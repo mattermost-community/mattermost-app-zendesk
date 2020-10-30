@@ -16,7 +16,7 @@
     "express": "^4.17.1",
     "mattermost-redux": "5.26.0",
     "node-fetch": "^2.6.0",
-    "node-zendesk": "^2.0.1"
+    "node-zendesk": "^2.0.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
