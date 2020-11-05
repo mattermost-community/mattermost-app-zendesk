@@ -30,6 +30,20 @@ router.post('/submission', async (req, res) => {
   app.createTicketFromPost(ticket, channel_id, user_id, post_id)
 });
 
+router.get('/mattermost-app.json', (req, res) => {
+  var manifest = 
+  `{
+      app_id: ${app.AppID},
+      display_name: ${app.DisplayName},
+      description: ${app.Description},
+      root_url: ${app.RootURL}
+      requested_permissions: ${app.RequestedPermissions}
+      oauth2_callback_url: ${app.OAuth2CallbackURL}
+      homepage_url: ${app.HomepageURL}    
+    }`;
+    res.send(manifest);
+});
+
 router.post('/trigger/create', async (req, res) => {
     client.triggers.create()
 });
