@@ -18,14 +18,7 @@ app.get('/', ((req, res) => {
     res.send('Hello Zendesk');
 }));
 
-// Zendesk router
-const zdRouter = new express.Router();
-zdRoutes.routes(zdRouter);
-app.use('/zendesk', zdRouter);
-
-// Mattermost router
-const mmRouter = new express.Router();
-mmRoutes.routes(mmRouter);
-app.use('/mattermost', mmRouter);
+app.use('/zendesk', zdRoutes); // Zendesk Router
+app.use('/mattermost', mmRoutes); // Mattermost router
 
 app.listen(4000, () => console.log('Listening'));
