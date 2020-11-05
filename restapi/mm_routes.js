@@ -62,4 +62,7 @@ router.post('/notify/user_joined_channel', async (req, res) => {
     res.json({});
 });
 
-module.exports = router 
+module.exports = {
+  path: app.PathMattermost,
+  routes: router 
+}
