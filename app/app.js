@@ -3,14 +3,17 @@ const mmClient = require('../mattermost/client');
 
 class App{
   constructor() {
+    this.PathMattermost = '/mattermost'
+    this.PathZendesk = '/zendesk'
+
     this.AppID = 'Zendesk'
     this.DisplayName = 'Zendesk'
     this.Description = 'Zendesk cloud app for Mattermost'
-    this.RootURL =  "",
-    this.RequestedPermissions = `[]api.PermissionType{
-        act_as_user,
-        act_as_bot,
-      }`,
+    this.RootURL =  "https://localhost:4000",
+    this.RequestedPermissions = `
+        "act_as_user",
+        "act_as_bot",
+      `,
     this.OAuth2CallbackURL = '/oauth2/complete'
     this.HomepageURL = "/"
   }
