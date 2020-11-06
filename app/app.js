@@ -10,11 +10,8 @@ class App{
     this.DisplayName = 'Zendesk'
     this.Description = 'Zendesk cloud app for Mattermost'
     this.RootURL =  "https://localhost:4000",
-    this.RequestedPermissions = `
-        "act_as_user",
-        "act_as_bot",
-      `,
-    this.OAuth2CallbackURL = '/oauth2/complete'
+    this.RequestedPermissions = [ "act_as_user", "act_as_bot" ]
+    this.OAuth2CallbackURL = this.RootURL + this.PathMattermost + '/oauth2/complete'
     this.HomepageURL = "/"
   }
 

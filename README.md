@@ -9,6 +9,10 @@
 
 ## Setup Mattermost Bot
   
+### Install the app
+
+`/apps install --url http://localhost:4000/mattermost/mattermost-app.json --app-secret thisisthesecret`
+
   The Mattermost Bot will be used to post messages to Mattermost.
   Authentications uses a Bot access token.
 
