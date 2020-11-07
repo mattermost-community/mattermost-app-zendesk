@@ -1,46 +1,46 @@
 const zdClient = require('../zendesk/client');
 const mmClient = require('../mattermost/client');
 
-class App{
-  constructor() {
-    this.PathMattermost = '/mattermost'
-    this.PathZendesk = '/zendesk'
+class App {
+    constructor() {
+        this.PathMattermost = '/mattermost';
+        this.PathZendesk = '/zendesk';
 
-    this.AppID = 'Zendesk'
-    this.DisplayName = 'Zendesk'
-    this.Description = 'Zendesk cloud app for Mattermost'
-    this.RootURL =  "https://localhost:4000",
-    this.RequestedPermissions = [ "act_as_user", "act_as_bot" ]
-    this.OAuth2CallbackURL = this.RootURL + this.PathMattermost + '/oauth2/complete'
-    this.HomepageURL = "/"
-  }
+        this.AppID = 'zendesk';
+        this.DisplayName = 'Zendesk';
+        this.Description = 'Zendesk cloud app for Mattermost';
+        this.RootURL = 'https://localhost:4000';
+        this.RequestedPermissions = ['act_as_user', 'act_as_bot'];
+        this.OAuth2CallbackURL = this.RootURL + this.PathMattermost + '/oauth2/complete';
+        this.HomepageURL = 'https://github.com/jfrerich/mattermost-applet-zendesk';
+    }
 
-  // createTicketFromPost
-  async createTicketFromPost(ticket, channel_id, user_id, post_id) {
-    const result = await zdClient.tickets.create(ticket)
-    const user = await zdClient.users.show(result.requester_id)
-    const host = process.env.ZENDESK_URL;
+    // createTicketFromPost
+    async createTicketFromPost(ticket, channelId, userId, postId) {
+        const result = await zdClient.tickets.create(ticket);
+        const user = await zdClient.users.show(result.requester_id);
+        const host = process.env.ZENDESK_URL;
 
-    const message = `${user.name} created ticket [#${result.id}](${host}/agent/tickets/${result.id}) [${result.subject}]`;
-    const pRes = mmClient.createPost({
-        message,
-        channel_id,
-        user_id,
-        root_id: post_id,
-    })
-  }
+        const message = `${user.name} created ticket [#${result.id}](${host}/agent/tickets/${result.id}) [${result.subject}]`;
+        const pRes = mmClient.createPost({
+            message,
+            channel_id: channelId,
+            user_id: userId,
+            root_id: postId,
+        });
+    }
 
-  // createTicketFromWebhook
-  async createPostFromWebhook(req) {
-    const message = `${req.body.ticketID} created ticket [#${req.body.ticketID}](${req.body.ticketUrl}) Type: ${req.body.ticketType} Priority: ${req.body.ticketPriority} [${req.body.title}]`;
-    const pRes = mmClient.createPost({
-        message,
-        channel_id: "rgiqcxrm8jdjzgj536gb45oh3e",
-        user_id: "6fiyj9ni9t835dnbni1ddrj93y",
-        root_id: "8dfjwummwfds8ptws3ha9ai6fr",
-    })
-  }
+    // createTicketFromWebhook
+    async createPostFromWebhook(req) {
+        const message = `${req.body.ticketID} created ticket [#${req.body.ticketID}](${req.body.ticketUrl}) Type: ${req.body.ticketType} Priority: ${req.body.ticketPriority} [${req.body.title}]`;
+        const pRes = mmClient.createPost({
+            message,
+            channel_id: 'rgiqcxrm8jdjzgj536gb45oh3e',
+            user_id: '6fiyj9ni9t835dnbni1ddrj93y',
+            root_id: '8dfjwummwfds8ptws3ha9ai6fr',
+        });
+    }
 }
 
-module.exports = new App()
+module.exports = new App();
 

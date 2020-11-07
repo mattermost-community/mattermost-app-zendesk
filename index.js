@@ -11,7 +11,7 @@ app.use(cors({origin: 'http://localhost:8065', credentials: true}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+    extended: true,
 }));
 
 app.get('/', ((req, res) => {

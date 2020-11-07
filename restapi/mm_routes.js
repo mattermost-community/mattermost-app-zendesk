@@ -1,6 +1,8 @@
-const utils = require('../utils/util');
-const app = require('../app/app')
 const express = require('express');
+
+const utils = require('../utils/util');
+const app = require('../app/app');
+const http = require('../app/http');
 const router = new express.Router();
 
 router.get('/', (req, res) => {
@@ -18,50 +20,56 @@ router.post('/submission', async (req, res) => {
     const {channel_id, user_id} = req.body;
 
     const ticket = {
-      "ticket": {
-          type: type,
-          subject: subject,
-          comment: {
-            body: description
-          },
-        }
+        ticket: {
+            type,
+            subject,
+            comment: {
+                body: description,
+            },
+        },
     };
 
-  app.createTicketFromPost(ticket, channel_id, user_id, post_id)
+    app.createTicketFromPost(ticket, channel_id, user_id, post_id);
 });
 
 router.get('/mattermost-app.json', (req, res) => {
-  res.json({
-    app_id: app.AppID,
-    display_name: app.DisplayName,
-    description: app.Description,
-    root_url: app.RootURL,
-    requested_permissions: app.RequestedPermissions,
-    oauth2_callback_url: app.OAuth2CallbackURL,
-    homepage_url: app.HomepageURL
-  });
-  res.send(manifest);
+    res.json({
+        app_id: app.AppID,
+        display_name: app.DisplayName,
+        description: app.Description,
+        root_url: app.RootURL,
+        requested_permissions: app.RequestedPermissions,
+        oauth2_callback_url: app.OAuth2CallbackURL,
+        homepage_url: app.HomepageURL,
+    });
+});
+
+router.get('/install', (req, res) => {
+    http.installApp();
+    const manifest = '/install post';
+    res.send(manifest);
 });
 
 router.post('/trigger/create', async (req, res) => {
-    client.triggers.create()
+    client.triggers.create();
 });
 
 router.post('/notify/user_left_channel', async (req, res) => {
     // const post = await Client4.getPost(req.body.values.post_id);
-    console.log('req', req)
-    res.send("user XXX left channel XXX");
+    console.log('req', req);
+    res.send('user XXX left channel XXX');
+
     // res.json({"user XXX join the channel"});
 });
 
 router.post('/notify/user_joined_channel', async (req, res) => {
     // const post = await Client4.getPost(req.body.values.post_id);
-    console.log('req', req)
-    res.send("user XXX joined channel XXX");
+    console.log('req', req);
+    res.send('user XXX joined channel XXX');
     res.json({});
 });
 
 module.exports = {
-  path: app.PathMattermost,
-  routes: router 
-}
+    path: app.PathMattermost,
+    routes: router,
+};

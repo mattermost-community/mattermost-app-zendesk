@@ -1,5 +1,6 @@
-const app = require('../app/app')
 const express = require('express');
+
+const app = require('../app/app');
 const router = new express.Router();
 
 router.get('/', (req, res) => {
@@ -12,10 +13,10 @@ router.post('/webhook', (req, res) => {
 });
 
 router.post('/trigger/create', async (req, res) => {
-    client.triggers.create()
+    client.triggers.create();
 });
 
 module.exports = {
-  path: app.PathZendesk,
-  routes: router 
-}
+    path: app.PathZendesk,
+    routes: router,
+};
