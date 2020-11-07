@@ -1,8 +1,11 @@
+const fs = require('fs');
+
 const express = require('express');
 
 const utils = require('../utils/util');
 const app = require('../app/app');
 const http = require('../app/http');
+
 const router = new express.Router();
 
 router.get('/', (req, res) => {
@@ -33,14 +36,12 @@ router.post('/submission', async (req, res) => {
 });
 
 router.get('/mattermost-app.json', (req, res) => {
-    res.json({
-        app_id: app.AppID,
-        display_name: app.DisplayName,
-        description: app.Description,
-        root_url: app.RootURL,
-        requested_permissions: app.RequestedPermissions,
-        oauth2_callback_url: app.OAuth2CallbackURL,
-        homepage_url: app.HomepageURL,
+    fs.readFile('manifest.json', (err, data) => {
+        if (err) {
+            throw err;
+        }
+        const manifest = JSON.parse(data);
+        res.json(manifest);
     });
 });
 
@@ -69,7 +70,4 @@ router.post('/notify/user_joined_channel', async (req, res) => {
     res.json({});
 });
 
-module.exports = {
-    path: app.PathMattermost,
-    routes: router,
-};
+module.exports = router;

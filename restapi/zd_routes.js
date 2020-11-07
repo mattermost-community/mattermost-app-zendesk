@@ -16,7 +16,4 @@ router.post('/trigger/create', async (req, res) => {
     client.triggers.create();
 });
 
-module.exports = {
-    path: app.PathZendesk,
-    routes: router,
-};
+module.exports = router;

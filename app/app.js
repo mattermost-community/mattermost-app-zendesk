@@ -2,19 +2,6 @@ const zdClient = require('../zendesk/client');
 const mmClient = require('../mattermost/client');
 
 class App {
-    constructor() {
-        this.PathMattermost = '/mattermost';
-        this.PathZendesk = '/zendesk';
-
-        this.AppID = 'zendesk';
-        this.DisplayName = 'Zendesk';
-        this.Description = 'Zendesk cloud app for Mattermost';
-        this.RootURL = 'https://localhost:4000';
-        this.RequestedPermissions = ['act_as_user', 'act_as_bot'];
-        this.OAuth2CallbackURL = this.RootURL + this.PathMattermost + '/oauth2/complete';
-        this.HomepageURL = 'https://github.com/jfrerich/mattermost-applet-zendesk';
-    }
-
     // createTicketFromPost
     async createTicketFromPost(ticket, channelId, userId, postId) {
         const result = await zdClient.tickets.create(ticket);
