@@ -13,6 +13,7 @@
       - Add API Token
 
 - `npm start` - start the node server
+- `npm run build` - builds the dist dir.  (TODO: can this be automated?  Fails if this is not run before `npm start`)
 - `npm run build:watch` (in separate shell) - watch for changing files and report typescript errors
 
 **Current Branches Needed**
