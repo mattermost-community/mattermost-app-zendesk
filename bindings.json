@@ -5,7 +5,7 @@
       {
         "label": "Create Zendesk Ticket",
         "description": "Create ticket in zendesk",
-        "icon": "https://raw.githubusercontent.com/jfrerich/mattermost-applet-zendesk/initial-PR-patch1/assets/zendesk.svg",
+        "icon": "https://raw.githubusercontent.com/jfrerich/mattermost-applet-zendesk/initial-PR/assets/zendesk.svg",
         "call": {
           "url": "https://jasonf.ngrok.io/createform",
           "type": "form",
