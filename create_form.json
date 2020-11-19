@@ -17,7 +17,6 @@
             {
                 "name": "additional_message",
                 "type": "text",
-                "description": "The ",
                 "label": "message",
                 "hint": "Add additional message to the Zendesk ticket",
                 "modal_label": "Optional message",
