@@ -2,7 +2,7 @@
     "app_id": "zendesk",
     "display_name": "Zendesk",
     "description": "Zendesk cloud app for Mattermost",
-    "root_url": "https://localhost:4000",
+    "root_url": "http://localhost:4000",
     "requested_permissions": ["act_as_user", "act_as_bot"],
     "oauth2_callback_url": "https://localhost:4000/mattermost/oauth2/complete",
     "homepage_url": "https://github.com/jfrerich/mattermost-applet-zendesk"

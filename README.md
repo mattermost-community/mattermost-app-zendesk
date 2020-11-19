@@ -2,29 +2,40 @@
 
 ## Quick Start
 
-* clone this repo
-* cp `.env.save` `.env`
-  * add your credentials to the `.env` file
-* npm start
+- clone this repo
+- cp `.env.save` `.env`
+  - add your credentials to the `.env` file
+    - ZENDESK_URL - URL to zendesk account
+    - ZENDESK_USERNAME - your zendesk login username
+    - ZENDESK_API_TOKEN - generated via the following steps
+      - zendesk > Admin > CHANNELS > API > Settings
+      - Token Access > Enable
+      - Add API Token
 
-## Setup Mattermost Bot
-  
-### Install the app
+- `npm start` - start the node server
+- `npm run build:watch` (in separate shell) - watch for changing files and report typescript errors
 
-`/apps install --url http://localhost:4000/mattermost/mattermost-app.json --app-secret thisisthesecret`
+**Current Branches Needed**
 
-  The Mattermost Bot will be used to post messages to Mattermost.
-  Authentications uses a Bot access token.
+The current master branches have not been merged to work with this app and the following are needed until they are mergd with master
 
-* `Channel Menu` > `Integrations` > `Bot Accounts` > `Add Bot Account`  
-* Copy the Token after creating Bot and set as `MM_BOT_TOKEN` value in `.env`
+mm-webapp: `apps-modals`  
+mm-plugin-apps: `apps-modals`
 
-* [ ] Automate this step?
+**Install the app**
+
+`/apps install --url http://localhost:4000/manifest.json --app-secret thisisthesecret`
+
+  After installing the app, a provisioned bot account will be created for user
+  @zendesk and posted in a DM. 
+
+  - Copy `MM_BOT_TOKEN` from the database to the `.env` file. This is the value
+    for the `bot_access_token` key
 
 ## Create a ticket
 
-EndPoint: `http://localhost:4000/mattermost/submission`  
-Method: `post`  
+EndPoint: `http://localhost:4000/createform`
+Method: `post`
 Body (example):
 
 ```json
