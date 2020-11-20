@@ -3,7 +3,7 @@ import fs from 'fs';
 import express, { Request, Response } from 'express';
 
 import app from '../app/app';
-import http from '../app/http';
+import {jsonStoreFileName} from '../app/constants';
 
 const router = express.Router();
 
@@ -47,10 +47,19 @@ router.get('/bindings', (req: Request, res: Response) => {
     });
 });
 
-router.get('/install', (req: Request, res: Response) => {
-    http.installApp();
-    const manifest = '/install post';
-    res.send(manifest);
+router.post('/install', (req: Request, res: Response) => {
+    // Write json file store
+    const values = req.body.values
+    fs.writeFile( jsonStoreFileName, JSON.stringify( values ), "utf8", (err) => { 
+      if (err) {
+        console.log(err); 
+        res.statusMessage = "unable to write json storage file";
+        res.status(400).end();
+      } else { 
+        console.log(jsonStoreFileName, " successfully written"); 
+        res.sendStatus(200);
+      } 
+    });
 });
 
 export default router;

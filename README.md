@@ -28,10 +28,12 @@ mm-plugin-apps: `apps-modals`
 `/apps install --url http://localhost:4000/manifest.json --app-secret thisisthesecret`
 
   After installing the app, a provisioned bot account will be created for user
-  @zendesk and posted in a DM. 
+  @zendesk and posted in a DM.
 
-  - Copy `MM_BOT_TOKEN` from the database to the `.env` file. This is the value
-    for the `bot_access_token` key
+  The following values are stored locally in `app_store.json`
+
+- `bot_access_token`
+- `oauth2_client_secret`
 
 ## Create a ticket
 
