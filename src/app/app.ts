@@ -1,5 +1,6 @@
 import zendeskClient from '../zendesk/client';
 import mmClient from '../mattermost/client';
+import store from './store';
 
 import fs from 'fs';
 
@@ -10,7 +11,6 @@ const token = process.env.ZENDESK_API_TOKEN as string;
 const apiURL = process.env.ZENDESK_URL + '/api/v2' as string;
 
 class App {
-    // createTicketFromPost
     async createTicketFromPost(ticket, channelId: string, userId: string, postId: string) {
         const zdClient = zendeskClient(username, token, apiURL)
         const result = await zdClient.tickets.create(ticket);
@@ -22,16 +22,17 @@ class App {
         const post: Post = {
             message: message,
             channel_id: channelId,
-            user_id: userId,
             root_id: postId,
         }
 
-        const pRes = mmClient.createPost(post);
+        let client = mmClient
+        client.setToken(store.getBotAccessToken())
+        const pRes = client.createPost(post);
     }
 
     getTicketForPost(values) {
         const zdSubject = values.subject
-        const mmSignature = "*message created from Mattermost message.*"
+        const mmSignature = "*message created from Mattermost message.*\n"
 
         const zdMessage = values.additional_message + "\n"
             + values.post_message + "\n"
@@ -48,7 +49,7 @@ class App {
         return ticket
     }
 
-    // createTicketFromWebhook
+    // getCreateForm gets the create form from json
     getCreateForm(message: string) {
         console.log("message", message)
         const value = fs.readFile('create_form.json', (err, data) => {
