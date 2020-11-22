@@ -5,6 +5,8 @@ import store from './store';
 import fs from 'fs';
 
 import { Post } from 'mattermost-redux/types/posts'
+import { AppCallResponse, AppForm } from 'mattermost-redux/types/apps'
+import { Tickets } from 'node-zendesk'
 
 const username = process.env.ZENDESK_USERNAME as string;
 const token = process.env.ZENDESK_API_TOKEN as string;
@@ -38,9 +40,10 @@ class App {
             + values.post_message + "\n"
             + mmSignature
 
-        const ticket = {
+        const ticket: Tickets.CreatePayload = {
             ticket: {
                 subject: zdSubject,
+                type: values.type,
                 comment: {
                     body: zdMessage
                 },
@@ -49,18 +52,72 @@ class App {
         return ticket
     }
 
-    // getCreateForm gets the create form from json
-    getCreateForm(message: string) {
-        console.log("message", message)
-        const value = fs.readFile('create_form.json', (err, data) => {
-            if (err) {
-                console.log('err', err)
-                throw err;
-            }
-            return JSON.parse(data.toString());
-        });
+    // getCreateFormResponse returns a form response to create a ticket from a post
+    getCreateFormResponse(message: string): AppCallResponse {
+        const response: AppCallResponse = {
+            type: "form",
+            form: {
+                title: "Create Zendesk Ticket",
+                header: "Create a Zendesk from Mattermost by filling in the required fields and clicking the submit button. Addition text can be added in the `Optional message` form.",
+                footer: "Message modal form footer",
+                fields: [
+                    {
+                        name: "subject",
+                        description: "zendesk subject",
+                        type: "text",
+                        is_required: true,
+                        label: "User",
+                        hint: "Zendesk ticket subject",
+                        position: 1,
+                        modal_label: "Ticket subject"
+                    },
+                    {
+                      name: "type",
+                        type: "static_select",
+                        options: [
+                            {
+                                label: "problem",
+                                value: "problem"
+                            },
+                            {
+                                label: "incident",
+                                value: "incident"
+                            }
+                        ],
+                        is_required: true,
+                        label: "User",
+                        hint: "Zendesk ticket type",
+                        position: 1,
+                        modal_label: "Ticket type"
+                    },
+                    {
+                        name: "additional_message",
+                        description: "zendesk additional message",
+                        type: "text",
+                        label: "message",
+                        hint: "Add additional message to the Zendesk ticket",
+                        modal_label: "Optional message",
+                        subtype: "textarea",
+                        min_length: 2,
+                        max_length: 1024
+                    },
+                    {
+                        name: "post_message",
+                        description: "zendesk",
+                        type: "text",
+                        is_required: true,
+                        value: message,
+                        label: "message",
+                        modal_label: "Mattermost message",
+                        subtype: "textarea",
+                        min_length: 2,
+                        max_length: 1024
+                    }
+                ],
 
-        return value
+            }
+        }
+        return response
     }
 }
 
