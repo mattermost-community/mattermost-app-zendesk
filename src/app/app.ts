@@ -1,8 +1,5 @@
-
-import fs from 'fs';
-
 import {Post} from 'mattermost-redux/types/posts';
-import {AppCallResponse, AppForm} from 'mattermost-redux/types/apps';
+import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {Tickets} from 'node-zendesk';
 
 import mmClient from '../mattermost/client';
