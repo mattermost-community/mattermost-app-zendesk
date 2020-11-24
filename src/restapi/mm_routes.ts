@@ -5,13 +5,13 @@ import express, {Request, Response} from 'express';
 import app from '../app/app';
 import {jsonStoreFileName} from '../app/constants';
 
-import createFormResponse from './responses';
+import responses from './responses';
 
 const router = express.Router();
 
 router.post('/createform', (req: Request, res: Response) => {
     if (req.body.type == 'form') {
-        const createForm = createFormResponse(req.body.context.post.message);
+        const createForm = responses.createForm(req.body.context.post.message);
         res.json(createForm);
     } else {
         const {acting_user_id, post_id, team_id, channel_id} = req.body.context;
