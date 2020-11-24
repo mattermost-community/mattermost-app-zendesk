@@ -11,29 +11,30 @@ function createFormResponse(message: string): AppCallResponse {
             fields: [
                 {
                     name: 'subject',
-                    description: 'zendesk subject',
                     type: 'text',
                     is_required: true,
-                    label: 'User',
-                    hint: 'Zendesk ticket subject',
-                    position: 1,
-                    modal_label: 'Ticket subject',
+                    hint: 'subject',
+                    modal_label: 'Subject',
                 },
                 {
                     name: 'type',
                     type: 'static_select',
-                    options: getTypeOptions(),
+                    options: getStaticSelectOptions(['problem', 'incident', 'question', 'task']),
                     is_required: true,
-                    label: 'User',
-                    hint: 'Zendesk ticket type',
-                    position: 1,
-                    modal_label: 'Ticket type',
+                    hint: 'type',
+                    modal_label: 'Type',
+                },
+                {
+                    name: 'priority',
+                    type: 'static_select',
+                    options: getStaticSelectOptions(['urgent', 'high', 'normal', 'low']),
+                    is_required: true,
+                    hint: 'priority',
+                    modal_label: 'Priority',
                 },
                 {
                     name: 'additional_message',
-                    description: 'zendesk additional message',
                     type: 'text',
-                    label: 'message',
                     hint: 'Add additional message to the Zendesk ticket',
                     modal_label: 'Optional message',
                     subtype: 'textarea',
@@ -42,11 +43,9 @@ function createFormResponse(message: string): AppCallResponse {
                 },
                 {
                     name: 'post_message',
-                    description: 'zendesk',
                     type: 'text',
                     is_required: true,
                     value: message,
-                    label: 'message',
                     modal_label: 'Mattermost message',
                     subtype: 'textarea',
                     min_length: 2,
@@ -59,25 +58,13 @@ function createFormResponse(message: string): AppCallResponse {
     return response;
 }
 
-function getTypeOptions(): AppSelectOption[] {
-    return [
-        {
-            label: 'problem',
-            value: 'problem',
-        },
-        {
-            label: 'incident',
-            value: 'incident',
-        },
-        {
-            label: 'question',
-            value: 'question',
-        },
-        {
-            label: 'task',
-            value: 'task',
-        },
-    ];
+function getStaticSelectOptions(values: string[]): AppSelectOption[] {
+    const options: Array<AppSelectOption> = [];
+    for (const key of values) {
+        options.push({label: key, value: key});
+    }
+
+    return options;
 }
 
 export default createFormResponse;

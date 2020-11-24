@@ -43,6 +43,7 @@ class App {
             ticket: {
                 subject: zdSubject,
                 type: values.type,
+                priority: values.priority,
                 comment: {
                     body: zdMessage,
                 },

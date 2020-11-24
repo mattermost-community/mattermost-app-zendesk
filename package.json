@@ -36,6 +36,7 @@
     "prettier": "1.19.1",
     "ts-jest": "^26.1.0",
     "ts-loader": "^6.2.1",
+    "ts-transformer-enumerate": "^0.5.1",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^5.4.0",
