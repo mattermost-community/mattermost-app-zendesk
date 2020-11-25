@@ -32,7 +32,6 @@ class App {
     }
 
     getTicketForPost(values) {
-        const zdSubject = values.subject;
         const mmSignature = '*message created from Mattermost message.*\n';
 
         const zdMessage = values.additional_message + '\n' +
@@ -41,7 +40,7 @@ class App {
 
         const ticket: Tickets.CreatePayload = {
             ticket: {
-                subject: zdSubject,
+                subject: values.subject,
                 type: values.type,
                 priority: values.priority,
                 comment: {

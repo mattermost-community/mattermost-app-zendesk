@@ -1,7 +1,7 @@
 import {AppCallResponse, AppSelectOption} from 'mattermost-redux/types/apps';
 
-// createFormResponse returns a form response to create a ticket from a post
 class Responses {
+    // createForm returns a form response to create a ticket from a post
     createForm(message: string): AppCallResponse {
         const response: AppCallResponse = {
             type: 'form',
