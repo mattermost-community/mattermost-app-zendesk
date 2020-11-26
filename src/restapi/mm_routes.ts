@@ -9,15 +9,15 @@ import responses from './responses';
 
 const router = express.Router();
 
-router.post('/createform', (req: Request, res: Response) => {
+router.post('/createform', async (req: Request, res: Response) => {
     if (req.body.type == 'form') {
         const createForm = responses.createForm(req.body.context.post.message);
         res.json(createForm);
     } else {
         const {acting_user_id, post_id, team_id, channel_id} = req.body.context;
-        const ticket = app.getTicketForPost(req.body.values);
-        app.createTicketFromPost(ticket, channel_id, acting_user_id, post_id);
-        res.sendStatus(200);
+        const message = await app.createTicketFromPost(req.body.values);
+        await app.createBotPost(message, channel_id, acting_user_id, post_id);
+        res.json({});
     }
 });
 
