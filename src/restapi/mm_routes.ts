@@ -14,9 +14,7 @@ router.post('/createform', async (req: Request, res: Response) => {
         const createForm = responses.createForm(req.body.context.post.message);
         res.json(createForm);
     } else {
-        const {acting_user_id, post_id, team_id, channel_id} = req.body.context;
-        const message = await app.createTicketFromPost(req.body.values);
-        await app.createBotPost(message, channel_id, acting_user_id, post_id);
+        const message = app.createTicketFromPost(req);
         res.json({});
     }
 });
@@ -53,6 +51,10 @@ router.post('/install', (req: Request, res: Response) => {
             res.sendStatus(200);
         }
     });
+});
+
+router.post('/oauth2/complete', (req: Request, res: Response) => {
+    res.send('hello');
 });
 
 export default router;
