@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 import express, {Request, Response} from 'express';
+import {AppCall} from 'mattermost-redux/types/apps';
 
 import app from '../app/app';
 import {jsonStoreFileName} from '../app/constants';
@@ -10,11 +11,12 @@ import responses from './responses';
 const router = express.Router();
 
 router.post('/createform', async (req: Request, res: Response) => {
-    if (req.body.type == 'form') {
-        const createForm = responses.createForm(req.body.context.post.message);
+    const appCall: AppCall = req.body
+    if (appCall.type == 'form') {
+        const createForm = responses.createForm(appCall.context.post.message);
         res.json(createForm);
     } else {
-        const message = app.createTicketFromPost(req);
+        const message = app.createTicketFromPost(appCall);
         res.json({});
     }
 });
