@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p .",
     "build:watch": "tsc -w -p .",
-    "start": "nodemon dist/index.js",
+    "start": "nodemon dist/src/index.js",
     "test": "jest --coverage",
     "rebuild": "rm -rf node_modules; rm package-lock.json; npm i; npm run build"
   },

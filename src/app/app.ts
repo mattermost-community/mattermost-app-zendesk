@@ -5,6 +5,8 @@ import {Tickets, CreatePayload} from 'node-zendesk';
 import mmClient from '../mattermost/client';
 import zendeskClient from '../zendesk/client';
 
+import manifest from '../../manifest';
+
 import bindings from './bindings';
 import calls from './calls';
 import store from './store';
@@ -16,10 +18,12 @@ const apiURL = process.env.ZENDESK_URL + '/api/v2' as string;
 class App {
     bindings: typeof AppState;
     calls: typeof AppCallResponse;
+    manifest: typeof any;
 
     constructor() {
         this.bindings = bindings;
         this.calls = calls;
+        this.manifest = manifest;
     }
 
     async createTicketFromPost(appCall: AppCall): string {

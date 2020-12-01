@@ -21,13 +21,7 @@ router.post('/createform', async (req: Request, res: Response) => {
 });
 
 router.get('/manifest.json', (req: Request, res: Response) => {
-    fs.readFile('manifest.json', (err, data) => {
-        if (err) {
-            throw err;
-        }
-        const manifest = JSON.parse(data.toString());
-        res.json(manifest);
-    });
+    res.json(app.manifest);
 });
 
 router.get('/bindings', (req: Request, res: Response) => {
