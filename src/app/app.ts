@@ -1,10 +1,12 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {AppCall, AppCallResponse, AppCallValues} from 'mattermost-redux/types/apps';
+import {AppCall, AppState, AppCallResponse, AppCallValues} from 'mattermost-redux/types/apps';
 import {Tickets, CreatePayload} from 'node-zendesk';
 
 import mmClient from '../mattermost/client';
 import zendeskClient from '../zendesk/client';
 
+import bindings from './bindings';
+import calls from './calls';
 import store from './store';
 
 const username = process.env.ZENDESK_USERNAME as string;
@@ -12,6 +14,14 @@ const token = process.env.ZENDESK_API_TOKEN as string;
 const apiURL = process.env.ZENDESK_URL + '/api/v2' as string;
 
 class App {
+    bindings: typeof AppState;
+    calls: typeof AppCallResponse;
+
+    constructor() {
+        this.bindings = bindings;
+        this.calls = calls;
+    }
+
     async createTicketFromPost(appCall: AppCall): string {
         const ticket = this.getTicketForPost(appCall.values);
 

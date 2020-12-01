@@ -4,16 +4,15 @@ import express, {Request, Response} from 'express';
 import {AppCall} from 'mattermost-redux/types/apps';
 
 import app from '../app/app';
-import {jsonStoreFileName} from '../app/constants';
 
-import responses from './responses';
+import {jsonStoreFileName} from '../app/constants';
 
 const router = express.Router();
 
 router.post('/createform', async (req: Request, res: Response) => {
-    const appCall: AppCall = req.body
-    if (appCall.type == 'form') {
-        const createForm = responses.createForm(appCall.context.post.message);
+    const appCall: AppCall = req.body;
+    if (appCall.type === 'form') {
+        const createForm = app.calls.createForm(appCall.context.post.message);
         res.json(createForm);
     } else {
         const message = app.createTicketFromPost(appCall);
@@ -32,13 +31,7 @@ router.get('/manifest.json', (req: Request, res: Response) => {
 });
 
 router.get('/bindings', (req: Request, res: Response) => {
-    fs.readFile('bindings.json', (err, data) => {
-        if (err) {
-            throw err;
-        }
-        const bindings = JSON.parse(data.toString());
-        res.json(bindings);
-    });
+    res.json(app.bindings.getBindings());
 });
 
 router.post('/install', (req: Request, res: Response) => {

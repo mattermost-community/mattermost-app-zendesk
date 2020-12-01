@@ -1,9 +1,9 @@
 import {AppCallResponse, AppSelectOption} from 'mattermost-redux/types/apps';
 
-class Responses {
+class Calls {
     // createForm returns a form response to create a ticket from a post
     createForm(message: string): AppCallResponse {
-        const response: AppCallResponse = {
+        const call: AppCallResponse = {
             type: 'form',
             form: {
                 title: 'Create Zendesk Ticket',
@@ -56,7 +56,7 @@ class Responses {
 
             },
         };
-        return response;
+        return call;
     }
 }
 
@@ -68,4 +68,4 @@ function getStaticSelectOptions(values: string[]): AppSelectOption[] {
     return options;
 }
 
-export default new Responses();
+export default new Calls();
