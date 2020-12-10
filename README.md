@@ -3,7 +3,7 @@
 ## Quick Start
 
 - clone this repo
-- cp `.env.save` `.env`
+- cp `.env.sample` `.env`
   - add your credentials to the `.env` file
     - ZENDESK_URL - URL to zendesk account
     - ZENDESK_USERNAME - your zendesk login username
@@ -27,8 +27,7 @@ mm-plugin-apps: `apps-modals`
 
 `/apps install --url http://localhost:4000/manifest.json --app-secret thisisthesecret`
 
-  After installing the app, a provisioned bot account will be created for user
-  @zendesk and posted in a DM.
+  After installing the app, a provisioned bot account will be created for user @zendesk and posted in a DM.
 
   The following values are stored locally in `app_store.json`
 
@@ -77,8 +76,7 @@ we will need to add an HTTP target which will accept the webhook notifications.
     1. **Method:** POST
     1. **Content Type:** JSON
 
-**Developer Notes:** When testing webhooks locally, you will need to expose your
-localhost:4040 with ngrok
+**Developer Notes:** When testing webhooks locally, you will need to expose your localhost:4040 with ngrok
 
 ### Add a trigger when new ticket is created
 

@@ -2,9 +2,9 @@ const manifest: any = {
     app_id: 'zendesk',
     display_name: 'Zendesk',
     description: 'Zendesk cloud app for Mattermost',
-    root_url: 'http://localhost:4000',
+    root_url: 'https://jasonf.ngrok.io',
     requested_permissions: ['act_as_user', 'act_as_bot'],
-    oauth2_callback_url: 'http://localhost:4000/oauth2/complete',
+    oauth2_callback_url: 'https://jasonf.ngrok.io/oauth2/complete',
     homepage_url: 'https://github.com/mattermost/mattermost-app-zendesk',
 };
 

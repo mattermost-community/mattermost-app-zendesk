@@ -7,8 +7,7 @@ const pathInstall = `${pathPrefix}/install`;
 const pathSubscribe = `${pathPrefix}/subscribe`;
 const pathConnectedInstall = `${pathPrefix}/connected_install`;
 
-// http constains methods for handling requests to and from the
-// mattermost-plugin-apps API
+// handles requests to and from the mattermost-plugin-apps API
 class MattermostPluginHTTP {
     async installApp() {
         // console.log(JSON.stringify(dialog));

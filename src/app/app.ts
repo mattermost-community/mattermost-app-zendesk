@@ -16,19 +16,12 @@ const token = process.env.ZENDESK_API_TOKEN as string;
 const apiURL = process.env.ZENDESK_URL + '/api/v2' as string;
 
 class App {
-    bindings: typeof AppState;
-    calls: typeof AppCallResponse;
-    manifest: typeof any;
-
-    constructor() {
-        this.bindings = bindings;
-        this.calls = calls;
-        this.manifest = manifest;
-    }
+    bindings = bindings;
+    calls = calls;
+    manifest = manifest;
 
     async createTicketFromPost(appCall: AppCall): string {
         const ticket = this.getTicketForPost(appCall.values);
-
         const zdClient = zendeskClient(username, token, apiURL);
         const result = await zdClient.tickets.create(ticket);
         const user = await zdClient.users.show(result.requester_id);
