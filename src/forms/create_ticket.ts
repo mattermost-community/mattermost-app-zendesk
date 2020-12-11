@@ -1,6 +1,6 @@
 import {AppCallResponse, AppSelectOption} from 'mattermost-redux/types/apps';
 
-import {getStaticSelectOptions} from './utils';
+import {getStaticSelectOptions} from '../utils/utils';
 
 // newCreateTicketForm returns a form response to create a ticket from a post
 export function newCreateTicketForm(message: string): AppCallResponse {

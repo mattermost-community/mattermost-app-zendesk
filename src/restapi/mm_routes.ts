@@ -6,7 +6,7 @@ import {AppCall} from 'mattermost-redux/types/apps';
 
 import app from '../app/app';
 import {getBindings} from '../app/bindings';
-import {newCreateTicketForm} from '../app/calls';
+import {newCreateTicketForm} from '../forms/create_ticket';
 import {jsonStoreFileName} from '../app/constants';
 
 const router = express.Router();
