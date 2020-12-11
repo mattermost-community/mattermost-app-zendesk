@@ -7,8 +7,6 @@ import zendeskClient from '../zendesk/client';
 
 import manifest from '../../manifest';
 
-import bindings from './bindings';
-import calls from './calls';
 import store from './store';
 
 const username = process.env.ZENDESK_USERNAME as string;
@@ -16,10 +14,6 @@ const token = process.env.ZENDESK_API_TOKEN as string;
 const apiURL = process.env.ZENDESK_URL + '/api/v2' as string;
 
 class App {
-    bindings = bindings;
-    calls = calls;
-    manifest = manifest;
-
     async createTicketFromPost(appCall: AppCall): string {
         const ticket = this.getTicketForPost(appCall.values);
         const zdClient = zendeskClient(username, token, apiURL);
@@ -62,6 +56,10 @@ class App {
             },
         };
         return ticket;
+    }
+
+    getManifest(): CreatePayload {
+        return manifest;
     }
 }
 

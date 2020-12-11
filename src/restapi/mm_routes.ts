@@ -6,6 +6,7 @@ import {AppCall} from 'mattermost-redux/types/apps';
 
 import app from '../app/app';
 import {getBindings} from '../app/bindings';
+import {newCreateTicketForm} from '../app/calls';
 import {jsonStoreFileName} from '../app/constants';
 
 const router = express.Router();
@@ -13,8 +14,8 @@ const router = express.Router();
 router.post('/createform', async (req: Request, res: Response) => {
     const appCall: AppCall = req.body;
     if (appCall.type === 'form') {
-        const createForm = app.calls.createForm(appCall.context.post.message);
-        res.json(createForm);
+        const createTicketForm = newCreateTicketForm(appCall.context.post.message);
+        res.json(createTicketForm);
     } else {
         const message = app.createTicketFromPost(appCall);
         res.json({});
@@ -22,11 +23,11 @@ router.post('/createform', async (req: Request, res: Response) => {
 });
 
 router.get('/manifest.json', (req: Request, res: Response) => {
-    res.json(app.manifest);
+    res.json(app.getManifest());
 });
 
 router.get('/bindings', (req: Request, res: Response) => {
-    res.json(app.bindings.getBindings());
+    res.json(getBindings());
 });
 
 router.post('/install', (req: Request, res: Response) => {
