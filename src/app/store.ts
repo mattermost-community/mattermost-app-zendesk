@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import {jsonStoreFileName} from './constants';
+import {jsonStoreFileName} from '../utils/constants';
 
 type AppStore = {
     bot_access_token: string;
