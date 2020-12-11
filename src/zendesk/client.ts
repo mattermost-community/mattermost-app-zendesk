@@ -1,5 +1,4 @@
-import zendesk from 'node-zendesk';
-import {Client, ClientOptions} from 'node-zendesk';
+import zendesk, {Client, ClientOptions} from 'node-zendesk';
 
 export function newClient(username: string, token: string, remoteUri: string): Client {
     const options: ClientOptions = {
