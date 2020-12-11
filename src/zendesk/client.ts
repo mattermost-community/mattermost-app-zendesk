@@ -1,7 +1,7 @@
 import zendesk from 'node-zendesk';
 import {Client, ClientOptions} from 'node-zendesk';
 
-function newClient(username: string, token: string, remoteUri: string): Client {
+export function newClient(username: string, token: string, remoteUri: string): Client {
     const options: ClientOptions = {
         username,
         token,
@@ -10,5 +10,3 @@ function newClient(username: string, token: string, remoteUri: string): Client {
 
     return zendesk.createClient(options);
 }
-
-export default newClient;
