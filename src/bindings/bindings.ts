@@ -1,6 +1,6 @@
 import {AppBinding, AppState, AppsState} from 'mattermost-redux/types/apps';
 
-import app from './app';
+import app from '../app/app';
 
 // getBindings returns bindings defined for all locations in the app
 export function getBindings(): AppBinding[] {

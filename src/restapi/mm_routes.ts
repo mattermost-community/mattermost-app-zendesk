@@ -5,7 +5,7 @@ import express, {Request, Response} from 'express';
 import {AppCall} from 'mattermost-redux/types/apps';
 
 import app from '../app/app';
-import {getBindings} from '../app/bindings';
+import {getBindings} from '../bindings';
 import {newCreateTicketForm} from '../forms/create_ticket';
 import {jsonStoreFileName} from '../utils/constants';
 
