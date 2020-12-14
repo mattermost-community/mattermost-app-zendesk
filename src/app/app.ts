@@ -3,7 +3,7 @@ import {AppCall, AppState, AppCallResponse, AppCallValues} from 'mattermost-redu
 import {Tickets, CreatePayload} from 'node-zendesk';
 
 import mmClient from '../mattermost/client';
-import zendeskClient from '../zendesk/client';
+import * as zendesk from '../zendesk/client';
 
 import manifest from '../../manifest';
 
@@ -16,7 +16,8 @@ const apiURL = process.env.ZENDESK_URL + '/api/v2' as string;
 class App {
     async createTicketFromPost(appCall: AppCall): string {
         const ticket = this.getTicketForPost(appCall.values);
-        const zdClient = zendeskClient(username, token, apiURL);
+
+        const zdClient = zendesk.newClient(username, token, apiURL);
         const result = await zdClient.tickets.create(ticket);
         const user = await zdClient.users.show(result.requester_id);
         const host = process.env.ZENDESK_URL;
