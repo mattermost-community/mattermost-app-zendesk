@@ -20,8 +20,8 @@
 
 The current master branches have not been merged to work with this app and the following are needed until they are mergd with master
 
-mm-webapp: `apps-modals`  
-mm-plugin-apps: `apps-modals`
+mm-webapp: `feature/cloud-apps`  
+mm-plugin-apps: `master`
 
 **Install the app**
 
@@ -35,23 +35,6 @@ mm-plugin-apps: `apps-modals`
 - `oauth2_client_secret`
 
 ## Create a ticket
-
-EndPoint: `http://localhost:4000/createform`
-Method: `post`
-Body (example):
-
-```json
-{
-    "channel_id": "rgiqcxrm8jdjzgj536gb45oh3e",
-    "user_id": "6fiyj9ni9t835dnbni1ddrj93y",
-    "submission": {
-        "post_id": "8dfjwummwfds8ptws3ha9ai6fr",
-        "subject": "This is subject",
-        "description": "This is description",
-        "type": "incident"
-    }
-}
-```
 
 ## Setup Zendesk Webhooks
 
@@ -110,27 +93,6 @@ From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/suppor
 }
 ```
 
-## Types
-
-```typescript
-export type AppletContext = {
-  app_id: string;
-  acting_user_id: string;
-  user_id?: string;
-  team_id?: string;
-  channel_id: string;
-  post_id?: string;
-  root_post_id?: string;
-    props?: {[name: string]: string};
-};
-
-export type AppletNotification = {
-  Subject: string;
-  Context: AppletContext;
-};
-
-```
-
 ## FAQ
 
 ### 1. `npm start` fails with warning about rudder in mattermost-redux
@@ -168,4 +130,13 @@ exports.rudderAnalytics = rudderAnalytics;
 ```javascript
 var fetch_etag_1 = require("node-fetch");
 ```
->>>>>>> Add instructions for target and trigger instructions
+
+### 3. Log message received
+
+`The system admin has turned off OAuth2 Service Provider.`
+
+Oauth2 service needs to be turned on in `config/config.json`
+
+```json
+"EnableOAuthServiceProvider": true,
+```

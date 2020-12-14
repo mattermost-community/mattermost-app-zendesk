@@ -13,7 +13,7 @@ export function getBindings(): AppBinding[] {
 // postMenuBindings returns bindings for the post_menu location
 function postMenuBindings(): AppBinding {
     const binding: AppBinding = {
-        location_id: '/post_menu',
+        location: '/post_menu',
         bindings: [
             {
                 label: 'Create Zendesk Ticket',
