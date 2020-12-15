@@ -30,12 +30,12 @@ class JSONFileStore implements Store {
         }
     }
 
-    storeInstallInfo(values: any) {
-        try {
-            fs.writeFileSync(jsonStoreFileName, JSON.stringify(values));
-        } catch (err) {
-            throw err
-        }
+    storeInstallInfo(values: any): void {
+        fs.writeFileSync(jsonStoreFileName, JSON.stringify(values), (err) => {
+            if (err) {
+                throw err;
+            }
+        });
     }
 
     getBotAccessToken(): string {
