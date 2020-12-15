@@ -36,7 +36,7 @@ class App {
             channel_id: context.channel_id,
             root_id: context.post_id,
         };
-        client.createPost(post);
+        await client.createPost(post);
     }
 
     getTicketForPost(values: AppCallValues): CreatePayload {
