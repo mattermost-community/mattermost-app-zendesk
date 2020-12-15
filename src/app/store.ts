@@ -7,11 +7,15 @@ type AppStore = {
     oauth2_client_secret: string;
 }
 
-class Store {
-    store: AppStore;
+interface Store {
+    getBotAccessToken(): string;
+}
+
+class JSONFileStore implements Store {
+    storeData: AppStore;
 
     constructor() {
-        this.store = {
+        this.storeData = {
             bot_access_token: '',
             oauth2_client_secret: '',
         };
@@ -19,17 +23,25 @@ class Store {
         if (fs.existsSync(jsonStoreFileName)) {
             fs.readFile(jsonStoreFileName, (err, data) => {
                 if (err) {
-                    console.log('err', err);
                     throw err;
                 }
-                this.store = JSON.parse(data.toString());
+                this.storeData = JSON.parse(data.toString());
             });
         }
     }
 
+    storeInstallInfo(values: any): [number, string] {
+        try {
+            fs.writeFileSync(jsonStoreFileName, JSON.stringify(values));
+            return [200, jsonStoreFileName + ' successfully written'];
+        } catch (err) {
+            return [400, err];
+        }
+    }
+
     getBotAccessToken(): string {
-        return this.store.bot_access_token;
+        return this.storeData.bot_access_token;
     }
 }
 
-export default new Store();
+export default new JSONFileStore();

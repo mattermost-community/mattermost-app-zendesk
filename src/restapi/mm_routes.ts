@@ -8,6 +8,7 @@ import app from '../app/app';
 import {getBindings} from '../bindings';
 import {newCreateTicketForm} from '../forms/create_ticket';
 import {jsonStoreFileName} from '../utils/constants';
+import store from '../app/store';
 
 const router = express.Router();
 
@@ -31,17 +32,10 @@ router.get('/bindings', (req: Request, res: Response) => {
 });
 
 router.post('/install', (req: Request, res: Response) => {
-    // Write json file store
-    fs.writeFile(jsonStoreFileName, JSON.stringify(req.body.values), 'utf8', (err) => {
-        if (err) {
-            console.log(err);
-            res.statusMessage = 'unable to write json storage file';
-            res.status(400).end();
-        } else {
-            console.log(jsonStoreFileName, ' successfully written');
-            res.sendStatus(200);
-        }
-    });
+    // save values from request into JSON file store
+    const [httpStatus, message] = store.storeInstallInfo(req.body.values);
+    res.statusMessage = message;
+    res.status(httpStatus).end();
 });
 
 router.post('/oauth2/complete', (req: Request, res: Response) => {
