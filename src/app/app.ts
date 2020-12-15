@@ -1,5 +1,5 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {AppCall, AppState, AppCallResponse, AppCallValues} from 'mattermost-redux/types/apps';
+import {AppCall, AppState, AppCallResponse, AppCallValues, AppContext} from 'mattermost-redux/types/apps';
 import {Tickets, CreatePayload} from 'node-zendesk';
 
 import mmClient from '../mattermost/client';
@@ -19,27 +19,12 @@ class App {
 
         const zdClient = zendesk.newClient(username, token, apiURL);
 
-        let result;
-        try {
-          result = await zdClient.tickets.create(ticket);
-        } catch (err) {
-          throw err
-        }
-
-        let user
-        try {
-           user = await zdClient.users.show(result.requester_id);
-        } catch (err) {
-          throw err
-        }
+        const result = await zdClient.tickets.create(ticket);
+        const user = await zdClient.users.show(result.requester_id);
 
         const host = process.env.ZENDESK_URL;
         const message = `${user.name} created ticket [#${result.id}](${host}/agent/tickets/${result.id}) [${result.subject}]`;
-        try {
-          await this.createBotPost(appCall.context, message);
-        } catch (err) {
-            throw err
-        }
+        await this.createBotPost(appCall.context, message);
     }
 
     async createBotPost(context: AppContext, message: string) {
