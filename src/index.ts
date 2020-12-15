@@ -21,4 +21,4 @@ app.use('/zendesk', zdRoutes); // Zendesk router
 // resolves certain paths based on the provided Root URL
 app.use('', mmRoutes);
 
-app.listen(4000, () => console.log('Listening'));
+app.listen(process.env.PORT || 4000, () => console.log('Listening'));
