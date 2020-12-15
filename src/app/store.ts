@@ -30,12 +30,11 @@ class JSONFileStore implements Store {
         }
     }
 
-    storeInstallInfo(values: any): [number, string] {
+    storeInstallInfo(values: any) {
         try {
             fs.writeFileSync(jsonStoreFileName, JSON.stringify(values));
-            return [200, jsonStoreFileName + ' successfully written'];
         } catch (err) {
-            return [400, err];
+            throw err
         }
     }
 

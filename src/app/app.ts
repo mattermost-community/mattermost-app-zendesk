@@ -14,17 +14,32 @@ const token = process.env.ZENDESK_API_TOKEN as string;
 const apiURL = process.env.ZENDESK_URL + '/api/v2' as string;
 
 class App {
-    async createTicketFromPost(appCall: AppCall): string {
+    async createTicketFromPost(appCall: AppCall): Promise<string> {
         const ticket = this.getTicketForPost(appCall.values);
 
         const zdClient = zendesk.newClient(username, token, apiURL);
-        const result = await zdClient.tickets.create(ticket);
-        const user = await zdClient.users.show(result.requester_id);
+
+        let result;
+        try {
+          result = await zdClient.tickets.create(ticket);
+        } catch (err) {
+          throw err
+        }
+
+        let user
+        try {
+           user = await zdClient.users.show(result.requester_id);
+        } catch (err) {
+          throw err
+        }
+
         const host = process.env.ZENDESK_URL;
         const message = `${user.name} created ticket [#${result.id}](${host}/agent/tickets/${result.id}) [${result.subject}]`;
-
-        await this.createBotPost(appCall.context, message);
-        return message;
+        try {
+          await this.createBotPost(appCall.context, message);
+        } catch (err) {
+            throw err
+        }
     }
 
     async createBotPost(context: AppContext, message: string) {
@@ -36,7 +51,7 @@ class App {
             channel_id: context.channel_id,
             root_id: context.post_id,
         };
-        const pRes = client.createPost(post);
+        client.createPost(post);
     }
 
     getTicketForPost(values: AppCallValues): CreatePayload {

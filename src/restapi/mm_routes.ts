@@ -7,7 +7,6 @@ import {AppCall} from 'mattermost-redux/types/apps';
 import app from '../app/app';
 import {getBindings} from '../bindings';
 import {newCreateTicketForm} from '../forms/create_ticket';
-import {jsonStoreFileName} from '../utils/constants';
 import store from '../app/store';
 
 const router = express.Router();
@@ -18,8 +17,15 @@ router.post('/createform', async (req: Request, res: Response) => {
         const createTicketForm = newCreateTicketForm(appCall.context.post.message);
         res.json(createTicketForm);
     } else {
-        const message = app.createTicketFromPost(appCall);
-        res.json({});
+        try {
+            await app.createTicketFromPost(appCall);
+            res.json({});
+        } catch (err) {
+            res.json({
+                type: 'error',
+                error: err.message,
+            });
+        }
     }
 });
 
@@ -32,10 +38,8 @@ router.get('/bindings', (req: Request, res: Response) => {
 });
 
 router.post('/install', (req: Request, res: Response) => {
-    // save values from request into JSON file store
-    const [httpStatus, message] = store.storeInstallInfo(req.body.values);
-    res.statusMessage = message;
-    res.status(httpStatus).end();
+    store.storeInstallInfo(req.body.values);
+    res.json({});
 });
 
 router.post('/oauth2/complete', (req: Request, res: Response) => {
