@@ -4,6 +4,7 @@ import express, {Request, Response} from 'express';
 
 import {AppCall} from 'mattermost-redux/types/apps';
 
+import {getManifest} from '../../manifest';
 import app from '../app/app';
 import {getBindings} from '../bindings';
 import {newCreateTicketForm} from '../forms/create_ticket';
@@ -30,7 +31,7 @@ router.post('/createform', async (req: Request, res: Response) => {
 });
 
 router.get('/manifest.json', (req: Request, res: Response) => {
-    res.json(app.getManifest());
+    res.json(getManifest());
 });
 
 router.get('/bindings', (req: Request, res: Response) => {

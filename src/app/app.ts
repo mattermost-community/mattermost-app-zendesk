@@ -5,8 +5,6 @@ import {Tickets, CreatePayload} from 'node-zendesk';
 import * as mattermost from '../mattermost/client';
 import * as zendesk from '../zendesk/client';
 
-import manifest from '../../manifest';
-
 import store from './store';
 
 const username = process.env.ZENDESK_USERNAME as string;
