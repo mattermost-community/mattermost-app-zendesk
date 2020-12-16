@@ -1,11 +1,11 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {AppCall, AppState, AppCallResponse, AppCallValues, AppContext} from 'mattermost-redux/types/apps';
-import {Tickets, CreatePayload} from 'node-zendesk';
 
 import * as mattermost from '../mattermost/client';
 import * as zendesk from '../zendesk/client';
 
 import store from './store';
+import {getTicketForPost} from './model';
 
 const username = process.env.ZENDESK_USERNAME as string;
 const zdToken = process.env.ZENDESK_API_TOKEN as string;
@@ -13,7 +13,7 @@ const apiURL = process.env.ZENDESK_URL + '/api/v2' as string;
 
 class App {
     async createTicketFromPost(appCall: AppCall): Promise<string> {
-        const ticket = this.getTicketForPost(appCall.values);
+        const ticket = getTicketForPost(appCall.values);
 
         const zdClient = zendesk.newClient(username, zdToken, apiURL);
 
@@ -36,30 +36,6 @@ class App {
             root_id: context.post_id,
         };
         await client.createPost(post);
-    }
-
-    getTicketForPost(values: AppCallValues): CreatePayload {
-        const mmSignature = '*message created from Mattermost message.*\n';
-
-        const zdMessage = values.additional_message + '\n' +
-            values.post_message + '\n' +
-            mmSignature;
-
-        const ticket: Tickets.CreatePayload = {
-            ticket: {
-                subject: values.subject,
-                type: values.type,
-                priority: values.priority,
-                comment: {
-                    body: zdMessage,
-                },
-            },
-        };
-        return ticket;
-    }
-
-    getManifest(): CreatePayload {
-        return manifest;
     }
 }
 

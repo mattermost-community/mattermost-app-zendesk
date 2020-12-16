@@ -1,10 +1,11 @@
-import {AppCallResponse, AppSelectOption} from 'mattermost-redux/types/apps';
+import {AppCall, AppCallResponse, AppSelectOption} from 'mattermost-redux/types/apps';
 
 import {makeOptions} from '../utils/utils';
 
 // newCreateTicketForm returns a form response to create a ticket from a post
-export function newCreateTicketForm(message: string): AppCallResponse {
-    const call: AppCallResponse = {
+export function newCreateTicketForm(call: AppCall): AppCallResponse {
+    const postMessage: string = call.context.post.message;
+    const callResponse: AppCallResponse = {
         type: 'form',
         form: {
             title: 'Create Zendesk Ticket',
@@ -45,7 +46,7 @@ export function newCreateTicketForm(message: string): AppCallResponse {
                     modal_label: 'Mattermost message',
                     type: 'text',
                     is_required: true,
-                    value: message,
+                    value: postMessage,
                     subtype: 'textarea',
                     min_length: 2,
                     max_length: 1024,
@@ -54,5 +55,5 @@ export function newCreateTicketForm(message: string): AppCallResponse {
 
         },
     };
-    return call;
+    return callResponse;
 }
