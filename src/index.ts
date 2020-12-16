@@ -16,9 +16,6 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use('/zendesk', zdRoutes); // Zendesk router
-
-// Mattermost routes must be at root URL level.  The cloud-apps proxy plugin
-// resolves certain paths based on the provided Root URL
-app.use('', mmRoutes);
+app.use('/mattermost', mmRoutes); // Mattermost router
 
 app.listen(process.env.PORT || 4000, () => console.log('Listening'));
