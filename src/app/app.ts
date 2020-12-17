@@ -10,24 +10,22 @@ import store from '../store/config';
 
 import {getTicketForPost} from './model';
 
-const apiURL = ENV.host_zendesk + '/api/v2' as string;
-
 class App {
     async createTicketFromPost(call: AppCall): Promise<string> {
         console.log('createticketfrompost call = ', call);
         const ticket = getTicketForPost(call.values);
 
-        const zdClient = zendesk.newClient(ENV.username, ENV.api_token, apiURL);
+        const zdClient = zendesk.newClient(ENV.zendesk.username, ENV.zendesk.apiToken, ENV.zendesk.apiURL);
 
         const result = await zdClient.tickets.create(ticket);
         const user = await zdClient.users.show(result.requester_id);
 
-        const message = `${user.name} created ticket [#${result.id}](${ENV.host_zendesk}/agent/tickets/${result.id}) [${result.subject}]`;
+        const message = `${user.name} created ticket [#${result.id}](${ENV.zendesk.host}/agent/tickets/${result.id}) [${result.subject}]`;
         await this.createBotPost(call.context, message);
     }
 
     async createBotPost(context: AppContext, message: string) {
-        const url = store.getSiteURL() || 'http://localhost:8065';
+        const url = store.getSiteURL();
         const botToken = store.getBotAccessToken();
         const client = mattermost.newClient(botToken, url);
 
