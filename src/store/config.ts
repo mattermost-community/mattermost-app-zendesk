@@ -1,14 +1,18 @@
 import fs from 'fs';
 
-import {jsonStoreFileName} from '../utils/constants';
+import {AppContext} from 'mattermost-redux/types/apps';
+
+import {jsonConfigFileStore} from '../utils/constants';
 
 type AppStore = {
     bot_access_token: string;
     oauth2_client_secret: string;
+    mm_site_url: string;
 }
 
 interface Store {
     getBotAccessToken(): string;
+    getSiteURL(): string;
 }
 
 class JSONFileStore implements Store {
@@ -20,8 +24,8 @@ class JSONFileStore implements Store {
             oauth2_client_secret: '',
         };
 
-        if (fs.existsSync(jsonStoreFileName)) {
-            fs.readFile(jsonStoreFileName, (err, data) => {
+        if (fs.existsSync(jsonConfigFileStore)) {
+            fs.readFile(jsonConfigFileStore, (err, data) => {
                 if (err) {
                     throw err;
                 }
@@ -30,8 +34,13 @@ class JSONFileStore implements Store {
         }
     }
 
-    storeInstallInfo(values: any): void {
-        fs.writeFileSync(jsonStoreFileName, JSON.stringify(values), (err) => {
+    storeInstallInfo(req: any): void {
+        const values = req.body.values;
+        const context: AppContext = req.body.context;
+
+        values.mm_site_url = context.config.site_url;
+
+        fs.writeFileSync(jsonConfigFileStore, JSON.stringify(values), (err) => {
             if (err) {
                 throw err;
             }
@@ -40,6 +49,10 @@ class JSONFileStore implements Store {
 
     getBotAccessToken(): string {
         return this.storeData.bot_access_token;
+    }
+
+    getSiteURL(): string {
+        return this.storeData.mm_site_url;
     }
 }
 

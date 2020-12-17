@@ -5,7 +5,7 @@ import express, {Request, Response} from 'express';
 import {getManifest} from '../../manifest';
 import {getBindings} from '../bindings';
 import {CreateTicketForm} from '../forms';
-import store from '../app/store';
+import store from '../store/config';
 
 const router = express.Router();
 
@@ -23,7 +23,7 @@ router.get('/bindings', (req: Request, res: Response) => {
 });
 
 router.post('/install', (req: Request, res: Response) => {
-    store.storeInstallInfo(req.body.values);
+    store.storeInstallInfo(req);
     res.json({});
 });
 

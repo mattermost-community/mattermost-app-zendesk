@@ -1,1 +1,1 @@
-export const jsonStoreFileName = 'app_store.json';
+export const jsonConfigFileStore = 'config.json';

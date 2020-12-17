@@ -1,5 +1,5 @@
 import {AppCall, AppCallResponse} from 'mattermost-redux/types/apps';
-import {AppFieldTypes} from 'mattermost-redux/constants/apps';
+import {AppFieldTypes, AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
 import {makeOptions} from '../utils/utils';
 
@@ -7,7 +7,7 @@ import {makeOptions} from '../utils/utils';
 export function newCreateTicketForm(call: AppCall): AppCallResponse {
     const postMessage: string = call.context.post.message;
     const callResponse: AppCallResponse = {
-        type: 'form',
+        type: AppCallResponseTypes.FORM,
         form: {
             title: 'Create Zendesk Ticket',
             header: 'Create a Zendesk ticket from Mattermost by filling out and submitting this form. Additional text can be added in the `Optional Message` field.',

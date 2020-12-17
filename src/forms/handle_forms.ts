@@ -1,3 +1,7 @@
+import {AppsCallResponseTypes} from 'mattermost-redux/constants/apps';
+
+import {AppCallResponse} from 'mattermost-redux/types/apps';
+
 import app from '../app/app';
 
 import {newCreateTicketForm} from './create_ticket';
@@ -8,7 +12,7 @@ export class BaseForm {
         this.call = call;
     }
 
-    handle() {
+    handle(): AppCallResponse {
         switch (this.call.type) {
         case 'form':
             return this.handleForm();
@@ -22,17 +26,19 @@ export class BaseForm {
 
 // CreateTicketForm handles creation and submission for creating a ticket from a post
 export class CreateTicketForm extends BaseForm {
-    handleForm() {
+    handleForm(): AppCallResponse {
         return newCreateTicketForm(this.call);
     }
 
-    async handleSubmit() {
-        let jsonRes = {};
+    async handleSubmit(): Promise<AppCallResponse> {
+        let jsonRes = {
+            type: AppsCallResponseTypes.OK,
+        };
         try {
             await app.createTicketFromPost(this.call);
         } catch (err) {
             jsonRes = {
-                type: 'error',
+                type: AppsCallResponseTypes.ERROR,
                 error: err.message,
             };
         }
