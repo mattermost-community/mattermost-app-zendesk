@@ -1,6 +1,8 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {AppCall, AppContext} from 'mattermost-redux/types/apps';
 
+import {ENV} from '../utils/constants';
+
 import * as mattermost from '../mattermost/client';
 import * as zendesk from '../zendesk/client';
 
@@ -8,26 +10,24 @@ import store from '../store/config';
 
 import {getTicketForPost} from './model';
 
-const username = process.env.ZENDESK_USERNAME as string;
-const zdToken = process.env.ZENDESK_API_TOKEN as string;
-const apiURL = process.env.ZENDESK_URL + '/api/v2' as string;
+const apiURL = ENV.host_zendesk + '/api/v2' as string;
 
 class App {
     async createTicketFromPost(call: AppCall): Promise<string> {
+        console.log('createticketfrompost call = ', call);
         const ticket = getTicketForPost(call.values);
 
-        const zdClient = zendesk.newClient(username, zdToken, apiURL);
+        const zdClient = zendesk.newClient(ENV.username, ENV.api_token, apiURL);
 
         const result = await zdClient.tickets.create(ticket);
         const user = await zdClient.users.show(result.requester_id);
 
-        const host = process.env.ZENDESK_URL;
-        const message = `${user.name} created ticket [#${result.id}](${host}/agent/tickets/${result.id}) [${result.subject}]`;
+        const message = `${user.name} created ticket [#${result.id}](${ENV.host_zendesk}/agent/tickets/${result.id}) [${result.subject}]`;
         await this.createBotPost(call.context, message);
     }
 
     async createBotPost(context: AppContext, message: string) {
-        const url = process.env.MM_SITEURL || 'http://localhost:8065';
+        const url = store.getSiteURL() || 'http://localhost:8065';
         const botToken = store.getBotAccessToken();
         const client = mattermost.newClient(botToken, url);
 
