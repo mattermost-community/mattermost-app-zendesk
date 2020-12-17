@@ -1,7 +1,7 @@
-import {AppBindings} from 'mattermost-redux/constants/apps';
+import {AppsBindings} from 'mattermost-redux/constants/apps';
 
 type RequestedPermissions = 'act_as_user' | 'act_as_bot'
-type RequestedLocations = AppBindings.POST_MENU_ITEM | AppBindings.CHANNEL_HEADER_ICON | AppBindings.COMMAND | AppBindings.IN_POST
+type RequestedLocations = AppsBindings.POST_MENU_ITEM | AppsBindings.CHANNEL_HEADER_ICON | AppsBindings.COMMAND | AppsBindings.IN_POST
 
 export type Manifest = {
     app_id: string;

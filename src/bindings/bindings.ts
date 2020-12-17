@@ -1,5 +1,5 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
-import {AppBindings, AppCallTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
+import {AppsBindings, AppCallTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {getManifest} from '../../manifest';
 
@@ -14,7 +14,7 @@ export function getBindings(): AppBinding[] {
 // postMenuBindings returns bindings for the post_menu location
 function postMenuBindings(): AppBinding {
     const binding: AppBinding = {
-        location: AppBindings.POST_MENU_ITEM,
+        location: AppsBindings.POST_MENU_ITEM,
         bindings: [
             {
                 label: 'Create Zendesk Ticket',
