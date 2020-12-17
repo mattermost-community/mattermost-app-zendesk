@@ -12,7 +12,6 @@ import {getTicketForPost} from './model';
 
 class App {
     async createTicketFromPost(call: AppCall): Promise<string> {
-        console.log('createticketfrompost call = ', call);
         const ticket = getTicketForPost(call.values);
 
         const zdClient = zendesk.newClient(ENV.zendesk.username, ENV.zendesk.apiToken, ENV.zendesk.apiURL);
