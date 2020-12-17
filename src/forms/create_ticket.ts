@@ -1,4 +1,5 @@
-import {AppCall, AppCallResponse, AppSelectOption} from 'mattermost-redux/types/apps';
+import {AppCall, AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import {makeOptions} from '../utils/utils';
 
@@ -15,27 +16,27 @@ export function newCreateTicketForm(call: AppCall): AppCallResponse {
                 {
                     name: 'subject',
                     modal_label: 'Subject',
-                    type: 'text',
+                    type: AppFieldTypes.TEXT,
                     is_required: true,
                 },
                 {
                     name: 'type',
                     modal_label: 'Type',
-                    type: 'static_select',
+                    type: AppFieldTypes.STATIC_SELECT,
                     options: makeOptions(['problem', 'incident', 'question', 'task']),
                     is_required: false,
                 },
                 {
                     name: 'priority',
                     modal_label: 'Priority',
-                    type: 'static_select',
+                    type: AppFieldTypes.STATIC_SELECT,
                     options: makeOptions(['urgent', 'high', 'normal', 'low']),
                     is_required: false,
                 },
                 {
                     name: 'additional_message',
                     modal_label: 'Optional message',
-                    type: 'text',
+                    type: AppFieldTypes.TEXT,
                     description: 'Add additional message to the Zendesk ticket',
                     subtype: 'textarea',
                     min_length: 2,
@@ -44,12 +45,12 @@ export function newCreateTicketForm(call: AppCall): AppCallResponse {
                 {
                     name: 'post_message',
                     modal_label: 'Mattermost message',
-                    type: 'text',
-                    is_required: true,
+                    type: AppFieldTypes.TEXT,
                     value: postMessage,
                     subtype: 'textarea',
                     min_length: 2,
                     max_length: 1024,
+                    is_required: true,
                 },
             ],
 

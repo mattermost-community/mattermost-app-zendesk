@@ -1,5 +1,5 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {AppCall, AppState, AppCallResponse, AppCallValues, AppContext} from 'mattermost-redux/types/apps';
+import {AppCall, AppContext} from 'mattermost-redux/types/apps';
 
 import * as mattermost from '../mattermost/client';
 import * as zendesk from '../zendesk/client';
