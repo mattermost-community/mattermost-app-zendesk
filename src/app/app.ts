@@ -3,8 +3,7 @@ import {AppCall, AppContext} from 'mattermost-redux/types/apps';
 
 import {ENV} from '../utils';
 
-import * as mattermost from '../mattermost/client';
-import * as zendesk from '../zendesk/client';
+import {mattermost, zendesk} from '../clients';
 
 import store from '../store/config';
 
@@ -26,14 +25,14 @@ class App {
     createBotPost = async (context: AppContext, message: string) => {
         const url = store.getSiteURL();
         const botToken = store.getBotAccessToken();
-        const client = mattermost.newClient(botToken, url);
+        const mmClient = mattermost.newClient(botToken, url);
 
         const post: Post = {
             message,
             channel_id: context.channel_id,
             root_id: context.post_id,
         };
-        await client.createPost(post);
+        await mmClient.createPost(post);
     }
 }
 
