@@ -11,7 +11,7 @@ import store from '../store/config';
 import {getTicketForPost} from './model';
 
 class App {
-    async createTicketFromPost(call: AppCall): Promise<string> {
+    createTicketFromPost = async (call: AppCall): Promise<string> => {
         const ticket = getTicketForPost(call.values);
 
         const zdClient = zendesk.newClient(ENV.zendesk.username, ENV.zendesk.apiToken, ENV.zendesk.apiURL);
@@ -23,7 +23,7 @@ class App {
         await this.createBotPost(call.context, message);
     }
 
-    async createBotPost(context: AppContext, message: string) {
+    createBotPost = async (context: AppContext, message: string) => {
         const url = store.getSiteURL();
         const botToken = store.getBotAccessToken();
         const client = mattermost.newClient(botToken, url);

@@ -12,7 +12,7 @@ export class BaseForm {
         this.call = call;
     }
 
-    handle(): AppCallResponse {
+    handle = (): AppCallResponse => {
         switch (this.call.type) {
         case 'form':
             return this.handleForm();
@@ -26,11 +26,11 @@ export class BaseForm {
 
 // CreateTicketForm handles creation and submission for creating a ticket from a post
 export class CreateTicketForm extends BaseForm {
-    handleForm(): AppCallResponse {
+    handleForm = (): AppCallResponse => {
         return newCreateTicketForm(this.call);
     }
 
-    async handleSubmit(): Promise<AppCallResponse> {
+    handleSubmit = async (): Promise<AppCallResponse> => {
         let jsonRes = {
             type: AppsCallResponseTypes.OK,
         };

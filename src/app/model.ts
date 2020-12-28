@@ -10,7 +10,7 @@ type CreateTicketFormValues = {
     post_message: string;
 }
 
-export function getTicketForPost(values: CreateTicketFormValues): CreatePayload {
+export const getTicketForPost = (values: CreateTicketFormValues): CreatePayload => {
     const mmSignature = '*message created from Mattermost message.*\n' + store.getSiteURL();
 
     const zdMessage = values.additional_message + '\n' +
@@ -28,4 +28,6 @@ export function getTicketForPost(values: CreateTicketFormValues): CreatePayload 
         },
     };
     return ticket;
-}
+};
+
+export default getTicketForPost;
