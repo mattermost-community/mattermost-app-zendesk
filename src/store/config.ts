@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import {AppContext} from 'mattermost-redux/types/apps';
 
-import {jsonConfigFileStore} from '../utils/constants';
+import {jsonConfigFileStore} from '../utils';
 
 type AppStore = {
     bot_access_token: string;

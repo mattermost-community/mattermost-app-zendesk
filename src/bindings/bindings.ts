@@ -2,6 +2,7 @@ import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppsBindings, AppCallTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {getManifest} from '../../manifest';
+import {zendeskIcon} from '../utils';
 
 // getBindings returns bindings defined for all locations in the app
 export function getBindings(): AppBinding[] {
@@ -19,7 +20,7 @@ function postMenuBindings(): AppBinding {
             {
                 label: 'Create Zendesk Ticket',
                 description: 'Create ticket in zendesk',
-                icon: 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/initial-PR/assets/zendesk.svg',
+                icon: zendeskIcon,
                 call: {
                     url: getManifest().root_url + '/createform',
                     type: AppCallTypes.FORM,

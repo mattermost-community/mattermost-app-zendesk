@@ -1,4 +1,5 @@
 export const jsonConfigFileStore = 'config.json';
+export const zendeskIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/main/assets/zendesk.svg';
 
 const zendesk = {
     host: process.env.ZENDESK_URL as string,
