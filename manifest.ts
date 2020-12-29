@@ -23,7 +23,7 @@ export function getManifest(): Manifest {
         requested_permissions: ['act_as_user', 'act_as_bot'],
         oauth2_callback_url: 'https://jasonf.ngrok.io/mattermost/oauth2/complete',
         homepage_url: 'https://github.com/mattermost/mattermost-app-zendesk',
-        requested_locations: [AppsBindings.CHANNEL_HEADER_ICON, AppsBindings.POST_MENU_ITEM, AppsBindings.IN_POST],
+        requested_locations: [AppsBindings.COMMAND, AppsBindings.CHANNEL_HEADER_ICON, AppsBindings.POST_MENU_ITEM, AppsBindings.IN_POST],
     };
     return manifest;
 }

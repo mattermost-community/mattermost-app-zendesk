@@ -11,3 +11,21 @@ const zendesk = {
 export const ENV = {
     zendesk,
 };
+
+export const routes = {
+    ManifestPath: '/manifest.json',
+    InstallPath: '/install',
+    BindingsPath: '/bindings',
+
+    OAuthPath: '/oauth',
+    OAuthCompletePath: '/complete',
+
+    BindingPathCreateForm: '/create',
+    BindingPathConnect: '/connect',
+    BindingPathDisconnect: '/disconnect',
+};
+
+export const commandLocations = {
+    locationConnect: 'connect',
+    locationDisconnect: 'disconnect',
+};

@@ -5,7 +5,7 @@ import {ENV} from '../utils';
 
 import {mattermost, zendesk} from '../clients';
 
-import store from '../store/config';
+import config from '../store/config';
 
 import {getTicketForPost} from './model';
 
@@ -23,8 +23,8 @@ class App {
     }
 
     createBotPost = async (context: AppContext, message: string) => {
-        const url = store.getSiteURL();
-        const botToken = store.getBotAccessToken();
+        const url = config.getSiteURL();
+        const botToken = config.getBotAccessToken();
         const mmClient = mattermost.newClient(botToken, url);
 
         const post: Post = {
