@@ -17,6 +17,8 @@ export const routes = {
     InstallPath: '/install',
     BindingsPath: '/bindings',
 
+    OAuthPath2: '/authorizations/new',
+
     OAuthPath: '/oauth',
     OAuthCompletePath: '/complete',
 

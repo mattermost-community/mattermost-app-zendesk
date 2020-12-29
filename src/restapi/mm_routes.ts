@@ -7,13 +7,14 @@ import {AppCallResponse} from 'mattermost-redux/constants/apps';
 import {getManifest} from '../../manifest';
 import {getBindings} from '../bindings';
 import {CreateTicketForm} from '../forms';
-import {zendesk, routes, createOAuthState} from '../utils';
+import {ENV, routes, createOAuthState} from '../utils';
 import config from '../store/config';
 
 const router = express.Router();
 
 router.get(routes.ManifestPath, fManifest);
 router.get(routes.BindingsPath, fBindings);
+router.get(routes.OAuthCompletePath, fComplete);
 
 // router.post(routes.InstallPath, extractCall(fInstall));
 router.post(routes.InstallPath, fInstall);
@@ -25,14 +26,50 @@ function fInstall(req: Request, res: Response): AppCallResponse {
     res.json({});
 }
 
+function fComplete(req: Request, res: Response): AppCallResponse {
+    const code = req.query.code;
+    if (code === '') {
+        throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
+    }
+    const connectedString = 'You have successfuly connected the Zendesk Mattermost App to Zendesk. Please close this window.';
+    const html = `
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<script>
+					window.close();
+				</script>
+			</head>
+			<body>
+				<p>%s</p>
+			</body>
+		</html>
+		${connectedString}`;
+
+    // TODO verify state
+    // TODO make this html look nicer
+    // TODO exchange code for token
+    // TODO store token
+    res.setHeader('Content-Type', 'text/html');
+    res.send(html);
+}
+
 function fConnect(req: Request, res: Response): AppCallResponse {
     const context = req.body.context;
     const state = createOAuthState(context);
 
-    // const connectLink = zendesk.host +
+    const url = ENV.zendesk.host + routes.OAuthPath + routes.OAuthPath2;
+
+    const urlWithParams = new URL(url);
+    urlWithParams.searchParams.append('response_type', 'code');
+    urlWithParams.searchParams.append('client_id', 'mattermost_zendesk_app');
+    urlWithParams.searchParams.append('state', state);
+    urlWithParams.searchParams.append('scope', 'read write');
+
+    const link = urlWithParams.href;
     const callResponse: AppCallResponse = {
         type: '',
-        markdown: 'Follow this link to connect: [link](zendesk.)',
+        markdown: `Follow this link to connect: [link](${link})`,
     };
     res.json(callResponse);
 }
