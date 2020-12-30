@@ -1,8 +1,8 @@
-import fs from 'fs';
-
 import express, {Request, Response} from 'express';
 
 import {AppCallResponse} from 'mattermost-redux/constants/apps';
+
+import {getOAuthConfig} from '../app/oauth';
 
 import {getManifest} from '../../manifest';
 import {getBindings} from '../bindings';
@@ -26,11 +26,20 @@ function fInstall(req: Request, res: Response): AppCallResponse {
     res.json({});
 }
 
-function fComplete(req: Request, res: Response): AppCallResponse {
+async function fComplete(req: Request, res: Response): AppCallResponse {
     const code = req.query.code;
     if (code === '') {
         throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
     }
+
+    // Exchange code for token
+    const zendeskAuth2 = getOAuthConfig();
+    const user = await zendeskAuth2.code.getToken(req.originalUrl);
+    const token = user.data.access_token;
+
+    // TODO store token
+
+    // TODO make this html look nicer
     const connectedString = 'You have successfuly connected the Zendesk Mattermost App to Zendesk. Please close this window.';
     const html = `
 		<!DOCTYPE html>
@@ -47,9 +56,6 @@ function fComplete(req: Request, res: Response): AppCallResponse {
 		${connectedString}`;
 
     // TODO verify state
-    // TODO make this html look nicer
-    // TODO exchange code for token
-    // TODO store token
     res.setHeader('Content-Type', 'text/html');
     res.send(html);
 }
