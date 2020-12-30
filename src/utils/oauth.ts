@@ -7,3 +7,11 @@ export function createOAuthState(context: AppContext): string {
     return [uuidv4(), userID, channelID].join('_');
 }
 
+export function parseOAuthState(state: string): string[] {
+    const splitted = state.split('_');
+    if (splitted.length !== 3) {
+        return ['', '', 'Bad state'];
+    }
+    return [splitted[1], splitted[2], ''];
+}
+

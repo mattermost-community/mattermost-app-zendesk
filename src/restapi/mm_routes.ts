@@ -7,7 +7,7 @@ import {getOAuthConfig} from '../app/oauth';
 import {getManifest} from '../../manifest';
 import {getBindings} from '../bindings';
 import {CreateTicketForm} from '../forms';
-import {ENV, routes, createOAuthState} from '../utils';
+import {ENV, routes, createOAuthState, parseOAuthState} from '../utils';
 import config from '../store/config';
 
 const router = express.Router();
@@ -32,9 +32,19 @@ async function fComplete(req: Request, res: Response): AppCallResponse {
         throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
     }
 
+    const state = req.query.state;
+    if (state === '') {
+        throw new Error('Bad Request: state param not provided'); // Express will catch this on its own.
+    }
+
+    const [userID,, err] = parseOAuthState(state);
+    if (err === '') {
+        throw new Error('Bad Request: bad state'); // Express will catch this on its own.
+    }
+
     // Exchange code for token
-    const zendeskAuth2 = getOAuthConfig();
-    const user = await zendeskAuth2.code.getToken(req.originalUrl);
+    const zendeskAuth = getOAuthConfig();
+    const user = await zendeskAuth.code.getToken(req.originalUrl);
     const token = user.data.access_token;
 
     // TODO store token
