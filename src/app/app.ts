@@ -6,14 +6,19 @@ import {ENV} from '../utils';
 import {mattermost, zendesk} from '../clients';
 
 import config from '../store/config';
+import oauth from '../store/oauth';
 
 import {getTicketForPost} from './model';
 
 class App {
     createTicketFromPost = async (call: AppCall): Promise<string> => {
         const ticket = getTicketForPost(call.values);
+        const userID = call.context.acting_user_id;
+        const [token, found] = oauth.getToken(userID);
 
-        const zdClient = zendesk.newClient(ENV.zendesk.username, ENV.zendesk.apiToken, ENV.zendesk.apiURL);
+        // TODO if user is not found, they shouldn't even be able to see this
+        // post menu option
+        const zdClient = zendesk.newClient(token, ENV.zendesk.apiURL);
 
         const result = await zdClient.tickets.create(ticket);
         const user = await zdClient.users.show(result.requester_id);

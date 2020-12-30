@@ -10,50 +10,43 @@ type TokenStore = Array<{string: string}>
 // }
 
 class JSONFileStore implements Store {
-    storeData: TokenStore;
+    tokens: TokenStore;
     constructor() {
-        this.storeData = {};
+        this.tokens = {};
         if (fs.existsSync(jsonTokenFileStore)) {
             fs.readFile(jsonTokenFileStore, (err, data) => {
                 if (err) {
                     throw err;
                 }
-                this.storeData = JSON.parse(data.toString());
+                this.tokens = JSON.parse(data.toString());
             });
         }
     }
 
     storeToken(userID: string, token: string): void {
-        const tokens = this.storeData;
-        tokens[userID] = token;
+        this.tokens[userID] = token;
         this.storeTokens();
     }
 
     deleteToken(userID: string): void {
-        const tokens = this.storeData;
-        delete tokens[userID];
+        delete this.tokens[userID];
         this.storeTokens();
     }
 
+    getToken(userID: string): [string, bool] {
+        if (this.tokens[userID]) {
+            return [this.tokens[userID], true];
+        }
+        return ['', false];
+    }
+
     storeTokens(): void {
-        fs.writeFileSync(jsonTokenFileStore, JSON.stringify(this.storeData), (err) => {
+        fs.writeFileSync(jsonTokenFileStore, JSON.stringify(this.tokens), (err) => {
             if (err) {
                 throw err;
             }
         });
     }
-
-    getBotAccessToken(): string {
-        return 'Jason';
-    }
-
-    // getBotAccessToken(): string {
-    //     return this.storeData.bot_access_token;
-    // }
-    //
-    // getSiteURL(): string {
-    //     return this.storeData.mm_site_url;
-    // }
 }
 
 export default new JSONFileStore();
