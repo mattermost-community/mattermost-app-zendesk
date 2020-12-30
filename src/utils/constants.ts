@@ -1,5 +1,6 @@
 export const jsonConfigFileStore = 'config.json';
 export const zendeskIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/main/assets/zendesk.svg';
+export const zendeskClientID = 'mattermost_zendesk_app';
 
 const zendesk = {
     host: process.env.ZENDESK_URL as string,
@@ -12,15 +13,18 @@ export const ENV = {
     zendesk,
 };
 
+export const zendeskPaths = {
+    OAuthAuthorizationURI: '/oauth/authorizations/new',
+    OAuthAccessTokenURI: '/oauth/tokens',
+};
+
 export const routes = {
+    zendesk: zendeskPaths,
     ManifestPath: '/manifest.json',
     InstallPath: '/install',
     BindingsPath: '/bindings',
 
-    OAuthPath2: '/authorizations/new',
-
-    OAuthPath: '/oauth',
-    OAuthCompletePath: '/complete',
+    OAuthCompletePath: '/oauth/complete',
 
     BindingPathCreateForm: '/create',
     BindingPathConnect: '/connect',

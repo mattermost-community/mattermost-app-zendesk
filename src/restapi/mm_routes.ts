@@ -64,7 +64,7 @@ function fConnect(req: Request, res: Response): AppCallResponse {
     const context = req.body.context;
     const state = createOAuthState(context);
 
-    const url = ENV.zendesk.host + routes.OAuthPath + routes.OAuthPath2;
+    const url = ENV.zendesk.host + routes.zendesk.OAuthAuthorizationURI;
 
     const urlWithParams = new URL(url);
     urlWithParams.searchParams.append('response_type', 'code');
