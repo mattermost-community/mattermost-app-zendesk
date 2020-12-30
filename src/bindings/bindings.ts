@@ -69,19 +69,21 @@ function commandDisconnect(): AppBinding {
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
         icon: zendeskIcon,
-        call: {
-            url: getManifest().root_url + routes.BindingPathDisconnect,
-            type: AppCallTypes.FORM,
-            expand: {
-                post: AppExpandLevels.EXPAND_ALL,
-            },
-        },
+        call: getDisconnectCall(),
     };
     return binding;
 }
 
 function getConnectCall(): AppCall {
     const url: string = getManifest().root_url + routes.BindingPathConnect;
+    const call: AppCall = {
+        url,
+    };
+    return call;
+}
+
+function getDisconnectCall(): AppCall {
+    const url: string = getManifest().root_url + routes.BindingPathDisconnect;
     const call: AppCall = {
         url,
     };

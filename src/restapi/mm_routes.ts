@@ -9,6 +9,7 @@ import {getBindings} from '../bindings';
 import {CreateTicketForm} from '../forms';
 import {ENV, routes, createOAuthState, parseOAuthState} from '../utils';
 import config from '../store/config';
+import oauth from '../store/oauth';
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ router.get(routes.OAuthCompletePath, fComplete);
 // router.post(routes.InstallPath, extractCall(fInstall));
 router.post(routes.InstallPath, fInstall);
 router.post(routes.BindingPathConnect, fConnect);
+router.post(routes.BindingPathDisconnect, fDisconnect);
 router.post(routes.BindingPathCreateForm, fCreateForm);
 
 function fInstall(req: Request, res: Response): AppCallResponse {
@@ -38,7 +40,7 @@ async function fComplete(req: Request, res: Response): AppCallResponse {
     }
 
     const [userID,, err] = parseOAuthState(state);
-    if (err === '') {
+    if (err !== '') {
         throw new Error('Bad Request: bad state'); // Express will catch this on its own.
     }
 
@@ -47,7 +49,7 @@ async function fComplete(req: Request, res: Response): AppCallResponse {
     const user = await zendeskAuth.code.getToken(req.originalUrl);
     const token = user.data.access_token;
 
-    // TODO store token
+    oauth.storeToken(userID, token);
 
     // TODO make this html look nicer
     const connectedString = 'You have successfuly connected the Zendesk Mattermost App to Zendesk. Please close this window.';
@@ -86,6 +88,16 @@ function fConnect(req: Request, res: Response): AppCallResponse {
     const callResponse: AppCallResponse = {
         type: '',
         markdown: `Follow this link to connect: [link](${link})`,
+    };
+    res.json(callResponse);
+}
+
+function fDisconnect(req: Request, res: Response): AppCallResponse {
+    const context = req.body.context;
+    oauth.deleteToken(context.acting_user_id);
+    const callResponse: AppCallResponse = {
+        type: '',
+        markdown: 'You have disconnected your Zendesk account',
     };
     res.json(callResponse);
 }

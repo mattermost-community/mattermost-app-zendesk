@@ -4,7 +4,7 @@ import {AppContext} from 'mattermost-redux/types/apps';
 
 import {jsonConfigFileStore} from '../utils';
 
-type AppStore = {
+type AppConfigStore = {
     bot_access_token: string;
     oauth2_client_secret: string;
     mm_site_url: string;
@@ -16,7 +16,7 @@ interface Store {
 }
 
 class JSONFileStore implements Store {
-    storeData: AppStore;
+    storeData: AppConfigStore;
 
     constructor() {
         this.storeData = {
