@@ -15,7 +15,7 @@ interface Store {
     getSiteURL(): string;
 }
 
-class JSONFileStore implements Store {
+class ConfigFileStore implements Store {
     storeData: AppConfigStore;
 
     constructor() {
@@ -56,4 +56,4 @@ class JSONFileStore implements Store {
     }
 }
 
-export default new JSONFileStore();
+export default new ConfigFileStore();

@@ -6,8 +6,6 @@ export const zendeskClientID = 'mattermost_zendesk_app';
 const zendesk = {
     host: process.env.ZENDESK_URL as string,
     apiURL: process.env.ZENDESK_URL + '/api/v2' as string,
-    apiToken: process.env.ZENDESK_API_TOKEN as string,
-    username: process.env.ZENDESK_USERNAME as string,
 };
 
 export const ENV = {

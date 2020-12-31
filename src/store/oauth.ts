@@ -9,7 +9,7 @@ type TokenStore = Array<{string: string}>
 //     getSiteURL(): string;
 // }
 
-class JSONFileStore implements Store {
+class TokenFileStore implements Store {
     tokens: TokenStore;
     constructor() {
         this.tokens = {};
@@ -49,4 +49,4 @@ class JSONFileStore implements Store {
     }
 }
 
-export default new JSONFileStore();
+export default new TokenFileStore();
