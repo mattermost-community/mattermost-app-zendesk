@@ -1,6 +1,6 @@
 import {Tickets, CreatePayload} from 'node-zendesk';
 
-import config from '../store/config';
+import {config} from '../store';
 
 type CreateTicketFormValues = {
     subject: string;

@@ -8,8 +8,7 @@ import {getManifest} from '../../manifest';
 import {getBindings} from '../bindings';
 import {CreateTicketForm} from '../forms';
 import {ENV, routes, createOAuthState, parseOAuthState} from '../utils';
-import config from '../store/config';
-import oauth from '../store/oauth';
+import {config, oauth} from '../store';
 
 const router = express.Router();
 

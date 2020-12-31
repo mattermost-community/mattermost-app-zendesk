@@ -5,8 +5,7 @@ import {ENV} from '../utils';
 
 import {mattermost, zendesk} from '../clients';
 
-import config from '../store/config';
-import oauth from '../store/oauth';
+import {config, oauth} from '../store';
 
 import {getTicketForPost} from './model';
 
