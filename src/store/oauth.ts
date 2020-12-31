@@ -33,7 +33,7 @@ class TokenFileStore implements Store {
         this.storeTokens();
     }
 
-    getToken(userID: string): [string, bool] {
+    getToken(userID: string): [string, boolean] {
         if (this.tokens[userID]) {
             return [this.tokens[userID], true];
         }

@@ -8,9 +8,9 @@ export const getOAuthConfig = (): any => {
     const zendeskAuth = new ClientOAuth2({
         clientId: zendeskClientID,
         clientSecret: 'a6db5cbc7b461413197bee1904f47288454724308a5f7e324d1cfed80539cdcb',
-        accessTokenUri: ENV.zendesk.host + r.zendesk.OAuthAccessTokenURI,
-        authorizationUri: ENV.zendesk.host + r.zendesk.OAuthAuthorizationURI,
-        redirectUri: getManifest().root_url + r.OAuthCompletePath,
+        accessTokenUri: ENV.zendesk.host + r.zd.OAuthAccessTokenURI,
+        authorizationUri: ENV.zendesk.host + r.zd.OAuthAuthorizationURI,
+        redirectUri: getManifest().root_url + r.app.OAuthCompletePath,
         scopes: ['read', 'write'],
     });
     return zendeskAuth;

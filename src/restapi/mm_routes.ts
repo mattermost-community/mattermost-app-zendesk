@@ -2,6 +2,8 @@ import express, {Request, Response} from 'express';
 
 import {AppCallResponse} from 'mattermost-redux/constants/apps';
 
+import {zendesk} from '../clients';
+
 import {getOAuthConfig} from '../app/oauth';
 
 import {getManifest} from '../../manifest';
@@ -91,8 +93,25 @@ function fConnect(req: Request, res: Response): AppCallResponse {
     res.json(callResponse);
 }
 
-function fDisconnect(req: Request, res: Response): AppCallResponse {
+async function fDisconnect(req: Request, res: Response): AppCallResponse {
     const context = req.body.context;
+    const [token, found] = oauth.getToken(context.acting_user_id);
+
+    const zdClient = zendesk.newClient(token, ENV.zendesk.apiURL);
+    
+    // get current token. this request will be recognzied as the token coming
+    // from the zendesk app
+    const currentToken = await zdClient.oauthtokens.current();
+
+    // get the token ID 
+    const currentTokenID = currentToken.token.id;
+
+    // delete the user zendesk oauth token
+    const deletedToken = await zdClient.oauthtokens.revoke(currentTokenID);
+
+    // delete the token from theh store
+    zendeskAuth.token.deleteToken();
+
     oauth.deleteToken(context.acting_user_id);
     const callResponse: AppCallResponse = {
         type: '',
