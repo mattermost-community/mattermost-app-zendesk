@@ -98,20 +98,18 @@ async function fDisconnect(req: Request, res: Response): AppCallResponse {
     const [token, found] = oauth.getToken(context.acting_user_id);
 
     const zdClient = zendesk.newClient(token, ENV.zendesk.apiURL);
-    
+
     // get current token. this request will be recognzied as the token coming
     // from the zendesk app
     const currentToken = await zdClient.oauthtokens.current();
 
-    // get the token ID 
+    // get the token ID
     const currentTokenID = currentToken.token.id;
 
     // delete the user zendesk oauth token
     const deletedToken = await zdClient.oauthtokens.revoke(currentTokenID);
 
-    // delete the token from theh store
-    zendeskAuth.token.deleteToken();
-
+    // delete the token from the store
     oauth.deleteToken(context.acting_user_id);
     const callResponse: AppCallResponse = {
         type: '',
@@ -125,7 +123,8 @@ function fManifest(req: Request, res: Response): AppCallResponse {
 }
 
 function fBindings(req: Request, res: Response): AppCallResponse {
-    res.json(getBindings());
+    const userID = req.query.acting_user_id;
+    res.json(getBindings(userID));
 }
 
 async function fCreateForm(req: Request, res: Response): AppCallResponse {
