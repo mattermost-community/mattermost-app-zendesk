@@ -6,86 +6,81 @@ import {zendeskIcon, routes, commandLocations} from '../utils';
 
 // getBindings returns bindings defined for all locations in the app
 export const getBindings = (): AppBinding[] => {
-    const bindings: AppBinding = [
+    return [
         postMenuBindings(),
         commandBindings(),
-    ];
-    return bindings;
+    ] as AppBinding;
 };
 
 // postMenuBindings returns bindings for the post_menu location
 function postMenuBindings(): AppBinding {
-    const binding: AppBinding = {
+    return {
         location: AppsBindings.POST_MENU_ITEM,
         bindings: [
             postMenuCreate(),
         ],
-    };
-    return binding;
+    } as AppBinding;
 }
 
 function postMenuCreate(): AppBinding {
-    const binding: AppBinding = {
+    return {
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
         icon: zendeskIcon,
-        call: {
-            url: getManifest().root_url + routes.BindingPathCreateForm,
-            type: AppCallTypes.FORM,
-            expand: {
-                post: AppExpandLevels.EXPAND_ALL,
-            },
-        },
-    };
-    return binding;
+        call: getPostMenuCreateCall(),
+    } as AppBinding;
 }
 
 // commandBindings returns bindings for the slash command location
 function commandBindings(): AppBinding {
-    const binding: AppBinding = {
+    return {
         location: AppsBindings.COMMAND,
         bindings: [
             commandConnect(),
             commandDisconnect(),
         ],
-    };
-    return binding;
+    } as AppBinding;
 }
 
 function commandConnect(): AppBinding {
-    const binding: AppBinding = {
-        location: commandLocations.locationConnect,
+    return {
+        location: commandLocations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
         icon: zendeskIcon,
         call: getConnectCall(),
-    };
-    return binding;
+    } as AppBinding;
 }
 
 function commandDisconnect(): AppBinding {
-    const binding: AppBinding = {
-        location: commandLocations.locationDisconnect,
+    return {
+        location: commandLocations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
         icon: zendeskIcon,
         call: getDisconnectCall(),
-    };
-    return binding;
+    } as AppBinding;
+}
+
+function getPostMenuCreateCall(): AppCall {
+    const url: string = getManifest().root_url + routes.app.BindingPathCreateForm;
+    return {
+        url,
+        type: AppCallTypes.FORM,
+        expand: {
+            post: AppExpandLevels.EXPAND_ALL,
+        },
+    } as AppCall;
 }
 
 function getConnectCall(): AppCall {
-    const url: string = getManifest().root_url + routes.BindingPathConnect;
-    const call: AppCall = {
-        url,
-    };
-    return call;
+    return {
+        url: getManifest().root_url + routes.app.BindingPathConnect,
+    } as AppCall;
 }
 
 function getDisconnectCall(): AppCall {
-    const url: string = getManifest().root_url + routes.BindingPathDisconnect;
-    const call: AppCall = {
-        url,
-    };
-    return call;
+    return {
+        url: getManifest().root_url + routes.app.BindingPathDisconnect,
+    } as AppCall;
 }
