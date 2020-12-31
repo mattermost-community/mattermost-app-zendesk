@@ -7,20 +7,20 @@ import {getOAuthConfig} from '../app/oauth';
 import {getManifest} from '../../manifest';
 import {getBindings} from '../bindings';
 import {CreateTicketForm} from '../forms';
-import {ENV, routes, createOAuthState, parseOAuthState} from '../utils';
+import {ENV, routes, createOAuthState, parseOAuthState, zendeskClientID} from '../utils';
 import {config, oauth} from '../store';
 
 const router = express.Router();
 
-router.get(routes.ManifestPath, fManifest);
-router.get(routes.BindingsPath, fBindings);
-router.get(routes.OAuthCompletePath, fComplete);
+router.get(routes.app.ManifestPath, fManifest);
+router.get(routes.app.BindingsPath, fBindings);
+router.get(routes.app.OAuthCompletePath, fComplete);
 
 // router.post(routes.InstallPath, extractCall(fInstall));
-router.post(routes.InstallPath, fInstall);
-router.post(routes.BindingPathConnect, fConnect);
-router.post(routes.BindingPathDisconnect, fDisconnect);
-router.post(routes.BindingPathCreateForm, fCreateForm);
+router.post(routes.app.InstallPath, fInstall);
+router.post(routes.app.BindingPathConnect, fConnect);
+router.post(routes.app.BindingPathDisconnect, fDisconnect);
+router.post(routes.app.BindingPathCreateForm, fCreateForm);
 
 function fInstall(req: Request, res: Response): AppCallResponse {
     config.storeInstallInfo(req);
@@ -61,10 +61,10 @@ async function fComplete(req: Request, res: Response): AppCallResponse {
 				</script>
 			</head>
 			<body>
-				<p>%s</p>
+				<p>${connectedString}</p>
 			</body>
 		</html>
-		${connectedString}`;
+		`;
 
     // TODO verify state
     res.setHeader('Content-Type', 'text/html');
@@ -75,11 +75,11 @@ function fConnect(req: Request, res: Response): AppCallResponse {
     const context = req.body.context;
     const state = createOAuthState(context);
 
-    const url = ENV.zendesk.host + routes.zendesk.OAuthAuthorizationURI;
+    const url = ENV.zendesk.host + routes.zd.OAuthAuthorizationURI;
 
     const urlWithParams = new URL(url);
     urlWithParams.searchParams.append('response_type', 'code');
-    urlWithParams.searchParams.append('client_id', 'mattermost_zendesk_app');
+    urlWithParams.searchParams.append('client_id', zendeskClientID);
     urlWithParams.searchParams.append('state', state);
     urlWithParams.searchParams.append('scope', 'read write');
 
