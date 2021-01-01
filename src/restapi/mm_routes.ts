@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express';
 
-import {AppCallResponse} from 'mattermost-redux/constants/apps';
+import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {zendesk} from '../clients';
 
@@ -24,12 +24,12 @@ router.post(routes.app.BindingPathConnect, fConnect);
 router.post(routes.app.BindingPathDisconnect, fDisconnect);
 router.post(routes.app.BindingPathCreateForm, fCreateForm);
 
-function fInstall(req: Request, res: Response): AppCallResponse {
+function fInstall(req: Request, res: Response): void {
     config.storeInstallInfo(req);
     res.json({});
 }
 
-async function fComplete(req: Request, res: Response): AppCallResponse {
+async function fComplete(req: Request, res: Response): Promise<void> {
     const code = req.query.code;
     if (code === '') {
         throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
@@ -73,7 +73,7 @@ async function fComplete(req: Request, res: Response): AppCallResponse {
     res.send(html);
 }
 
-function fConnect(req: Request, res: Response): AppCallResponse {
+function fConnect(req: Request, res: Response): void {
     const context = req.body.context;
     const state = createOAuthState(context);
 
@@ -93,7 +93,7 @@ function fConnect(req: Request, res: Response): AppCallResponse {
     res.json(callResponse);
 }
 
-async function fDisconnect(req: Request, res: Response): AppCallResponse {
+async function fDisconnect(req: Request, res: Response): Promise<void> {
     const context = req.body.context;
     const [token, found] = oauth.getToken(context.acting_user_id);
 
@@ -118,16 +118,16 @@ async function fDisconnect(req: Request, res: Response): AppCallResponse {
     res.json(callResponse);
 }
 
-function fManifest(req: Request, res: Response): AppCallResponse {
+function fManifest(req: Request, res: Response): void {
     res.json(getManifest());
 }
 
-function fBindings(req: Request, res: Response): AppCallResponse {
+function fBindings(req: Request, res: Response): void {
     const userID = req.query.acting_user_id;
     res.json(getBindings(userID));
 }
 
-async function fCreateForm(req: Request, res: Response): AppCallResponse {
+async function fCreateForm(req: Request, res: Response): Promise<void> {
     const form = await new CreateTicketForm(req.body).handle();
     res.json(form);
 }
