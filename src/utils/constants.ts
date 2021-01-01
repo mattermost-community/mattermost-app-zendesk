@@ -38,6 +38,7 @@ export const commandLocations = {
 const zendeskENV = {
     host: process.env.ZENDESK_URL as string,
     apiURL: process.env.ZENDESK_URL + zendeskPaths.APIVersion as string,
+    clientSecret: process.env.ZENDESK_CLIENT_SECRET as string,
 };
 
 export const ENV = {

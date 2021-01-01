@@ -7,7 +7,7 @@ import {getManifest} from '../../manifest';
 export const getOAuthConfig = (): any => {
     const zendeskAuth = new ClientOAuth2({
         clientId: zendeskClientID,
-        clientSecret: 'a6db5cbc7b461413197bee1904f47288454724308a5f7e324d1cfed80539cdcb',
+        clientSecret: ENV.zendesk.clientSecret,
         accessTokenUri: ENV.zendesk.host + r.zd.OAuthAccessTokenURI,
         authorizationUri: ENV.zendesk.host + r.zd.OAuthAuthorizationURI,
         redirectUri: getManifest().root_url + r.app.OAuthCompletePath,
