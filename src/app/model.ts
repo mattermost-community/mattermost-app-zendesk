@@ -13,8 +13,11 @@ type CreateTicketFormValues = {
 export const getTicketForPost = (values: CreateTicketFormValues): CreatePayload => {
     const mmSignature = '*message created from Mattermost message.*\n' + store.getSiteURL();
 
-    const zdMessage = values.additional_message + '\n' +
-            values.post_message + '\n' +
+    const additionalMessage = values.additional_message || '';
+    const postMessage = values.post_message || '';
+
+    const zdMessage = additionalMessage + '\n' +
+            postMessage + '\n' +
             mmSignature;
 
     const ticket: Tickets.CreatePayload = {
