@@ -1,7 +1,6 @@
 import {AppsBindings} from 'mattermost-redux/constants/apps';
 
 type RequestedPermissions = 'act_as_user' | 'act_as_bot'
-type RequestedLocations = AppsBindings.POST_MENU_ITEM | AppsBindings.CHANNEL_HEADER_ICON | AppsBindings.COMMAND | AppsBindings.IN_POST
 
 export type Manifest = {
     app_id: string;
@@ -11,7 +10,7 @@ export type Manifest = {
     requested_permissions: RequestedPermissions[];
     oauth2_callback_url: string;
     homepage_url: string;
-    requested_locations: RequestedLocations[];
+    requested_locations: string[];
 }
 
 export function getManifest(): Manifest {
@@ -23,7 +22,7 @@ export function getManifest(): Manifest {
         requested_permissions: ['act_as_user', 'act_as_bot'],
         oauth2_callback_url: 'https://jasonf.ngrok.io/mattermost/oauth2/complete',
         homepage_url: 'https://github.com/mattermost/mattermost-app-zendesk',
-        requested_locations: [AppsBindings.CHANNEL_HEADER_ICON, AppsBindings.POST_MENU_ITEM, AppsBindings.IN_POST],
+        requested_locations: [AppsBindings.COMMAND, AppsBindings.CHANNEL_HEADER_ICON, AppsBindings.POST_MENU_ITEM, AppsBindings.IN_POST],
     };
     return manifest;
 }

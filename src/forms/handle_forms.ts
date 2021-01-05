@@ -1,6 +1,6 @@
-import {AppsCallResponseTypes} from 'mattermost-redux/constants/apps';
+import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
-import {AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCall, AppCallResponse} from 'mattermost-redux/types/apps';
 
 import app from '../app/app';
 
@@ -8,11 +8,13 @@ import {newCreateTicketForm} from './create_ticket';
 
 // BaseForm routes the call type to its corresponding method
 export class BaseForm {
+    call: AppCall
+
     constructor(call: AppCall) {
         this.call = call;
     }
 
-    handle = (): AppCallResponse => {
+    handle = (): Promise<AppCallResponse> => {
         switch (this.call.type) {
         case 'form':
             return this.handleForm();
@@ -22,32 +24,32 @@ export class BaseForm {
             return this.handleSubmit();
         }
     }
-    handleForm = (): AppCallResponse => {
+    handleForm = (): Promise<AppCallResponse> => {
         throw new Error('handleForm not implemented');
     };
-    handleLookup = (): AppCallResponse => {
+    handleLookup = (): Promise<AppCallResponse> => {
         throw new Error('handleLookup not implemented');
     };
-    handleSubmit = (): AppCallResponse => {
+    handleSubmit = (): Promise<AppCallResponse> => {
         throw new Error('handleSubmit not implemented');
     };
 }
 
 // CreateTicketForm handles creation and submission for creating a ticket from a post
 export class CreateTicketForm extends BaseForm {
-    handleForm = (): AppCallResponse => {
+    handleForm = async (): Promise<AppCallResponse> => {
         return newCreateTicketForm(this.call);
     }
 
     handleSubmit = async (): Promise<AppCallResponse> => {
         let jsonRes = {
-            type: AppsCallResponseTypes.OK,
+            type: AppCallResponseTypes.OK,
         };
         try {
             await app.createTicketFromPost(this.call);
         } catch (err) {
             jsonRes = {
-                type: AppsCallResponseTypes.ERROR,
+                type: AppCallResponseTypes.ERROR,
                 error: err.message,
             };
         }

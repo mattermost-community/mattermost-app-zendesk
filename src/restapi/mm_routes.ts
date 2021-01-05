@@ -1,34 +1,24 @@
-import fs from 'fs';
+import express from 'express';
 
-import express, {Request, Response} from 'express';
+import {routes} from '../utils';
 
-import {getManifest} from '../../manifest';
-import {getBindings} from '../bindings';
-import {CreateTicketForm} from '../forms';
-import store from '../store/config';
+import {fBindings} from './fBindings';
+import {fConnect} from './fConnect';
+import {fComplete} from './fComplete';
+import {fCreateForm} from './fCreateForm';
+import {fDisconnect} from './fDisconnect';
+import {fInstall} from './fInstall';
+import {fManifest} from './fManifest';
 
 const router = express.Router();
 
-router.post('/createform', async (req: Request, res: Response) => {
-    const form = await new CreateTicketForm(req.body).handle();
-    res.json(form);
-});
+router.get(routes.app.ManifestPath, fManifest);
+router.get(routes.app.BindingsPath, fBindings);
+router.get(routes.app.OAuthCompletePath, fComplete);
 
-router.get('/manifest.json', (req: Request, res: Response) => {
-    res.json(getManifest());
-});
-
-router.get('/bindings', (req: Request, res: Response) => {
-    res.json(getBindings());
-});
-
-router.post('/install', (req: Request, res: Response) => {
-    store.storeInstallInfo(req);
-    res.json({});
-});
-
-router.post('/oauth2/complete', (req: Request, res: Response) => {
-    res.send('hello');
-});
+router.post(routes.app.InstallPath, fInstall);
+router.post(routes.app.BindingPathConnect, fConnect);
+router.post(routes.app.BindingPathDisconnect, fDisconnect);
+router.post(routes.app.BindingPathCreateForm, fCreateForm);
 
 export default router;

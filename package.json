@@ -16,7 +16,6 @@
     "body-parser": "1.19.0",
     "cors": "2.8.5",
     "dotenv": "8.2.0",
-    "mattermost-redux": "github:mattermost/mattermost-redux#e3d04aaba9687a257d748d6fe9fa8d4b26ed9cfc",
     "node-fetch": "2.6.1",
     "node-zendesk": "2.0.3",
     "ts-node": "9.1.1"
@@ -28,10 +27,12 @@
     "@types/node": "12.19.8",
     "@types/node-fetch": "2.5.7",
     "@types/node-zendesk": "2.0.1",
+    "client-oauth2": "4.3.3",
     "dts-bundle": "0.7.3",
     "eslint-plugin-import": "2.22.1",
     "express": "4.17.1",
     "jest": "24.9.0",
+    "mattermost-redux": "git://github.com/mattermost/mattermost-redux.git#feature/cloud-apps",
     "nodemon": "2.0.6",
     "prettier": "1.19.1",
     "ts-jest": "26.4.4",
@@ -43,6 +44,7 @@
     "tslint-loader": "3.5.4",
     "tslint-plugin-prettier": "2.3.0",
     "typescript": "3.9.7",
+    "uuid": "8.3.2",
     "webpack": "4.44.2",
     "webpack-cli": "3.3.12"
   }

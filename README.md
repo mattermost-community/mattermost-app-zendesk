@@ -1,40 +1,67 @@
 # ZenDesk App
 
-## Quick Start
+## Development Repository Branches Needed
 
-- clone this repo
-- cp `.env.sample` `.env`
-  - add your credentials to the `.env` file
-    - ZENDESK_URL - URL to zendesk account
-    - ZENDESK_USERNAME - your zendesk login username
-    - ZENDESK_API_TOKEN - generated via the following steps
-      - zendesk > Admin > CHANNELS > API > Settings
-      - Token Access > Enable
-      - Add API Token
-
-- `npm start` - start the node server
-- `npm run build` - builds the dist dir.  (TODO: can this be automated?  Fails if this is not run before `npm start`)
-- `npm run build:watch` (in separate shell) - watch for changing files and report typescript errors
-
-**Current Branches Needed**
-
-The current master branches have not been merged to work with this app and the following are needed until they are mergd with master
+The current master branches have not been merged to work with this app and the following are needed until they are merged with master
 
 mm-webapp: `feature/cloud-apps`  
 mm-plugin-apps: `master`
 
-**Install the app**
+## Quick Start
 
-`/apps install --url http://localhost:4000/manifest.json --app-secret thisisthesecret`
+### Zendesk and Mattermost Users (System Admin privileges required)
 
-  After installing the app, a provisioned bot account will be created for user @zendesk and posted in a DM.
+1. Clone this repo
+1. cp `.env.sample` `.env`
+    1. `ZENDESK_URL` - set URL to your zendesk account host
+        1. Ex. `https://<subdomain>.zendesk.com`
+    1. `ZENDESK_CLIENT_SECRET` - (will be set later in the setup)
+1. Create Zendesk Oauth Client for Mattermost (in Zendesk)
+    1. `Zendesk` > `Admin` > `API` > `OAuth Clients`
+    1. `Add OAuth Client`
+        1. `Client Name`: `Mattermost Zendesk App`
+        1. `Description`: `Connect your Zendesk to accout to Mattermost`
+        1. `https://<your-zendesk-app-host>/mattermost/oauth/complete`
+            1. Ex. `https://localhost:4000` - Development
+            1. Ex. `https://mytest.ngrok.io` - Exposed for development
+        1. `Secret` - Save the generated secret in `.env` as the `ZENDESK_CLIENT_SECRET`
+        1. `Save`
+1. Start the node server
+    1. `npm start` - start the node server
+    1. `npm run build` - builds the dist dir.  (TODO: can this be automated?  Fails if this is not run before `npm start`)
+    1. `npm run build:watch` (in separate shell) - watch for changing files and report typescript errors
+1. Install the app (In Mattermost)
+    1. `/apps install --url http://<your-zendesk-app-host>/mattermost/manifest.json --app-secret thisisthesecret`  
+        1. TODO this command could be used to set zendesk-url and zendesk-client-secret
 
-  The following values are stored locally in `app_store.json`
+### Zendesk and Mattermost Users (All users)
+
+#### Connect your Zendesk account to Mattermost
+
+- `/zendesk connect`
+
+This slash command will allow a user to connect their Mattermost and Zendesk
+accounts via OAuth2 authorization
+
+## Slash Commands
+
+`/zendesk connect` - connect your Zendesk account to Mattermost  
+`/zendesk disconnect` - disconnect your Zendesk account from Mattermost
+
+## Create a ticket
+
+Creating a ticket from a Mattermost post is done through the `...` post menu button
+
+## Installation
+
+`/apps install --url http://<your-zendesk-app>/mattermost/manifest.json --app-secret thisisthesecret`  
+`/apps install --url http://localhost:4000/mattermost/manifest.json --app-secret thisisthesecret`  
+
+After installing the app, a provisioned bot account will be created for user `@zendesk` and posted in a DM. The following values are stored locally in `config.json`
 
 - `bot_access_token`
 - `oauth2_client_secret`
-
-## Create a ticket
+- `mm_site_url`
 
 ## Setup Zendesk Webhooks
 
@@ -98,12 +125,12 @@ From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/suppor
 ### 1. `npm start` fails with warning about rudder in mattermost-redux
 
 ```sh
-/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-applet-zendesk/node_modules/rudder-sdk-js/index.js:8733
+.../mattermost-app-zendesk/node_modules/rudder-sdk-js/index.js:8733
         var domain = ".".concat(lib(window.location.href));
 ```
 
-* open `node_modules/mattermost-redux/client/rudder.js`
-* comment out the following lines:
+- open `node_modules/mattermost-redux/client/rudder.js`
+- comment out the following lines:
 
 ```javascript
 var rudderAnalytics = tslib_1.__importStar(require("rudder-sdk-js"));
@@ -118,14 +145,14 @@ exports.rudderAnalytics = rudderAnalytics;
     at Client4.<anonymous> (/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-applet-zendesk/node_modules/mattermost-redux/client/client4.js:1594:70)
 ```
 
-* open `node_modules/mattermost-redux/client/client4.js`
-* comment out the following line:
+- open `node_modules/mattermost-redux/client/client4.js`
+- comment out the following line:
 
 ```javascript
 // var fetch_etag_1 = tslib_1.__importDefault(require("./fetch_etag"));
 ```
 
-* add the following line:
+- add the following line:
 
 ```javascript
 var fetch_etag_1 = require("node-fetch");

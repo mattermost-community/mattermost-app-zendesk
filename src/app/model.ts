@@ -1,17 +1,17 @@
-import {Tickets, CreatePayload} from 'node-zendesk';
+import {Tickets, CreatePayload, TicketType, Priority} from 'node-zendesk';
 
-import store from '../store/config';
+import {config} from '../store';
 
 type CreateTicketFormValues = {
     subject: string;
-    type: string;
-    priority: string;
+    type: TicketType;
+    priority: Priority;
     additional_message: string;
     post_message: string;
 }
 
 export const getTicketForPost = (values: CreateTicketFormValues): CreatePayload => {
-    const mmSignature = '*message created from Mattermost message.*\n' + store.getSiteURL();
+    const mmSignature = '*message created from Mattermost message.*\n' + config.getSiteURL();
 
     const additionalMessage = values.additional_message || '';
     const postMessage = values.post_message || '';
