@@ -1,10 +1,18 @@
 import fs from 'fs';
 
+<<<<<<< HEAD
 import {AppContextProps} from 'mattermost-redux/types/apps';
 
 import {jsonConfigFileStore} from '../utils';
 
 type AppConfigStore = {
+=======
+import {AppContext} from 'mattermost-redux/types/apps';
+
+import {jsonConfigFileStore} from '../utils';
+
+type AppStore = {
+>>>>>>> master
     bot_access_token: string;
     oauth2_client_secret: string;
     mm_site_url: string;
@@ -15,8 +23,13 @@ interface Store {
     getSiteURL(): string;
 }
 
+<<<<<<< HEAD
 class ConfigFileStore implements Store {
     storeData: AppConfigStore;
+=======
+class JSONFileStore implements Store {
+    storeData: AppStore;
+>>>>>>> master
 
     constructor() {
         this.storeData = {
@@ -35,6 +48,7 @@ class ConfigFileStore implements Store {
         }
     }
 
+<<<<<<< HEAD
     storeInstallInfo(req: any): void {
         const values = req.body.values;
         const context: AppContextProps = req.body.context;
@@ -45,6 +59,22 @@ class ConfigFileStore implements Store {
             if (err) {
                 throw err;
             }
+=======
+    storeInstallInfo(req: any): Promise<void> {
+        const values = req.body.values;
+        const context: AppContext = req.body.context;
+
+        values.mm_site_url = context.config.site_url;
+
+        return new Promise((resolve, reject) => {
+            fs.writeFileSync(jsonConfigFileStore, JSON.stringify(values), (err) => {
+                if (err) {
+                    reject(err);
+                    throw err;
+                }
+                resolve();
+            });
+>>>>>>> master
         });
     }
 
@@ -57,4 +87,8 @@ class ConfigFileStore implements Store {
     }
 }
 
+<<<<<<< HEAD
 export default new ConfigFileStore();
+=======
+export default new JSONFileStore();
+>>>>>>> master

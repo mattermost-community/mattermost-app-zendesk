@@ -25,13 +25,17 @@ export class BaseForm {
         }
     }
 
-    handleFunc = async (): Promise<AppCallResponse> => {
-        return {} as AppCallResponse;
+    handleFunc = async (fname: string): Promise<AppCallResponse> => {
+        throw new Error(fname + ' not implemented');
     }
 
-    handleForm = this.handleFunc
-    handleLookup = this.handleFunc
-    handleSubmit = this.handleFunc
+    handleForm = this.handleFunc('handleForm')
+    handleLookup = (): AppCallResponse => {
+        throw new Error('handleLookup not implemented');
+    };
+    handleSubmit = (): AppCallResponse => {
+        throw new Error('handleSubmit not implemented');
+    };
 }
 
 // CreateTicketForm handles creation and submission for creating a ticket from a post

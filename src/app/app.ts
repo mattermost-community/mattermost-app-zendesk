@@ -1,11 +1,12 @@
 import {Post} from 'mattermost-redux/types/posts';
+import {ResponsePayload} from 'node-zendesk';
 import {AppCall, AppContext} from 'mattermost-redux/types/apps';
 
-import {ENV} from '../utils';
+import {ENV, errorWithMessage} from '../utils';
 
 import {mattermost, zendesk} from '../clients';
 
-import {config, oauth} from '../store';
+import store from '../store/config';
 
 import {getTicketForPost} from './model';
 
@@ -17,17 +18,32 @@ class App {
 
         const zdClient = zendesk.newClient(token, ENV.zendesk.apiURL);
 
-        const result = await zdClient.tickets.create(ticket);
-        const user = await zdClient.users.show(result.requester_id);
+        let result: Promise<ResponsePayload>;
+        try {
+            result = await zdClient.tickets.create(ticket);
+        } catch (err) {
+            throw new Error(errorWithMessage(err, 'Failed to create ticket'));
+        }
+
+        let user: Promise<ResponsePayload>;
+        try {
+            user = await zdClient.users.show(result.requester_id);
+        } catch (err) {
+            throw new Error(errorWithMessage(err, 'Failed to get user'));
+        }
 
         const message = `${user.name} created ticket [#${result.id}](${ENV.zendesk.host}/agent/tickets/${result.id}) [${result.subject}]`;
-        await this.createBotPost(call.context, message);
+        try {
+            await this.createBotPost(call.context, message);
+        } catch (err) {
+            throw new Error(errorWithMessage(err, 'Failed to create post'));
+        }
     }
 
     createBotPost = async (context: AppContext, message: string): Promise<void> => {
         const url = config.getSiteURL();
         const botToken = config.getBotAccessToken();
-        const mmClient = mattermost.newClient(botToken, url);
+        const mmClient = mattermost.newClient(url, botToken);
 
         const post: Post = {
             message,

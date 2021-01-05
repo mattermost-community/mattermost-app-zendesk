@@ -1,8 +1,6 @@
-interface iOption {label: string; value: string}
-export function makeOption(name: string): iOption {
-    return ({label: name, value: name});
-}
+export const makeOption = (name: string) => ({label: name, value: name});
+export const makeOptions = (names: string[]) => names.map(makeOption);
 
-export function makeOptions(names: string[]): iOption[] {
-    return names.map((name: string) => ({label: name, value: name}));
+export function errorWithMessage(err, message): string {
+    return `"${message}".  ` + err.message;
 }

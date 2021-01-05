@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {AppBinding, AppCall} from 'mattermost-redux/types/apps';
 import {AppsBindings, AppCallTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
 
@@ -99,4 +100,40 @@ function getDisconnectCall(): AppCall {
     return {
         url: getManifest().root_url + routes.app.BindingPathDisconnect,
     } as AppCall;
+=======
+import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppsBindings, AppCallTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
+
+import {getManifest} from '../../manifest';
+import {zendeskIcon} from '../utils';
+
+// getBindings returns bindings defined for all locations in the app
+export function getBindings(): AppBinding[] {
+    const bindings: AppBinding = [
+        postMenuBindings(),
+    ];
+    return bindings;
+}
+
+// postMenuBindings returns bindings for the post_menu location
+function postMenuBindings(): AppBinding {
+    const binding: AppBinding = {
+        location: AppsBindings.POST_MENU_ITEM,
+        bindings: [
+            {
+                label: 'Create Zendesk Ticket',
+                description: 'Create ticket in zendesk',
+                icon: zendeskIcon,
+                call: {
+                    url: getManifest().root_url + '/createform',
+                    type: AppCallTypes.FORM,
+                    expand: {
+                        post: AppExpandLevels.EXPAND_ALL,
+                    },
+                },
+            },
+        ],
+    };
+    return binding;
+>>>>>>> master
 }
