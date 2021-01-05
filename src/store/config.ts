@@ -34,16 +34,20 @@ class JSONFileStore implements Store {
         }
     }
 
-    storeInstallInfo(req: any): void {
+    storeInstallInfo(req: any): Promise<void> {
         const values = req.body.values;
         const context: AppContext = req.body.context;
 
         values.mm_site_url = context.config.site_url;
 
-        fs.writeFileSync(jsonConfigFileStore, JSON.stringify(values), (err) => {
-            if (err) {
-                throw err;
-            }
+        return new Promise((resolve, reject) => {
+            fs.writeFileSync(jsonConfigFileStore, JSON.stringify(values), (err) => {
+                if (err) {
+                    reject(err);
+                    throw err;
+                }
+                resolve();
+            });
         });
     }
 

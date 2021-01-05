@@ -22,6 +22,15 @@ export class BaseForm {
             return this.handleSubmit();
         }
     }
+    handleForm = (): AppCallResponse => {
+        throw new Error('handleForm not implemented');
+    };
+    handleLookup = (): AppCallResponse => {
+        throw new Error('handleLookup not implemented');
+    };
+    handleSubmit = (): AppCallResponse => {
+        throw new Error('handleSubmit not implemented');
+    };
 }
 
 // CreateTicketForm handles creation and submission for creating a ticket from a post

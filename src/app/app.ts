@@ -25,7 +25,7 @@ class App {
     createBotPost = async (context: AppContext, message: string) => {
         const url = store.getSiteURL();
         const botToken = store.getBotAccessToken();
-        const mmClient = mattermost.newClient(botToken, url);
+        const mmClient = mattermost.newClient(url, botToken);
 
         const post: Post = {
             message,
