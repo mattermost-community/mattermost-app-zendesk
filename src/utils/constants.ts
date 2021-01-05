@@ -1,7 +1,9 @@
 export const jsonConfigFileStore = 'config.json';
 export const jsonTokenFileStore = 'tokens.json';
 export const ZDIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
+export const AppID = 'zendesk';
 
+export const FormTextAreaMinLength = 2;
 export const FormTextAreaMaxLength = 1024;
 
 // Routes to the Mattermost Instance
@@ -12,6 +14,7 @@ const MMPaths = {
 const ZDPaths = {
     OAuthAuthorizationURI: '/oauth/authorizations/new',
     OAuthAccessTokenURI: '/oauth/tokens',
+    TicketPathPrefix: '/agent/tickets',
     APIVersion: '/api/v2',
 };
 
@@ -21,15 +24,19 @@ const AppPaths = {
     InstallPath: '/install',
 
     OAuthCompletePath: '/oauth/complete',
+    SubscribeIncomingWebhookPath: '/webhook-incoming',
 
     // Binding routes are accessed via a location call
     BindingsPath: '/bindings',
     BindingPathOpenCreateTicketForm: '/open-create-ticket-form',
+    BindingPathOpenSubcriptionsForm: '/open-subscriptions-form',
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
+    BindingPathHelp: '/help',
 
     // Call routes are callable routes, but not bound to a location
     CallPathSubmitOrUpdateCreateTicketForm: '/submit-or-update-create-ticket-form',
+    CallPathSubmitOrUpdateSubcriptionForm: '/submit-or-update-subcription-form',
 };
 
 export const Routes = {
@@ -41,6 +48,8 @@ export const Routes = {
 export const CommandLocations = {
     Connect: 'connect',
     Disconnect: 'disconnect',
+    Subscribe: 'subscribe',
+    Help: 'help',
 };
 
 const ZDEnv = {
@@ -76,13 +85,60 @@ export const ZDFieldTypes = {
     Muliselect: 'multiselect',
 };
 
-export const AppFieldNames = {
-    AdditionalMessage: 'additional_message',
-    PostMessage: 'post_message',
-    FormsSelectName: 'ticket_form_id',
-
-    CustomFieldPrefix: 'custom_field_',
+export const CreateTicketFields = {
+    NameAdditionalMessage: 'additional_message',
+    NamePostMessage: 'post_message',
+    NameFormsSelect: 'ticket_form_id',
+    PrefixCustomField: 'custom_field_',
 };
+
+export const SubscriptionFields = {
+    ChannelPickerSelect_Label: 'Channel Name',
+    ChannelPickerSelect_Name: 'channel_picker_name',
+
+    SubSelect_Label: 'Subscription Name',
+    SubSelect_Name: 'subcription_select_name',
+
+    // UnsupportedFieldsText_Label: 'un',
+    UnsupportedFieldsText_Name: 'unsupported_fields',
+
+    SubText_Label: 'Name',
+    SubText_Name: 'subscription_text_name',
+
+    NewSub_OptionValue: 'newsubscription',
+    NewSub_OptionLabel: 'New Subscription',
+
+    PrefixTriggersTitle: '__mm_webhook__channelID:',
+    RegexTriggerTitle: '__mm_webhook__channelID:(\\w+) (.*)',
+
+    // TODO add ticket is created and ticket is updated options
+    ConditionsCheckBoxFields: [
+        'status',
+        'priority',
+        'brand',
+        'form',
+        'type',
+        'group',
+        'assignee',
+        'requester',
+        'organization',
+    ],
+};
+
+export const TriggerFields = {
+    TicketIDKey: 'ticketID',
+    ChannelIDKey: 'channelID',
+    ActionField: 'notification_target',
+    ActionValuePairs: {},
+
+    // TODO this is the target id value. Need to store this value when creating the
+    // target through the app, or when the user has to create target in zendesk
+    TargetID: 360002371891,
+};
+
+// ActionValuePairs is an object of static key value pairs that will be added to a
+// trigger when saving in Zendesk
+TriggerFields.ActionValuePairs[TriggerFields.TicketIDKey] = '{{ticket.id}}';
 
 // ZdFieldValidation is an object of Zendesk fields types that validates a field
 // value against a regex.  The regex values are retreivable from the field

@@ -1,4 +1,5 @@
 import {AppBindingLocations} from 'mattermost-redux/constants/apps';
+import {AppID} from './src/utils'
 
 type RequestedPermissions = 'act_as_user' | 'act_as_bot'
 
@@ -16,7 +17,7 @@ export type Manifest = {
 
 export function getManifest(): Manifest {
     const manifest: Manifest = {
-        app_id: 'zendesk',
+        app_id: AppID,
         app_type: 'http',
         display_name: 'Zendesk',
         description: 'Zendesk cloud app for Mattermost',

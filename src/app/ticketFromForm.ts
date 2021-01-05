@@ -1,12 +1,12 @@
 import {Tickets} from 'node-zendesk';
 
-import {AppFormValue, AppFormValues} from 'mattermost-redux/types/apps';
+import {AppFormValues} from 'mattermost-redux/types/apps';
 
-import {AppFieldNames, ZDFieldValidation, getMultiselectValues} from '../utils';
+import {CreateTicketFields, ZDFieldValidation} from '../utils/constants';
+import {getMultiselectValues, isFieldValueSelected} from '../utils/utils';
 
 import {configStore} from '../store';
-
-export type FieldValidationErrors = {[name: string]: string};
+import {FieldValidationErrors} from '../utils/call_responses';
 
 interface ITicketFromFrom {
     getTicket(): Tickets.CreatePayload;
@@ -31,8 +31,8 @@ export class TicketFromForm implements ITicketFromFrom {
     getPostMessage(): string {
         const mmSignature = '*message created from Mattermost message.*\n' + configStore.getSiteURL();
 
-        const additionalMessage = this.formValues[AppFieldNames.AdditionalMessage] || '';
-        const postMessage = this.formValues[AppFieldNames.PostMessage] || '';
+        const additionalMessage = this.formValues[CreateTicketFields.NameAdditionalMessage] || '';
+        const postMessage = this.formValues[CreateTicketFields.NamePostMessage] || '';
 
         const zdMessage = additionalMessage + '\n' +
                 postMessage + '\n' +
@@ -93,7 +93,7 @@ export class TicketFromForm implements ITicketFromFrom {
     }
 
     getCustomZDFieldTypeAndID(fieldName: string): [string, number] {
-        const prefix = fieldName.replace(AppFieldNames.CustomFieldPrefix, '');
+        const prefix = fieldName.replace(CreateTicketFields.PrefixCustomField, '');
         const splitted = prefix.split('_');
         if (splitted.length !== 2) {
             console.log('custom field name is not valid. fieldName =', fieldName);
@@ -139,14 +139,14 @@ export class TicketFromForm implements ITicketFromFrom {
 
     // isCustomField determines if a field is custom based on the field name
     isCustomField(fieldName: string): boolean {
-        return Boolean(fieldName.startsWith(AppFieldNames.CustomFieldPrefix));
+        return Boolean(fieldName.startsWith(CreateTicketFields.PrefixCustomField));
     }
 
     // isOmittedField returns true if a field should not be mapped directly to
     // a zendesk ticket
     isOmittedField(fieldName: string): boolean {
         // app form values that are not to be 1:1 mapped to zendesk fields
-        const omitFields = [AppFieldNames.AdditionalMessage, AppFieldNames.PostMessage];
+        const omitFields = [CreateTicketFields.NameAdditionalMessage, CreateTicketFields.NamePostMessage];
         return Boolean(omitFields.includes(fieldName));
     }
 
@@ -157,7 +157,7 @@ export class TicketFromForm implements ITicketFromFrom {
             const errMsg = `custom field value is not defined for fieldName. fieldName = ${fieldName}`;
             return [fieldValue, errMsg];
         }
-        if (fieldValue.value) {
+        if (isFieldValueSelected(fieldValue)) {
             fieldValue = fieldValue.value;
         }
         return [fieldValue, ''];
