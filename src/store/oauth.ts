@@ -2,17 +2,21 @@ import fs from 'fs';
 
 import {jsonTokenFileStore} from '../utils';
 
-type TokenStore = Array<{string: string}>
+interface TokenStore {
+    [key: string]: string;
+}
 
-// interface Store {
-//     getBotAccessToken(): string;
-//     getSiteURL(): string;
-// }
+interface Store {
+    tokens: TokenStore;
+    storeToken(userID: string, token: string): void;
+    deleteToken(userID: string): void;
+    getToken(userID: string): [string, boolean];
+    storeTokens(): void;
+}
 
 class TokenFileStore implements Store {
-    tokens: TokenStore;
+    tokens: TokenStore = {};
     constructor() {
-        this.tokens = {};
         if (fs.existsSync(jsonTokenFileStore)) {
             fs.readFile(jsonTokenFileStore, (err, data) => {
                 if (err) {

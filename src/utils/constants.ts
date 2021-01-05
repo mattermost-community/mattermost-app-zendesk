@@ -45,3 +45,4 @@ export const ENV = {
     zendesk: zendeskENV,
 };
 
+export const maxLength = 1024;

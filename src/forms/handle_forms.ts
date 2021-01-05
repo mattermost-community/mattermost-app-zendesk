@@ -1,4 +1,4 @@
-import {AppsCallResponseTypes} from 'mattermost-redux/constants/apps';
+import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
 import {AppCall, AppCallResponse} from 'mattermost-redux/types/apps';
 
@@ -42,13 +42,13 @@ export class CreateTicketForm extends BaseForm {
 
     handleSubmit = async (): Promise<AppCallResponse> => {
         let jsonRes = {
-            type: AppsCallResponseTypes.OK,
+            type: AppCallResponseTypes.OK,
         };
         try {
             await app.createTicketFromPost(this.call);
         } catch (err) {
             jsonRes = {
-                type: AppsCallResponseTypes.ERROR,
+                type: AppCallResponseTypes.ERROR,
                 error: err.message,
             };
         }

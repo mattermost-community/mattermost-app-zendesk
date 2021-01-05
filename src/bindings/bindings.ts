@@ -20,14 +20,12 @@ export const getBindings = (userID: string): AppBinding[] => {
     return [
         requireConnected(userID, postMenuBindings()),
         commandBindings(userID),
-    ] as AppBinding;
+    ] as AppBinding[];
 };
 
 // postMenuBindings returns bindings for the post_menu location
 function postMenuBindings(): AppBinding {
-    let binding: AppBinding;
-
-    binding = {
+    const binding = {
         location: AppsBindings.POST_MENU_ITEM,
         bindings: [
             postMenuCreate(),

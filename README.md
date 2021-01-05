@@ -126,7 +126,7 @@ From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/suppor
 ### 1. `npm start` fails with warning about rudder in mattermost-redux
 
 ```sh
-/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-applet-zendesk/node_modules/rudder-sdk-js/index.js:8733
+.../mattermost-app-zendesk/node_modules/rudder-sdk-js/index.js:8733
         var domain = ".".concat(lib(window.location.href));
 ```
 

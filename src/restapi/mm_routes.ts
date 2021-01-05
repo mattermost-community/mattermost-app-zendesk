@@ -107,7 +107,7 @@ async function fDisconnect(req: Request, res: Response): Promise<void> {
     const currentTokenID = currentToken.token.id;
 
     // delete the user zendesk oauth token
-    const deletedToken = await zdClient.oauthtokens.revoke(currentTokenID);
+    await zdClient.oauthtokens.revoke(currentTokenID);
 
     // delete the token from the store
     oauth.deleteToken(context.acting_user_id);
@@ -118,7 +118,7 @@ async function fDisconnect(req: Request, res: Response): Promise<void> {
     res.json(callResponse);
 }
 
-function fManifest(req: Request, res: Response): void {
+function fManifest(_: Request, res: Response): void {
     res.json(getManifest());
 }
 

@@ -1,11 +1,11 @@
-import {Tickets, CreatePayload} from 'node-zendesk';
+import {Tickets, CreatePayload, TicketType, Priority} from 'node-zendesk';
 
 import {config} from '../store';
 
 type CreateTicketFormValues = {
     subject: string;
-    type: string;
-    priority: string;
+    type: TicketType;
+    priority: Priority;
     additional_message: string;
     post_message: string;
 }

@@ -10,13 +10,11 @@ import {config, oauth} from '../store';
 import {getTicketForPost} from './model';
 
 class App {
-    createTicketFromPost = async (call: AppCall): Promise<string> => {
+    createTicketFromPost = async (call: AppCall): Promise<void> => {
         const ticket = getTicketForPost(call.values);
         const userID = call.context.acting_user_id;
         const [token, found] = oauth.getToken(userID);
 
-        // TODO if user is not found, they shouldn't even be able to see this
-        // post menu option
         const zdClient = zendesk.newClient(token, ENV.zendesk.apiURL);
 
         const result = await zdClient.tickets.create(ticket);
@@ -26,15 +24,15 @@ class App {
         await this.createBotPost(call.context, message);
     }
 
-    createBotPost = async (context: AppContext, message: string) => {
+    createBotPost = async (context: AppContext, message: string): Promise<void> => {
         const url = config.getSiteURL();
         const botToken = config.getBotAccessToken();
         const mmClient = mattermost.newClient(botToken, url);
 
         const post: Post = {
             message,
-            channel_id: context.channel_id,
-            root_id: context.post_id,
+            channel_id: context.channel_id as string,
+            root_id: context.post_id as string,
         };
         await mmClient.createPost(post);
     }

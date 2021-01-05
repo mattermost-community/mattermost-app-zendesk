@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import {AppContext} from 'mattermost-redux/types/apps';
+import {AppContextProps} from 'mattermost-redux/types/apps';
 
 import {jsonConfigFileStore} from '../utils';
 
@@ -22,6 +22,7 @@ class ConfigFileStore implements Store {
         this.storeData = {
             bot_access_token: '',
             oauth2_client_secret: '',
+            mm_site_url: '',
         };
 
         if (fs.existsSync(jsonConfigFileStore)) {
@@ -36,7 +37,7 @@ class ConfigFileStore implements Store {
 
     storeInstallInfo(req: any): void {
         const values = req.body.values;
-        const context: AppContext = req.body.context;
+        const context: AppContextProps = req.body.context;
 
         values.mm_site_url = context.config.site_url;
 
