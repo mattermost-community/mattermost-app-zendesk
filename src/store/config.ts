@@ -22,6 +22,7 @@ class JSONFileStore implements Store {
         this.storeData = {
             bot_access_token: '',
             oauth2_client_secret: '',
+            mm_site_url: '',
         };
 
         if (fs.existsSync(jsonConfigFileStore)) {
