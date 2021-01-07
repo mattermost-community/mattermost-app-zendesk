@@ -27,7 +27,6 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
 
     oauth.storeToken(userID, token);
 
-    // TODO make this html look nicer
     const connectedString = 'You have successfuly connected the Zendesk Mattermost App to Zendesk. Please close this window.';
     const html = `
 		<!DOCTYPE html>
