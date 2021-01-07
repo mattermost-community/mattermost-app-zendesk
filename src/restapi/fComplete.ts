@@ -42,7 +42,6 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
 		</html>
 		`;
 
-    // TODO verify state
     res.setHeader('Content-Type', 'text/html');
     res.send(html);
 }
