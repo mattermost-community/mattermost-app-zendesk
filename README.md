@@ -15,7 +15,7 @@ mm-plugin-apps: `master`
 1. cp `.env.sample` `.env`
     1. `ZD_URL` - set URL to your zendesk account host
         1. Ex. `https://<subdomain>.zendesk.com`
-    1. `ZENDESK_CLIENT_SECRET` - (will be set later in the setup)
+    1. `ZD_CLIENT_SECRET` - (will be set later in the setup)
 1. Create Zendesk Oauth Client for Mattermost (in Zendesk)
     1. `Zendesk` > `Admin` > `API` > `OAuth Clients`
     1. `Add OAuth Client`
@@ -27,6 +27,7 @@ mm-plugin-apps: `master`
         1. `Secret` - Save the generated secret in `.env` as the `ZENDESK_CLIENT_SECRET`
         1. `Save`
 1. Start the node server
+    1. `npm i` - install node_moduls and dependencies
     1. `npm run build:watch` - watch for changing files and report typescript errors
     1. `npm start` - (in a separate shell) start the node server
 1. Install the app (In Mattermost)
@@ -50,6 +51,8 @@ accounts via OAuth2 authorization
 
 Creating a ticket from a Mattermost post is done through the `...` post menu button
 
+![create ticket](./assets/create-ticket.gif)
+
 ## Installation
 
 `/apps install --url http://<your-zendesk-app>/mattermost/manifest.json --app-secret thisisthesecret`  
@@ -59,7 +62,7 @@ After installing the app, a provisioned bot account will be created for user `@z
 
 - `bot_access_token`
 - `oauth2_client_secret`
-- `mm_site_url`
+- `mattermost_site_url`
 
 ## Setup Zendesk Webhooks
 

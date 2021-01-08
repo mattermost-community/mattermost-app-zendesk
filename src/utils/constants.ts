@@ -2,6 +2,7 @@ export const jsonConfigFileStore = 'config.json';
 export const jsonTokenFileStore = 'tokens.json';
 export const zdIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
 export const zdClientID = 'mattermost_zendesk_app';
+
 export const formTextAreaMaxLength = 1024;
 
 const mmPaths = {
@@ -46,3 +47,34 @@ export const ENV = {
     zd: zdENV,
 };
 
+export const zdTypes = {
+
+    // System Types
+    // zdTypeAssignee: 'assignee',
+    zdTypeSubject: 'subject',
+    zdTypePriority: 'priority',
+    zdTypeTicketType: 'tickettype',
+    zdTypeDescription: 'description',
+
+    // Custom Types
+    zdTypeMultiLine: 'textarea',
+    zdTypeText: 'text',
+
+    // zdTypeNumeric: 'integer',
+    zdTypeCheckbox: 'checkbox',
+    zdTypeTagger: 'tagger',
+};
+
+export const fieldNames = {
+    additionalMessage: 'additional_message',
+    postMessage: 'post_message',
+    formsSelectName: 'ticket_form_id',
+    customPrefix: 'custom_field_',
+};
+
+// mappedZDNames are field names that need to be remapped before sending as a
+// field name for the app modal.
+export const mappedZDNames = { };
+mappedZDNames[zdTypes.zdTypeTicketType] = 'type';
+
+export const systemFields = ['subject'];

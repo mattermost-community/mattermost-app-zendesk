@@ -13,7 +13,7 @@ import {fManifest} from './fManifest';
 const router = express.Router();
 
 router.get(routes.app.ManifestPath, fManifest);
-router.get(routes.app.BindingsPath, fBindings);
+router.post(routes.app.BindingsPath, fBindings);
 router.get(routes.app.OAuthCompletePath, fComplete);
 
 router.post(routes.app.InstallPath, fInstall);

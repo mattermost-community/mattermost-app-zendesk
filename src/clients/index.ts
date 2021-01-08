@@ -1,2 +1,2 @@
-export * as mm from './mattermost';
-export * as zd from './zendesk';
+export {newMMClient} from './mattermost';
+export {newZDClient} from './zendesk';

@@ -1,9 +1,8 @@
 import {AppBinding, AppCall} from 'mattermost-redux/types/apps';
-import {AppsBindings} from 'mattermost-redux/constants/apps';
+import {AppBindingLocations, AppCallTypes} from 'mattermost-redux/constants/apps';
 
 import {isUserConnected} from '../app/user';
 
-import {getManifest} from '../../manifest';
 import {zdIcon, routes, commandLocations} from '../utils';
 
 // commandBindings returns bindings for the slash command location
@@ -16,7 +15,7 @@ export function commandBindings(userID: string): AppBinding {
     }
 
     return {
-        location: AppsBindings.COMMAND,
+        location: AppBindingLocations.COMMAND,
         bindings,
     } as AppBinding;
 }
@@ -33,7 +32,8 @@ function commandConnect(): AppBinding {
 
 function getConnectCall(): AppCall {
     return {
-        url: getManifest().root_url + routes.app.BindingPathConnect,
+        type: AppCallTypes.FORM,
+        url: routes.app.BindingPathConnect,
     } as AppCall;
 }
 
@@ -49,6 +49,6 @@ function commandDisconnect(): AppBinding {
 
 function getDisconnectCall(): AppCall {
     return {
-        url: getManifest().root_url + routes.app.BindingPathDisconnect,
+        url: routes.app.BindingPathDisconnect,
     } as AppCall;
 }
