@@ -2,7 +2,7 @@ import zendesk, {Client, ClientOptions} from 'node-zendesk';
 
 import {ENV} from '../utils';
 
-export const newClient = (token: string): Client => {
+export const newZDClient = (token: string): Client => {
     const options: ClientOptions = {
         username: '',
         token,
@@ -10,5 +10,5 @@ export const newClient = (token: string): Client => {
         oauth: true,
     };
 
-    return zendesk.createClient(options);
+    return zendesk.createClient(options) as Client;
 };

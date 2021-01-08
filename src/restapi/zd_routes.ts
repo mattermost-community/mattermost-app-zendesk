@@ -5,7 +5,7 @@ import app from '../app/app';
 const router = express.Router();
 
 router.post('/webhook', (req: Request, res: Response) => {
-    app.createPostFromWebhook(req);
+    // app.createPostFromWebhook(req);
     res.send('nice');
 });
 

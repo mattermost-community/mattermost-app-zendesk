@@ -1,5 +1,6 @@
 import {Request, Response} from 'express';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
 import {ENV, routes, createOAuthState, zdClientID} from '../utils';
 
@@ -17,9 +18,8 @@ export function fConnect(req: Request, res: Response): void {
 
     const link = urlWithParams.href;
     const callResponse: AppCallResponse = {
-        type: '',
+        type: AppCallResponseTypes.OK,
         markdown: `Follow this link to connect: [link](${link})`,
     };
     res.json(callResponse);
 }
-
