@@ -22,8 +22,8 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
     }
 
     // Exchange code for token
-    const zendeskAuth = getOAuthConfig();
-    const user = await zendeskAuth.code.getToken(req.originalUrl);
+    const zdAuth = getOAuthConfig();
+    const user = await zdAuth.code.getToken(req.originalUrl);
     const token = user.data.access_token;
 
     oauth.storeToken(userID, token);

@@ -6,7 +6,7 @@ export const newClient = (token: string): Client => {
     const options: ClientOptions = {
         username: '',
         token,
-        remoteUri: ENV.zendesk.apiURL,
+        remoteUri: ENV.zd.apiURL,
         oauth: true,
     };
 

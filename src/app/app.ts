@@ -1,48 +1,50 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {Tickets} from 'node-zendesk';
+import {Tickets, Users} from 'node-zendesk';
 import {AppCall, AppContext} from 'mattermost-redux/types/apps';
 
 import {ENV, errorWithMessage} from '../utils';
 
-import {mattermost, zendesk} from '../clients';
+import {mm, zd} from '../clients';
 
 import {config, oauth} from '../store';
 
-import {getTicketForPost} from './model';
+import {getTicketFromForm} from './model';
 
 class App {
     createTicketFromPost = async (call: AppCall): Promise<void> => {
-        // get user ID for active Mattermost user
-        const userID = call.context.acting_user_id || '';
-        const token = oauth.getToken(userID);
-        if (!token) {
+        // get active mattermost user ID
+        const mmUserID = call.context.acting_user_id || '';
+        const zdToken = oauth.getToken(mmUserID);
+        if (!zdToken) {
             throw new Error('Failed to get user access_token');
         }
 
         // get zendesk client for user
-        const zdClient = zendesk.newClient(token);
+        const zdClient = zd.newClient(zdToken);
 
         // create the ticket object from the form response
-        const ticket = getTicketForPost(call.values);
+        const zdTicket = getTicketFromForm(call.values);
 
         // create the ticket in Zendesk
-        let result: Tickets.ResponsePayload;
+        let ticket: Tickets.ResponseModel;
         try {
-            result = await zdClient.tickets.create(ticket);
+            ticket = await zdClient.tickets.create(zdTicket);
         } catch (err) {
-            throw new Error(errorWithMessage(err, 'Failed to create ticket'));
+            throw new Error(errorWithMessage(err, 'Failed to create Zendesk ticket'));
         }
 
         // get the Zendesk user
-        let user: Users.ResponsePayload;
+        let zdUser: Users.ResponseModel;
         try {
-            user = await zdClient.users.show(result.requester_id);
+            zdUser = await zdClient.users.show(ticket.requester_id);
         } catch (err) {
-            throw new Error(errorWithMessage(err, 'Failed to get user'));
+            throw new Error(errorWithMessage(err, 'Failed to get Zendesk user'));
         }
 
         // create a reply to the original post noting the ticket was created
-        const message = `${user.name} created ticket [#${result.id}](${ENV.zendesk.host}/agent/tickets/${result.id}) [${result.subject}]`;
+        const id = ticket.id;
+        const subject = ticket.subject;
+        const message = `${zdUser.name} created ticket [#${id}](${ENV.zd.host}/agent/tickets/${id}) [${subject}]`;
         try {
             await this.createBotPost(call.context, message);
         } catch (err) {
@@ -53,7 +55,7 @@ class App {
     createBotPost = async (context: AppContext, message: string): Promise<void> => {
         const url = config.getSiteURL();
         const botToken = config.getBotAccessToken();
-        const mmClient = mattermost.newClient(url, botToken);
+        const mmClient = mm.newClient(url, botToken);
 
         const post: Post = {
             message,

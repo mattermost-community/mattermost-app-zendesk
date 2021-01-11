@@ -13,14 +13,14 @@ mm-plugin-apps: `master`
 
 1. Clone this repo
 1. cp `.env.sample` `.env`
-    1. `ZENDESK_URL` - set URL to your zendesk account host
+    1. `ZD_URL` - set URL to your zendesk account host
         1. Ex. `https://<subdomain>.zendesk.com`
     1. `ZENDESK_CLIENT_SECRET` - (will be set later in the setup)
 1. Create Zendesk Oauth Client for Mattermost (in Zendesk)
     1. `Zendesk` > `Admin` > `API` > `OAuth Clients`
     1. `Add OAuth Client`
         1. `Client Name`: `Mattermost Zendesk App`
-        1. `Description`: `Connect your Zendesk to accout to Mattermost`
+        1. `Description`: `Connect your Zendesk account to Mattermost`
         1. `https://<your-zendesk-app-host>/mattermost/oauth/complete`
             1. Ex. `https://localhost:4000` - Development
             1. Ex. `https://mytest.ngrok.io` - Exposed for development
@@ -141,8 +141,8 @@ exports.rudderAnalytics = rudderAnalytics;
 
 ```sh
 (node:45576) UnhandledPromiseRejectionWarning: ReferenceError: fetch is not defined
-    at Object.exports.default (/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-applet-zendesk/node_modules/mattermost-redux/client/fetch_etag.js:32:26)
-    at Client4.<anonymous> (/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-applet-zendesk/node_modules/mattermost-redux/client/client4.js:1594:70)
+    at Object.exports.default (/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-app-zendesk/node_modules/mattermost-redux/client/fetch_etag.js:32:26)
+    at Client4.<anonymous> (/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-app-zendesk/node_modules/mattermost-redux/client/client4.js:1594:70)
 ```
 
 - open `node_modules/mattermost-redux/client/client4.js`

@@ -1,13 +1,13 @@
 export const jsonConfigFileStore = 'config.json';
 export const jsonTokenFileStore = 'tokens.json';
-export const zendeskIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
-export const zendeskClientID = 'mattermost_zendesk_app';
+export const zdIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
+export const zdClientID = 'mattermost_zendesk_app';
 export const formTextAreaMaxLength = 1024;
 
-const mattermostPaths = {
+const mmPaths = {
 };
 
-const zendeskPaths = {
+const zdPaths = {
     OAuthAuthorizationURI: '/oauth/authorizations/new',
     OAuthAccessTokenURI: '/oauth/tokens',
     APIVersion: '/api/v2',
@@ -26,8 +26,8 @@ const appPaths = {
 };
 
 export const routes = {
-    zd: zendeskPaths,
-    mm: mattermostPaths,
+    zd: zdPaths,
+    mm: mmPaths,
     app: appPaths,
 };
 
@@ -36,13 +36,13 @@ export const commandLocations = {
     Disconnect: 'disconnect',
 };
 
-const zendeskENV = {
-    host: process.env.ZENDESK_URL as string,
-    apiURL: process.env.ZENDESK_URL + zendeskPaths.APIVersion as string,
-    clientSecret: process.env.ZENDESK_CLIENT_SECRET as string,
+const zdENV = {
+    host: process.env.ZD_URL as string,
+    apiURL: process.env.ZD_URL + zdPaths.APIVersion as string,
+    clientSecret: process.env.ZD_CLIENT_SECRET as string,
 };
 
 export const ENV = {
-    zendesk: zendeskENV,
+    zd: zdENV,
 };
 
