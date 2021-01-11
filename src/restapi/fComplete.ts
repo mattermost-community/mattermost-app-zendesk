@@ -3,7 +3,7 @@ import {Request, Response} from 'express';
 import {getOAuthConfig} from '../app/oauth';
 import {parseOAuthState} from '../utils';
 
-import {oauth} from '../store';
+import {oauthStore} from '../store';
 
 export async function fComplete(req: Request, res: Response): Promise<void> {
     const code = req.query.code;
@@ -26,7 +26,7 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
     const user = await zdAuth.code.getToken(req.originalUrl);
     const token = user.data.access_token;
 
-    oauth.storeToken(userID, token);
+    oauthStore.storeToken(userID, token);
 
     const connectedString = 'You have successfuly connected the Zendesk Mattermost App to Zendesk. Please close this window.';
     const html = `

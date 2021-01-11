@@ -4,11 +4,11 @@ import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {zd} from '../clients';
 import {errorWithMessage} from '../utils';
 
-import {oauth} from '../store';
+import {oauthStore} from '../store';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const context = req.body.context;
-    const token = oauth.getToken(context.acting_user_id);
+    const token = oauthStore.getToken(context.acting_user_id);
 
     const zdClient = zd.newClient(token);
 
@@ -32,7 +32,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     }
 
     // delete the token from the store
-    oauth.deleteToken(context.acting_user_id);
+    oauthStore.deleteToken(context.acting_user_id);
     const callResponse: AppCallResponse = {
         type: '',
         markdown: 'You have disconnected your Zendesk account',

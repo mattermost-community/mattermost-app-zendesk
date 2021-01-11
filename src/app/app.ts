@@ -6,7 +6,7 @@ import {ENV, errorWithMessage} from '../utils';
 
 import {mm, zd} from '../clients';
 
-import {config, oauth} from '../store';
+import {configStore, oauthStore} from '../store';
 
 import {getTicketFromForm} from './model';
 
@@ -14,7 +14,7 @@ class App {
     createTicketFromPost = async (call: AppCall): Promise<void> => {
         // get active mattermost user ID
         const mmUserID = call.context.acting_user_id || '';
-        const zdToken = oauth.getToken(mmUserID);
+        const zdToken = oauthStore.getToken(mmUserID);
         if (!zdToken) {
             throw new Error('Failed to get user access_token');
         }
@@ -53,8 +53,8 @@ class App {
     }
 
     createBotPost = async (context: AppContext, message: string): Promise<void> => {
-        const url = config.getSiteURL();
-        const botToken = config.getBotAccessToken();
+        const url = configStore.getSiteURL();
+        const botToken = configStore.getBotAccessToken();
         const mmClient = mm.newClient(url, botToken);
 
         const post: Post = {

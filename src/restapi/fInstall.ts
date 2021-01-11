@@ -1,9 +1,9 @@
 import {Request, Response} from 'express';
 
-import {config} from '../store';
+import {configStore} from '../store';
 
 export function fInstall(req: Request, res: Response): void {
-    config.storeInstallInfo(req);
+    configStore.storeInstallInfo(req);
     res.json({});
 }
 

@@ -1,6 +1,6 @@
-import {oauth} from '../store';
+import {oauthStore} from '../store';
 
 export function isUserConnected(userID: string): string {
-    return oauth.getToken(userID);
+    return oauthStore.getToken(userID);
 }
 

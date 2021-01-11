@@ -1,6 +1,6 @@
 import {Tickets, TicketType, Priority} from 'node-zendesk';
 
-import {config} from '../store';
+import {configStore} from '../store';
 
 type CreateTicketFormValues = {
     subject: string;
@@ -11,7 +11,7 @@ type CreateTicketFormValues = {
 }
 
 export const getTicketFromForm = (values: CreateTicketFormValues): Tickets.CreatePayload => {
-    const mmSignature = '*message created from Mattermost message.*\n' + config.getSiteURL();
+    const mmSignature = '*message created from Mattermost message.*\n' + configStore.getSiteURL();
 
     const additionalMessage = values.additional_message || '';
     const postMessage = values.post_message || '';
