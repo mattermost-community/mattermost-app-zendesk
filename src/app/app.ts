@@ -1,5 +1,5 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {ResponsePayload} from 'node-zendesk';
+import {Tickets} from 'node-zendesk';
 import {AppCall, AppContext} from 'mattermost-redux/types/apps';
 
 import {ENV, errorWithMessage} from '../utils';
@@ -14,19 +14,19 @@ class App {
     createTicketFromPost = async (call: AppCall): Promise<void> => {
         // get user ID for active Mattermost user
         const userID = call.context.acting_user_id || '';
-        const [token, found] = oauth.getToken(userID);
-        if (found === false) {
+        const token = oauth.getToken(userID);
+        if (!token) {
             throw new Error('Failed to get user access_token');
         }
 
         // get zendesk client for user
-        const zdClient = zendesk.newClient(ENV.zendesk.apiURL, token);
+        const zdClient = zendesk.newClient(token);
 
         // create the ticket object from the form response
         const ticket = getTicketForPost(call.values);
 
         // create the ticket in Zendesk
-        let result: Promise<ResponsePayload>;
+        let result: Tickets.ResponsePayload;
         try {
             result = await zdClient.tickets.create(ticket);
         } catch (err) {
@@ -34,7 +34,7 @@ class App {
         }
 
         // get the Zendesk user
-        let user: Promise<ResponsePayload>;
+        let user: Users.ResponsePayload;
         try {
             user = await zdClient.users.show(result.requester_id);
         } catch (err) {

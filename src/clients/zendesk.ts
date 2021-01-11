@@ -1,10 +1,12 @@
 import zendesk, {Client, ClientOptions} from 'node-zendesk';
 
-export const newClient = (remoteUri: string, token: string): Client => {
+import {ENV} from '../utils';
+
+export const newClient = (token: string): Client => {
     const options: ClientOptions = {
         username: '',
         token,
-        remoteUri,
+        remoteUri: ENV.zendesk.apiURL,
         oauth: true,
     };
 

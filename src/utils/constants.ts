@@ -1,6 +1,6 @@
 export const jsonConfigFileStore = 'config.json';
 export const jsonTokenFileStore = 'tokens.json';
-export const zendeskIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/main/assets/zendesk.svg';
+export const zendeskIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
 export const zendeskClientID = 'mattermost_zendesk_app';
 export const formTextAreaMaxLength = 1024;
 

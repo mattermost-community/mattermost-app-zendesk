@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
 
-import {getOAuthConfig, parseOAuthState} from '../app/oauth';
+import {getOAuthConfig} from '../app/oauth';
+import {parseOAuthState} from '../utils';
 
 import {oauth} from '../store';
 

@@ -10,7 +10,7 @@ interface Store {
     tokens: TokenStore;
     storeToken(userID: string, token: string): void;
     deleteToken(userID: string): void;
-    getToken(userID: string): [string, boolean];
+    getToken(userID: string): string;
     storeTokens(): void;
 }
 
@@ -38,11 +38,11 @@ class TokenFileStore implements Store {
         this.storeTokens();
     }
 
-    getToken(userID: string): [string, boolean] {
+    getToken(userID: string): string {
         if (this.tokens[userID]) {
-            return [this.tokens[userID], true];
+            return this.tokens[userID];
         }
-        return ['', false];
+        return '';
     }
 
     storeTokens(): Promise<void> {
