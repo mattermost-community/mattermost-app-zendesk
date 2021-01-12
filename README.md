@@ -27,12 +27,10 @@ mm-plugin-apps: `master`
         1. `Secret` - Save the generated secret in `.env` as the `ZENDESK_CLIENT_SECRET`
         1. `Save`
 1. Start the node server
-    1. `npm start` - start the node server
-    1. `npm run build` - builds the dist dir.  (TODO: can this be automated?  Fails if this is not run before `npm start`)
-    1. `npm run build:watch` (in separate shell) - watch for changing files and report typescript errors
+    1. `npm run build:watch` - watch for changing files and report typescript errors
+    1. `npm start` - (in a separate shell) start the node server
 1. Install the app (In Mattermost)
     1. `/apps install --url http://<your-zendesk-app-host>/mattermost/manifest.json --app-secret thisisthesecret`  
-        1. TODO this command could be used to set zendesk-url and zendesk-client-secret
 
 ### Zendesk and Mattermost Users (All users)
 
