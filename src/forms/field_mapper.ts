@@ -40,6 +40,7 @@ export class FieldMapper implements Imapper {
             case zdTypes.zdTypeTicketType:
             case zdTypes.zdTypePriority:
             case zdTypes.zdTypeTagger:
+            case zdTypes.zdTypeMuliselect:
                 appFields.push(this.mapToStaticSelect(field));
 
             default:
@@ -87,12 +88,13 @@ export class FieldMapper implements Imapper {
     private mapToStaticSelect(field: UserField): AppField {
         const name = this.getMappedName(field);
         const options = this.isSystemField(field) ? field.system_field_options : field.custom_field_options;
-
+        const multiselect = field.type === zdTypes.zdTypeMuliselect;
         const selectField: AppField = {
             name,
             label: field.title,
             type: AppFieldTypes.STATIC_SELECT,
             options: makeOptions(options),
+            multiselect,
             is_required: field.required_in_portal,
             value: this.getSavedValue(name),
         };

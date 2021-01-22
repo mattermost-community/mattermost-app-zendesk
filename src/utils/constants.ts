@@ -63,6 +63,7 @@ export const zdTypes = {
     // zdTypeNumeric: 'integer',
     zdTypeCheckbox: 'checkbox',
     zdTypeTagger: 'tagger',
+    zdTypeMuliselect: 'multiselect',
 };
 
 export const fieldNames = {

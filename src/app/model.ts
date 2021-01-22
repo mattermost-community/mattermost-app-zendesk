@@ -19,7 +19,6 @@ export const getTicketFromForm = (values: AppFormValues): Tickets.CreatePayload 
 // 1:1 to a zendesk ticket
 function mapFormValuesToTicket(ticket: Tickets.CreateModel, formValues: AppFormValues): Tickets.CreatePayload {
     const customRegex = RegExp(`${fieldNames.customPrefix}*`);
-    const customFields: Tickets.Field[] = [];
 
     // app form values that are not to be 1:1 mapped to zendesk fields
     const omitFields = [fieldNames.additionalMessage, fieldNames.postMessage];
@@ -35,41 +34,49 @@ function mapFormValuesToTicket(ticket: Tickets.CreateModel, formValues: AppFormV
             return;
 
         // custom fields are saved by ID and value
-        case customRegex.test(formName):
-            customFields.push(getFieldPair(formValues, formName));
+        case customRegex.test(formName): {
+            const customPair = getCustomFieldPair(formValues, formName);
+            if (!ticket.custom_fields) {
+                ticket.custom_fields = [];
+            }
+            ticket.custom_fields.push(customPair);
             return;
-
+        }
         default:
         {
             // app form field names were mapped to a corresponding Zendesk field name. Save them
             // directly to the ticket payload
             // check if the value is in an object and not the single value of the key
-            const value = getFormValue(formValues, formName);
+            const value = getFieldValue(formValues, formName);
             ticket[formName] = value;
         }
         }
     });
 
-    // only save custom fields if one exists
-    if (customFields.length > 0) {
-        ticket.custom_fields = customFields;
-    }
-
+    console.log('ticket = ', inspect(ticket, false, null, true /* enable colors */));
     return {ticket};
 }
 
-function getFormValue(formValues: AppFormValues, formName: string): AppFormValue {
-    let formValue: AppFormValue = formValues[formName];
-    if (formValue.value) {
-        formValue = formValue.value;
+// getFieldValue converts app field value to a zendesk field value
+function getFieldValue(formValues: AppFormValues, fieldName: string): AppFormValue {
+    let fieldValue: AppFormValue = formValues[fieldName];
+    if (fieldValue.value) {
+        fieldValue = fieldValue.value;
     }
-    return formValue;
+    return fieldValue;
 }
 
-function getFieldPair(formValues: AppFormValues, formName: string): Tickets.Field {
-    const id = Number(formName.replace(fieldNames.customPrefix, ''));
-    const value = getFormValue(formValues, formName);
-    return {id, value};
+function getCustomFieldPair(formValues: AppFormValues, fieldName: string): Tickets.Field {
+    const getOption = (option) => (option.value);
+    const getMultiselectValues = (options) => options.map(getOption);
+
+    const id = Number(fieldName.replace(fieldNames.customPrefix, ''));
+
+    // if multiselect, the value is an array of values
+    if (formValues[fieldName].length) {
+        return {id, value: getMultiselectValues(formValues[fieldName])};
+    }
+    return {id, value: getFieldValue(formValues, fieldName)};
 }
 
 function getMessage(formValues: AppFormValues): string {
