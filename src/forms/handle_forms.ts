@@ -1,3 +1,5 @@
+import {inspect} from 'util';
+
 import {AppCallResponseTypes, AppCallTypes} from 'mattermost-redux/constants/apps';
 import {AppCall, AppCallResponse} from 'mattermost-redux/types/apps';
 
@@ -67,13 +69,25 @@ export class CreateTicketForm extends BaseForm {
         };
 
         try {
-            await app.createTicketFromPost(this.call);
+            const fieldErrors = await app.createTicketFromPost(this.call);
+
+            // response with errors
+            if (Object.keys(fieldErrors).length !== 0) {
+                callResponse = {
+                    type: AppCallResponseTypes.ERROR,
+                    data: {
+                        errors: fieldErrors,
+                    },
+                };
+                return callResponse;
+            }
         } catch (err) {
             callResponse = {
                 type: AppCallResponseTypes.ERROR,
                 error: err.message,
             };
         }
+
         return callResponse;
     }
 }

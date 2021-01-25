@@ -60,7 +60,8 @@ export const zdTypes = {
     zdTypeMultiLine: 'textarea',
     zdTypeText: 'text',
 
-    // zdTypeNumeric: 'integer',
+    zdTypeDecimal: 'decimal',
+    zdTypeInteger: 'integer',
     zdTypeCheckbox: 'checkbox',
     zdTypeTagger: 'tagger',
     zdTypeMuliselect: 'multiselect',
@@ -70,7 +71,19 @@ export const fieldNames = {
     additionalMessage: 'additional_message',
     postMessage: 'post_message',
     formsSelectName: 'ticket_form_id',
-    customPrefix: 'custom_field_',
+
+    customFieldPrefix: 'custom_field_',
+};
+
+export const fieldValidation = {
+    integer: {
+        regex: '^[+-]?\\d+$',
+        regexError: 'Numeric field not valid',
+    },
+    decimal: {
+        regex: '^[-+]?[0-9]*[.,]?[0-9]+$',
+        regexError: 'Decimal field not valid',
+    },
 };
 
 // mappedZDNames are field names that need to be remapped before sending as a

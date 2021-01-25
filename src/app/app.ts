@@ -7,10 +7,10 @@ import {newMMClient, newZDClient} from '../clients';
 
 import {configStore, oauthStore} from '../store';
 
-import {getTicketFromForm} from './model';
+import {newTicketFromForm} from './model';
 
 class App {
-    createTicketFromPost = async (call: AppCall): Promise<void> => {
+    createTicketFromPost = async (call: AppCall): Promise<any> => {
         // get active mattermost user ID
         const mmUserID = call.context.acting_user_id || '';
         const zdToken = oauthStore.getToken(mmUserID);
@@ -22,7 +22,12 @@ class App {
         const zdClient = newZDClient(zdToken);
 
         // create the ticket object from the form response
-        const zdTicket = getTicketFromForm(call.values);
+        const [zdTicket, errors] = newTicketFromForm(call.values);
+
+        // response with errors
+        if (Object.keys(errors).length !== 0) {
+            return errors;
+        }
 
         // create the ticket in Zendesk
         const ticket = await tryCallWithMessage(zdClient.tickets.create(zdTicket), 'Failed to create Zendesk ticket');

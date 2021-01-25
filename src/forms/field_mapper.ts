@@ -27,6 +27,11 @@ export class FieldMapper implements Imapper {
             case zdTypes.zdTypeDescription:
                 return;
 
+            case zdTypes.zdTypeInteger:
+            case zdTypes.zdTypeDecimal:
+                appFields.push(this.mapToText(field));
+                return;
+
             case zdTypes.zdTypeSubject:
             case zdTypes.zdTypeText:
             case zdTypes.zdTypeMultiLine:
@@ -42,6 +47,7 @@ export class FieldMapper implements Imapper {
             case zdTypes.zdTypeTagger:
             case zdTypes.zdTypeMuliselect:
                 appFields.push(this.mapToStaticSelect(field));
+                return;
 
             default:
                 console.log('field not mapped to app field. field = ', field);
@@ -126,10 +132,6 @@ export class FieldMapper implements Imapper {
     }
 
     private isSystemField(field: UserField): boolean {
-        if (field.type === zdTypes.zdTypeCheckbox) {
-            return false;
-        }
-
         if (systemFields.includes(field.type) || field.system_field_options) {
             return true;
         }
@@ -183,6 +185,10 @@ export class FieldMapper implements Imapper {
             return field.type;
         default :
         }
-        return fieldNames.customPrefix + field.id;
+        return this.getCustomFieldName(field);
+    }
+
+    private getCustomFieldName(field: UserField): string {
+        return fieldNames.customFieldPrefix + `${field.type}_` + field.id;
     }
 }

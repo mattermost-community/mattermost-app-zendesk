@@ -2,94 +2,132 @@ import {Tickets} from 'node-zendesk';
 
 import {AppFormValue, AppFormValues} from 'mattermost-redux/types/apps';
 
-import {fieldNames} from '../utils';
+import {fieldNames, fieldValidation} from '../utils';
 
 import {configStore} from '../store';
 
-export const getTicketFromForm = (values: AppFormValues): Tickets.CreatePayload => {
-    const ticket: Tickets.CreateModel = {
-        comment: {
-            body: getMessage(values),
-        },
-    };
-    return mapFormValuesToTicket(ticket, values);
-};
+interface IticketFromFrom {
+    getTicket(): Tickets.CreatePayload;
+    fieldValidationErrors: any;
+}
 
-// mapFormValuesToTicket returns a zendesk ticket with AppCall values mapped
-// 1:1 to a zendesk ticket
-function mapFormValuesToTicket(ticket: Tickets.CreateModel, formValues: AppFormValues): Tickets.CreatePayload {
-    const customRegex = RegExp(`${fieldNames.customPrefix}*`);
+export class TicketFromForm implements IticketFromFrom {
+    formValues: AppFormValues;
+    ticket: Tickets.CreateModel;
+    fieldValidationErrors: any
 
-    // app form values that are not to be 1:1 mapped to zendesk fields
-    const omitFields = [fieldNames.additionalMessage, fieldNames.postMessage];
+    constructor(values: AppFormValues) {
+        this.formValues = values;
+        this.fieldValidationErrors = {};
+        this.ticket = {
+            comment: {
+                body: this.getPostMessage(),
+            },
+        };
+    }
 
-    Object.keys(formValues).forEach((formName) => {
-        switch (true) {
-        case omitFields.includes(formName):
-            return;
+    getPostMessage(): string {
+        const mmSignature = '*message created from Mattermost message.*\n' + configStore.getSiteURL();
 
-        // if a form is not defined, selected, or checked in the modal, its
-        // value will be null. continue to next field
-        case !formValues[formName]:
-            return;
+        const additionalMessage = this.formValues[fieldNames.additionalMessage] || '';
+        const postMessage = this.formValues[fieldNames.postMessage] || '';
 
-        // custom fields are saved by ID and value
-        case customRegex.test(formName): {
-            const customPair = getCustomFieldPair(formValues, formName);
-            if (!ticket.custom_fields) {
-                ticket.custom_fields = [];
+        const zdMessage = additionalMessage + '\n' +
+                postMessage + '\n' +
+                mmSignature;
+
+        return zdMessage;
+    }
+
+    getTicket(): Tickets.CreatePayload {
+        return this.mapFormValuesToTicket(this.ticket);
+    }
+
+    // mapFormValuesToTicket returns a zendesk ticket with AppCall values mapped
+    // 1:1 to a zendesk ticket
+    mapFormValuesToTicket(ticket: Tickets.CreateModel): Tickets.CreatePayload {
+        // app form values that are not to be 1:1 mapped to zendesk fields
+        const omitFields = [fieldNames.additionalMessage, fieldNames.postMessage];
+
+        // iterate through each field and build the Zendesk ticket
+        Object.keys(this.formValues).forEach((fieldName) => {
+            switch (true) {
+            case omitFields.includes(fieldName):
+                return;
+
+            // if a form is not defined, selected, or checked in the modal, its
+            // value will be null. continue to next field
+            case !this.formValues[fieldName]:
+                return;
+
+            // field is a custom field
+            case RegExp(`${fieldNames.customFieldPrefix}*`).test(fieldName):
+                this.handleCustomField(fieldName);
+                return;
+
+            default:
+                // app form field names were mapped to a corresponding Zendesk field name. Save them
+                // directly to the ticket payload
+                ticket[fieldName] = this.getFieldValue(fieldName);
             }
-            ticket.custom_fields.push(customPair);
+        });
+
+        return {ticket};
+    }
+
+    handleCustomField(fieldName: string): void{
+        const getOption = (option) => (option.value);
+        const getMultiselectValues = (options) => options.map(getOption);
+
+        const re = new RegExp(fieldNames.customFieldPrefix);
+        if (re.test(fieldName)) {
+            const typePrefix = fieldName.replace(fieldNames.customFieldPrefix, '');
+            const type = typePrefix.split('_')[0];
+            const id = typePrefix.split('_')[1];
+
+            let fieldValue = this.getFieldValue(fieldName) as string;
+
+            this.validateField(fieldName, type, fieldValue);
+
+            // if multiselect, the value is an array of values
+            if (Array.isArray(this.formValues[fieldName])) {
+                fieldValue = getMultiselectValues(this.formValues[fieldName]);
+            }
+
+            const pair = {id, value: fieldValue};
+            this.addCustomFieldToArray(pair);
+        }
+    }
+
+    validateField(fieldName: string, type: string, value: string): void {
+        if (!fieldValidation[type]) {
             return;
         }
-        default:
-        {
-            // app form field names were mapped to a corresponding Zendesk field name. Save them
-            // directly to the ticket payload
-            // check if the value is in an object and not the single value of the key
-            const value = getFieldValue(formValues, formName);
-            ticket[formName] = value;
+        const regex = RegExp(fieldValidation[type].regex);
+        if (!regex.test(value)) {
+            const err = fieldValidation[type].regexError;
+            this.fieldValidationErrors[fieldName] = err;
         }
+    }
+
+    addCustomFieldToArray(customPair: any): void {
+        if (!this.ticket.custom_fields) {
+            this.ticket.custom_fields = [];
         }
-    });
-
-    console.log('ticket = ', inspect(ticket, false, null, true /* enable colors */));
-    return {ticket};
-}
-
-// getFieldValue converts app field value to a zendesk field value
-function getFieldValue(formValues: AppFormValues, fieldName: string): AppFormValue {
-    let fieldValue: AppFormValue = formValues[fieldName];
-    if (fieldValue.value) {
-        fieldValue = fieldValue.value;
+        this.ticket.custom_fields.push(customPair);
     }
-    return fieldValue;
-}
 
-function getCustomFieldPair(formValues: AppFormValues, fieldName: string): Tickets.Field {
-    const getOption = (option) => (option.value);
-    const getMultiselectValues = (options) => options.map(getOption);
-
-    const id = Number(fieldName.replace(fieldNames.customPrefix, ''));
-
-    // if multiselect, the value is an array of values
-    if (formValues[fieldName].length) {
-        return {id, value: getMultiselectValues(formValues[fieldName])};
+    // getFieldValue converts app field value to a zendesk field value
+    getFieldValue(fieldName: string): AppFormValue {
+        let fieldValue: AppFormValue = this.formValues[fieldName];
+        if (fieldValue.value) {
+            fieldValue = fieldValue.value;
+        }
+        return fieldValue;
     }
-    return {id, value: getFieldValue(formValues, fieldName)};
 }
 
-function getMessage(formValues: AppFormValues): string {
-    const mmSignature = '*message created from Mattermost message.*\n' + configStore.getSiteURL();
-
-    const additionalMessage = formValues[fieldNames.additionalMessage] || '';
-    const postMessage = formValues[fieldNames.postMessage] || '';
-
-    const zdMessage = additionalMessage + '\n' +
-            postMessage + '\n' +
-            mmSignature;
-
-    return zdMessage;
+export function newTicketFromForm(values: AppFormValues): [Tickets.CreatePayload, any] {
+    const ticket = new TicketFromForm(values);
+    return [ticket.getTicket(), ticket.fieldValidationErrors];
 }
-
-export default getTicketFromForm;
