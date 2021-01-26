@@ -7,10 +7,10 @@ import {newMMClient, newZDClient} from '../clients';
 
 import {configStore, oauthStore} from '../store';
 
-import {newTicketFromForm} from './model';
+import {newTicketFromForm, fieldValidationErrors} from './model';
 
 class App {
-    createTicketFromPost = async (call: AppCall): Promise<any> => {
+    createTicketFromPost = async (call: AppCall): Promise<fieldValidationErrors> => {
         // get active mattermost user ID
         const mmUserID = call.context.acting_user_id || '';
         const zdToken = oauthStore.getToken(mmUserID);
@@ -24,7 +24,7 @@ class App {
         // create the ticket object from the form response
         const [zdTicket, errors] = newTicketFromForm(call.values);
 
-        // response with errors
+        // respond with errors
         if (Object.keys(errors).length !== 0) {
             return errors;
         }
@@ -40,6 +40,9 @@ class App {
         const subject = ticket.subject;
         const message = `${zdUser.name} created ticket [#${id}](${ENV.zd.host}/agent/tickets/${id}) [${subject}]`;
         await this.createBotPost(call.context, message);
+
+        // no respond with no errors
+        return {};
     }
 
     createBotPost = async (context: AppContext, message: string): Promise<void> => {

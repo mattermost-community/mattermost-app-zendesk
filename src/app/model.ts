@@ -2,13 +2,15 @@ import {Tickets} from 'node-zendesk';
 
 import {AppFormValue, AppFormValues} from 'mattermost-redux/types/apps';
 
-import {fieldNames, fieldValidation} from '../utils';
+import {fieldNames, fieldValidation, getMultiselectValues} from '../utils';
 
 import {configStore} from '../store';
 
+export type fieldValidationErrors = Record<string, string> | {};
+
 interface IticketFromFrom {
     getTicket(): Tickets.CreatePayload;
-    fieldValidationErrors: any;
+    fieldValidationErrors: fieldValidationErrors;
 }
 
 export class TicketFromForm implements IticketFromFrom {
@@ -75,28 +77,21 @@ export class TicketFromForm implements IticketFromFrom {
         return {ticket};
     }
 
-    handleCustomField(fieldName: string): void{
-        const getOption = (option) => (option.value);
-        const getMultiselectValues = (options) => options.map(getOption);
+    handleCustomField(fieldName: string): void {
+        const typePrefix = fieldName.replace(fieldNames.customFieldPrefix, '');
+        const type = typePrefix.split('_')[0];
+        const id = Number(typePrefix.split('_')[1]);
 
-        const re = new RegExp(fieldNames.customFieldPrefix);
-        if (re.test(fieldName)) {
-            const typePrefix = fieldName.replace(fieldNames.customFieldPrefix, '');
-            const type = typePrefix.split('_')[0];
-            const id = typePrefix.split('_')[1];
+        let fieldValue = this.getFieldValue(fieldName) as string;
+        this.validateField(fieldName, type, fieldValue);
 
-            let fieldValue = this.getFieldValue(fieldName) as string;
-
-            this.validateField(fieldName, type, fieldValue);
-
-            // if multiselect, the value is an array of values
-            if (Array.isArray(this.formValues[fieldName])) {
-                fieldValue = getMultiselectValues(this.formValues[fieldName]);
-            }
-
-            const pair = {id, value: fieldValue};
-            this.addCustomFieldToArray(pair);
+        // if multiselect, the value is an array of values
+        if (Array.isArray(this.formValues[fieldName])) {
+            fieldValue = getMultiselectValues(this.formValues[fieldName]);
         }
+
+        const pair: Tickets.Field = {id, value: fieldValue};
+        this.addCustomField(pair);
     }
 
     validateField(fieldName: string, type: string, value: string): void {
@@ -110,7 +105,7 @@ export class TicketFromForm implements IticketFromFrom {
         }
     }
 
-    addCustomFieldToArray(customPair: any): void {
+    addCustomField(customPair: Tickets.Field): void {
         if (!this.ticket.custom_fields) {
             this.ticket.custom_fields = [];
         }

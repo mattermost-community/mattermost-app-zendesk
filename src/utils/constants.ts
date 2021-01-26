@@ -56,13 +56,14 @@ export const zdTypes = {
     zdTypeTicketType: 'tickettype',
     zdTypeDescription: 'description',
 
-    // Custom Types
-    zdTypeMultiLine: 'textarea',
+    // Custom Zendesk UserField Types
     zdTypeText: 'text',
-
-    zdTypeDecimal: 'decimal',
-    zdTypeInteger: 'integer',
+    zdTypeMultiLine: 'textarea',
     zdTypeCheckbox: 'checkbox',
+    zdTypeDate: 'date',
+    zdTypeInteger: 'integer',
+    zdTypeDecimal: 'decimal',
+    zdTypeRegex: 'regexp',
     zdTypeTagger: 'tagger',
     zdTypeMuliselect: 'multiselect',
 };
@@ -75,6 +76,9 @@ export const fieldNames = {
     customFieldPrefix: 'custom_field_',
 };
 
+// fieldValidation is an object of Zendesk fields types that validates a field
+// value against a regex .  The regex values are retreiveable from the field
+// list API, but are hardcoded here for simplicity
 export const fieldValidation = {
     integer: {
         regex: '^[+-]?\\d+$',

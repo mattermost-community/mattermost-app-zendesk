@@ -6,7 +6,7 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import {zdTypes, systemFields, fieldNames, mappedZDNames, makeFormOptions, makeOptions, formTextAreaMaxLength} from '../utils';
 
 interface Imapper {
-    mapFieldsToAppFields(fields: UserField[]): AppField[];
+    mapZdFieldsToAppFields(fields: UserField[]): AppField[];
     mapFormsToSelectField(forms: any): AppField;
 }
 
@@ -18,7 +18,7 @@ export class FieldMapper implements Imapper {
         this.values = call.values;
         this.postMessage = call.context.post.message;
     }
-    mapFieldsToAppFields(fields: UserField[]): AppField[] {
+    mapZdFieldsToAppFields(fields: UserField[]): AppField[] {
         const appFields: AppField[] = [];
         fields.forEach((field) => {
             switch (field.type) {
@@ -179,7 +179,7 @@ export class FieldMapper implements Imapper {
     // when form is submitted
     private getMappedName(field: UserField): string {
         switch (true) {
-        case mappedZDNames[field.type]:
+        case field.type in mappedZDNames:
             return mappedZDNames[field.type];
         case this.isSystemField(field):
             return field.type;

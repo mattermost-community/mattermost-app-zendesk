@@ -1,5 +1,3 @@
-import {inspect} from 'util';
-
 import {AppCallResponseTypes, AppCallTypes} from 'mattermost-redux/constants/apps';
 import {AppCall, AppCallResponse} from 'mattermost-redux/types/apps';
 

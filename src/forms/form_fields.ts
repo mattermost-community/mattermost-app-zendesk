@@ -45,7 +45,7 @@ export class FormFields implements Ifields {
         const zdFormFieldIDs = this.getTicketFieldIDs(zdTicketForms, formID);
         const zdTicketFields = await tryCallWithMessage(zdClient.ticketfields.list(), 'Failed to fetch ticket fields');
         const zdViewableFields = this.getViewableFields(zdTicketFields, zdFormFieldIDs);
-        const formFields = mapper.mapFieldsToAppFields(zdViewableFields);
+        const formFields = mapper.mapZdFieldsToAppFields(zdViewableFields);
 
         appFields.push(...formFields);
 

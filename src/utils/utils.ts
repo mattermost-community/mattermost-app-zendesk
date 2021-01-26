@@ -4,6 +4,9 @@ export const makeOptions = (options) => options.map(makeOption);
 export const makeFormOption = (option) => ({label: option.name, value: `${option.id}`});
 export const makeFormOptions = (options) => options.map(makeFormOption);
 
+export const makeMultiselectOption = (option) => (option.value);
+export const getMultiselectValues = (options) => options.map(makeMultiselectOption);
+
 export function errorWithMessage(err, message): string {
     return `"${message}".  ` + err.message;
 }
