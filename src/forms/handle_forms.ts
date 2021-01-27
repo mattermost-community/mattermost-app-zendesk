@@ -1,8 +1,6 @@
 import {AppCallResponseTypes, AppCallTypes} from 'mattermost-redux/constants/apps';
 import {AppCall, AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {getManifest} from '../../manifest';
-
 import app from '../app/app';
 
 import {newCreateTicketForm} from './create_ticket';
@@ -17,19 +15,8 @@ export class BaseForm {
 
     // handle delegates form handling based on AppCall type
     handle = (): Promise<AppCallResponse> => {
-        const fullURL = getManifest().root_url + this.call.url;
-        const url = new URL(fullURL);
-        const callType = url.searchParams.get('call_type');
-
-        // a field value in the form has changed
-        if (this.call.values) {
-            if (this.call.type === AppCallTypes.FORM && this.call.values.name) {
-                return this.handleForm();
-            }
-        }
-
-        switch (callType) {
-        case 'open':
+        switch (this.call.type) {
+        case 'form':
             return this.handleForm();
         case 'lookup':
             return this.handleLookup();
@@ -50,17 +37,28 @@ export class BaseForm {
     };
 }
 
-// CreateTicketForm handles creation and submission for creating a ticket from a post
-export class CreateTicketForm extends BaseForm {
-    handleForm = async (): Promise<AppCallResponse> => {
-        const form = await newCreateTicketForm(this.call);
-        const callResponse: AppCallResponse = {
+// OpenCreateTicketForm opens a new create ticket form
+export class OpenCreateTicketForm extends BaseForm {
+    handleSubmit = async (): Promise<AppCallResponse> => {
+        return {
             type: AppCallTypes.FORM,
-            form,
+            form: await newCreateTicketForm(this.call),
         };
-        return callResponse;
+    }
+}
+
+// CreateTicketForm updates the create ticket form with new values or creates
+// the ticket if submit button is clicked
+export class CreateTicketForm extends BaseForm {
+    // update the values in the form
+    handleForm = async (): Promise<AppCallResponse> => {
+        return {
+            type: AppCallTypes.FORM,
+            form: await newCreateTicketForm(this.call),
+        };
     }
 
+    // submit the ticket
     handleSubmit = async (): Promise<AppCallResponse> => {
         let callResponse: AppCallResponse = {
             type: AppCallResponseTypes.OK,

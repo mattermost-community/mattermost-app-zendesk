@@ -26,15 +26,10 @@ function commandConnect(): AppBinding {
         label: 'connect',
         description: 'Connect your Zendesk account',
         icon: zdIcon,
-        call: getConnectCall(),
+        call: {
+            url: routes.app.BindingPathConnect,
+        },
     } as AppBinding;
-}
-
-function getConnectCall(): AppCall {
-    return {
-        type: AppCallTypes.FORM,
-        url: routes.app.BindingPathConnect,
-    } as AppCall;
 }
 
 function commandDisconnect(): AppBinding {
@@ -43,12 +38,8 @@ function commandDisconnect(): AppBinding {
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
         icon: zdIcon,
-        call: getDisconnectCall(),
+        call: {
+            url: routes.app.BindingPathDisconnect,
+        },
     } as AppBinding;
-}
-
-function getDisconnectCall(): AppCall {
-    return {
-        url: routes.app.BindingPathDisconnect,
-    } as AppCall;
 }

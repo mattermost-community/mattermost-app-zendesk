@@ -1,1 +1,1 @@
-export {CreateTicketForm} from './handle_forms';
+export {CreateTicketForm, OpenCreateTicketForm} from './handle_forms';

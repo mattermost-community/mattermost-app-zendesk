@@ -22,7 +22,6 @@ export class FieldMapper implements Imapper {
         const appFields: AppField[] = [];
         fields.forEach((field) => {
             switch (field.type) {
-
             // will be filled by post message and handled separately
             case zdTypes.zdTypeDescription:
                 return;

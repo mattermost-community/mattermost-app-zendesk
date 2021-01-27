@@ -26,16 +26,11 @@ function postMenuCreate(): AppBinding {
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
         icon: zdIcon,
-        call: getPostMenuCreateCall(),
-    } as AppBinding;
-}
-
-function getPostMenuCreateCall(): AppCall {
-    return {
-        type: AppCallTypes.FORM,
-        url: routes.app.BindingPathCreateForm + '?call_type=open',
-        expand: {
-            post: 'all',
+        call: {
+            url: routes.app.BindingPathOpenCreateTicketForm,
+            expand: {
+                post: 'all',
+            },
         },
-    } as AppCall;
+    } as AppBinding;
 }

@@ -5,25 +5,32 @@ export const zdClientID = 'mattermost_zendesk_app';
 
 export const formTextAreaMaxLength = 1024;
 
+// routes to the Mattermost Instance
 const mmPaths = {
 };
 
+// routes to the Zendesk Instance
 const zdPaths = {
     OAuthAuthorizationURI: '/oauth/authorizations/new',
     OAuthAccessTokenURI: '/oauth/tokens',
     APIVersion: '/api/v2',
 };
 
+// routes to the Zendesk App Instance
 const appPaths = {
     ManifestPath: '/manifest.json',
     InstallPath: '/install',
 
     OAuthCompletePath: '/oauth/complete',
 
+    // Binding routes are accessed via a location call
     BindingsPath: '/bindings',
-    BindingPathCreateForm: '/create',
+    BindingPathOpenCreateTicketForm: '/open-create-ticket-form',
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
+
+    // Call routes are callable routes, but not bound to a location
+    CallPathCreateForm: '/create-ticket-form',
 };
 
 export const routes = {

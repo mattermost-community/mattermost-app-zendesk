@@ -15,7 +15,7 @@ export async function newCreateTicketForm(call: AppCall): Promise<AppForm> {
         icon: zdIcon,
         fields,
         call: {
-            url: routes.app.BindingPathCreateForm + '?call_type=submit',
+            url: routes.app.CallPathCreateForm,
         },
     };
     return form;
