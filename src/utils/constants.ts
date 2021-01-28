@@ -1,23 +1,23 @@
 export const jsonConfigFileStore = 'config.json';
 export const jsonTokenFileStore = 'tokens.json';
-export const zdIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
-export const zdClientID = 'mattermost_zendesk_app';
+export const ZDIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
+export const ZDClientID = 'mattermost_zendesk_app';
 
-export const formTextAreaMaxLength = 1024;
+export const FormTextAreaMaxLength = 1024;
 
-// routes to the Mattermost Instance
-const mmPaths = {
+// Routes to the Mattermost Instance
+const MMPaths = {
 };
 
-// routes to the Zendesk Instance
-const zdPaths = {
+// Routes to the Zendesk Instance
+const ZDPaths = {
     OAuthAuthorizationURI: '/oauth/authorizations/new',
     OAuthAccessTokenURI: '/oauth/tokens',
     APIVersion: '/api/v2',
 };
 
-// routes to the Zendesk App Instance
-const appPaths = {
+// Routes to the Zendesk App Instance
+const AppPaths = {
     ManifestPath: '/manifest.json',
     InstallPath: '/install',
 
@@ -33,73 +33,73 @@ const appPaths = {
     CallPathCreateForm: '/create-ticket-form',
 };
 
-export const routes = {
-    zd: zdPaths,
-    mm: mmPaths,
-    app: appPaths,
+export const Routes = {
+    ZD: ZDPaths,
+    MM: MMPaths,
+    App: AppPaths,
 };
 
-export const commandLocations = {
+export const CommandLocations = {
     Connect: 'connect',
     Disconnect: 'disconnect',
 };
 
-const zdENV = {
-    host: process.env.ZD_URL as string,
-    apiURL: process.env.ZD_URL + zdPaths.APIVersion as string,
-    clientSecret: process.env.ZD_CLIENT_SECRET as string,
+const ZDEnv = {
+    Host: process.env.ZD_URL as string,
+    ApiURL: process.env.ZD_URL + ZDPaths.APIVersion as string,
+    ClientSecret: process.env.ZD_CLIENT_SECRET as string,
 };
 
-export const ENV = {
-    zd: zdENV,
+export const Env = {
+    ZD: ZDEnv,
 };
 
-export const zdTypes = {
+// Fields available inside Zendesk
+export const ZDFieldTypes = {
 
     // System Types
-    // zdTypeAssignee: 'assignee',
-    zdTypeSubject: 'subject',
-    zdTypePriority: 'priority',
-    zdTypeTicketType: 'tickettype',
-    zdTypeDescription: 'description',
+    // Assignee: 'assignee',
+    Subject: 'subject',
+    Priority: 'priority',
+    TicketType: 'tickettype',
+    Description: 'description',
 
     // Custom Zendesk UserField Types
-    zdTypeText: 'text',
-    zdTypeMultiLine: 'textarea',
-    zdTypeCheckbox: 'checkbox',
-    zdTypeDate: 'date',
-    zdTypeInteger: 'integer',
-    zdTypeDecimal: 'decimal',
-    zdTypeRegex: 'regexp',
-    zdTypeTagger: 'tagger',
-    zdTypeMuliselect: 'multiselect',
+    Text: 'text',
+    MultiLine: 'textarea',
+    Checkbox: 'checkbox',
+    Date: 'date',
+    Integer: 'integer',
+    Decimal: 'decimal',
+    Regex: 'regexp',
+    Tagger: 'tagger',
+    Muliselect: 'multiselect',
 };
 
-export const fieldNames = {
-    additionalMessage: 'additional_message',
-    postMessage: 'post_message',
-    formsSelectName: 'ticket_form_id',
+export const AppFieldNames = {
+    AdditionalMessage: 'additional_message',
+    PostMessage: 'post_message',
+    FormsSelectName: 'ticket_form_id',
 
-    customFieldPrefix: 'custom_field_',
+    CustomFieldPrefix: 'custom_field_',
 };
 
-// fieldValidation is an object of Zendesk fields types that validates a field
-// value against a regex .  The regex values are retreiveable from the field
+// ZdFieldValidation is an object of Zendesk fields types that validates a field
+// value against a regex.  The regex values are retreivable from the field
 // list API, but are hardcoded here for simplicity
-export const fieldValidation = {
-    integer: {
-        regex: '^[+-]?\\d+$',
-        regexError: 'Numeric field not valid',
-    },
-    decimal: {
-        regex: '^[-+]?[0-9]*[.,]?[0-9]+$',
-        regexError: 'Decimal field not valid',
-    },
+export const ZDFieldValidation = {};
+ZDFieldValidation[ZDFieldTypes.Integer] = {
+    Regex: '^[+-]?\\d+$',
+    RegexError: 'Numeric field not valid',
+};
+ZDFieldValidation[ZDFieldTypes.Decimal] = {
+    Regex: '^[-+]?[0-9]*[.,]?[0-9]+$',
+    RegexError: 'Decimal field not valid',
 };
 
-// mappedZDNames are field names that need to be remapped before sending as a
+// MappedZDNames are field names that need to be remapped before sending as a
 // field name for the app modal.
-export const mappedZDNames = { };
-mappedZDNames[zdTypes.zdTypeTicketType] = 'type';
+export const MappedZDNames = { };
+MappedZDNames[ZDFieldTypes.TicketType] = 'type';
 
-export const systemFields = ['subject'];
+export const SystemFields = ['subject'];

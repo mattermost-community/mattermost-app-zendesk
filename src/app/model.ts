@@ -2,21 +2,21 @@ import {Tickets} from 'node-zendesk';
 
 import {AppFormValue, AppFormValues} from 'mattermost-redux/types/apps';
 
-import {fieldNames, fieldValidation, getMultiselectValues} from '../utils';
+import {AppFieldNames, ZDFieldValidation, getMultiselectValues} from '../utils';
 
 import {configStore} from '../store';
 
 export type fieldValidationErrors = Record<string, string> | {};
 
-interface IticketFromFrom {
+interface ITicketFromFrom {
     getTicket(): Tickets.CreatePayload;
     fieldValidationErrors: fieldValidationErrors;
 }
 
-export class TicketFromForm implements IticketFromFrom {
+export class TicketFromForm implements ITicketFromFrom {
     formValues: AppFormValues;
     ticket: Tickets.CreateModel;
-    fieldValidationErrors: any
+    fieldValidationErrors: fieldValidationErrors
 
     constructor(values: AppFormValues) {
         this.formValues = values;
@@ -31,8 +31,8 @@ export class TicketFromForm implements IticketFromFrom {
     getPostMessage(): string {
         const mmSignature = '*message created from Mattermost message.*\n' + configStore.getSiteURL();
 
-        const additionalMessage = this.formValues[fieldNames.additionalMessage] || '';
-        const postMessage = this.formValues[fieldNames.postMessage] || '';
+        const additionalMessage = this.formValues[AppFieldNames.AdditionalMessage] || '';
+        const postMessage = this.formValues[AppFieldNames.PostMessage] || '';
 
         const zdMessage = additionalMessage + '\n' +
                 postMessage + '\n' +
@@ -49,7 +49,7 @@ export class TicketFromForm implements IticketFromFrom {
     // 1:1 to a zendesk ticket
     mapFormValuesToTicket(ticket: Tickets.CreateModel): Tickets.CreatePayload {
         // app form values that are not to be 1:1 mapped to zendesk fields
-        const omitFields = [fieldNames.additionalMessage, fieldNames.postMessage];
+        const omitFields = [AppFieldNames.AdditionalMessage, AppFieldNames.PostMessage];
 
         // iterate through each field and build the Zendesk ticket
         Object.keys(this.formValues).forEach((fieldName) => {
@@ -63,7 +63,7 @@ export class TicketFromForm implements IticketFromFrom {
                 return;
 
             // field is a custom field
-            case RegExp(`${fieldNames.customFieldPrefix}*`).test(fieldName):
+            case RegExp(`${AppFieldNames.CustomFieldPrefix}*`).test(fieldName):
                 this.handleCustomField(fieldName);
                 return;
 
@@ -78,7 +78,7 @@ export class TicketFromForm implements IticketFromFrom {
     }
 
     handleCustomField(fieldName: string): void {
-        const typePrefix = fieldName.replace(fieldNames.customFieldPrefix, '');
+        const typePrefix = fieldName.replace(AppFieldNames.CustomFieldPrefix, '');
         const type = typePrefix.split('_')[0];
         const id = Number(typePrefix.split('_')[1]);
 
@@ -95,12 +95,12 @@ export class TicketFromForm implements IticketFromFrom {
     }
 
     validateField(fieldName: string, type: string, value: string): void {
-        if (!fieldValidation[type]) {
+        if (!ZDFieldValidation[type]) {
             return;
         }
-        const regex = RegExp(fieldValidation[type].regex);
+        const regex = RegExp(ZDFieldValidation[type].Regex);
         if (!regex.test(value)) {
-            const err = fieldValidation[type].regexError;
+            const err = ZDFieldValidation[type].RegexError;
             this.fieldValidationErrors[fieldName] = err;
         }
     }

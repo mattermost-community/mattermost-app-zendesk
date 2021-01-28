@@ -1,9 +1,9 @@
-import {AppBinding, AppCall} from 'mattermost-redux/types/apps';
-import {AppBindingLocations, AppCallTypes} from 'mattermost-redux/constants/apps';
+import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBindingLocations} from 'mattermost-redux/constants/apps';
 
 import {isUserConnected} from '../app/user';
 
-import {zdIcon, routes, commandLocations} from '../utils';
+import {ZDIcon, Routes, CommandLocations} from '../utils';
 
 // commandBindings returns bindings for the slash command location
 export function commandBindings(userID: string): AppBinding {
@@ -22,24 +22,24 @@ export function commandBindings(userID: string): AppBinding {
 
 function commandConnect(): AppBinding {
     return {
-        location: commandLocations.Connect,
+        location: CommandLocations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
-        icon: zdIcon,
+        icon: ZDIcon,
         call: {
-            url: routes.app.BindingPathConnect,
+            url: Routes.App.BindingPathConnect,
         },
     } as AppBinding;
 }
 
 function commandDisconnect(): AppBinding {
     return {
-        location: commandLocations.Disconnect,
+        location: CommandLocations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
-        icon: zdIcon,
+        icon: ZDIcon,
         call: {
-            url: routes.app.BindingPathDisconnect,
+            url: Routes.App.BindingPathDisconnect,
         },
     } as AppBinding;
 }

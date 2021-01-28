@@ -3,7 +3,7 @@ import {AppBindingLocations, AppCallTypes, AppExpandLevels} from 'mattermost-red
 
 import {isUserConnected} from '../app/user';
 
-import {zdIcon, routes} from '../utils';
+import {ZDIcon, Routes} from '../utils';
 
 // postMenuBindings returns bindings for the post_menu location
 export function postMenuBindings(userID: string): AppBinding {
@@ -25,9 +25,9 @@ function postMenuCreate(): AppBinding {
         app_id: 'zendesk',
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
-        icon: zdIcon,
+        icon: ZDIcon,
         call: {
-            url: routes.app.BindingPathOpenCreateTicketForm,
+            url: Routes.App.BindingPathOpenCreateTicketForm,
             expand: {
                 post: 'all',
             },

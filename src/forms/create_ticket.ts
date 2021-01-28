@@ -1,6 +1,6 @@
 import {AppForm} from 'mattermost-redux/types/apps';
 
-import {routes, zdIcon} from '../utils';
+import {Routes, ZDIcon} from '../utils';
 
 import {FormFields} from './form_fields';
 
@@ -12,10 +12,10 @@ export async function newCreateTicketForm(call: AppCall): Promise<AppForm> {
     const form: AppForm = {
         title: 'Create Zendesk Ticket',
         header: 'Create a Zendesk ticket from Mattermost by filling out and submitting this form. Additional text can be added in the `Optional Message` field.',
-        icon: zdIcon,
+        icon: ZDIcon,
         fields,
         call: {
-            url: routes.app.CallPathCreateForm,
+            url: Routes.App.CallPathCreateForm,
         },
     };
     return form;

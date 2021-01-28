@@ -3,7 +3,7 @@ import {AppCall, AppField, AppCallValues} from 'mattermost-redux/types/apps';
 
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
-import {zdTypes, systemFields, fieldNames, mappedZDNames, makeFormOptions, makeOptions, formTextAreaMaxLength} from '../utils';
+import {ZDFieldTypes, SystemFields, AppFieldNames, MappedZDNames, makeFormOptions, makeOptions, FormTextAreaMaxLength} from '../utils';
 
 interface Imapper {
     mapZdFieldsToAppFields(fields: UserField[]): AppField[];
@@ -23,33 +23,33 @@ export class FieldMapper implements Imapper {
         fields.forEach((field) => {
             switch (field.type) {
             // will be filled by post message and handled separately
-            case zdTypes.zdTypeDescription:
+            case ZDFieldTypes.Description:
                 return;
 
-            case zdTypes.zdTypeInteger:
-            case zdTypes.zdTypeDecimal:
+            case ZDFieldTypes.Integer:
+            case ZDFieldTypes.Decimal:
                 appFields.push(this.mapToText(field));
                 return;
 
-            case zdTypes.zdTypeSubject:
-            case zdTypes.zdTypeText:
-            case zdTypes.zdTypeMultiLine:
+            case ZDFieldTypes.Subject:
+            case ZDFieldTypes.Text:
+            case ZDFieldTypes.MultiLine:
                 appFields.push(this.mapToText(field));
                 return;
 
-            case zdTypes.zdTypeCheckbox:
+            case ZDFieldTypes.Checkbox:
                 appFields.push(this.mapToBool(field));
                 return;
 
-            case zdTypes.zdTypeTicketType:
-            case zdTypes.zdTypePriority:
-            case zdTypes.zdTypeTagger:
-            case zdTypes.zdTypeMuliselect:
+            case ZDFieldTypes.TicketType:
+            case ZDFieldTypes.Priority:
+            case ZDFieldTypes.Tagger:
+            case ZDFieldTypes.Muliselect:
                 appFields.push(this.mapToStaticSelect(field));
                 return;
 
             default:
-                console.log('field not mapped to app field. field = ', field);
+                console.log('field type not mapped to app field. type = ', field.type);
                 break;
             }
         });
@@ -63,7 +63,7 @@ export class FieldMapper implements Imapper {
 
     // mapFormsToSelectField maps zendesk forms to a Mattermost select field
     mapFormsToSelectField(forms: any): AppField {
-        const name = fieldNames.formsSelectName;
+        const name = AppFieldNames.FormsSelectName;
         const selectField: AppField = {
             name,
             label: 'Form',
@@ -93,7 +93,7 @@ export class FieldMapper implements Imapper {
     private mapToStaticSelect(field: UserField): AppField {
         const name = this.getMappedName(field);
         const options = this.isSystemField(field) ? field.system_field_options : field.custom_field_options;
-        const multiselect = field.type === zdTypes.zdTypeMuliselect;
+        const multiselect = field.type === ZDFieldTypes.Muliselect;
         const selectField: AppField = {
             name,
             label: field.title,
@@ -110,8 +110,8 @@ export class FieldMapper implements Imapper {
     private mapToText(field: UserField): AppField {
         // multi-line zd fields have type textarea
         let subType = '';
-        if (field.type === zdTypes.zdTypeMultiLine) {
-            subType = zdTypes.zdTypeMultiLine;
+        if (field.type === ZDFieldTypes.MultiLine) {
+            subType = ZDFieldTypes.MultiLine;
         }
 
         // There is no distinguishable difference in a custom text field and
@@ -122,7 +122,7 @@ export class FieldMapper implements Imapper {
             label: field.title,
             type: AppFieldTypes.TEXT,
             min_length: 2,
-            max_length: formTextAreaMaxLength,
+            max_length: FormTextAreaMaxLength,
             subtype: subType,
             is_required: field.required_in_portal,
             value: this.getSavedValue(name),
@@ -131,7 +131,7 @@ export class FieldMapper implements Imapper {
     }
 
     private isSystemField(field: UserField): boolean {
-        if (systemFields.includes(field.type) || field.system_field_options) {
+        if (SystemFields.includes(field.type) || field.system_field_options) {
             return true;
         }
         return false;
@@ -150,24 +150,24 @@ export class FieldMapper implements Imapper {
     private getPostFields(postMessage: string): AppField[] {
         return [
             {
-                name: fieldNames.additionalMessage,
+                name: AppFieldNames.AdditionalMessage,
                 label: 'Optional message',
                 type: AppFieldTypes.TEXT,
                 description: 'Add additional message to the Zendesk ticket',
                 subtype: 'textarea',
-                value: this.getSavedValue(fieldNames.additionalMessage),
+                value: this.getSavedValue(AppFieldNames.AdditionalMessage),
                 min_length: 2,
-                max_length: formTextAreaMaxLength,
+                max_length: FormTextAreaMaxLength,
             },
             {
-                name: fieldNames.postMessage,
+                name: AppFieldNames.PostMessage,
                 label: 'Mattermost message',
                 type: AppFieldTypes.TEXT,
                 value: postMessage,
                 subtype: 'textarea',
                 readonly: true,
                 min_length: 2,
-                max_length: formTextAreaMaxLength,
+                max_length: FormTextAreaMaxLength,
                 is_required: true,
             },
         ];
@@ -178,8 +178,8 @@ export class FieldMapper implements Imapper {
     // when form is submitted
     private getMappedName(field: UserField): string {
         switch (true) {
-        case field.type in mappedZDNames:
-            return mappedZDNames[field.type];
+        case field.type in MappedZDNames:
+            return MappedZDNames[field.type];
         case this.isSystemField(field):
             return field.type;
         default :
@@ -188,6 +188,6 @@ export class FieldMapper implements Imapper {
     }
 
     private getCustomFieldName(field: UserField): string {
-        return fieldNames.customFieldPrefix + `${field.type}_` + field.id;
+        return AppFieldNames.CustomFieldPrefix + `${field.type}_` + field.id;
     }
 }

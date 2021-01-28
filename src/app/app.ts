@@ -1,7 +1,7 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {AppCall, AppContext} from 'mattermost-redux/types/apps';
 
-import {ENV, tryCallWithMessage, errorWithMessage} from '../utils';
+import {Env, tryCallWithMessage, errorWithMessage} from '../utils';
 
 import {newMMClient, newZDClient} from '../clients';
 
@@ -38,7 +38,7 @@ class App {
         // create a reply to the original post noting the ticket was created
         const id = ticket.id;
         const subject = ticket.subject;
-        const message = `${zdUser.name} created ticket [#${id}](${ENV.zd.host}/agent/tickets/${id}) [${subject}]`;
+        const message = `${zdUser.name} created ticket [#${id}](${Env.ZD.Host}/agent/tickets/${id}) [${subject}]`;
         await this.createBotPost(call.context, message);
 
         // no respond with no errors

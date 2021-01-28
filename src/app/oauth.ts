@@ -1,15 +1,15 @@
 import ClientOAuth2 from 'client-oauth2';
 
-import {ENV, zdClientID, routes as r} from '../utils';
+import {Env, ZDClientID, Routes} from '../utils';
 import {getManifest} from '../../manifest';
 
 export const getOAuthConfig = (): any => {
     const zdAuth = new ClientOAuth2({
-        clientId: zdClientID,
-        clientSecret: ENV.zd.clientSecret,
-        accessTokenUri: ENV.zd.host + r.zd.OAuthAccessTokenURI,
-        authorizationUri: ENV.zd.host + r.zd.OAuthAuthorizationURI,
-        redirectUri: getManifest().root_url + r.app.OAuthCompletePath,
+        clientId: ZDClientID,
+        clientSecret: Env.ZD.ClientSecret,
+        accessTokenUri: Env.ZD.Host + Routes.ZD.OAuthAccessTokenURI,
+        authorizationUri: Env.ZD.Host + Routes.ZD.OAuthAuthorizationURI,
+        redirectUri: getManifest().root_url + Routes.App.OAuthCompletePath,
         scopes: ['read', 'write'],
     });
     return zdAuth;
