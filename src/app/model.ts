@@ -6,17 +6,17 @@ import {AppFieldNames, ZDFieldValidation, getMultiselectValues} from '../utils';
 
 import {configStore} from '../store';
 
-export type fieldValidationErrors = Record<string, string> | {};
+export type FieldValidationErrors = {[name: string]: string};
 
 interface ITicketFromFrom {
     getTicket(): Tickets.CreatePayload;
-    fieldValidationErrors: fieldValidationErrors;
+    fieldValidationErrors: FieldValidationErrors;
 }
 
 export class TicketFromForm implements ITicketFromFrom {
     formValues: AppFormValues;
     ticket: Tickets.CreateModel;
-    fieldValidationErrors: fieldValidationErrors
+    fieldValidationErrors: FieldValidationErrors
 
     constructor(values: AppFormValues) {
         this.formValues = values;

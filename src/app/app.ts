@@ -7,10 +7,10 @@ import {newMMClient, newZDClient} from '../clients';
 
 import {configStore, oauthStore} from '../store';
 
-import {newTicketFromForm, fieldValidationErrors} from './model';
+import {newTicketFromForm, FieldValidationErrors} from './model';
 
 class App {
-    createTicketFromPost = async (call: AppCall): Promise<fieldValidationErrors> => {
+    createTicketFromPost = async (call: AppCall): Promise<FieldValidationErrors> => {
         // get active mattermost user ID
         const mmUserID = call.context.acting_user_id || '';
         const zdToken = oauthStore.getToken(mmUserID);
