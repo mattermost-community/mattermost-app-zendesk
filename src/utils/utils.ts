@@ -13,10 +13,8 @@ export function errorWithMessage(err, message): string {
     return `"${message}".  ` + err.message;
 }
 
-export function tryCallWithMessage(f: Function, message: string): any {
-    try {
-        return f;
-    } catch (err) {
+export async function tryPromiseWithMessage(p: Promise<any>, message: string): Promise<any> {
+    return p.catch((err) => {
         throw new Error(errorWithMessage(err, message));
-    }
+    });
 }

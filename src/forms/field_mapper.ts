@@ -49,7 +49,7 @@ export class FieldMapper implements Imapper {
                 return;
 
             default:
-                console.log('field type not mapped to app field. type = ', field.type);
+                console.log('field type not mapped to app field. type =', field.type);
                 break;
             }
         });

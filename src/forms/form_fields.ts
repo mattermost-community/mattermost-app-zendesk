@@ -2,7 +2,7 @@ import {AppCall, AppField} from 'mattermost-redux/types/apps';
 import {Client, Tickets, UserField} from 'node-zendesk';
 
 import {newZDClient} from '../clients';
-import {tryCallWithMessage} from '../utils';
+import {tryPromiseWithMessage} from '../utils';
 import {oauthStore} from '../store';
 
 import {FieldMapper} from './field_mapper';
@@ -27,7 +27,7 @@ export class FormFields implements Ifields {
             throw new Error('Failed to get user access_token');
         }
         const zdClient: Client = newZDClient(token);
-        const zdTicketForms = await tryCallWithMessage(zdClient.ticketforms.list(), 'Failed to fetch ticket forms');
+        const zdTicketForms = await tryPromiseWithMessage(zdClient.ticketforms.list(), 'Failed to fetch ticket forms');
 
         // show the form selector when intially opening the modal
         const mapper = new FieldMapper(this.call);
@@ -43,7 +43,7 @@ export class FormFields implements Ifields {
         const formID = formField.value.value;
 
         const zdFormFieldIDs = this.getTicketFieldIDs(zdTicketForms, formID);
-        const zdTicketFields = await tryCallWithMessage(zdClient.ticketfields.list(), 'Failed to fetch ticket fields');
+        const zdTicketFields = await tryPromiseWithMessage(zdClient.ticketfields.list(), 'Failed to fetch ticket fields');
         const zdViewableFields = this.getViewableFields(zdTicketFields, zdFormFieldIDs);
         const formFields = mapper.mapZdFieldsToAppFields(zdViewableFields);
 

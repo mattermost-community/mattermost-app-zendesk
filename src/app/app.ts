@@ -1,7 +1,7 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {AppCall, AppContext} from 'mattermost-redux/types/apps';
 
-import {Env, tryCallWithMessage, errorWithMessage} from '../utils';
+import {Env, tryPromiseWithMessage, errorWithMessage} from '../utils';
 
 import {newMMClient, newZDClient} from '../clients';
 
@@ -30,10 +30,10 @@ class App {
         }
 
         // create the ticket in Zendesk
-        const ticket = await tryCallWithMessage(zdClient.tickets.create(zdTicket), 'Failed to create Zendesk ticket');
+        const ticket = await tryPromiseWithMessage(zdClient.tickets.create(zdTicket), 'Failed to create Zendesk ticket');
 
         // get the Zendesk user
-        const zdUser = await tryCallWithMessage(zdClient.users.show(ticket.requester_id), 'Failed to get Zendesk user');
+        const zdUser = await tryPromiseWithMessage(zdClient.users.show(ticket.requester_id), 'Failed to get Zendesk user');
 
         // create a reply to the original post noting the ticket was created
         const id = ticket.id;
@@ -41,27 +41,30 @@ class App {
         const message = `${zdUser.name} created ticket [#${id}](${Env.ZD.Host}/agent/tickets/${id}) [${subject}]`;
         await this.createBotPost(call.context, message);
 
-        // no respond with no errors
+        // respond with no errors
         return {};
     }
 
     createBotPost = async (context: AppContext, message: string): Promise<void> => {
+        const adminToken = configStore.getAdminAccessToken();
+        const adminClient = newMMClient(adminToken);
+
+        // add bot to team and channel
+        const botUserID = configStore.getBotUserID();
+        await tryPromiseWithMessage(adminClient.addToTeam(context.team_id, botUserID), 'Failed to add bot to team');
+        await tryPromiseWithMessage(adminClient.addToChannel(botUserID, context.channel_id), 'Failed to add bot to team');
+
         const botToken = configStore.getBotAccessToken();
-        const mmClient = newMMClient(botToken);
+        const botClient = newMMClient(botToken);
 
         const post: Post = {
             message,
+            user_id: botUserID,
             channel_id: context.channel_id as string,
             root_id: context.post_id as string,
         };
 
-        // await tryCallWithMessage(mmClient.createPost(post), 'Failed to create Zendesk ticket');
-
-        try {
-            await mmClient.createPost(post);
-        } catch (err) {
-            throw new Error(errorWithMessage(err, 'Failed to create post'));
-        }
+        await tryPromiseWithMessage(botClient.createPost(post), 'Failed to create post');
     }
 }
 

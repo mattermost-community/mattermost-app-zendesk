@@ -4,7 +4,7 @@ import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 import {Client} from 'node-zendesk';
 
 import {newZDClient} from '../clients';
-import {tryCallWithMessage, errorWithMessage} from '../utils';
+import {tryPromiseWithMessage} from '../utils';
 
 import {oauthStore} from '../store';
 
@@ -17,13 +17,13 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
 
     // get current token. this request will be recognized as the token coming
     // from the zendesk app
-    const currentToken = await tryCallWithMessage(zdClient.oauthtokens.current(), 'failed to get current user token');
+    const currentToken = await tryPromiseWithMessage(zdClient.oauthtokens.current(), 'failed to get current user token');
 
     // get the token ID
     const currentTokenID = currentToken.token.id;
 
     // delete the user zendesk oauth token
-    await tryCallWithMessage(zdClient.oauthtokens.revoke(currentTokenID), 'failed to revoke current user token');
+    await tryPromiseWithMessage(zdClient.oauthtokens.revoke(currentTokenID), 'failed to revoke current user token');
 
     // delete the token from the store
     oauthStore.deleteToken(context.acting_user_id);
