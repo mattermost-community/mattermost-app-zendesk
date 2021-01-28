@@ -96,6 +96,14 @@ ZDFieldValidation[ZDFieldTypes.Decimal] = {
     Regex: '^[-+]?[0-9]*[.,]?[0-9]+$',
     RegexError: 'Decimal field not valid',
 };
+ZDFieldValidation[ZDFieldTypes.Date] = {
+    Regex: '^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|[12][0-9]|0[1-9])$',
+    RegexError: 'Date field not valid',
+};
+ZDFieldValidation[ZDFieldTypes.Regex] = {
+    Regex: '^(http|https):\\/\\/[a-z0-9]+([-.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(([0-9]{1,5})?\\/.*)?$',
+    RegexError: 'Regex field not valid',
+};
 
 // MappedZDNames are field names that need to be remapped before sending as a
 // field name for the app modal.
