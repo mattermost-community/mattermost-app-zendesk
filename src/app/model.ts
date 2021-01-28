@@ -63,7 +63,7 @@ export class TicketFromForm implements ITicketFromFrom {
                 return;
 
             // field is a custom field
-            case RegExp(`${AppFieldNames.CustomFieldPrefix}*`).test(fieldName):
+            case fieldName.startsWith(AppFieldNames.CustomFieldPrefix):
                 this.handleCustomField(fieldName);
                 return;
 
