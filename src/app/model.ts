@@ -42,12 +42,13 @@ export class TicketFromForm implements ITicketFromFrom {
     }
 
     getTicket(): Tickets.CreatePayload {
-        return this.mapFormValuesToTicket(this.ticket);
+        this.mapFormValuesToTicket();
+        return {ticket: this.ticket};
     }
 
     // mapFormValuesToTicket returns a zendesk ticket with AppCall values mapped
     // 1:1 to a zendesk ticket
-    mapFormValuesToTicket(ticket: Tickets.CreateModel): Tickets.CreatePayload {
+    mapFormValuesToTicket(): void {
         // app form values that are not to be 1:1 mapped to zendesk fields
         const omitFields = [AppFieldNames.AdditionalMessage, AppFieldNames.PostMessage];
 
@@ -70,11 +71,9 @@ export class TicketFromForm implements ITicketFromFrom {
             default:
                 // app form field names were mapped to a corresponding Zendesk field name. Save them
                 // directly to the ticket payload
-                ticket[fieldName] = this.getFieldValue(fieldName);
+                this.ticket[fieldName] = this.getFieldValue(fieldName);
             }
         });
-
-        return {ticket};
     }
 
     handleCustomField(fieldName: string): void {
