@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
+import {Client} from 'node-zendesk';
 
 import {newZDClient} from '../clients';
 import {tryCallWithMessage, errorWithMessage} from '../utils';
@@ -12,7 +13,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const token = oauthStore.getToken(context.acting_user_id);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const zdClient = newZDClient(token) as any;
+    const zdClient = newZDClient(token) as Client;
 
     // get current token. this request will be recognized as the token coming
     // from the zendesk app
