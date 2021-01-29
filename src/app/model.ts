@@ -46,37 +46,29 @@ export class TicketFromForm implements ITicketFromFrom {
         return {ticket: this.ticket};
     }
 
-    // mapFormValuesToTicket returns a zendesk ticket with AppCall values mapped
-    // 1:1 to a zendesk ticket
+    // mapFormValuesToTicket maps AppCall values 1:1 to a zendesk ticket
     mapFormValuesToTicket(): void {
-        // app form values that are not to be 1:1 mapped to zendesk fields
-        const omitFields = [AppFieldNames.AdditionalMessage, AppFieldNames.PostMessage];
+        // get only the fields that are to be mapped
+        const prunedFormValues = this.pruneFormFields();
 
         // iterate through each field and build the Zendesk ticket
-        Object.keys(this.formValues).forEach((fieldName) => {
+        Object.keys(prunedFormValues).forEach((fieldName) => {
             switch (true) {
-            case omitFields.includes(fieldName):
-                return;
-
-            // if a form is not defined, selected, or checked in the modal, its
-            // value will be null. continue to next field
-            case !this.formValues[fieldName]:
-                return;
-
-            // field is a custom field
-            case fieldName.startsWith(AppFieldNames.CustomFieldPrefix):
-                this.handleCustomField(fieldName);
+            case this.isCustomField(fieldName):
+                // this is a custom field
+                this.mapCustomFieldToTicket(fieldName);
                 return;
 
             default:
                 // app form field names were mapped to a corresponding Zendesk field name. Save them
                 // directly to the ticket payload
-                this.ticket[fieldName] = this.getFieldValue(fieldName);
+                this.mapFieldToTicket(fieldName);
             }
         });
     }
 
-    handleCustomField(fieldName: string): void {
+    // mapCustomFieldToTicket maps a custom to a zendesk ticket
+    mapCustomFieldToTicket(fieldName: string): void {
         const typePrefix = fieldName.replace(AppFieldNames.CustomFieldPrefix, '');
         const type = typePrefix.split('_')[0];
         const id = Number(typePrefix.split('_')[1]);
@@ -93,6 +85,11 @@ export class TicketFromForm implements ITicketFromFrom {
         this.addCustomField(pair);
     }
 
+    // mapFieldToTicket maps a non-custom field directly to a zendesk ticket
+    mapFieldToTicket(fieldName: string): void {
+        this.ticket[fieldName] = this.getFieldValue(fieldName);
+    }
+
     validateField(fieldName: string, type: string, value: string): void {
         if (!ZDFieldValidation[type]) {
             return;
@@ -104,11 +101,48 @@ export class TicketFromForm implements ITicketFromFrom {
         }
     }
 
+    // pruneFormFields removes fields that are not defined or omitted during
+    // the field mapping process
+    pruneFormFields(): AppFormValues {
+        const prunedFormValues: AppFormValues = {};
+        Object.keys(this.formValues).forEach((fieldName) => {
+            switch (true) {
+            case this.isOmittedField(fieldName):
+                // this field will not be mapped
+                return;
+
+            case !this.formValues[fieldName]:
+                // if a form is not defined, selected, or checked in the modal, its
+                // value will be null. continue to next field
+                return;
+
+            default:
+                // this field will be directly mapped to a zendesk ticket field
+                prunedFormValues[fieldName] = this.formValues[fieldName];
+            }
+        });
+
+        return prunedFormValues;
+    }
+
     addCustomField(customPair: Tickets.Field): void {
         if (!this.ticket.custom_fields) {
             this.ticket.custom_fields = [];
         }
         this.ticket.custom_fields.push(customPair);
+    }
+
+    // isCustomField determines if a field is custom based on the field name
+    isCustomField(fieldName: string): boolean {
+        return Boolean(fieldName.startsWith(AppFieldNames.CustomFieldPrefix));
+    }
+
+    // isOmittedField returns true if a field should not be mapped directly to
+    // a zendesk ticket
+    isOmittedField(fieldName: string): boolean {
+        // app form values that are not to be 1:1 mapped to zendesk fields
+        const omitFields = [AppFieldNames.AdditionalMessage, AppFieldNames.PostMessage];
+        return Boolean(omitFields.includes(fieldName));
     }
 
     // getFieldValue converts app field value to a zendesk field value
@@ -121,7 +155,7 @@ export class TicketFromForm implements ITicketFromFrom {
     }
 }
 
-export function newTicketFromForm(values: AppFormValues): [Tickets.CreatePayload, any] {
+export function newTicketFromForm(values: AppFormValues): [Tickets.CreatePayload, FieldValidationErrors] {
     const ticket = new TicketFromForm(values);
     return [ticket.getTicket(), ticket.fieldValidationErrors];
 }

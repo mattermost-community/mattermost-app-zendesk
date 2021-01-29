@@ -1,4 +1,4 @@
-import {AppForm} from 'mattermost-redux/types/apps';
+import {AppCall, AppForm} from 'mattermost-redux/types/apps';
 
 import {Routes, ZDIcon} from '../utils';
 
