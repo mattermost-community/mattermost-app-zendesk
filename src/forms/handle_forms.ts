@@ -47,9 +47,9 @@ export class OpenCreateTicketForm extends BaseForm {
     }
 }
 
-// CreateTicketForm updates the create ticket form with new values or creates
-// the ticket if submit button is clicked
-export class CreateTicketForm extends BaseForm {
+// SubmitOrUpdateCreateTicketForm updates the create ticket form with new values or
+// submits the ticket if submit button is clicked
+export class SubmitOrUpdateCreateTicketForm extends BaseForm {
     // update the values in the form
     handleForm = async (): Promise<AppCallResponse> => {
         return {

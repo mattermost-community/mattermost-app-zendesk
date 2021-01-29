@@ -30,7 +30,7 @@ const AppPaths = {
     BindingPathDisconnect: '/disconnect',
 
     // Call routes are callable routes, but not bound to a location
-    CallPathCreateForm: '/create-ticket-form',
+    CallPathSubmitOrUpdateCreateTicketForm: '/submit-or-update-create-ticket-form',
 };
 
 export const Routes = {

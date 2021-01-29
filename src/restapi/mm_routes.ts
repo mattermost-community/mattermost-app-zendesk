@@ -5,7 +5,7 @@ import {Routes} from '../utils';
 import {fBindings} from './fBindings';
 import {fConnect} from './fConnect';
 import {fComplete} from './fComplete';
-import {fCreateForm} from './fCreateForm';
+import {fSubmitOrUpdateCreateTicketForm} from './fSumbmitOrCreateTicketForm';
 import {fOpenCreateTicketForm} from './fOpenCreateTicketForm';
 import {fDisconnect} from './fDisconnect';
 import {fInstall} from './fInstall';
@@ -25,5 +25,5 @@ router.post(Routes.App.BindingPathDisconnect, fDisconnect);
 router.post(Routes.App.BindingPathOpenCreateTicketForm, fOpenCreateTicketForm);
 
 // Callable routes, not bound to a location
-router.post(Routes.App.CallPathCreateForm, fCreateForm);
+router.post(Routes.App.CallPathSubmitOrUpdateCreateTicketForm, fSubmitOrUpdateCreateTicketForm);
 export default router;

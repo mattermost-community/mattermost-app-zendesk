@@ -1,5 +1,4 @@
 import {Request, Response} from 'express';
-import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {OpenCreateTicketForm} from '../forms';
 
