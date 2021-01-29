@@ -69,16 +69,15 @@ export class TicketFromForm implements ITicketFromFrom {
         const type = typePrefix.split('_')[0];
         const id = Number(typePrefix.split('_')[1]);
 
-        let fieldValue = String(this.getFieldValue(fieldName));
-        this.validateField(fieldName, type, fieldValue);
+        let value: any = this.getFieldValue(fieldName);
+        this.validateField(fieldName, type, value);
 
         // if multiselect, the value is an array of values
-        if (Array.isArray(this.formValues[fieldName])) {
-            fieldValue = getMultiselectValues(this.formValues[fieldName]);
+        if (Array.isArray(value)) {
+            value = getMultiselectValues(value);
         }
-
-        const pair: Tickets.Field = {id, value: fieldValue};
-        this.addCustomField(pair);
+        const zdField: Tickets.Field = {id, value};
+        this.addCustomField(zdField);
     }
 
     // mapFieldToTicket maps a non-custom field directly to a zendesk ticket
@@ -86,7 +85,7 @@ export class TicketFromForm implements ITicketFromFrom {
         this.ticket[fieldName] = this.getFieldValue(fieldName);
     }
 
-    validateField(fieldName: string, type: string, value: string): void {
+    validateField(fieldName: string, type: string, value: any): void {
         if (!ZDFieldValidation[type]) {
             return;
         }
@@ -135,8 +134,8 @@ export class TicketFromForm implements ITicketFromFrom {
     }
 
     // getFieldValue converts app field value to a zendesk field value
-    getFieldValue(fieldName: string): AppFormValue {
-        let fieldValue: AppFormValue = this.formValues[fieldName];
+    getFieldValue(fieldName: string): Tickets.Field {
+        let fieldValue: any = this.formValues[fieldName];
         if (fieldValue.value) {
             fieldValue = fieldValue.value;
         }
