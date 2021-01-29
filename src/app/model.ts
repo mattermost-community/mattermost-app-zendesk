@@ -65,12 +65,19 @@ export class TicketFromForm implements ITicketFromFrom {
 
     // mapCustomFieldToTicket maps a custom to a zendesk ticket
     mapCustomFieldToTicket(fieldName: string): void {
-        const typePrefix = fieldName.replace(AppFieldNames.CustomFieldPrefix, '');
-        const type = typePrefix.split('_')[0];
-        const id = Number(typePrefix.split('_')[1]);
+        const [zdType, id] = this.getCustomZDFieldTypeAndID(fieldName);
+        if (!zdType) {
+            return;
+        }
 
-        let value: any = this.getFieldValue(fieldName);
-        this.validateField(fieldName, type, value);
+        let errMsg = '';
+        let value: any;
+        [value, errMsg] = this.getFieldValue(fieldName);
+        if (errMsg !== '') {
+            console.log(errMsg);
+            return;
+        }
+        this.validateField(fieldName, zdType, value);
 
         // if multiselect, the value is an array of values
         if (Array.isArray(value)) {
@@ -82,7 +89,17 @@ export class TicketFromForm implements ITicketFromFrom {
 
     // mapFieldToTicket maps a non-custom field directly to a zendesk ticket
     mapFieldToTicket(fieldName: string): void {
-        this.ticket[fieldName] = this.getFieldValue(fieldName);
+        this.ticket[fieldName] = this.getFieldValue(fieldName)[0];
+    }
+
+    getCustomZDFieldTypeAndID(fieldName: string): [string, number] {
+        const prefix = fieldName.replace(AppFieldNames.CustomFieldPrefix, '');
+        const splitted = prefix.split('_');
+        if (splitted.length !== 2) {
+            console.log('custom field name is not valid. fieldName =', fieldName);
+            return ['', 0];
+        }
+        return [splitted[0], Number(splitted[1])];
     }
 
     validateField(fieldName: string, type: string, value: any): void {
@@ -134,12 +151,16 @@ export class TicketFromForm implements ITicketFromFrom {
     }
 
     // getFieldValue converts app field value to a zendesk field value
-    getFieldValue(fieldName: string): Tickets.Field {
+    getFieldValue(fieldName: string): [Tickets.Field, string] {
         let fieldValue: any = this.formValues[fieldName];
+        if (!fieldValue) {
+            const errMsg = `custom field value is not defined for fieldName. fieldName = ${fieldName}`;
+            return [fieldValue, errMsg];
+        }
         if (fieldValue.value) {
             fieldValue = fieldValue.value;
         }
-        return fieldValue;
+        return [fieldValue, ''];
     }
 }
 
