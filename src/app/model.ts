@@ -48,22 +48,18 @@ export class TicketFromForm implements ITicketFromFrom {
 
     // mapFormValuesToTicket maps AppCall values 1:1 to a zendesk ticket
     mapFormValuesToTicket(): void {
-        // get only the fields that are to be mapped
-        const prunedFormValues = this.pruneFormFields();
+        // get only the fields that will be mapped
+        const prunedFormNames = this.pruneFieldNames();
 
         // iterate through each field and build the Zendesk ticket
-        Object.keys(prunedFormValues).forEach((fieldName) => {
-            switch (true) {
-            case this.isCustomField(fieldName):
-                // this is a custom field
+        prunedFormNames.forEach((fieldName) => {
+            // this is a custom field
+            if (this.isCustomField(fieldName)) {
                 this.mapCustomFieldToTicket(fieldName);
                 return;
-
-            default:
-                // app form field names were mapped to a corresponding Zendesk field name. Save them
-                // directly to the ticket payload
-                this.mapFieldToTicket(fieldName);
             }
+
+            this.mapFieldToTicket(fieldName);
         });
     }
 
@@ -101,28 +97,21 @@ export class TicketFromForm implements ITicketFromFrom {
         }
     }
 
-    // pruneFormFields removes fields that are not defined or omitted during
-    // the field mapping process
-    pruneFormFields(): AppFormValues {
-        const prunedFormValues: AppFormValues = {};
+    // pruneFormFields removes field names that are not defined or will be omitted
+    // during the field mapping process
+    pruneFieldNames(): string[] {
+        const prunedFormNames: string[] = [];
         Object.keys(this.formValues).forEach((fieldName) => {
-            switch (true) {
-            case this.isOmittedField(fieldName):
-                // this field will not be mapped
+            // form is not defined, selected, or checked in the modal or is an ommitted field
+            if (this.isOmittedField(fieldName) || !this.formValues[fieldName]) {
                 return;
-
-            case !this.formValues[fieldName]:
-                // if a form is not defined, selected, or checked in the modal, its
-                // value will be null. continue to next field
-                return;
-
-            default:
-                // this field will be directly mapped to a zendesk ticket field
-                prunedFormValues[fieldName] = this.formValues[fieldName];
             }
+
+            // this field will be directly mapped to a zendesk ticket field
+            prunedFormNames.push(fieldName);
         });
 
-        return prunedFormValues;
+        return prunedFormNames;
     }
 
     addCustomField(customPair: Tickets.Field): void {
