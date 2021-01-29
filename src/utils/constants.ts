@@ -1,7 +1,6 @@
 export const jsonConfigFileStore = 'config.json';
 export const jsonTokenFileStore = 'tokens.json';
 export const ZDIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
-export const ZDClientID = 'mattermost_zendesk_app';
 
 export const FormTextAreaMaxLength = 1024;
 
@@ -48,6 +47,7 @@ const ZDEnv = {
     Host: process.env.ZD_URL as string,
     ApiURL: process.env.ZD_URL + ZDPaths.APIVersion as string,
     ClientSecret: process.env.ZD_CLIENT_SECRET as string,
+    ClientID: process.env.ZD_CLIENT_ID as string,
 };
 
 export const Env = {

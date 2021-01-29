@@ -12,23 +12,27 @@ mm-plugin-apps: `master`
 ### Zendesk and Mattermost Users (System Admin privileges required)
 
 1. Clone this repo
-1. cp `.env.sample` `.env`
-    1. `ZD_URL` - set URL to your zendesk account host
-        1. Ex. `https://<subdomain>.zendesk.com`
-    1. `ZD_CLIENT_SECRET` - (will be set later in the setup)
 1. Create Zendesk Oauth Client for Mattermost (in Zendesk)
     1. `Zendesk` > `Admin` > `API` > `OAuth Clients`
     1. `Add OAuth Client`
-        1. `Client Name`: `Mattermost Zendesk App`
+        1. `Client Name`: (Example `Mattermost Zendesk App`)
         1. `Description`: `Connect your Zendesk account to Mattermost`
-        1. `https://<your-zendesk-app-host>/mattermost/oauth/complete`
+        1. `Redirect URLs`: `https://<your-zendesk-app-host>/mattermost/oauth/complete`
             1. Ex. `https://localhost:4000` - Development
             1. Ex. `https://mytest.ngrok.io` - Exposed for development
-        1. `Secret` - Save the generated secret in `.env` as the `ZENDESK_CLIENT_SECRET`
         1. `Save`
+    1. Save values from Oauth Client form to the `.env` file
+        1. cp `.env.sample` `.env`
+        1. Set `ZD_CLIENT_ID` as the `Unique identifier` field
+        1. Set `ZD_CLIENT_SECRET` as the `Secret` field
+        1. Set `ZD_URL` to your zendesk account host
+            1. Ex. `https://<subdomain>.zendesk.com`
+        1. Set `ZD_NODE_HOST` to the path of you zendesk app host
+            1. Ex. `https://https://testing.ngrok.io/mattermost`
+    1. `ZD_CLIENT_SECRET` - (will be set later in the setup)
 1. Start the node server
     1. `npm i` - install node_moduls and dependencies
-    1. `npm run build:watch` - watch for changing files and report typescript errors
+    1. `npm run build:watch` - (to monitor typescriopt errors and watch chaning files errors)
     1. `npm start` - (in a separate shell) start the node server
 1. Install the app (In Mattermost)
     1. `/apps install --url http://<your-zendesk-app-host>/mattermost/manifest.json --app-secret thisisthesecret`  
@@ -159,11 +163,13 @@ exports.rudderAnalytics = rudderAnalytics;
 var fetch_etag_1 = require("node-fetch");
 ```
 
-### 3. Log message received
+### 3. Log message received and bindings are not received by the 
 
 `The system admin has turned off OAuth2 Service Provider.`
 
 Oauth2 service needs to be turned on in `config/config.json`
+Through system console -> enable oauth2 service provider
+
 
 ```json
 "EnableOAuthServiceProvider": true,

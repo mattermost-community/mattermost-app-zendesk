@@ -20,9 +20,9 @@ export function getManifest(): Manifest {
         app_type: 'http',
         display_name: 'Zendesk',
         description: 'Zendesk cloud app for Mattermost',
-        root_url: 'https://jasonf.ngrok.io/mattermost',
+        root_url: process.env.ZD_NODE_HOST as string,
         requested_permissions: ['act_as_user', 'act_as_bot'],
-        oauth2_callback_url: 'https://jasonf.ngrok.io/mattermost/oauth2/complete',
+        oauth2_callback_url: process.env.ZD_NODE_HOST + '/oauth2/complete',
         homepage_url: 'https://github.com/mattermost/mattermost-app-zendesk',
         requested_locations: [AppBindingLocations.COMMAND, AppBindingLocations.CHANNEL_HEADER_ICON, AppBindingLocations.POST_MENU_ITEM, AppBindingLocations.IN_POST],
     };
