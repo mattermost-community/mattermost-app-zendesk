@@ -1,2 +1,2 @@
-export * as mattermost from './mattermost';
-export * as zendesk from './zendesk';
+export * as mm from './mattermost';
+export * as zd from './zendesk';

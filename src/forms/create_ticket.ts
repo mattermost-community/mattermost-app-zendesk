@@ -1,7 +1,7 @@
 import {AppCall, AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppFieldTypes, AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
-import {zendeskIcon, makeOptions} from '../utils';
+import {zdIcon, makeOptions, formTextAreaMaxLength} from '../utils';
 
 // newCreateTicketForm returns a form response to create a ticket from a post
 export function newCreateTicketForm(call: AppCall): AppCallResponse {
@@ -12,7 +12,7 @@ export function newCreateTicketForm(call: AppCall): AppCallResponse {
             title: 'Create Zendesk Ticket',
             header: 'Create a Zendesk ticket from Mattermost by filling out and submitting this form. Additional text can be added in the `Optional Message` field.',
             footer: 'Message modal form footer',
-            icon: zendeskIcon,
+            icon: zdIcon,
             fields: [
                 {
                     name: 'subject',
@@ -41,7 +41,7 @@ export function newCreateTicketForm(call: AppCall): AppCallResponse {
                     description: 'Add additional message to the Zendesk ticket',
                     subtype: 'textarea',
                     min_length: 2,
-                    max_length: 1024,
+                    max_length: formTextAreaMaxLength,
                 },
                 {
                     name: 'post_message',
@@ -50,7 +50,7 @@ export function newCreateTicketForm(call: AppCall): AppCallResponse {
                     value: postMessage,
                     subtype: 'textarea',
                     min_length: 2,
-                    max_length: 1024,
+                    max_length: formTextAreaMaxLength,
                     is_required: true,
                 },
             ],

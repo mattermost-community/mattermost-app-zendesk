@@ -1,10 +1,12 @@
 import fs from 'fs';
 
-import {AppContext} from 'mattermost-redux/types/apps';
+import {Request} from 'express';
+
+import {AppContextProps} from 'mattermost-redux/types/apps';
 
 import {jsonConfigFileStore} from '../utils';
 
-type AppStore = {
+type AppConfigStore = {
     bot_access_token: string;
     oauth2_client_secret: string;
     mm_site_url: string;
@@ -15,8 +17,8 @@ interface Store {
     getSiteURL(): string;
 }
 
-class JSONFileStore implements Store {
-    storeData: AppStore;
+class ConfigFileStore implements Store {
+    storeData: AppConfigStore;
 
     constructor() {
         this.storeData = {
@@ -35,14 +37,14 @@ class JSONFileStore implements Store {
         }
     }
 
-    storeInstallInfo(req: any): Promise<void> {
+    storeInstallInfo(req: Request): Promise<void> {
         const values = req.body.values;
-        const context: AppContext = req.body.context;
+        const context: AppContextProps = req.body.context;
 
         values.mm_site_url = context.config.site_url;
 
         return new Promise((resolve, reject) => {
-            fs.writeFileSync(jsonConfigFileStore, JSON.stringify(values), (err) => {
+            fs.writeFile(jsonConfigFileStore, JSON.stringify(values), (err) => {
                 if (err) {
                     reject(err);
                     throw err;
@@ -61,4 +63,4 @@ class JSONFileStore implements Store {
     }
 }
 
-export default new JSONFileStore();
+export default new ConfigFileStore();

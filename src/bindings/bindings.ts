@@ -1,35 +1,13 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
-import {AppsBindings, AppCallTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {getManifest} from '../../manifest';
-import {zendeskIcon} from '../utils';
+import {commandBindings} from './slash_commands';
+import {postMenuBindings} from './post_menu';
 
 // getBindings returns bindings defined for all locations in the app
-export function getBindings(): AppBinding[] {
-    const bindings: AppBinding = [
-        postMenuBindings(),
-    ];
-    return bindings;
-}
+export const getBindings = (userID: string): AppBinding[] => {
+    return [
+        postMenuBindings(userID),
+        commandBindings(userID),
+    ] as AppBinding[];
+};
 
-// postMenuBindings returns bindings for the post_menu location
-function postMenuBindings(): AppBinding {
-    const binding: AppBinding = {
-        location: AppsBindings.POST_MENU_ITEM,
-        bindings: [
-            {
-                label: 'Create Zendesk Ticket',
-                description: 'Create ticket in zendesk',
-                icon: zendeskIcon,
-                call: {
-                    url: getManifest().root_url + '/createform',
-                    type: AppCallTypes.FORM,
-                    expand: {
-                        post: AppExpandLevels.EXPAND_ALL,
-                    },
-                },
-            },
-        ],
-    };
-    return binding;
-}
