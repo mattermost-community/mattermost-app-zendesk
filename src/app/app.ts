@@ -60,8 +60,8 @@ class App {
         const post: Post = {
             message,
             user_id: botUserID,
-            channel_id: context.channel_id as string,
-            root_id: context.post_id as string,
+            channel_id: String(context.channel_id),
+            root_id: String(context.post_id),
         };
 
         await tryPromiseWithMessage(botClient.createPost(post), 'Failed to create post');

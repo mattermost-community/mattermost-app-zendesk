@@ -11,7 +11,7 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
         throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
     }
 
-    const state = req.query.state as string;
+    const state = String(req.query.state);
     if (state === '') {
         throw new Error('Bad Request: state param not provided'); // Express will catch this on its own.
     }

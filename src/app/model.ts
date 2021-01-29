@@ -69,7 +69,7 @@ export class TicketFromForm implements ITicketFromFrom {
         const type = typePrefix.split('_')[0];
         const id = Number(typePrefix.split('_')[1]);
 
-        let fieldValue = this.getFieldValue(fieldName) as string;
+        let fieldValue = String(this.getFieldValue(fieldName));
         this.validateField(fieldName, type, fieldValue);
 
         // if multiselect, the value is an array of values
