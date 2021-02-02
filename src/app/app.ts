@@ -1,17 +1,16 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {Tickets, Users} from 'node-zendesk';
 import {AppCall, AppContext} from 'mattermost-redux/types/apps';
 
-import {ENV, errorWithMessage} from '../utils';
+import {Env, tryPromiseWithMessage, errorWithMessage} from '../utils';
 
-import {mm, zd} from '../clients';
+import {newMMClient, newZDClient} from '../clients';
 
 import {configStore, oauthStore} from '../store';
 
-import {getTicketFromForm} from './model';
+import {newTicketFromForm, FieldValidationErrors} from './model';
 
 class App {
-    createTicketFromPost = async (call: AppCall): Promise<void> => {
+    createTicketFromPost = async (call: AppCall): Promise<FieldValidationErrors> => {
         // get active mattermost user ID
         const mmUserID = call.context.acting_user_id || '';
         const zdToken = oauthStore.getToken(mmUserID);
@@ -20,49 +19,52 @@ class App {
         }
 
         // get zendesk client for user
-        const zdClient = zd.newClient(zdToken);
+        const zdClient = newZDClient(zdToken);
 
         // create the ticket object from the form response
-        const zdTicket = getTicketFromForm(call.values);
+        const [zdTicket, errors] = newTicketFromForm(call.values);
+
+        // respond with errors
+        if (Object.keys(errors).length !== 0) {
+            return errors;
+        }
 
         // create the ticket in Zendesk
-        let ticket: Tickets.ResponseModel;
-        try {
-            ticket = await zdClient.tickets.create(zdTicket);
-        } catch (err) {
-            throw new Error(errorWithMessage(err, 'Failed to create Zendesk ticket'));
-        }
+        const ticket = await tryPromiseWithMessage(zdClient.tickets.create(zdTicket), 'Failed to create Zendesk ticket');
 
         // get the Zendesk user
-        let zdUser: Users.ResponseModel;
-        try {
-            zdUser = await zdClient.users.show(ticket.requester_id);
-        } catch (err) {
-            throw new Error(errorWithMessage(err, 'Failed to get Zendesk user'));
-        }
+        const zdUser = await tryPromiseWithMessage(zdClient.users.show(ticket.requester_id), 'Failed to get Zendesk user');
 
         // create a reply to the original post noting the ticket was created
         const id = ticket.id;
         const subject = ticket.subject;
-        const message = `${zdUser.name} created ticket [#${id}](${ENV.zd.host}/agent/tickets/${id}) [${subject}]`;
-        try {
-            await this.createBotPost(call.context, message);
-        } catch (err) {
-            throw new Error(errorWithMessage(err, 'Failed to create post'));
-        }
+        const message = `${zdUser.name} created ticket [#${id}](${Env.ZD.Host}/agent/tickets/${id}) [${subject}]`;
+        await this.createBotPost(call.context, message);
+
+        // respond with no errors
+        return {};
     }
 
     createBotPost = async (context: AppContext, message: string): Promise<void> => {
-        const url = configStore.getSiteURL();
+        const adminToken = configStore.getAdminAccessToken();
+        const adminClient = newMMClient(adminToken);
+
+        // add bot to team and channel
+        const botUserID = configStore.getBotUserID();
+        await tryPromiseWithMessage(adminClient.addToTeam(context.team_id, botUserID), 'Failed to add bot to team');
+        await tryPromiseWithMessage(adminClient.addToChannel(botUserID, context.channel_id), 'Failed to add bot to team');
+
         const botToken = configStore.getBotAccessToken();
-        const mmClient = mm.newClient(url, botToken);
+        const botClient = newMMClient(botToken);
 
         const post: Post = {
             message,
-            channel_id: context.channel_id as string,
-            root_id: context.post_id as string,
+            user_id: botUserID,
+            channel_id: String(context.channel_id),
+            root_id: String(context.post_id),
         };
-        await mmClient.createPost(post);
+
+        await tryPromiseWithMessage(botClient.createPost(post), 'Failed to create post');
     }
 }
 

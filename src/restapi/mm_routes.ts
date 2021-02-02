@@ -1,24 +1,29 @@
 import express from 'express';
 
-import {routes} from '../utils';
+import {Routes} from '../utils';
 
 import {fBindings} from './fBindings';
 import {fConnect} from './fConnect';
 import {fComplete} from './fComplete';
-import {fCreateForm} from './fCreateForm';
+import {fSubmitOrUpdateCreateTicketForm} from './fSumbmitOrCreateTicketForm';
+import {fOpenCreateTicketForm} from './fOpenCreateTicketForm';
 import {fDisconnect} from './fDisconnect';
 import {fInstall} from './fInstall';
 import {fManifest} from './fManifest';
 
 const router = express.Router();
 
-router.get(routes.app.ManifestPath, fManifest);
-router.get(routes.app.BindingsPath, fBindings);
-router.get(routes.app.OAuthCompletePath, fComplete);
+router.get(Routes.App.ManifestPath, fManifest);
+router.post(Routes.App.BindingsPath, fBindings);
+router.get(Routes.App.OAuthCompletePath, fComplete);
 
-router.post(routes.app.InstallPath, fInstall);
-router.post(routes.app.BindingPathConnect, fConnect);
-router.post(routes.app.BindingPathDisconnect, fDisconnect);
-router.post(routes.app.BindingPathCreateForm, fCreateForm);
+router.post(Routes.App.InstallPath, fInstall);
 
+// Location bound calls
+router.post(Routes.App.BindingPathConnect, fConnect);
+router.post(Routes.App.BindingPathDisconnect, fDisconnect);
+router.post(Routes.App.BindingPathOpenCreateTicketForm, fOpenCreateTicketForm);
+
+// Callable routes, not bound to a location
+router.post(Routes.App.CallPathSubmitOrUpdateCreateTicketForm, fSubmitOrUpdateCreateTicketForm);
 export default router;

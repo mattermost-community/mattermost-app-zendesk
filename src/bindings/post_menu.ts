@@ -1,10 +1,9 @@
 import {AppBinding, AppCall} from 'mattermost-redux/types/apps';
-import {AppsBindings, AppCallTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
+import {AppBindingLocations, AppCallTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {isUserConnected} from '../app/user';
 
-import {zdIcon, routes} from '../utils';
-import {getManifest} from '../../manifest';
+import {ZDIcon, Routes} from '../utils';
 
 // postMenuBindings returns bindings for the post_menu location
 export function postMenuBindings(userID: string): AppBinding {
@@ -13,7 +12,7 @@ export function postMenuBindings(userID: string): AppBinding {
     }
 
     const binding = {
-        location: AppsBindings.POST_MENU_ITEM,
+        location: AppBindingLocations.POST_MENU_ITEM,
         bindings: [
             postMenuCreate(),
         ],
@@ -23,21 +22,15 @@ export function postMenuBindings(userID: string): AppBinding {
 
 function postMenuCreate(): AppBinding {
     return {
+        app_id: 'zendesk',
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
-        icon: zdIcon,
-        call: getPostMenuCreateCall(),
+        icon: ZDIcon,
+        call: {
+            url: Routes.App.BindingPathOpenCreateTicketForm,
+            expand: {
+                post: 'all',
+            },
+        },
     } as AppBinding;
 }
-
-function getPostMenuCreateCall(): AppCall {
-    const url: string = getManifest().root_url + routes.app.BindingPathCreateForm;
-    return {
-        url,
-        type: AppCallTypes.FORM,
-        expand: {
-            post: AppExpandLevels.EXPAND_ALL,
-        },
-    } as AppCall;
-}
-

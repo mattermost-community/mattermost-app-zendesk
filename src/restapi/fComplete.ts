@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 
 import {getOAuthConfig} from '../app/oauth';
-import {parseOAuthState} from '../utils';
+import {parseOAuthState, errorWithMessage} from '../utils';
 
 import {oauthStore} from '../store';
 
@@ -11,7 +11,7 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
         throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
     }
 
-    const state = req.query.state;
+    const state = String(req.query.state);
     if (state === '') {
         throw new Error('Bad Request: state param not provided'); // Express will catch this on its own.
     }

@@ -1,10 +1,9 @@
-import {AppBinding, AppCall} from 'mattermost-redux/types/apps';
-import {AppsBindings} from 'mattermost-redux/constants/apps';
+import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBindingLocations} from 'mattermost-redux/constants/apps';
 
 import {isUserConnected} from '../app/user';
 
-import {getManifest} from '../../manifest';
-import {zdIcon, routes, commandLocations} from '../utils';
+import {ZDIcon, Routes, CommandLocations} from '../utils';
 
 // commandBindings returns bindings for the slash command location
 export function commandBindings(userID: string): AppBinding {
@@ -16,39 +15,31 @@ export function commandBindings(userID: string): AppBinding {
     }
 
     return {
-        location: AppsBindings.COMMAND,
+        location: AppBindingLocations.COMMAND,
         bindings,
     } as AppBinding;
 }
 
 function commandConnect(): AppBinding {
     return {
-        location: commandLocations.Connect,
+        location: CommandLocations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
-        icon: zdIcon,
-        call: getConnectCall(),
+        icon: ZDIcon,
+        call: {
+            url: Routes.App.BindingPathConnect,
+        },
     } as AppBinding;
-}
-
-function getConnectCall(): AppCall {
-    return {
-        url: getManifest().root_url + routes.app.BindingPathConnect,
-    } as AppCall;
 }
 
 function commandDisconnect(): AppBinding {
     return {
-        location: commandLocations.Disconnect,
+        location: CommandLocations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
-        icon: zdIcon,
-        call: getDisconnectCall(),
+        icon: ZDIcon,
+        call: {
+            url: Routes.App.BindingPathDisconnect,
+        },
     } as AppBinding;
-}
-
-function getDisconnectCall(): AppCall {
-    return {
-        url: getManifest().root_url + routes.app.BindingPathDisconnect,
-    } as AppCall;
 }
