@@ -18,7 +18,7 @@ mm-plugin-apps: `master`
         1. `Client Name`: (Example `Mattermost Zendesk App`)
         1. `Description`: `Connect your Zendesk account to Mattermost`
         1. `Redirect URLs`: `https://<your-zendesk-app-host>/mattermost/oauth/complete`
-            1. Ex. `https://localhost:4000` - Development
+            1. Ex. `http://localhost:4000` - Development
             1. Ex. `https://mytest.ngrok.io` - Exposed for development
         1. `Save`
     1. Save values from Oauth Client form to the `.env` file
