@@ -26,15 +26,15 @@ class App implements IApp {
     values: AppCallValues
 
     constructor(call: AppCall) {
-        this.values = call.values;
         this.context = call.context;
+        this.values = call.values;
     }
     createTicketFromPost = async (): Promise<AppCallResponse> => {
         // get zendesk client for user
         const zdClient = newZDClient(this.context);
 
         // create the ticket object from the form response
-        const [zdTicket, fieldErrors] = newTicketFromForm(this.values);
+        const [zdTicketPayload, fieldErrors] = newTicketFromForm(this.values);
 
         // respond with errors
         if (this.hasFieldErrors(fieldErrors)) {
@@ -42,16 +42,16 @@ class App implements IApp {
         }
 
         // create the ticket in Zendesk
-        const createReq = zdClient.tickets.create(zdTicket);
-        const ticket = await tryPromiseWithMessage(createReq, 'Failed to create Zendesk ticket');
+        const createReq = zdClient.tickets.create(zdTicketPayload);
+        const zdTicket = await tryPromiseWithMessage(createReq, 'Failed to create Zendesk ticket');
 
         // get the Zendesk user
-        const getUserReq = zdClient.users.show(ticket.requester_id);
+        const getUserReq = zdClient.users.show(zdTicket.requester_id);
         const zdUser = await tryPromiseWithMessage(getUserReq, 'Failed to get Zendesk user');
 
         // create a reply to the original post noting the ticket was created
-        const id = ticket.id;
-        const subject = ticket.subject;
+        const id = zdTicket.id;
+        const subject = zdTicket.subject;
         const message = `${zdUser.name} created ticket [#${id}](${Env.ZD.Host}/agent/tickets/${id}) [${subject}]`;
         await this.createBotPost(message);
 
@@ -63,10 +63,10 @@ class App implements IApp {
         const zdClient = newZDClient(this.context);
 
         // create the trigger object from the form response
-        let zdTrigger: any;
+        let zdTriggerPayload: any;
         let fieldErrors: FieldValidationErrors;
         try {
-            [zdTrigger, fieldErrors] = newTriggerFromForm(this.values, this.context);
+            [zdTriggerPayload, fieldErrors] = newTriggerFromForm(this.values, this.context);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }
@@ -75,10 +75,10 @@ class App implements IApp {
             return newErrorCallResponseWithFieldErrors(fieldErrors);
         }
 
-        let request = zdClient.triggers.create(zdTrigger);
+        let request = zdClient.triggers.create(zdTriggerPayload);
         let msg = 'Successfuly created subscription';
-        if (zdTrigger.trigger.id) {
-            request = zdClient.triggers.update(zdTrigger.trigger.id);
+        if (zdTriggerPayload.trigger.id) {
+            request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
             msg = 'Successfuly updated subscription';
         }
 

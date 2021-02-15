@@ -13,12 +13,12 @@ export type zdFormFieldOption = {
     id: number;
 }
 
-type zdSubsriptionFieldOption = {
+type zdSubscriptionFieldOption = {
     title: string;
     id: number;
 }
 
-const getDisplaySubTitleOption = (option: zdSubsriptionFieldOption): string => {
+const getDisplaySubTitleOption = (option: zdSubscriptionFieldOption): string => {
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
     const newTitle = option.title.match(re)[2];
     return newTitle;
@@ -41,8 +41,8 @@ export const makeOptions = (options: zdFieldOption[]): AppSelectOption[] => opti
 export const makeFormOption = (option: zdFormFieldOption): AppSelectOption => ({label: option.name, value: option.id.toString()});
 export const makeFormOptions = (options: zdFormFieldOption[]): AppSelectOption[] => options.map(makeFormOption);
 
-export const makeSubscriptionOption = (option: zdSubsriptionFieldOption): AppSelectOption => ({label: getDisplaySubTitleOption(option), value: option.id.toString()});
-export const makeSubscriptionOptions = (options: zdSubsriptionFieldOption[]): AppSelectOption[] => options.map(makeSubscriptionOption);
+export const makeSubscriptionOption = (option: zdSubscriptionFieldOption): AppSelectOption => ({label: getDisplaySubTitleOption(option), value: option.id.toString()});
+export const makeSubscriptionOptions = (options: zdSubscriptionFieldOption[]): AppSelectOption[] => options.map(makeSubscriptionOption);
 
 export const getMultiselectValue = (option: zdFieldOption): string => option.value;
 export const getMultiselectValues = (options: zdFieldOption[]): string[] => options.map(getMultiselectValue);
