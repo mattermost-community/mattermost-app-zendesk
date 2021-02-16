@@ -105,6 +105,10 @@ export const SubscriptionFields = {
     SubText_Label: 'Name',
     SubText_Name: 'subscription_text_name',
 
+    SubmitButtonsName: 'button_action',
+    DeleteButtonLabel: 'Delete',
+    SaveButtonLabel: 'Save',
+
     NewSub_OptionValue: 'newsubscription',
     NewSub_OptionLabel: 'New Subscription',
 
@@ -124,6 +128,18 @@ export const SubscriptionFields = {
         'organization',
     ],
 };
+
+// SubscriptionFields.SubmitButtonOptions = {};
+SubscriptionFields.SubmitButtonsOptions = [
+    {
+        label: SubscriptionFields.DeleteButtonLabel,
+        value: SubscriptionFields.DeleteButtonLabel,
+    },
+    {
+        label: SubscriptionFields.SaveButtonLabel,
+        value: SubscriptionFields.SaveButtonLabel,
+    },
+];
 
 export const TriggerFields = {
     TicketIDKey: 'ticketID',

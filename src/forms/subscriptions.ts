@@ -1,5 +1,5 @@
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppSelectOption, AppCall, AppField} from 'mattermost-redux/types/apps';
+import {AppSelectOption, AppCall, AppForm, AppField} from 'mattermost-redux/types/apps';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
@@ -22,6 +22,7 @@ export async function newSubscriptionsForm(call: AppCall): Promise<AppForm> {
         title: 'Create or Edit Zendesk Subscriptions',
         header: 'Create or edit channel subscriptions to Zendesk notifications',
         icon: ZDIcon,
+        submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
         call: {
             url: Routes.App.CallPathSubmitOrUpdateSubcriptionForm,
@@ -131,6 +132,15 @@ class FormFields extends BaseFormFields {
         this.addSubNameTextField();
 
         this.addSubCheckBoxes();
+
+        this.addSubmitButtons();
+    }
+
+    // addSubmitButtons adds a delete button in addition to the save button
+    addSubmitButtons(): void {
+        const options = SubscriptionFields.SubmitButtonsOptions;
+        const f = new StaticSelectField(SubscriptionFields.SubmitButtonsName, options);
+        this.builder.addField(f.toAppField());
     }
 
     // addSubCheckBoxes adds the available check box options for subscription

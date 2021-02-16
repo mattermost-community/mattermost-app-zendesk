@@ -20,6 +20,7 @@ interface TicketFields {
 
 interface Triggers {
     update(id: number): any;
+    delete(id: number): any;
     create(trigger: any): any;
     search(query: string): any;
 }

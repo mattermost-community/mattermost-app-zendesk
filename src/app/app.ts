@@ -1,6 +1,8 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {AppCall, AppContext, AppCallValues, AppCallResponse} from 'mattermost-redux/types/apps';
 
+import {SubscriptionFields} from '../utils/constants';
+
 import {
     newErrorCallResponseWithFieldErrors,
     newOKCallResponse,
@@ -64,22 +66,27 @@ class App implements IApp {
 
         // create the trigger object from the form response
         let zdTriggerPayload: any;
-        let fieldErrors: FieldValidationErrors;
+        let fieldErrors: any;
         try {
             [zdTriggerPayload, fieldErrors] = newTriggerFromForm(this.values, this.context);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }
 
-        if (this.hasFieldErrors(fieldErrors)) {
-            return newErrorCallResponseWithFieldErrors(fieldErrors);
-        }
-
-        let request = zdClient.triggers.create(zdTriggerPayload);
-        let msg = 'Successfuly created subscription';
-        if (zdTriggerPayload.trigger.id) {
+        let request: any;
+        let msg: string;
+        switch (true) {
+        case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
+            request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
+            msg = 'Successfuly deleted subscription';
+            break;
+        case (zdTriggerPayload.trigger.id):
             request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
             msg = 'Successfuly updated subscription';
+            break;
+        default:
+            request = zdClient.triggers.create(zdTriggerPayload);
+            msg = 'Successfuly created subscription';
         }
 
         try {

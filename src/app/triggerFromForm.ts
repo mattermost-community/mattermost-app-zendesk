@@ -105,6 +105,10 @@ export class TriggerFromForm implements ITriggerFromFrom {
             }
         }
 
+        if (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel) {
+            return conditions;
+        }
+
         // do not let subscriptions without a condition be created...
         if (conditions.any.length === 0) {
             throw new Error('Must select at least one condition');
