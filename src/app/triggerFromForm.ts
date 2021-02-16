@@ -3,23 +3,19 @@ import {Tickets} from 'node-zendesk';
 import {AppContext, AppCallValues} from 'mattermost-redux/types/apps';
 
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
-import {FieldValidationErrors} from '../utils/call_responses';
 
 interface ITriggerFromFrom {
     getTrigger(): Tickets.CreatePayload;
-    fieldValidationErrors: FieldValidationErrors;
 }
 
 export class TriggerFromForm implements ITriggerFromFrom {
     values: AppCallValues;
     context: AppContext;
     trigger: any
-    fieldValidationErrors: FieldValidationErrors
 
     constructor(values: AppCallValues, context: AppContext) {
         this.values = values;
         this.context = context;
-        this.fieldValidationErrors = {};
         this.trigger = {};
     }
 
@@ -118,8 +114,8 @@ export class TriggerFromForm implements ITriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(values: AppCallValues, context: AppContext): [any, FieldValidationErrors] {
+export function newTriggerFromForm(values: AppCallValues, context: AppContext): any {
     const trigger = new TriggerFromForm(values, context).getTrigger();
-    return [trigger, trigger.fieldValidationErrors];
+    return trigger;
 }
 
