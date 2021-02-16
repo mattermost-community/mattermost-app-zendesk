@@ -52,13 +52,7 @@ export class TriggerFromForm implements ITriggerFromFrom {
         const channelID = this.values[SubscriptionFields.ChannelPickerSelect_Name].value;
         const pairs = TriggerFields.ActionValuePairs;
         pairs[TriggerFields.ChannelIDKey] = channelID;
-
-        const objStrings = Object.entries(TriggerFields.ActionValuePairs).map((pair) => {
-            const key = pair[0];
-            const value = pair[1];
-            return `"${key}": "${value}"`;
-        });
-        return '{' + objStrings.join(',') + '}';
+        return JSON.stringify(pairs);
     }
 
     getChannelIDobject(): {} {
