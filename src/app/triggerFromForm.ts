@@ -28,17 +28,17 @@ export class TriggerFromForm implements ITriggerFromFrom {
         // This is a signal to update the trigger, not create a new one
         if (!this.isNewTrigger()) {
             const subID = this.values[SubscriptionFields.SubSelect_Name].value;
-            this.addTriggerField('id', subID);
+            this.addField('id', subID);
         }
-        this.addTriggerField('title', this.getTriggerTitle());
-        this.addTriggerField('description', this.getTriggerDescription());
-        this.addTriggerField('actions', this.getTriggerActions());
-        this.addTriggerField('conditions', this.getTriggerConditions());
+        this.addTitle();
+        this.addDescription();
+        this.addActions();
+        this.addConditions();
 
         return {trigger: this.trigger};
     }
 
-    getTriggerActions(): any[] {
+    addActions(): void {
         const actions = [
             {
                 field: TriggerFields.ActionField,
@@ -48,7 +48,7 @@ export class TriggerFromForm implements ITriggerFromFrom {
                 ],
             },
         ];
-        return actions;
+        this.addField('actions', actions);
     }
 
     // getJSONDataFields constructs the object text string for a trigger
@@ -71,27 +71,28 @@ export class TriggerFromForm implements ITriggerFromFrom {
         return {fieldName: channelID};
     }
 
-    getTriggerTitle(): string {
+    addTitle(): void {
         let title = SubscriptionFields.PrefixTriggersTitle;
         title += this.context.channel_id;
         title += ' ' + this.values[SubscriptionFields.SubText_Name];
-        return title;
+        this.addField('title', title);
     }
 
-    getTriggerDescription(): string {
-        return String(this.values[SubscriptionFields.SubText_Name]);
+    addDescription(): void {
+        const description = String(this.values[SubscriptionFields.SubText_Name]);
+        this.addField('description', description);
     }
 
-    addTriggerField(key: string, value: any): void {
+    addField(key: string, value: any): void {
         this.trigger[key] = value;
     }
 
     isNewTrigger(): boolean {
         const subID = this.values[SubscriptionFields.SubSelect_Name].value;
-        return Boolean(subID === SubscriptionFields.NewSub_OptionValue);
+        return subID === SubscriptionFields.NewSub_OptionValue;
     }
 
-    getTriggerConditions(): {} {
+    addConditions(): void {
         const conditions = {
             any: [],
         };
@@ -106,14 +107,14 @@ export class TriggerFromForm implements ITriggerFromFrom {
         }
 
         if (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel) {
-            return conditions;
+            this.addField('conditions', conditions);
         }
 
         // do not let subscriptions without a condition be created...
         if (conditions.any.length === 0) {
             throw new Error('Must select at least one condition');
         }
-        return conditions;
+        this.addField('conditions', conditions);
     }
 }
 
