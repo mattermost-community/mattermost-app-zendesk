@@ -28,8 +28,6 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const message: string = getNotificationMessage(ticketID, auditEvent);
 
     const adminClient = newMMClient().asAdmin();
-
-    // const botClient = newMMClient().asBot();
     const botUserID = configStore.getBotUserID();
     const post: Post = {
         message,

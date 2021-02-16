@@ -184,12 +184,11 @@ class FormFields extends BaseFormFields {
     // when form is submitted
     getMappedName(field: Users.Fields.UserField): string {
         const strFieldType = String(field.type);
-        switch (true) {
-        case strFieldType in MappedZDNames:
+        if (strFieldType in MappedZDNames) {
             return MappedZDNames[strFieldType];
-        case this.isSystemField(field):
+        }
+        if (this.isSystemField(field)) {
             return strFieldType;
-        default :
         }
         return this.getCustomFieldName(field);
     }

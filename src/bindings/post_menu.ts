@@ -1,4 +1,5 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {AppID, ZDIcon, Routes} from '../utils/constants';
 import {Bindings, newPostMenuBindings} from '../utils';
@@ -29,7 +30,7 @@ class PostMenuBindings extends Bindings {
             call: {
                 url: Routes.App.BindingPathOpenCreateTicketForm,
                 expand: {
-                    post: 'all',
+                    post: AppExpandLevels.EXPAND_ALL,
                 },
             },
         } as AppBinding;
@@ -44,9 +45,6 @@ class PostMenuBindings extends Bindings {
             location: 'open_subscription',
             call: {
                 url: Routes.App.BindingPathOpenSubcriptionsForm,
-                expand: {
-                    post: 'all',
-                },
             },
         } as AppBinding;
     }

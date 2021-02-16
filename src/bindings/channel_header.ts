@@ -25,9 +25,6 @@ class ChannelHeaderBindings extends Bindings {
             icon: ZDIcon,
             call: {
                 url: Routes.App.BindingPathOpenSubcriptionsForm,
-                expand: {
-                    post: 'all',
-                },
             },
         } as AppBinding;
     }
