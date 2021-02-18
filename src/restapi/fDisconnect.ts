@@ -3,15 +3,15 @@ import {Request, Response} from 'express';
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
 import {newZDClient} from '../clients';
-import {tryPromiseWithMessage} from '../utils';
+import {tryPromiseWithMessage, contextFromRequest} from '../utils';
 
-import {oauthStore} from '../store';
+import {newTokenStore} from '../store';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
-    const context = req.body.context;
+    const context = contextFromRequest(req);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const zdClient = newZDClient(context);
+    const zdClient = await newZDClient(context);
 
     // get current token. this request will be recognized as the token coming
     // from the zendesk app
@@ -26,6 +26,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     await tryPromiseWithMessage(deleteReq, 'failed to revoke current user token');
 
     // delete the token from the store
-    oauthStore.deleteToken(context.acting_user_id);
+    const tokenStore = newTokenStore(context);
+    tokenStore.deleteToken(context.acting_user_id);
     res.json(newOKCallResponseWithMarkdown('You have disconnected your Zendesk account'));
 }

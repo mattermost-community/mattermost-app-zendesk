@@ -15,8 +15,8 @@ import {BaseFormFields} from '../utils/base_form_fields';
 
 // newCreateTicketForm returns a form response to create a ticket from a post
 export async function newCreateTicketForm(call: AppCall): Promise<AppForm> {
-    const zdClient = newZDClient(call.context);
-    const mmClient = newMMClient().asAdmin();
+    const zdClient = await newZDClient(call.context);
+    const mmClient = newMMClient(call.context).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient);
     const fields = await formFields.getCreateTicketFields();
 

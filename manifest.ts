@@ -1,5 +1,6 @@
 import {AppBindingLocations} from 'mattermost-redux/constants/apps';
-import {AppID} from './src/utils'
+
+import {AppID} from './src/utils';
 
 type RequestedPermissions = 'act_as_user' | 'act_as_bot'
 

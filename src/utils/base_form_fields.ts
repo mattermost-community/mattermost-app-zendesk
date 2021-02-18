@@ -4,12 +4,12 @@ import Client4 from 'mattermost-redux/client/client4.js';
 
 import {ZDClient} from '../clients';
 
-import {Ibuilder, newFieldsBuilder} from './helper_classes/fields/fields_builder';
+import {Builder, newFieldsBuilder} from './helper_classes/fields/fields_builder';
 
 // BaseFormFields call provides base methods for retrieving viewable modal app fields
 export class BaseFormFields {
     call: AppCall;
-    builder: Ibuilder;
+    builder: Builder;
     zdClient: ZDClient;
     mmClient: Client4;
 

@@ -1,10 +1,13 @@
 import {Request, Response} from 'express';
 
+import {AppContext} from 'mattermost-redux/types/apps';
+
 import {getOAuthConfig} from '../app/oauth';
-import {parseOAuthState, errorWithMessage} from '../utils';
+import {parseOAuthState} from '../utils';
 
-import {oauthStore} from '../store';
+import {newTokenStore} from '../store';
 
+// fComplete is the endpoint called by zendesk after a user approves oauth
 export async function fComplete(req: Request, res: Response): Promise<void> {
     const code = req.query.code;
     if (code === '') {
@@ -16,17 +19,18 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
         throw new Error('Bad Request: state param not provided'); // Express will catch this on its own.
     }
 
-    const [userID,, err] = parseOAuthState(state);
+    const [userID,, botToken, url, err] = parseOAuthState(state);
     if (err !== '') {
         throw new Error('Bad Request: bad state'); // Express will catch this on its own.
     }
 
-    // Exchange code for token
-    const zdAuth = getOAuthConfig();
+    const context = createContextFromState(botToken, url);
+    const zdAuth = await getOAuthConfig(context);
+
     const user = await zdAuth.code.getToken(req.originalUrl);
     const token = user.data.access_token;
 
-    oauthStore.storeToken(userID, token);
+    newTokenStore(context).storeToken(userID, token);
 
     const connectedString = 'You have successfuly connected the Zendesk Mattermost App to Zendesk. Please close this window.';
     const html = `
@@ -45,5 +49,15 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
 
     res.setHeader('Content-Type', 'text/html');
     res.send(html);
+}
+
+// createContextFromState constructs an AppContext from state. fComplete needs
+// access to the PluginKVStore and retrieves the token and url from state
+function createContextFromState(botToken: string, url: string): AppContext {
+    const context: AppContext = {
+        bot_access_token: botToken,
+        mattermost_site_url: url,
+    };
+    return context;
 }
 

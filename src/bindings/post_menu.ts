@@ -5,15 +5,27 @@ import {AppID, ZDIcon, Routes} from '../utils/constants';
 import {Bindings, newPostMenuBindings} from '../utils';
 
 // getPostMenuBindings returns the users post menu bindings
-export const getPostMenuBindings = (userID: string): AppBinding => {
-    return new PostMenuBindings(userID).getBindings();
+export const getPostMenuBindings = (isConfigured: boolean, isConnected: boolean, isSysadmin: boolean): AppBinding => {
+    const b = new PostMenuBindings(isConfigured, isConnected, isSysadmin);
+    const bindings = b.getBindings();
+    return bindings;
 };
 
 // PostMenuBindings class for creating post_menu location bindings
 class PostMenuBindings extends Bindings {
     getBindings = (): AppBinding[] => {
         const bindings: AppBinding[] = [];
-        if (this.isConnected()) {
+
+        const connected = this.isConnected();
+        const configured = this.isConfigured();
+        const sysadmin = this.isSysadmin();
+
+        // only show configuration option if admin has not configured the plugin
+        if (!configured && sysadmin) {
+            return newPostMenuBindings(bindings);
+        }
+
+        if (connected) {
             bindings.push(this.openCreateTicketForm());
             bindings.push(this.openSubscriptionsForm());
         }

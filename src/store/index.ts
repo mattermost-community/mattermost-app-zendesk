@@ -1,2 +1,2 @@
-export {default as configStore} from './config';
-export {default as oauthStore} from './oauth';
+export {newConfigStore} from './config';
+export {newTokenStore} from './oauth';

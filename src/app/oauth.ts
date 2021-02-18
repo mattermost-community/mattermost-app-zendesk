@@ -1,15 +1,18 @@
 import ClientOAuth2 from 'client-oauth2';
+import {AppContext} from 'mattermost-redux/types/apps';
 
-import {Env, Routes} from '../utils';
+import {Routes} from '../utils';
 import {getManifest} from '../../manifest';
+import {newConfigStore} from '../store';
 
-export const getOAuthConfig = (): any => {
+export const getOAuthConfig = async (context: AppContext): any => {
+    const config = await newConfigStore(context).getValues();
     const zdAuth = new ClientOAuth2({
-        clientId: Env.ZD.ClientID,
-        clientSecret: Env.ZD.ClientSecret,
-        accessTokenUri: Env.ZD.Host + Routes.ZD.OAuthAccessTokenURI,
-        authorizationUri: Env.ZD.Host + Routes.ZD.OAuthAuthorizationURI,
-        redirectUri: getManifest().root_url + Routes.App.OAuthCompletePath,
+        clientId: config.zd_client_id,
+        clientSecret: config.zd_client_secret,
+        accessTokenUri: config.zd_url + Routes.ZD.OAuthAccessTokenURI,
+        authorizationUri: config.zd_url + Routes.ZD.OAuthAuthorizationURI,
+        redirectUri: config.zd_node_host + Routes.App.OAuthCompletePath,
         scopes: ['read', 'write'],
     });
     return zdAuth;

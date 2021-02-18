@@ -21,17 +21,17 @@ mm-plugin-apps: `master` @831d203
             1. Ex. `http://localhost:4000` - Development
             1. Ex. `https://mytest.ngrok.io` - Exposed for development
         1. `Save`
-    1. Save values from Oauth Client form to the `.env` file
-        1. cp `.env.sample` `.env`
-        1. Set `ZD_CLIENT_ID` as the `Unique identifier` field
-        1. Set `ZD_CLIENT_SECRET` as the `Secret` field
-        1. Set `ZD_URL` to your zendesk account host
+1. Configure Zendesk Client in Mattermost
+    1. `/zendesk configure` to open the configuration modal
+    1. Save values from Oauth Client form to the fields in the configuration modal
+        1. `Zendesk URL` - set to your zendesk account host
+        1. `Zendesk Client ID` - set to the `Unique identifier` field value
+        1. `Zendesk Client Secret` - set as the `Secret` field value
             1. Ex. `https://<subdomain>.zendesk.com`
-        1. Set `ZD_NODE_HOST` to the path of you zendesk app host
+        1. `ZD_NODE_HOST` - set to the path of your zendesk app host
             1. Ex. `https://https://testing.ngrok.io/mattermost`
-    1. `ZD_CLIENT_SECRET` - (will be set later in the setup)
 1. Start the node server
-    1. `npm i` - install node_moduls and dependencies
+    1. `npm i` - install node_modules and dependencies
     1. `npm run build:watch` - (to monitor typescriopt errors and watch chaning files errors)
     1. `npm start` - (in a separate shell) start the node server
 1. Install the app (In Mattermost)
@@ -49,7 +49,9 @@ accounts via OAuth2 authorization
 ## Slash Commands
 
 `/zendesk connect` - connect your Zendesk account to Mattermost  
-`/zendesk disconnect` - disconnect your Zendesk account from Mattermost
+`/zendesk configure` - Configure the Zendesk app after installation  
+`/zendesk disconnect` - disconnect your Zendesk account from Mattermost  
+`/zendesk help` - post ephemeral message with help text
 
 ## Create a ticket
 

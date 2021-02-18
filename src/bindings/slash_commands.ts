@@ -4,22 +4,37 @@ import {ZDIcon, Routes, CommandLocations} from '../utils/constants';
 import {newCommandBindings, Bindings} from '../utils';
 
 // getCommandBindings returns the users slash command bindings
-export const getCommandBindings = (userID: string): AppBinding[] => {
-    return new CommandBindings(userID).getBindings();
+export const getCommandBindings = (isConfigured: boolean, isConnected: boolean, isSysadmin: boolean): AppBinding => {
+    const b = new CommandBindings(isConfigured, isConnected, isSysadmin);
+    const bindings = b.getBindings();
+    return bindings;
 };
 
 // CommandBindings class for creating slash command location bindings
 class CommandBindings extends Bindings {
     getBindings = (): AppBinding[] => {
         const bindings: AppBinding[] = [];
-        if (this.isConnected()) {
+
+        const connected = this.isConnected();
+        const configured = this.isConfigured();
+        const sysadmin = this.isSysadmin();
+
+        // only show configuration option if admin has not configured the plugin
+        if (!configured && sysadmin) {
+            bindings.push(this.cmdConfigure());
+            bindings.push(this.cmdHelp());
+            return newCommandBindings(bindings);
+        }
+
+        if (connected) {
             bindings.push(this.cmdDisconnect());
-            if (this.isSysadmin()) {
+            if (sysadmin) {
                 bindings.push(this.cmdSubscribe());
             }
         } else {
             bindings.push(this.cmdConnect());
         }
+        bindings.push(this.cmdConfigure());
         bindings.push(this.cmdHelp());
 
         return newCommandBindings(bindings);
@@ -57,6 +72,20 @@ class CommandBindings extends Bindings {
             icon: ZDIcon,
             call: {
                 url: Routes.App.BindingPathOpenSubcriptionsForm,
+            },
+        } as AppBinding;
+    }
+
+    cmdConfigure = (): AppBinding => {
+        return {
+            location: CommandLocations.Configure,
+            label: 'configure',
+            description: 'Configure the installed Zendesk account',
+            icon: ZDIcon,
+            call: {
+
+                // url: Routes.App.BindingPathOpenSubcriptionsForm,
+                url: Routes.App.BindingPathOpenZendeskConfigForm,
             },
         } as AppBinding;
     }

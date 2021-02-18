@@ -3,40 +3,42 @@ import {AppCall, AppContext, AppCallValues, AppCallResponse} from 'mattermost-re
 
 import {SubscriptionFields} from '../utils/constants';
 
+import {newConfigStore} from '../store';
+
 import {
     newErrorCallResponseWithFieldErrors,
     newOKCallResponse,
     newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
     FieldValidationErrors} from '../utils/call_responses';
-import {Env, tryPromiseWithMessage} from '../utils';
+import {tryPromiseWithMessage} from '../utils';
 
 import {newMMClient, newZDClient} from '../clients';
-
-import {configStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
 import {newTriggerFromForm} from './triggerFromForm';
 
-export interface IApp {
+export interface App {
     createTicketFromPost(): Promise<AppCallResponse>;
     createZDSubscription(): Promise<AppCallResponse>;
 }
 
-class App implements IApp {
+class AppImpl implements App {
+    call: AppCall
     context: AppContext
     values: AppCallValues
 
     constructor(call: AppCall) {
+        this.call = call;
         this.context = call.context;
         this.values = call.values;
     }
     createTicketFromPost = async (): Promise<AppCallResponse> => {
         // get zendesk client for user
-        const zdClient = newZDClient(this.context);
+        const zdClient = await newZDClient(this.context);
 
         // create the ticket object from the form response
-        const [zdTicketPayload, fieldErrors] = newTicketFromForm(this.values);
+        const [zdTicketPayload, fieldErrors] = newTicketFromForm(this.call);
 
         // respond with errors
         if (this.hasFieldErrors(fieldErrors)) {
@@ -52,9 +54,12 @@ class App implements IApp {
         const zdUser = await tryPromiseWithMessage(getUserReq, 'Failed to get Zendesk user');
 
         // create a reply to the original post noting the ticket was created
+        const config = await newConfigStore(this.context).getValues();
+        const host = config.zd_node_host;
+
         const id = zdTicket.id;
         const subject = zdTicket.subject;
-        const message = `${zdUser.name} created ticket [#${id}](${Env.ZD.Host}/agent/tickets/${id}) [${subject}]`;
+        const message = `${zdUser.name} created ticket [#${id}](${host}/agent/tickets/${id}) [${subject}]`;
         await this.createBotPost(message);
 
         return newOKCallResponse();
@@ -62,12 +67,12 @@ class App implements IApp {
 
     createZDSubscription = async (): Promise<AppCallResponse> => {
         // get zendesk client for user
-        const zdClient = newZDClient(this.context);
+        const zdClient = await newZDClient(this.context);
 
         // create the trigger object from the form response
         let zdTriggerPayload: any;
         try {
-            zdTriggerPayload = newTriggerFromForm(this.values, this.context);
+            zdTriggerPayload = newTriggerFromForm(this.call);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }
@@ -98,17 +103,17 @@ class App implements IApp {
     }
 
     createBotPost = async (message: string): Promise<void> => {
-        const adminClient = newMMClient().asAdmin();
+        const adminClient = newMMClient(this.context).asAdmin();
 
         // add bot to team and channel
-        const botUserID = configStore.getBotUserID();
+        const botUserID = this.context.bot_user_id;
         const addToTeamReq = adminClient.addToTeam(this.context.team_id, botUserID);
         await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
 
         const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id);
         await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to team');
 
-        const botClient = newMMClient().asBot();
+        const botClient = newMMClient(this.context).asBot();
 
         const post: Post = {
             message,
@@ -126,6 +131,6 @@ class App implements IApp {
     }
 }
 
-export function newApp(call: AppCall): IApp {
-    return new App(call);
+export function newApp(call: AppCall): App {
+    return new AppImpl(call);
 }

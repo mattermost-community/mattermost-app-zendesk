@@ -2,17 +2,23 @@ import {Request, Response} from 'express';
 
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
-import {Env, Routes, createOAuthState} from '../utils';
+import {newConfigStore} from '../store';
 
-export function fConnect(req: Request, res: Response): void {
-    const context = req.body.context;
+import {Routes, createOAuthState, contextFromRequest} from '../utils';
+
+export async function fConnect(req: Request, res: Response): Promise<void> {
+    const context = contextFromRequest(req);
     const state = createOAuthState(context);
 
-    const url = Env.ZD.Host + Routes.ZD.OAuthAuthorizationURI;
+    const configStore = newConfigStore(context);
+    const config = await configStore.getValues();
+    const zdHost = config.zd_url;
+    const clientID = config.zd_client_id;
 
+    const url = zdHost + Routes.ZD.OAuthAuthorizationURI;
     const urlWithParams = new URL(url);
     urlWithParams.searchParams.append('response_type', 'code');
-    urlWithParams.searchParams.append('client_id', Env.ZD.ClientID);
+    urlWithParams.searchParams.append('client_id', clientID);
     urlWithParams.searchParams.append('state', state);
     urlWithParams.searchParams.append('scope', 'read write');
 

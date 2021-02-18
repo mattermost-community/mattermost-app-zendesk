@@ -1,25 +1,26 @@
 import {Tickets} from 'node-zendesk';
 
-import {AppFormValues} from 'mattermost-redux/types/apps';
+import {AppFormValues, AppContext, AppCall} from 'mattermost-redux/types/apps';
 
 import {CreateTicketFields, ZDFieldValidation} from '../utils/constants';
-import {getMultiselectValues, isFieldValueSelected} from '../utils/utils';
+import {getMultiselectValues, isFieldValueSelected, baseUrlFromContext} from '../utils/utils';
 
-import {configStore} from '../store';
 import {FieldValidationErrors} from '../utils/call_responses';
 
-interface ITicketFromFrom {
+interface TicketFromFrom {
     getTicket(): Tickets.CreatePayload;
     fieldValidationErrors: FieldValidationErrors;
 }
 
-export class TicketFromForm implements ITicketFromFrom {
+export class TicketFromFormImpl implements TicketFromFrom {
+    context: AppContext;
     formValues: AppFormValues;
     ticket: Tickets.CreateModel;
     fieldValidationErrors: FieldValidationErrors
 
-    constructor(values: AppFormValues) {
-        this.formValues = values;
+    constructor(call: AppCall) {
+        this.context = call.context;
+        this.formValues = call.values as AppFormValues;
         this.fieldValidationErrors = {};
         this.ticket = {
             comment: {
@@ -29,7 +30,8 @@ export class TicketFromForm implements ITicketFromFrom {
     }
 
     getPostMessage(): string {
-        const mmSignature = '*message created from Mattermost message.*\n' + configStore.getSiteURL();
+        const baseURL = baseUrlFromContext(this.context);
+        const mmSignature = '*message created from Mattermost message.*\n' + baseURL;
 
         const additionalMessage = this.formValues[CreateTicketFields.NameAdditionalMessage] || '';
         const postMessage = this.formValues[CreateTicketFields.NamePostMessage] || '';
@@ -164,7 +166,7 @@ export class TicketFromForm implements ITicketFromFrom {
     }
 }
 
-export function newTicketFromForm(values: AppFormValues): [Tickets.CreatePayload, FieldValidationErrors] {
-    const ticket = new TicketFromForm(values);
+export function newTicketFromForm(call: AppCall): [Tickets.CreatePayload, FieldValidationErrors] {
+    const ticket = new TicketFromFormImpl(call);
     return [ticket.getTicket(), ticket.fieldValidationErrors];
 }
