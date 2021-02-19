@@ -1,0 +1,27 @@
+{
+    "app_id": "zendesk",
+    "app_type": "aws_lambda",
+    "version": "0.0.1",
+    "display_name": "Zendesk",
+    "description": "Zendesk cloud app for Mattermost",
+    "homepage_url": "https://github.com/mattermost/mattermost-app-zendesk",
+    "root_url": "",
+    "requested_permissions": [
+        "act_as_user",
+        "act_as_bot"
+    ],
+    "requested_locations": [
+        "/command",
+        "/channel_header",
+        "/post_menu",
+        "/in_post"
+    ],
+    "functions": [
+        {
+            "name": "js-function",
+            "handler": "index.handler",
+            "runtime": "nodejs14.x"
+        }
+    ],
+    "assets": []
+}

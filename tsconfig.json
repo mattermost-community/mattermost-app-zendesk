@@ -19,6 +19,7 @@
         "jest",
         "node"
       ], 
+      "resolveJsonModule": true,
       "esModuleInterop": true,
       "skipLibCheck": true
     },
