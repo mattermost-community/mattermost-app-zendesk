@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use('/zendesk', zdRoutes); // Zendesk router
-app.use('/mattermost', mmRoutes); // Mattermost router
+app.use('/', mmRoutes); // Mattermost router
 
 if (isRunningInHTTPMode()) {
     // Listen to http port

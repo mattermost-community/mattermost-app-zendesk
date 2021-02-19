@@ -16,6 +16,12 @@
         "/post_menu",
         "/in_post"
     ],
+    "on_install": {
+        "url": "/install"
+    },
+    "bindings": {
+        "url": "/bindings"
+    },
     "functions": [
         {
             "name": "js-function",
