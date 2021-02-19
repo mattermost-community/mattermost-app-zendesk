@@ -11,10 +11,10 @@
         "act_as_bot"
     ],
     "requested_locations": [
-        "command",
-        "channel_header",
-        "post_menu",
-        "in_post"
+        "/command",
+        "/channel_header",
+        "/post_menu",
+        "/in_post"
     ],
     "functions": [
         {
