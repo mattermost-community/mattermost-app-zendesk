@@ -27,7 +27,7 @@ function commandConnect(): AppBinding {
         description: 'Connect your Zendesk account',
         icon: ZDIcon,
         call: {
-            url: Routes.App.BindingPathConnect,
+            path: Routes.App.BindingPathConnect,
         },
     } as AppBinding;
 }
@@ -39,7 +39,7 @@ function commandDisconnect(): AppBinding {
         description: 'Disconnect your Zendesk account',
         icon: ZDIcon,
         call: {
-            url: Routes.App.BindingPathDisconnect,
+            path: Routes.App.BindingPathDisconnect,
         },
     } as AppBinding;
 }
