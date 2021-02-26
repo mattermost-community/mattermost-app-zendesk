@@ -35,7 +35,7 @@
     "eslint-plugin-import": "2.22.1",
     "express": "4.17.1",
     "jest": "24.9.0",
-    "mattermost-redux": "git://github.com/mattermost/mattermost-redux.git#feature/cloud-apps",
+    "mattermost-redux": "github:mattermost/mattermost-redux#0bb937f0ed7ba3c1cf095edbb5db2a24ea96339a",
     "nodemon": "2.0.6",
     "prettier": "1.19.1",
     "ts-jest": "26.4.4",

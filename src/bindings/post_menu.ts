@@ -27,7 +27,7 @@ function postMenuCreate(): AppBinding {
         description: 'Create ticket in Zendesk',
         icon: ZDIcon,
         call: {
-            url: Routes.App.BindingPathOpenCreateTicketForm,
+            path: Routes.App.BindingPathOpenCreateTicketForm,
             expand: {
                 post: 'all',
             },
