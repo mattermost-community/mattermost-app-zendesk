@@ -125,6 +125,10 @@ From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/suppor
 }
 ```
 
+## Provision
+
+To provision this PR to AWS run `npm run dist` to generate the App bundle and then follow the steps [here](https://github.com/mattermost/mattermost-plugin-apps#provisioning).
+
 ## FAQ
 
 ### 1. `npm start` fails with warning about rudder in mattermost-redux
