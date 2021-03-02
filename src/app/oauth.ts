@@ -2,7 +2,6 @@ import ClientOAuth2 from 'client-oauth2';
 import {AppContext} from 'mattermost-redux/types/apps';
 
 import {Routes} from '../utils';
-import {getManifest} from '../../manifest';
 import {newConfigStore} from '../store';
 
 export const getOAuthConfig = async (context: AppContext): any => {
