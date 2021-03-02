@@ -8,6 +8,7 @@ import {AppSelectOption} from 'mattermost-redux/types/apps';
 
 // Routes to the Mattermost Instance
 const MMPaths = {
+    KVPath: '/plugins/com.mattermost.apps/api/v1/kv/',
 };
 
 // Routes to the Zendesk Instance

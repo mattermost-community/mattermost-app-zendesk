@@ -1,5 +1,7 @@
 import fetch from 'node-fetch';
 
+import {Routes} from '../utils/constants';
+
 export interface KVClient {
     set(key: string, value: any): void;
     get(key: string): Promise<any>;
@@ -47,10 +49,7 @@ class KVClientImpl implements KVClient {
             then((data) => data.json());
     }
 
-    // req.ParseForm()
-    // req.Form.Add("prefix", "servicenow")
-
     getKVURL(key: string): string {
-        return '/plugins/com.mattermost.apps/api/v1/kv/' + key;
+        return Routes.MM.KVPath + key;
     }
 }

@@ -11,10 +11,10 @@ interface MMClient {
 }
 
 export const newMMClient = (context: AppContext): MMClient => {
-    return new MattermostClient(context);
+    return new MMClientImpl(context);
 };
 
-class MattermostClient implements MMClient {
+class MMClientImpl implements MMClient {
     context: any
     constructor(context: AppContext) {
         this.context = context;

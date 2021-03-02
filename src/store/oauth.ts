@@ -3,14 +3,14 @@ import {AppContext} from 'mattermost-redux/types/apps';
 import {newKVClient, KVClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
-interface AppTokenStore {
+interface TokenStore {
     storeToken(userID: string, token: string): void;
     deleteToken(userID: string): void;
     getToken(userID: string): Promise<string>;
 }
 
 // need to add prefix
-class TokenStore implements AppTokenStore {
+class TokenStoreImpl implements TokenStore {
     kvClient: KVClient
 
     constructor(botToken: string, baseURL: string) {
@@ -30,9 +30,9 @@ class TokenStore implements AppTokenStore {
     }
 }
 
-export const newTokenStore = (context: AppContext): AppTokenStore => {
+export const newTokenStore = (context: AppContext): TokenStore => {
     const botAccessToken = context.bot_access_token;
     const baseURL = baseUrlFromContext(context);
-    return new TokenStore(botAccessToken, baseURL);
+    return new TokenStoreImpl(botAccessToken, baseURL);
 };
 
