@@ -3,13 +3,13 @@ import {Tickets, Users} from 'node-zendesk';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {AppCall, AppField, AppForm} from 'mattermost-redux/types/apps';
+import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 
 import {Routes, ZDIcon} from '../utils';
 import {makeOptions, makeFormOptions, tryPromiseWithMessage, zdFormFieldOption} from '../utils/utils';
 import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields} from '../utils/constants';
-import {TextField, StaticSelectField, BoolField} from '../utils/helper_classes/fields/app_fields';
 
 import {BaseFormFields} from '../utils/base_form_fields';
 
@@ -120,6 +120,12 @@ class FormFields extends BaseFormFields {
             const label = field.title;
             const isRequired = Boolean(field.required_in_portal);
 
+            const f: AppField = {
+                name,
+                label,
+                is_required: isRequired,
+            };
+
             switch (field.type) {
             case ZDFieldTypes.Description:
                 // will be filled by post message and handled separately
@@ -130,25 +136,17 @@ class FormFields extends BaseFormFields {
             case ZDFieldTypes.Subject:
             case ZDFieldTypes.Text:
             case ZDFieldTypes.MultiLine: {
-                const f = new TextField(name);
-                f.setLabel(label);
-                if (isRequired) {
-                    f.isRequired();
-                }
+                f.type = AppFieldTypes.TEXT;
                 if (field.type === ZDFieldTypes.MultiLine) {
-                    f.isTextArea();
+                    f.subtype = 'textarea';
                 }
-                this.builder.addField(f.toAppField());
+                this.builder.addField(f);
                 return;
             }
 
             case ZDFieldTypes.Checkbox: {
-                const f = new BoolField(name);
-                f.setLabel(label);
-                if (isRequired) {
-                    f.isRequired();
-                }
-                this.builder.addField(f.toAppField());
+                f.type = AppFieldTypes.BOOL;
+                this.builder.addField(f);
                 return;
             }
 
@@ -156,16 +154,15 @@ class FormFields extends BaseFormFields {
             case ZDFieldTypes.Priority:
             case ZDFieldTypes.Tagger:
             case ZDFieldTypes.Muliselect: {
+                f.type = AppFieldTypes.STATIC_SELECT;
                 const options = this.isSystemField(field) ? field.system_field_options : field.custom_field_options;
-                const f = new StaticSelectField(name, makeOptions(options));
-                f.setLabel(label);
-                if (isRequired) {
-                    f.isRequired();
-                }
+                f.options = makeOptions(options);
+
+                f.multiselect = false;
                 if (field.type === ZDFieldTypes.Muliselect) {
-                    f.isMuliselect();
+                    f.multiselect = true;
                 }
-                this.builder.addField(f.toAppField());
+                this.builder.addField(f);
                 return;
             }
             default:
@@ -199,30 +196,41 @@ class FormFields extends BaseFormFields {
 
     // addFormsToSelectField maps zendesk forms to a Mattermost select field
     addFormsSelectField(): void {
-        const field = new StaticSelectField(CreateTicketFields.NameFormsSelect, makeFormOptions(this.zdTicketForms));
-        field.setLabel('Form');
-        field.isRequired();
-        field.isRefresh();
-        this.builder.addField(field.toAppField());
+        const f: AppField = {
+            name: CreateTicketFields.NameFormsSelect,
+            type: AppFieldTypes.STATIC_SELECT,
+            label: 'Form',
+            options: makeFormOptions(this.zdTicketForms),
+            is_required: true,
+            refresh: true,
+        };
+        this.builder.addField(f);
     }
 
     // addPostFields returns fields for post message and additoinal text fields
     addOptionalMessageField(): void {
-        const field = new TextField(CreateTicketFields.NameAdditionalMessage);
-        field.setLabel('Optional message');
-        field.setDescription('Add additional message to the Zendesk ticket');
-        field.isTextArea();
-        this.builder.addField(field.toAppField());
+        const f: AppField = {
+            name: CreateTicketFields.NameAdditionalMessage,
+            type: AppFieldTypes.TEXT,
+            subtype: 'textarea',
+            label: 'Optional message',
+            options: makeFormOptions(this.zdTicketForms),
+            description: 'Add additional message to the Zendesk ticket',
+        };
+        this.builder.addField(f);
     }
 
     addPostMessageField(): void {
-        const field = new TextField(CreateTicketFields.NamePostMessage);
-        field.setLabel('Mattermost message');
-        field.setValue(this.postMessage);
-        field.isTextArea();
-        field.isReadOnly();
-        field.isRequired();
-        this.builder.addField(field.toAppField());
+        const f: AppField = {
+            name: CreateTicketFields.NamePostMessage,
+            type: AppFieldTypes.TEXT,
+            subtype: 'textarea',
+            label: 'Mattermost message',
+            value: this.postMessage,
+            is_required: true,
+            readonly: true,
+        };
+        this.builder.addField(f);
     }
 }
 
