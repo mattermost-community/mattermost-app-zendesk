@@ -1,7 +1,7 @@
 import ClientOAuth2 from 'client-oauth2';
 
 import {Env, Routes} from '../utils';
-import {getManifest} from '../../manifest';
+import {getManifest} from '../manifest';
 
 export const getOAuthConfig = (): any => {
     const zdAuth = new ClientOAuth2({

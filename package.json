@@ -6,9 +6,11 @@
   "scripts": {
     "build": "tsc -p .",
     "build:watch": "tsc -w -p .",
-    "start": "nodemon dist/src/index.js",
+    "clean": "rm -rf dist node_modules",
+    "dist": "rm -rf dist; npm run build; cp -r node_modules dist; cd dist; zip -qr js-function * node_modules; zip -r bundle.zip js-function.zip manifest.json",
+    "start": "LOCAL=true nodemon dist/index.js",
     "test": "jest --coverage",
-    "rebuild": "rm -rf node_modules; rm package-lock.json; npm i; npm run build"
+    "rebuild": "rm -rf node_modules; rm -f package-lock.json; npm i; npm run build"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +20,7 @@
     "dotenv": "8.2.0",
     "node-fetch": "2.6.1",
     "node-zendesk": "2.0.3",
+    "serverless-http": "2.7.0",
     "ts-node": "9.1.1"
   },
   "devDependencies": {
@@ -32,7 +35,7 @@
     "eslint-plugin-import": "2.22.1",
     "express": "4.17.1",
     "jest": "24.9.0",
-    "mattermost-redux": "git://github.com/mattermost/mattermost-redux.git#feature/cloud-apps",
+    "mattermost-redux": "github:mattermost/mattermost-redux#0bb937f0ed7ba3c1cf095edbb5db2a24ea96339a",
     "nodemon": "2.0.6",
     "prettier": "1.19.1",
     "ts-jest": "26.4.4",
