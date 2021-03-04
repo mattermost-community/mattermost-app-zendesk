@@ -74,26 +74,29 @@ class App implements IApp {
 
         let request: any;
         let msg: string;
+        const link = '[subscription](' + Env.ZD.Host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
             request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
             msg = 'Successfuly deleted subscription';
             break;
-        case (zdTriggerPayload.trigger.id):
+        case Boolean(zdTriggerPayload.trigger.id):
             request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
-            msg = 'Successfuly updated subscription';
+            msg = `Successfuly updated ${link}`;
             break;
         default:
             request = zdClient.triggers.create(zdTriggerPayload);
-            msg = 'Successfuly created subscription';
+            msg = `Successfuly created ${link}`;
         }
 
+        // Any zendesk error will produce an error in the modal
         try {
-            await tryPromiseWithMessage(request, msg);
+            await request;
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }
 
+        // return the call response with successful markdown message
         return newOKCallResponseWithMarkdown(msg);
     }
 

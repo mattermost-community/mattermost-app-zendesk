@@ -28,6 +28,7 @@ export class SubmitOrUpdateSubscriptionsForm extends BaseCallHandler {
     // show subcription options
     handleSubmit = async (): Promise<AppCallResponse> => {
         const app = newApp(this.call);
-        return app.createZDSubscription();
+        const callResponse = await app.createZDSubscription();
+        return callResponse;
     }
 }
