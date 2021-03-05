@@ -1,10 +1,10 @@
 import {AppCall, AppField, AppForm} from 'mattermost-redux/types/apps';
+import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {newMMClient, ZDClient} from '../clients';
 
 import {Routes, ZDIcon} from '../utils';
-import {TextField} from '../utils/helper_classes/fields/app_fields';
 
 import {BaseFormFields} from '../utils/base_form_fields';
 import {newConfigStore, ConfigStore, AppConfigStore} from '../store/config';
@@ -22,7 +22,7 @@ export async function newZendeskConfigForm(call: AppCall): Promise<AppForm> {
         icon: ZDIcon,
         fields,
         call: {
-            url: Routes.App.CallPathSubmitOrUpdateZendeskConfigForm,
+            path: Routes.App.CallPathSubmitOrUpdateZendeskConfigForm,
         },
     };
     return form;
