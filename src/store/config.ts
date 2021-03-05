@@ -32,10 +32,12 @@ class ConfigStoreImpl implements ConfigStore {
 
     async getValues(): Promise<AppConfigStore> {
         const config = await this.kvClient.get(StoreKeys.config);
-        this.storeData.zd_url = config.zd_url || '';
-        this.storeData.zd_client_id = config.zd_client_id || '';
-        this.storeData.zd_client_secret = config.zd_client_secret || '';
-        this.storeData.zd_node_host = config.zd_node_host || '';
+        if (config) {
+            this.storeData.zd_url = config.zd_url || '';
+            this.storeData.zd_client_id = config.zd_client_id || '';
+            this.storeData.zd_client_secret = config.zd_client_secret || '';
+            this.storeData.zd_node_host = config.zd_node_host || '';
+        }
         return this.storeData;
     }
 
