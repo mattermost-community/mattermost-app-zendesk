@@ -60,39 +60,51 @@ class FormFields extends BaseFormFields {
     }
 
     addZDUrlField(): void {
-        const f = new TextField('zd_url');
-        f.setLabel('Zendesk URL');
-        f.setValue(this.storeValues.zd_url);
-        f.setHint('Ex. https://yourhost.zendesk.com');
-        f.setDescription('Base URL of the zendesk account');
-        f.isRequired();
-        this.builder.addField(f.toAppField());
+        const f: AppField = {
+            type: AppFieldTypes.TEXT,
+            name: 'zd_url',
+            label: 'Zendesk URL',
+            value: this.storeValues.zd_url,
+            hint: 'Ex. https://yourhost.zendesk.com',
+            description: 'Base URL of the zendesk account',
+            is_required: true,
+        };
+        this.builder.addField(f);
     }
 
     addZDClientIDField(): void {
-        const f = new TextField('zd_client_id');
-        f.setLabel('Zendesk Client ID');
-        f.setValue(this.storeValues.zd_client_id);
-        f.setDescription('Client ID obtained when setting up Oauth client in zendesk');
-        f.isRequired();
-        this.builder.addField(f.toAppField());
+        const f: AppField = {
+            type: AppFieldTypes.TEXT,
+            name: 'zd_client_id',
+            label: 'Zendesk Client ID',
+            value: this.storeValues.zd_client_id,
+            description: 'Client ID obtained when setting up Oauth client in zendesk',
+            is_required: true,
+        };
+        this.builder.addField(f);
     }
     addZDClientSecretField(): void {
-        const f = new TextField('zd_client_secret');
-        f.setLabel('Zendesk Client Secret');
-        f.setValue(this.storeValues.zd_client_secret);
-        f.setDescription('Client Secret obtained when setting up Oauth client in zendesk');
-        f.isRequired();
-        this.builder.addField(f.toAppField());
+        const f: AppField = {
+            type: AppFieldTypes.TEXT,
+            name: 'zd_client_secret',
+            label: 'Zendesk Client Secret',
+            value: this.storeValues.zd_client_secret,
+            description: 'Client Secret obtained when setting up Oauth client in zendesk',
+            is_required: true,
+        };
+        this.builder.addField(f);
     }
 
     addZDNodeHost(): void {
-        const f = new TextField('zd_node_host');
-        f.setHint('Ex. https://yourhost.ngrok.io');
-        f.setValue(this.storeValues.zd_node_host);
-        f.setLabel('Zendesk Node Host');
-        f.setDescription('Only needed for development');
-        this.builder.addField(f.toAppField());
+        const f: AppField = {
+            type: AppFieldTypes.TEXT,
+            name: 'zd_node_host',
+            hint: 'Ex. https://yourhost.ngrok.io',
+            label: 'Zendesk Node Host',
+            value: this.storeValues.zd_node_host,
+            description: 'Only needed for development',
+        };
+        this.builder.addField(f);
     }
 }
 
