@@ -32,7 +32,7 @@ class CommandBindings extends Bindings {
             description: 'Connect your Zendesk account',
             icon: ZDIcon,
             call: {
-                url: Routes.App.BindingPathConnect,
+                path: Routes.App.BindingPathConnect,
             },
         } as AppBinding;
     }
@@ -44,7 +44,7 @@ class CommandBindings extends Bindings {
             description: 'Disconnect your Zendesk account',
             icon: ZDIcon,
             call: {
-                url: Routes.App.BindingPathDisconnect,
+                path: Routes.App.BindingPathDisconnect,
             },
         } as AppBinding;
     }
@@ -56,7 +56,7 @@ class CommandBindings extends Bindings {
             description: 'Subscribe notifications to a channel',
             icon: ZDIcon,
             call: {
-                url: Routes.App.BindingPathOpenSubcriptionsForm,
+                path: Routes.App.BindingPathOpenSubcriptionsForm,
             },
         } as AppBinding;
     }
@@ -68,7 +68,7 @@ class CommandBindings extends Bindings {
             description: 'Show Zendesk Help',
             icon: ZDIcon,
             call: {
-                url: Routes.App.BindingPathHelp,
+                path: Routes.App.BindingPathHelp,
             },
         } as AppBinding;
     }

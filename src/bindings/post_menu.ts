@@ -28,7 +28,7 @@ class PostMenuBindings extends Bindings {
             icon: ZDIcon,
             location: 'open_ticket',
             call: {
-                url: Routes.App.BindingPathOpenCreateTicketForm,
+                path: Routes.App.BindingPathOpenCreateTicketForm,
                 expand: {
                     post: AppExpandLevels.EXPAND_ALL,
                 },
@@ -44,7 +44,7 @@ class PostMenuBindings extends Bindings {
             icon: ZDIcon,
             location: 'open_subscription',
             call: {
-                url: Routes.App.BindingPathOpenSubcriptionsForm,
+                path: Routes.App.BindingPathOpenSubcriptionsForm,
             },
         } as AppBinding;
     }

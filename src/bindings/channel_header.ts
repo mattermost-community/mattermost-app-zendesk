@@ -24,7 +24,7 @@ class ChannelHeaderBindings extends Bindings {
             description: 'Open Create Zendesk Subcription Modal',
             icon: ZDIcon,
             call: {
-                url: Routes.App.BindingPathOpenSubcriptionsForm,
+                path: Routes.App.BindingPathOpenSubcriptionsForm,
             },
         } as AppBinding;
     }

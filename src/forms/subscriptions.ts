@@ -25,7 +25,7 @@ export async function newSubscriptionsForm(call: AppCall): Promise<AppForm> {
         submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
         call: {
-            url: Routes.App.CallPathSubmitOrUpdateSubcriptionForm,
+            path: Routes.App.CallPathSubmitOrUpdateSubcriptionForm,
         },
     };
     return form;
