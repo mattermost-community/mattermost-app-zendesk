@@ -1,5 +1,6 @@
 import {Channel} from 'mattermost-redux/types/channels';
 import {AppSelectOption, AppCall, AppForm, AppField} from 'mattermost-redux/types/apps';
+import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
@@ -7,7 +8,6 @@ import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {Routes, ZDIcon} from '../utils';
 import {makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
 import {SubscriptionFields} from '../utils/constants';
-import {BoolField, StaticSelectField, TextField} from '../utils/helper_classes/fields/app_fields';
 
 import {BaseFormFields} from '../utils/base_form_fields';
 
@@ -25,7 +25,7 @@ export async function newSubscriptionsForm(call: AppCall): Promise<AppForm> {
         submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
         call: {
-            url: Routes.App.CallPathSubmitOrUpdateSubcriptionForm,
+            path: Routes.App.CallPathSubmitOrUpdateSubcriptionForm,
         },
     };
     return form;
@@ -110,18 +110,22 @@ class FormFields extends BaseFormFields {
         const options = makeChannelOptions(this.getTeamChannelsWithSubs());
         const currentChannelOption = options.filter(this.getDefaultChannelOption());
 
-        const f = new StaticSelectField(SubscriptionFields.ChannelPickerSelect_Name, options);
-        f.setLabel(SubscriptionFields.ChannelPickerSelect_Label);
-        f.isRequired();
-        f.isRefresh();
+        const f: AppField = {
+            name: SubscriptionFields.ChannelPickerSelect_Name,
+            type: AppFieldTypes.STATIC_SELECT,
+            label: SubscriptionFields.ChannelPickerSelect_Label,
+            options,
+            is_required: true,
+            refresh: true,
+        };
 
         // when initially opening the modal (call.values is undefined)
         // set default option to current channel if the user is in a
         // channel with subscriptions
         if (currentChannelOption.length === 1 && !this.getCallValues()) {
-            f.setValue(currentChannelOption[0]);
+            f.value = currentChannelOption[0];
         }
-        this.builder.addField(f.toAppField());
+        this.builder.addField(f);
     }
 
     // addSubNameDependentFields add the conditional fields once the
@@ -139,21 +143,29 @@ class FormFields extends BaseFormFields {
     // addSubmitButtons adds a delete button in addition to the save button
     addSubmitButtons(): void {
         const options = SubscriptionFields.SubmitButtonsOptions;
-        const f = new StaticSelectField(SubscriptionFields.SubmitButtonsName, options);
-        this.builder.addField(f.toAppField());
+
+        const f: AppField = {
+            name: SubscriptionFields.SubmitButtonsName,
+            type: AppFieldTypes.STATIC_SELECT,
+            options,
+        };
+
+        this.builder.addField(f);
     }
 
     // addSubCheckBoxes adds the available check box options for subscription
     addSubCheckBoxes(): void {
         const checkboxes = [];
         for (const fieldName of SubscriptionFields.ConditionsCheckBoxFields) {
-            const f = new BoolField(fieldName);
-            f.setFalse();
-            f.setLabel(fieldName);
+            const f: AppField = {
+                name: fieldName,
+                type: AppFieldTypes.BOOL,
+                label: fieldName,
+                value: false,
+            };
 
-            // add checkbox with default value already set to false
             if (this.isNewSub()) {
-                checkboxes.push(f.toAppField());
+                checkboxes.push(f);
                 continue;
             }
 
@@ -161,10 +173,10 @@ class FormFields extends BaseFormFields {
             if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
                 const anyConditions = this.getAnyConditions();
                 if (this.isZdFieldChecked(anyConditions, fieldName)) {
-                    f.setTrue();
+                    f.value = true;
                 }
             }
-            checkboxes.push(f.toAppField());
+            checkboxes.push(f);
         }
         this.builder.addFields(checkboxes);
     }
@@ -226,10 +238,6 @@ class FormFields extends BaseFormFields {
     // addErrorMessageField adds a text field with a message when a trigger has
     // conditions not supported by the app
     addErrorMessageField(link: string): void {
-        // TODO This message is better suited as an error message next to buttons
-        // Need to add clickable link to trigger.  Always show the link (next to Subscription Name)
-        // disble the submit button';
-        const f = new TextField(SubscriptionFields.UnsupportedFieldsText_Name);
         let text = 'The following condition fields are not currently supported by the app. Please visit the trigger link to modify the conditions for this subscription';
         text += '\n\n';
         text += this.getBulletedList('Unsupported Fields', this.unsupportedFields);
@@ -237,10 +245,19 @@ class FormFields extends BaseFormFields {
         text += this.getBulletedList('Unsupported Field Operators', this.unsupportedOperators);
         text += '\n\n' + link;
 
-        f.setValue(text);
-        f.isReadOnly();
-        f.isTextArea();
-        this.builder.addField(f.toAppField());
+        // TODO This message is better suited as an error message next to buttons
+        // Need to add clickable link to trigger.  Always show the link (next to Subscription Name)
+        // disble the submit button';
+        const f: AppField = {
+            name: SubscriptionFields.UnsupportedFieldsText_Name,
+            type: AppFieldTypes.TEXT,
+            subtype: 'textarea',
+            label: 'Optional message',
+            value: text,
+            readonly: true,
+        };
+
+        this.builder.addField(f);
     }
 
     // getBulletedList returns a bulleted list of items with options header
@@ -270,20 +287,25 @@ class FormFields extends BaseFormFields {
 
     // addNewSubTextField adds a field for adding or editing a subcription name
     addSubNameTextField(): void {
-        const f = new TextField(SubscriptionFields.SubText_Name);
+        const f: AppField = {
+            name: SubscriptionFields.SubText_Name,
+            type: AppFieldTypes.TEXT,
+            label: SubscriptionFields.SubText_Label,
+            is_required: true,
+        };
+
         if (this.isNewSub()) {
-            f.setHint(this.getSelectedSubTriggerName());
+            f.hint = this.getSelectedSubTriggerName();
 
             // TODO this value needs to be set to empty so the hint will show.
             // setting to '' does not work
             // not setting keeps previous text form previous selected sub
-            f.setValue(this.getSelectedSubTriggerName());
+            f.value = this.getSelectedSubTriggerName();
         } else {
-            f.setValue(this.getSelectedSubTriggerName());
+            f.value = this.getSelectedSubTriggerName();
         }
-        f.setLabel(SubscriptionFields.SubText_Label);
-        f.isRequired();
-        this.builder.addField(f.toAppField());
+
+        this.builder.addField(f);
     }
 
     // add addSubSelectField adds the subscription selector modal field
@@ -301,11 +323,16 @@ class FormFields extends BaseFormFields {
             ...subsOptions,
         ];
 
-        const f = new StaticSelectField(SubscriptionFields.SubSelect_Name, options);
-        f.setLabel(SubscriptionFields.SubSelect_Label);
-        f.isRequired();
-        f.isRefresh();
-        this.builder.addField(f.toAppField());
+        const f: AppField = {
+            name: SubscriptionFields.SubSelect_Name,
+            label: SubscriptionFields.SubSelect_Label,
+            type: AppFieldTypes.STATIC_SELECT,
+            options,
+            is_required: true,
+            refresh: true,
+        };
+
+        this.builder.addField(f);
     }
 
     // getTeamChannelsWithSubs returns an array of channels that have

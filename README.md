@@ -17,7 +17,7 @@ mm-plugin-apps: `master` @831d203
     1. `Add OAuth Client`
         1. `Client Name`: (Example `Mattermost Zendesk App`)
         1. `Description`: `Connect your Zendesk account to Mattermost`
-        1. `Redirect URLs`: `https://<your-zendesk-app-host>/mattermost/oauth/complete`
+        1. `Redirect URLs`: `https://<your-zendesk-app-host>/oauth/complete`
             1. Ex. `http://localhost:4000` - Development
             1. Ex. `https://mytest.ngrok.io` - Exposed for development
         1. `Save`
@@ -35,7 +35,7 @@ mm-plugin-apps: `master` @831d203
     1. `npm run build:watch` - (to monitor typescriopt errors and watch chaning files errors)
     1. `npm start` - (in a separate shell) start the node server
 1. Install the app (In Mattermost)
-    1. `/apps install --url http://<your-zendesk-app-host>/mattermost/manifest.json --app-secret thisisthesecret`  
+    1. `/apps install --url http://<your-zendesk-app-host>/manifest.json --app-secret thisisthesecret`  
 
 ### Zendesk and Mattermost Users (All users)
 
@@ -61,8 +61,8 @@ Creating a ticket from a Mattermost post is done through the `...` post menu but
 
 ## Installation
 
-`/apps install --url http://<your-zendesk-app>/mattermost/manifest.json --app-secret thisisthesecret`  
-`/apps install --url http://localhost:4000/mattermost/manifest.json --app-secret thisisthesecret`  
+`/apps install --url http://<your-zendesk-app>/manifest.json --app-secret thisisthesecret`  
+`/apps install --url http://localhost:4000/manifest.json --app-secret thisisthesecret`  
 
 After installing the app, a provisioned bot account will be created for user `@zendesk` and posted in a DM. The following values are stored locally in `config.json`
 
@@ -131,6 +131,10 @@ From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/suppor
   "teamID": ""
 }
 ```
+
+## Provision
+
+To provision this PR to AWS run `npm run dist` to generate the App bundle and then follow the steps [here](https://github.com/mattermost/mattermost-plugin-apps#provisioning).
 
 ## FAQ
 
