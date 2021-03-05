@@ -4,6 +4,7 @@ import express from 'express';
 import serverless from 'serverless-http';
 import bodyParser from 'body-parser';
 
+// import zdRoutes from './restapi/zd_routes';
 import mmRoutes from './restapi/mm_routes';
 
 const app = express();
@@ -13,7 +14,7 @@ app.use(bodyParser.urlencoded({
     extended: true,
 }));
 
-app.use('/zendesk', zdRoutes); // Zendesk router
+// app.use('/zendesk', zdRoutes); // Zendesk router
 app.use('/', mmRoutes); // Mattermost router
 
 if (isRunningInHTTPMode()) {
