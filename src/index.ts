@@ -4,7 +4,7 @@ import express from 'express';
 import serverless from 'serverless-http';
 import bodyParser from 'body-parser';
 
-import zdRoutes from './restapi/zd_routes';
+// import zdRoutes from './restapi/zd_routes';
 import mmRoutes from './restapi/mm_routes';
 
 const app = express();
@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({
     extended: true,
 }));
 
-app.use('/zendesk', zdRoutes); // Zendesk router
+// app.use('/zendesk', zdRoutes); // Zendesk router
 app.use('/', mmRoutes); // Mattermost router
 
 if (isRunningInHTTPMode()) {
@@ -27,7 +27,7 @@ if (isRunningInHTTPMode()) {
 }
 
 export function isRunningInHTTPMode(): boolean {
-    return process.env.LOCAL === 'true'
+    return process.env.LOCAL === 'true';
 }
 
 function getPort(): number {
@@ -35,5 +35,5 @@ function getPort(): number {
 }
 
 export function getHTTPPath(): string {
-    return 'http://localhost:' + getPort()
+    return 'http://localhost:' + getPort();
 }
