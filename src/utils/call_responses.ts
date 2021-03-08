@@ -30,10 +30,10 @@ export function newFormCallResponse(form: AppForm): AppCallResponse {
     };
 }
 
-export function newErrorCallResponseWithMessage(error: string): AppCallResponse {
+export function newErrorCallResponseWithMessage(message: string): AppCallResponse {
     return {
         type: AppCallResponseTypes.ERROR,
-        error,
+        error: message,
     };
 }
 
