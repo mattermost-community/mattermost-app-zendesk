@@ -9,7 +9,7 @@ export const getOAuthConfig = (): any => {
         clientSecret: Env.ZD.ClientSecret,
         accessTokenUri: Env.ZD.Host + Routes.ZD.OAuthAccessTokenURI,
         authorizationUri: Env.ZD.Host + Routes.ZD.OAuthAuthorizationURI,
-        redirectUri: getManifest().root_url + Routes.App.OAuthCompletePath,
+        redirectUri: Env.ZD.NodeHost + Routes.App.OAuthCompletePath,
         scopes: ['read', 'write'],
     });
     return zdAuth;

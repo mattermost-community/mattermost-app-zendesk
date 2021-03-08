@@ -54,6 +54,7 @@ export const CommandLocations = {
 
 const ZDEnv = {
     Host: process.env.ZD_URL as string,
+    NodeHost: process.env.ZD_NODE_HOST as string,
     ApiURL: process.env.ZD_URL + ZDPaths.APIVersion as string,
     ClientSecret: process.env.ZD_CLIENT_SECRET as string,
     ClientID: process.env.ZD_CLIENT_ID as string,
