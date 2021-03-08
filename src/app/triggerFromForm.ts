@@ -96,14 +96,11 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
             }
         }
 
-        if (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel) {
-            this.addField('conditions', conditions);
-        }
-
         // do not let subscriptions without a condition be created...
         if (conditions.any.length === 0) {
             throw new Error('Must select at least one condition');
         }
+
         this.addField('conditions', conditions);
     }
 }
