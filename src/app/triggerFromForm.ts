@@ -13,7 +13,7 @@ export class TriggerFromForm implements ITriggerFromFrom {
     context: AppContext;
     trigger: any
 
-    constructor(values: AppCallValues, context: AppContext) {
+    constructor(context: AppContext, values: AppCallValues) {
         this.values = values;
         this.context = context;
         this.trigger = {};
@@ -108,8 +108,8 @@ export class TriggerFromForm implements ITriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(values: AppCallValues, context: AppContext): any {
-    const trigger = new TriggerFromForm(values, context).getTrigger();
+export function newTriggerFromForm(context: AppContext, values: AppCallValues): any {
+    const trigger = new TriggerFromForm(context, values).getTrigger();
     return trigger;
 }
 

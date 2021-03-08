@@ -67,7 +67,7 @@ class App implements IApp {
         // create the trigger object from the form response
         let zdTriggerPayload: any;
         try {
-            zdTriggerPayload = newTriggerFromForm(this.values, this.context);
+            zdTriggerPayload = newTriggerFromForm(this.context, this.values);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }
