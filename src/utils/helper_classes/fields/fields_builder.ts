@@ -92,9 +92,7 @@ class FieldsBuilder implements Ibuilder {
     }
 
     // getFieldValueByName returns the defined AppCall value for a field or an empty string
-    // this is a helper function for a caller to check the value of an
-    // AppField. The return value is the value of the field. In the case of a
-    // select field, it is the value field in the returned object.
+    // In the case of a select field, it is the value field in the returned object.
     getFieldValueByName(fieldName: string): string {
         if (this.values && this.values.values[fieldName]) {
             // this is select field return the value field in the object
@@ -107,9 +105,7 @@ class FieldsBuilder implements Ibuilder {
     }
 
     // getFieldLabelByName returns the defined AppCall label for a field or an empty string
-    // this is a helper function for a caller to check the value of an
-    // AppField. The return value is the value of the field. In the case of a
-    // select field, it is the value field in the returned object.
+    // In the case of a select field, it is the label field in the returned object.
     getFieldLabelByName(fieldName: string): string {
         if (this.values && this.values.values[fieldName]) {
             // this is select field return the value field in the object
