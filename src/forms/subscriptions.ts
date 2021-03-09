@@ -111,9 +111,9 @@ class FormFields extends BaseFormFields {
         const currentChannelOption = options.filter(this.getDefaultChannelOption());
 
         const f: AppField = {
-            name: SubscriptionFields.ChannelPickerSelect_Name,
+            name: SubscriptionFields.ChannelPickerSelectName,
             type: AppFieldTypes.STATIC_SELECT,
-            label: SubscriptionFields.ChannelPickerSelect_Label,
+            label: SubscriptionFields.ChannelPickerSelectLabel,
             options,
             is_required: true,
             refresh: true,
@@ -249,7 +249,7 @@ class FormFields extends BaseFormFields {
         // Need to add clickable link to trigger.  Always show the link (next to Subscription Name)
         // disble the submit button';
         const f: AppField = {
-            name: SubscriptionFields.UnsupportedFieldsText_Name,
+            name: SubscriptionFields.UnsupportedFieldsTextName,
             type: AppFieldTypes.TEXT,
             subtype: 'textarea',
             label: 'Optional message',
@@ -288,9 +288,9 @@ class FormFields extends BaseFormFields {
     // addNewSubTextField adds a field for adding or editing a subscription name
     addSubNameTextField(): void {
         const f: AppField = {
-            name: SubscriptionFields.SubText_Name,
+            name: SubscriptionFields.SubTextName,
             type: AppFieldTypes.TEXT,
-            label: SubscriptionFields.SubText_Label,
+            label: SubscriptionFields.SubTextLabel,
             is_required: true,
         };
 
@@ -324,8 +324,8 @@ class FormFields extends BaseFormFields {
         ];
 
         const f: AppField = {
-            name: SubscriptionFields.SubSelect_Name,
-            label: SubscriptionFields.SubSelect_Label,
+            name: SubscriptionFields.SubSelectName,
+            label: SubscriptionFields.SubSelectLabel,
             type: AppFieldTypes.STATIC_SELECT,
             options,
             is_required: true,
@@ -361,7 +361,7 @@ class FormFields extends BaseFormFields {
     }
 
     getSelectedChannelID(): string {
-        return this.builder.getFieldValueByName(SubscriptionFields.ChannelPickerSelect_Name);
+        return this.builder.getFieldValueByName(SubscriptionFields.ChannelPickerSelectName);
     }
 
     getSelectedSubTrigger(): string {
@@ -370,11 +370,11 @@ class FormFields extends BaseFormFields {
     }
 
     getSelectedSubTriggerID(): string {
-        return this.builder.getFieldValueByName(SubscriptionFields.SubSelect_Name);
+        return this.builder.getFieldValueByName(SubscriptionFields.SubSelectName);
     }
 
     getSelectedSubTriggerName(): string {
-        return this.builder.getFieldLabelByName(SubscriptionFields.SubSelect_Name);
+        return this.builder.getFieldLabelByName(SubscriptionFields.SubSelectName);
     }
 
     getSubTriggerByID(subID: string): any {

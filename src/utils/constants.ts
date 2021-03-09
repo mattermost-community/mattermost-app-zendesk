@@ -94,24 +94,23 @@ export const CreateTicketFields = {
 };
 
 export const SubscriptionFields = {
-    ChannelPickerSelect_Label: 'Channel Name',
-    ChannelPickerSelect_Name: 'channel_picker_name',
+    ChannelPickerSelectLabel: 'Channel Name',
+    ChannelPickerSelectName: 'channel_picker_name',
 
-    SubSelect_Label: 'Subscription Name',
-    SubSelect_Name: 'subcription_select_name',
+    SubSelectLabel: 'Subscription Name',
+    SubSelectName: 'subcription_select_name',
 
-    // UnsupportedFieldsText_Label: 'un',
-    UnsupportedFieldsText_Name: 'unsupported_fields',
+    UnsupportedFieldsTextName: 'unsupported_fields',
 
-    SubText_Label: 'Name',
-    SubText_Name: 'subscription_text_name',
+    SubTextLabel: 'Name',
+    SubTextName: 'subscription_text_name',
 
-    SubmitButtonsName: 'button_action',
     DeleteButtonLabel: 'Delete',
+    SubmitButtonsName: 'button_action',
     SaveButtonLabel: 'Save',
 
-    NewSub_OptionValue: 'newsubscription',
     NewSub_OptionLabel: 'New Subscription',
+    NewSub_OptionValue: 'newsubscription',
 
     PrefixTriggersTitle: '__mm_webhook__channelID:',
     RegexTriggerTitle: '__mm_webhook__channelID:(\\w+) (.*)',
