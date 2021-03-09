@@ -8,7 +8,7 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 
 import {Routes, ZDIcon} from '../utils';
-import {makeOptions, makeFormOptions, tryPromiseWithMessage, zdFormFieldOption} from '../utils/utils';
+import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption} from '../utils/utils';
 import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields} from '../utils/constants';
 
 import {BaseFormFields} from '../utils/base_form_fields';
@@ -34,7 +34,7 @@ export async function newCreateTicketForm(call: AppCall): Promise<AppForm> {
 
 // FormFields retrieves viewable modal app fields
 class FormFields extends BaseFormFields {
-    zdTicketForms: zdFormFieldOption[]
+    zdTicketForms: ZDFormFieldOption[]
     postMessage: string
     constructor(call: AppCall, zdClient: ZDClient, mmClient: Client4) {
         super(call, zdClient, mmClient);

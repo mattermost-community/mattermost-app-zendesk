@@ -3,12 +3,12 @@ import {Channel} from 'mattermost-redux/types/channels';
 
 import {SubscriptionFields} from './constants';
 
-type zdFieldOption = {
+export type ZDFieldOption = {
     name: string;
     value: string;
 }
 
-export type zdFormFieldOption = {
+export type ZDFormFieldOption = {
     name: string;
     id: number;
 }
@@ -18,7 +18,7 @@ type ZDSubscriptionFieldOption = {
     id: number;
 }
 
-const getDisplaySubTitleOption = (option: zdSubscriptionFieldOption): string => {
+const getDisplaySubTitleOption = (option: ZDSubscriptionFieldOption): string => {
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
     const newTitle = option.title.match(re)[2];
     return newTitle;
@@ -35,17 +35,17 @@ export const getChannelIDFromTriggerTitle = (title: string): string => {
     return match[1];
 };
 
-export const makeOption = (option: zdFieldOption): AppSelectOption => ({label: option.name, value: option.value});
-export const makeOptions = (options: zdFieldOption[]): AppSelectOption[] => options.map(makeOption);
+export const makeOption = (option: ZDFieldOption): AppSelectOption => ({label: option.name, value: option.value});
+export const makeOptions = (options: ZDFieldOption[]): AppSelectOption[] => options.map(makeOption);
 
-export const makeFormOption = (option: zdFormFieldOption): AppSelectOption => ({label: option.name, value: option.id.toString()});
-export const makeFormOptions = (options: zdFormFieldOption[]): AppSelectOption[] => options.map(makeFormOption);
+export const makeFormOption = (option: ZDFormFieldOption): AppSelectOption => ({label: option.name, value: option.id.toString()});
+export const makeFormOptions = (options: ZDFormFieldOption[]): AppSelectOption[] => options.map(makeFormOption);
 
-export const makeSubscriptionOption = (option: zdSubscriptionFieldOption): AppSelectOption => ({label: getDisplaySubTitleOption(option), value: option.id.toString()});
-export const makeSubscriptionOptions = (options: zdSubscriptionFieldOption[]): AppSelectOption[] => options.map(makeSubscriptionOption);
+export const makeSubscriptionOption = (option: ZDSubscriptionFieldOption): AppSelectOption => ({label: getDisplaySubTitleOption(option), value: option.id.toString()});
+export const makeSubscriptionOptions = (options: ZDSubscriptionFieldOption[]): AppSelectOption[] => options.map(makeSubscriptionOption);
 
-export const getMultiselectValue = (option: zdFieldOption): string => option.value;
-export const getMultiselectValues = (options: zdFieldOption[]): string[] => options.map(getMultiselectValue);
+export const getMultiselectValue = (option: ZDFieldOption): string => option.value;
+export const getMultiselectValues = (options: ZDFieldOption[]): string[] => options.map(getMultiselectValue);
 
 export const makeChannelOption = (option: Channel): AppSelectOption => ({label: option.display_name, value: option.id});
 export const makeChannelOptions = (options: Channel[]): AppSelectOption[] => options.map(makeChannelOption);
