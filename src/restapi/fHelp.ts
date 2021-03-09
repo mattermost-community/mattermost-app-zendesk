@@ -8,7 +8,7 @@ import {isUserSysadmin} from '../app/user';
 
 export async function fHelp(req: Request, res: Response): Promise<void> {
     let helpText = getHelpText();
-    helpText += getSysadminCommands(req.body.context.acting_user_id);
+    helpText += getSysadminCommandsHelpText(req.body.context.acting_user_id);
 
     res.json(newOKCallResponseWithMarkdown(helpText));
 }
@@ -30,7 +30,7 @@ function getHelpText(): string {
   `;
 }
 
-function getSysadminCommands(userID: string): string {
+function getSysadminCommandsHelpText(userID: string): string {
     const text = `
 
 ##### System Admin Commands

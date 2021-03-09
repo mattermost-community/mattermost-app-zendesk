@@ -379,11 +379,7 @@ class FormFields extends BaseFormFields {
 
     getSubTriggerByID(subID: string): any {
         const triggers = this.getChannelTriggers(this.getSelectedChannelID());
-        for (const trigger of triggers) {
-            if (String(trigger.id) === subID) {
-                return trigger;
-            }
-        }
+        return triggers.find((trigger) => String(trigger.id) === subID);
     }
 
     getChannelTriggers(channelID: string): any[] {

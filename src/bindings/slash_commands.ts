@@ -13,10 +13,10 @@ class CommandBindings extends Bindings {
     getBindings = (): AppBinding[] => {
         const bindings: AppBinding[] = [];
         if (this.isConnected()) {
-            bindings.push(this.cmdDisconnect());
             if (this.isSysadmin()) {
                 bindings.push(this.cmdSubscribe());
             }
+            bindings.push(this.cmdDisconnect());
         } else {
             bindings.push(this.cmdConnect());
         }

@@ -101,8 +101,6 @@ class FieldsBuilder implements Ibuilder {
             if (this.values.values[fieldName].value) {
                 return this.values.values[fieldName].value;
             }
-
-            // this is any field type that doesn't have an option type value
             return this.values.values[fieldName];
         }
         return '';
@@ -118,8 +116,6 @@ class FieldsBuilder implements Ibuilder {
             if (this.values.values[fieldName].label) {
                 return this.values.values[fieldName].label;
             }
-
-            // this is any field type that doesn't have an option type value
             return this.values.values[fieldName];
         }
         return '';
