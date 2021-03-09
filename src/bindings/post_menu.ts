@@ -44,7 +44,7 @@ class PostMenuBindings extends Bindings {
             icon: ZDIcon,
             location: 'open_subscription',
             call: {
-                path: Routes.App.BindingPathOpenSubcriptionsForm,
+                path: Routes.App.BindingPathOpenSubscriptionsForm,
             },
         } as AppBinding;
     }

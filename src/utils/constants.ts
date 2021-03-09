@@ -29,14 +29,14 @@ const AppPaths = {
     // Binding routes are accessed via a location call
     BindingsPath: '/bindings',
     BindingPathOpenCreateTicketForm: '/open-create-ticket-form',
-    BindingPathOpenSubcriptionsForm: '/open-subscriptions-form',
+    BindingPathOpenSubscriptionsForm: '/open-subscriptions-form',
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
     BindingPathHelp: '/help',
 
     // Call routes are callable routes, but not bound to a location
     CallPathSubmitOrUpdateCreateTicketForm: '/submit-or-update-create-ticket-form',
-    CallPathSubmitOrUpdateSubcriptionForm: '/submit-or-update-subcription-form',
+    CallPathSubmitOrUpdateSubscriptionForm: '/submit-or-update-subscription-form',
 };
 
 export const Routes = {

@@ -13,7 +13,7 @@ export type zdFormFieldOption = {
     id: number;
 }
 
-type zdSubscriptionFieldOption = {
+type ZDSubscriptionFieldOption = {
     title: string;
     id: number;
 }

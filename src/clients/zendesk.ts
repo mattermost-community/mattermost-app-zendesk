@@ -24,10 +24,12 @@ interface Triggers {
     create(trigger: any): any;
     search(query: string): any;
 }
+
 interface OauthTokens {
     current(): any;
     revoke(id: number): any;
 }
+
 interface Users {
     show(id: number): any;
 }

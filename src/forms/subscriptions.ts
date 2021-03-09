@@ -285,7 +285,7 @@ class FormFields extends BaseFormFields {
         };
     }
 
-    // addNewSubTextField adds a field for adding or editing a subcription name
+    // addNewSubTextField adds a field for adding or editing a subscription name
     addSubNameTextField(): void {
         const f: AppField = {
             name: SubscriptionFields.SubText_Name,
