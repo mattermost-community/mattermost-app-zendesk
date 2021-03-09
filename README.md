@@ -150,29 +150,7 @@ To provision this PR to AWS run `npm run dist` to generate the App bundle and th
 var rudderAnalytics = tslib_1.__importStar(require("rudder-sdk-js"));
 exports.rudderAnalytics = rudderAnalytics;
 ```
-
-### 2.  fails with warning about rudder in mattermost-redux
-
-```sh
-(node:45576) UnhandledPromiseRejectionWarning: ReferenceError: fetch is not defined
-    at Object.exports.default (/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-app-zendesk/node_modules/mattermost-redux/client/fetch_etag.js:32:26)
-    at Client4.<anonymous> (/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-app-zendesk/node_modules/mattermost-redux/client/client4.js:1594:70)
-```
-
-- open `node_modules/mattermost-redux/client/client4.js`
-- comment out the following line:
-
-```javascript
-// var fetch_etag_1 = tslib_1.__importDefault(require("./fetch_etag"));
-```
-
-- add the following line:
-
-```javascript
-var fetch_etag_1 = require("node-fetch");
-```
-
-### 3. Log message received and bindings are not received by the
+### 2. Log message received and binding locations do not show
 
 `The system admin has turned off OAuth2 Service Provider.`
 
@@ -184,7 +162,7 @@ Through system console -> enable oauth2 service provider
 "EnableOAuthServiceProvider": true,
 ```
 
-### 4. Need a branched version of the node-zendesk client so that we can query
+### 3. Need a branched version of the node-zendesk client so that we can query
 webhooks by title
 
 In `node_modules/node-zendesk/lib/client/triggers.js` add the following lines
