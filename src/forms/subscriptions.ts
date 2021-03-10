@@ -134,9 +134,7 @@ class FormFields extends BaseFormFields {
         // TODO add other fields besides checkboxes
         // provide a text field to add the name of the new subscription
         this.addSubNameTextField();
-
         this.addSubCheckBoxes();
-
         this.addSubmitButtons();
     }
 
