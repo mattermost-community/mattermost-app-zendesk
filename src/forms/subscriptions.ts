@@ -6,7 +6,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {Routes, ZDIcon} from '../utils';
-import {makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
+import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
 import {SubscriptionFields} from '../utils/constants';
 
 import {BaseFormFields} from '../utils/base_form_fields';
@@ -238,9 +238,9 @@ class FormFields extends BaseFormFields {
     addErrorMessageField(link: string): void {
         let text = 'The following condition fields are not currently supported by the app. Please visit the trigger link to modify the conditions for this subscription';
         text += '\n\n';
-        text += this.getBulletedList('Unsupported Fields', this.unsupportedFields);
+        text += getBulletedList('Unsupported Fields', this.unsupportedFields);
         text += '\n\n';
-        text += this.getBulletedList('Unsupported Field Operators', this.unsupportedOperators);
+        text += getBulletedList('Unsupported Field Operators', this.unsupportedOperators);
         text += '\n\n' + link;
 
         // TODO This message is better suited as an error message next to buttons
@@ -256,16 +256,6 @@ class FormFields extends BaseFormFields {
         };
 
         this.builder.addField(f);
-    }
-
-    // getBulletedList returns a bulleted list of items with options header
-    // pretext
-    getBulletedList(pretext: string, items: string[]): string {
-        let text = '* ' + items.join('\n* ');
-        if (pretext) {
-            text = `###  ${pretext}\n` + text;
-        }
-        return text;
     }
 
     // isZdFieldChecked returns a boolean representing if a value in the saved

@@ -63,3 +63,13 @@ export async function tryPromiseWithMessage(p: Promise<any>, message: string): P
 export function isFieldValueSelected(field: AppField): boolean {
     return Boolean(field.value);
 }
+
+// getBulletedList returns a bulleted list of items with options header
+// pretext
+export function getBulletedList(pretext: string, items: string[]): string {
+    let text = '* ' + items.join('\n* ');
+    if (pretext) {
+        text = `###  ${pretext}\n` + text;
+    }
+    return text;
+}
