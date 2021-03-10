@@ -31,6 +31,12 @@ export async function newSubscriptionsForm(call: AppCall): Promise<AppForm> {
     return form;
 }
 
+type conditionOption = {
+    field: string;
+    operator: string;
+    value: string;
+}
+
 // FormFields retrieves viewable modal app fields
 class FormFields extends BaseFormFields {
     teamTriggers: any
@@ -260,15 +266,15 @@ class FormFields extends BaseFormFields {
 
     // isZdFieldChecked returns a boolean representing if a value in the saved
     // Zendesk trigger is true or false
-    isZdFieldChecked(conditions: any, name: string): boolean {
+    isZdFieldChecked(conditions: conditionOption[], name: string): boolean {
         const condition = conditions.filter(this.byName(name));
         return condition.length === 1;
     }
 
     // byName is a map filter function to retrieve a given fieldName from an
     // array of conditions
-    byName(name: string): boolean {
-        return (option: any): boolean => {
+    byName(name: string): (option: conditionOption) => boolean {
+        return (option: conditionOption): boolean => {
             return option.field === name;
         };
     }
