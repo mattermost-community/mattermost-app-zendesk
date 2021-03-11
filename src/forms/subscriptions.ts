@@ -287,10 +287,6 @@ class FormFields extends BaseFormFields {
 
         if (this.isNewSub()) {
             f.hint = this.getSelectedSubTriggerName();
-
-            // TODO this value needs to be set to empty so the hint will show.
-            // setting to '' does not work
-            // not setting keeps previous text form previous selected sub
             f.value = this.getSelectedSubTriggerName();
         } else {
             f.value = this.getSelectedSubTriggerName();
