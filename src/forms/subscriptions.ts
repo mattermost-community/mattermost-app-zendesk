@@ -249,9 +249,6 @@ class FormFields extends BaseFormFields {
         text += getBulletedList('Unsupported Field Operators', this.unsupportedOperators);
         text += '\n\n' + link;
 
-        // TODO This message is better suited as an error message next to buttons
-        // Need to add clickable link to trigger.  Always show the link (next to Subscription Name)
-        // disble the submit button';
         const f: AppField = {
             name: SubscriptionFields.UnsupportedFieldsTextName,
             type: AppFieldTypes.TEXT,
