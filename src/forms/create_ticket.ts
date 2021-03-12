@@ -8,10 +8,12 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 
 import {Routes, ZDIcon} from '../utils';
-import {makeOptions, makeFormOptions, tryPromiseWithMessage, zdFormFieldOption} from '../utils/utils';
+import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption} from '../utils/utils';
 import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields} from '../utils/constants';
 
 import {BaseFormFields} from '../utils/base_form_fields';
+
+const omitFields = ['Group', 'Status'];
 
 // newCreateTicketForm returns a form response to create a ticket from a post
 export async function newCreateTicketForm(call: AppCall): Promise<AppForm> {
@@ -34,7 +36,7 @@ export async function newCreateTicketForm(call: AppCall): Promise<AppForm> {
 
 // FormFields retrieves viewable modal app fields
 class FormFields extends BaseFormFields {
-    zdTicketForms: zdFormFieldOption[]
+    zdTicketForms: ZDFormFieldOption[]
     postMessage: string
     constructor(call: AppCall, zdClient: ZDClient, mmClient: Client4) {
         super(call, zdClient, mmClient);
@@ -99,9 +101,8 @@ class FormFields extends BaseFormFields {
     private getViewableFields(ticketFields: Users.Fields.UserField[], formIDs: number[]): Tickets.Field[] {
         const fields = [];
         ticketFields.forEach((field: Users.Fields.UserField) => {
-            // omit fields that do not show up in the create ticket modeal in Zendesk
+            // omit fields that do not show up in the create ticket modal in Zendesk
             // but are returned in the ticketFields query
-            const omitFields = ['Group', 'Status'];
             if (omitFields.includes(field.title)) {
                 return;
             }
@@ -191,7 +192,7 @@ class FormFields extends BaseFormFields {
     }
 
     getCustomFieldName(field: Users.Fields.UserField): string {
-        return CreateTicketFields.PrefixCustomField + `${field.type}_` + field.id;
+        return `${CreateTicketFields.PrefixCustomField}${field.type}_${field.id}`;
     }
 
     // addFormsToSelectField maps zendesk forms to a Mattermost select field

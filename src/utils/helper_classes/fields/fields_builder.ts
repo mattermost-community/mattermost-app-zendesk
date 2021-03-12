@@ -92,34 +92,26 @@ class FieldsBuilderImpl implements FieldsBuilder {
     }
 
     // getFieldValueByName returns the defined AppCall value for a field or an empty string
-    // this is a helper function for a caller to check the value of an
-    // AppField. The return value is the value of the field. In the case of a
-    // select field, it is the value field in the returned object.
+    // In the case of a select field, it is the value field in the returned object.
     getFieldValueByName(fieldName: string): string {
         if (this.values && this.values.values[fieldName]) {
             // this is select field return the value field in the object
             if (this.values.values[fieldName].value) {
                 return this.values.values[fieldName].value;
             }
-
-            // this is any field type that doesn't have an option type value
             return this.values.values[fieldName];
         }
         return '';
     }
 
     // getFieldLabelByName returns the defined AppCall label for a field or an empty string
-    // this is a helper function for a caller to check the value of an
-    // AppField. The return value is the value of the field. In the case of a
-    // select field, it is the value field in the returned object.
+    // In the case of a select field, it is the label field in the returned object.
     getFieldLabelByName(fieldName: string): string {
         if (this.values && this.values.values[fieldName]) {
             // this is select field return the value field in the object
             if (this.values.values[fieldName].label) {
                 return this.values.values[fieldName].label;
             }
-
-            // this is any field type that doesn't have an option type value
             return this.values.values[fieldName];
         }
         return '';

@@ -23,7 +23,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         // If not a new trigger, add the trigger ID to the payload
         // This is a signal to update the trigger, not create a new one
         if (!this.isNewTrigger()) {
-            const subID = this.values[SubscriptionFields.SubSelect_Name].value;
+            const subID = this.values[SubscriptionFields.SubSelectName].value;
             this.addField('id', subID);
         }
         this.addTitle();
@@ -49,14 +49,14 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
 
     // getJSONDataFields constructs the object text string for a trigger
     getJSONDataFields(): string {
-        const channelID = this.values[SubscriptionFields.ChannelPickerSelect_Name].value;
+        const channelID = this.values[SubscriptionFields.ChannelPickerSelectName].value;
         const pairs = TriggerFields.ActionValuePairs;
         pairs[TriggerFields.ChannelIDKey] = channelID;
         return JSON.stringify(pairs);
     }
 
     getChannelIDobject(): {} {
-        const fieldName = SubscriptionFields.ChannelPickerSelect_Name;
+        const fieldName = SubscriptionFields.ChannelPickerSelectName;
         const channelID = this.values[fieldName].value;
         return {fieldName: channelID};
     }
@@ -64,12 +64,12 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     addTitle(): void {
         let title = SubscriptionFields.PrefixTriggersTitle;
         title += this.context.channel_id;
-        title += ' ' + this.values[SubscriptionFields.SubText_Name];
+        title += ' ' + this.values[SubscriptionFields.SubTextName];
         this.addField('title', title);
     }
 
     addDescription(): void {
-        const description = String(this.values[SubscriptionFields.SubText_Name]);
+        const description = String(this.values[SubscriptionFields.SubTextName]);
         this.addField('description', description);
     }
 
@@ -78,7 +78,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 
     isNewTrigger(): boolean {
-        const subID = this.values[SubscriptionFields.SubSelect_Name].value;
+        const subID = this.values[SubscriptionFields.SubSelectName].value;
         return subID === SubscriptionFields.NewSub_OptionValue;
     }
 

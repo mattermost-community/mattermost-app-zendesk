@@ -30,7 +30,7 @@ const AppPaths = {
     // Binding routes are accessed via a location call
     BindingsPath: '/bindings',
     BindingPathOpenCreateTicketForm: '/open-create-ticket-form',
-    BindingPathOpenSubcriptionsForm: '/open-subscriptions-form',
+    BindingPathOpenSubscriptionsForm: '/open-subscriptions-form',
     BindingPathOpenZendeskConfigForm: '/open-zendesk-config-form',
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
@@ -38,7 +38,7 @@ const AppPaths = {
 
     // Call routes are callable routes, but not bound to a location
     CallPathSubmitOrUpdateCreateTicketForm: '/submit-or-update-create-ticket-form',
-    CallPathSubmitOrUpdateSubcriptionForm: '/submit-or-update-subcription-form',
+    CallPathSubmitOrUpdateSubscriptionForm: '/submit-or-update-subscription-form',
     CallPathSubmitOrUpdateZendeskConfigForm: '/submit-or-update-zendesk-config-form',
 };
 
@@ -91,25 +91,24 @@ export const CreateTicketFields = {
 
 const selectOptions: AppSelectOption[] = [];
 export const SubscriptionFields = {
-    ChannelPickerSelect_Label: 'Channel Name',
-    ChannelPickerSelect_Name: 'channel_picker_name',
+    ChannelPickerSelectLabel: 'Channel Name',
+    ChannelPickerSelectName: 'channel_picker_name',
 
-    SubSelect_Label: 'Subscription Name',
-    SubSelect_Name: 'subcription_select_name',
+    SubSelectLabel: 'Subscription Name',
+    SubSelectName: 'subcription_select_name',
 
-    // UnsupportedFieldsText_Label: 'un',
-    UnsupportedFieldsText_Name: 'unsupported_fields',
+    UnsupportedFieldsTextName: 'unsupported_fields',
 
-    SubText_Label: 'Name',
-    SubText_Name: 'subscription_text_name',
+    SubTextLabel: 'Name',
+    SubTextName: 'subscription_text_name',
 
+    DeleteButtonLabel: 'Delete',
     SubmitButtonsName: 'button_action',
     SubmitButtonsOptions: selectOptions,
-    DeleteButtonLabel: 'Delete',
     SaveButtonLabel: 'Save',
 
-    NewSub_OptionValue: 'newsubscription',
     NewSub_OptionLabel: 'New Subscription',
+    NewSub_OptionValue: 'newsubscription',
 
     PrefixTriggersTitle: '__mm_webhook__channelID:',
     RegexTriggerTitle: '__mm_webhook__channelID:(\\w+) (.*)',

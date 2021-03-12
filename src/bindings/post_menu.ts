@@ -44,7 +44,7 @@ const openSubscriptionsForm = (): AppBinding => {
         icon: ZDIcon,
         location: 'open_subscription',
         call: {
-            path: Routes.App.BindingPathOpenSubcriptionsForm,
+            path: Routes.App.BindingPathOpenSubscriptionsForm,
             expand: {
                 acting_user: AppExpandLevels.EXPAND_ALL,
             },

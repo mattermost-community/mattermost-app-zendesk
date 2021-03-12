@@ -30,7 +30,7 @@ const channelHeaderSubscribe = (): AppBinding => {
         description: 'Open Create Zendesk Subcription Modal',
         icon: ZDIcon,
         call: {
-            path: Routes.App.BindingPathOpenSubcriptionsForm,
+            path: Routes.App.BindingPathOpenSubscriptionsForm,
             expand: {
                 acting_user: AppExpandLevels.EXPAND_ALL,
             },

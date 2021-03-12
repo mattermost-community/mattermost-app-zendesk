@@ -81,6 +81,7 @@ class AppImpl implements App {
         let msg: string;
         let action: string;
         const link = '[subscription](' + Env.ZD.Host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
+        const subName = this.values[SubscriptionFields.SubTextName];
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
             request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
@@ -97,6 +98,8 @@ class AppImpl implements App {
             msg = `Successfuly created ${link}`;
             action = 'create';
         }
+
+        msg += ` \`${subName}\``;
 
         // Any zendesk error will produce an error in the modal
         try {

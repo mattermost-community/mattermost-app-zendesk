@@ -1,4 +1,5 @@
 import {AppCall, AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCallTypes} from 'mattermost-redux/constants/apps';
 
 // BaseCallHandler is the base class for all call handlers. Each call handler
 // implements this class which routes the call type to its corresponding method
@@ -12,11 +13,11 @@ export class BaseCallHandler {
     // handle delegates form handling based on AppCall type
     handle = (): Promise<AppCallResponse> => {
         switch (this.call.type) {
-        case 'form':
+        case AppCallTypes.FORM:
             return this.handleForm();
-        case 'lookup':
+        case AppCallTypes.LOOKUP:
             return this.handleLookup();
-        case 'submit':
+        case AppCallTypes.SUBMIT:
             return this.handleSubmit();
         default:
             return this.handleSubmit();

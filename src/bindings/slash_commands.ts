@@ -60,7 +60,7 @@ const cmdSubscribe = (): AppBinding => {
         description: 'Subscribe notifications to a channel',
         icon: ZDIcon,
         call: {
-            path: Routes.App.BindingPathOpenSubcriptionsForm,
+            path: Routes.App.BindingPathOpenSubscriptionsForm,
         },
     } as AppBinding;
 };

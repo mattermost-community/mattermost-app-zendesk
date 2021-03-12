@@ -6,7 +6,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {Routes, ZDIcon} from '../utils';
-import {makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
+import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
 import {SubscriptionFields} from '../utils/constants';
 
 import {BaseFormFields} from '../utils/base_form_fields';
@@ -25,10 +25,16 @@ export async function newSubscriptionsForm(call: AppCall): Promise<AppForm> {
         submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
         call: {
-            path: Routes.App.CallPathSubmitOrUpdateSubcriptionForm,
+            path: Routes.App.CallPathSubmitOrUpdateSubscriptionForm,
         },
     };
     return form;
+}
+
+type conditionOption = {
+    field: string;
+    operator: string;
+    value: string;
 }
 
 // FormFields retrieves viewable modal app fields
@@ -111,9 +117,9 @@ class FormFields extends BaseFormFields {
         const currentChannelOption = options.filter(this.getDefaultChannelOption());
 
         const f: AppField = {
-            name: SubscriptionFields.ChannelPickerSelect_Name,
+            name: SubscriptionFields.ChannelPickerSelectName,
             type: AppFieldTypes.STATIC_SELECT,
-            label: SubscriptionFields.ChannelPickerSelect_Label,
+            label: SubscriptionFields.ChannelPickerSelectLabel,
             options,
             is_required: true,
             refresh: true,
@@ -134,9 +140,7 @@ class FormFields extends BaseFormFields {
         // TODO add other fields besides checkboxes
         // provide a text field to add the name of the new subscription
         this.addSubNameTextField();
-
         this.addSubCheckBoxes();
-
         this.addSubmitButtons();
     }
 
@@ -240,16 +244,13 @@ class FormFields extends BaseFormFields {
     addErrorMessageField(link: string): void {
         let text = 'The following condition fields are not currently supported by the app. Please visit the trigger link to modify the conditions for this subscription';
         text += '\n\n';
-        text += this.getBulletedList('Unsupported Fields', this.unsupportedFields);
+        text += getBulletedList('Unsupported Fields', this.unsupportedFields);
         text += '\n\n';
-        text += this.getBulletedList('Unsupported Field Operators', this.unsupportedOperators);
+        text += getBulletedList('Unsupported Field Operators', this.unsupportedOperators);
         text += '\n\n' + link;
 
-        // TODO This message is better suited as an error message next to buttons
-        // Need to add clickable link to trigger.  Always show the link (next to Subscription Name)
-        // disble the submit button';
         const f: AppField = {
-            name: SubscriptionFields.UnsupportedFieldsText_Name,
+            name: SubscriptionFields.UnsupportedFieldsTextName,
             type: AppFieldTypes.TEXT,
             subtype: 'textarea',
             label: 'Optional message',
@@ -260,46 +261,32 @@ class FormFields extends BaseFormFields {
         this.builder.addField(f);
     }
 
-    // getBulletedList returns a bulleted list of items with options header
-    // pretext
-    getBulletedList(pretext: string, items: string[]): string {
-        let text = '* ' + items.join('\n* ');
-        if (pretext) {
-            text = `###  ${pretext}\n` + text;
-        }
-        return text;
-    }
-
     // isZdFieldChecked returns a boolean representing if a value in the saved
     // Zendesk trigger is true or false
-    isZdFieldChecked(conditions: any, name: string): boolean {
+    isZdFieldChecked(conditions: conditionOption[], name: string): boolean {
         const condition = conditions.filter(this.byName(name));
         return condition.length === 1;
     }
 
     // byName is a map filter function to retrieve a given fieldName from an
     // array of conditions
-    byName(name: string): boolean {
-        return (option: any): boolean => {
+    byName(name: string): (option: conditionOption) => boolean {
+        return (option: conditionOption): boolean => {
             return option.field === name;
         };
     }
 
-    // addNewSubTextField adds a field for adding or editing a subcription name
+    // addNewSubTextField adds a field for adding or editing a subscription name
     addSubNameTextField(): void {
         const f: AppField = {
-            name: SubscriptionFields.SubText_Name,
+            name: SubscriptionFields.SubTextName,
             type: AppFieldTypes.TEXT,
-            label: SubscriptionFields.SubText_Label,
+            label: SubscriptionFields.SubTextLabel,
             is_required: true,
         };
 
         if (this.isNewSub()) {
             f.hint = this.getSelectedSubTriggerName();
-
-            // TODO this value needs to be set to empty so the hint will show.
-            // setting to '' does not work
-            // not setting keeps previous text form previous selected sub
             f.value = this.getSelectedSubTriggerName();
         } else {
             f.value = this.getSelectedSubTriggerName();
@@ -324,8 +311,8 @@ class FormFields extends BaseFormFields {
         ];
 
         const f: AppField = {
-            name: SubscriptionFields.SubSelect_Name,
-            label: SubscriptionFields.SubSelect_Label,
+            name: SubscriptionFields.SubSelectName,
+            label: SubscriptionFields.SubSelectLabel,
             type: AppFieldTypes.STATIC_SELECT,
             options,
             is_required: true,
@@ -361,7 +348,7 @@ class FormFields extends BaseFormFields {
     }
 
     getSelectedChannelID(): string {
-        return this.builder.getFieldValueByName(SubscriptionFields.ChannelPickerSelect_Name);
+        return this.builder.getFieldValueByName(SubscriptionFields.ChannelPickerSelectName);
     }
 
     getSelectedSubTrigger(): string {
@@ -370,20 +357,16 @@ class FormFields extends BaseFormFields {
     }
 
     getSelectedSubTriggerID(): string {
-        return this.builder.getFieldValueByName(SubscriptionFields.SubSelect_Name);
+        return this.builder.getFieldValueByName(SubscriptionFields.SubSelectName);
     }
 
     getSelectedSubTriggerName(): string {
-        return this.builder.getFieldLabelByName(SubscriptionFields.SubSelect_Name);
+        return this.builder.getFieldLabelByName(SubscriptionFields.SubSelectName);
     }
 
     getSubTriggerByID(subID: string): any {
         const triggers = this.getChannelTriggers(this.getSelectedChannelID());
-        for (const trigger of triggers) {
-            if (String(trigger.id) === subID) {
-                return trigger;
-            }
-        }
+        return triggers.find((trigger) => String(trigger.id) === subID);
     }
 
     getChannelTriggers(channelID: string): any[] {

@@ -22,7 +22,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const zdClient = await newZDClient(fakeBotContext);
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);
-    const ticketAudit = ticketAudits.slice(-1)[0];
+    const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
 
     const context = contextFromRequest(req);
