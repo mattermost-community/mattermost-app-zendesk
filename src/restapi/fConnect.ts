@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
-import {AppCallResponse} from 'mattermost-redux/types/apps';
-import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
+
+import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
 import {Env, Routes, createOAuthState} from '../utils';
 
@@ -17,9 +17,5 @@ export function fConnect(req: Request, res: Response): void {
     urlWithParams.searchParams.append('scope', 'read write');
 
     const link = urlWithParams.href;
-    const callResponse: AppCallResponse = {
-        type: AppCallResponseTypes.OK,
-        markdown: `Follow this link to connect: [link](${link})`,
-    };
-    res.json(callResponse);
+    res.json(newOKCallResponseWithMarkdown(`Follow this link to connect: [link](${link})`));
 }

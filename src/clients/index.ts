@@ -1,2 +1,2 @@
 export {newMMClient} from './mattermost';
-export {newZDClient} from './zendesk';
+export {newZDClient, ZDClient} from './zendesk';

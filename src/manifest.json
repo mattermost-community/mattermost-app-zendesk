@@ -20,7 +20,7 @@
         "url": "/install"
     },
     "bindings": {
-        "url": "/bindings"
+        "path": "/bindings"
     },
     "functions": [
         {

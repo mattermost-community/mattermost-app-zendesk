@@ -1,71 +1,141 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {AppCall, AppContext} from 'mattermost-redux/types/apps';
+import {AppCall, AppContext, AppCallValues, AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {Env, tryPromiseWithMessage, errorWithMessage} from '../utils';
+import {SubscriptionFields} from '../utils/constants';
+
+import {
+    newErrorCallResponseWithFieldErrors,
+    newOKCallResponse,
+    newOKCallResponseWithMarkdown,
+    newErrorCallResponseWithMessage,
+    FieldValidationErrors} from '../utils/call_responses';
+import {Env, tryPromiseWithMessage} from '../utils';
 
 import {newMMClient, newZDClient} from '../clients';
 
-import {configStore, oauthStore} from '../store';
+import {configStore} from '../store';
 
-import {newTicketFromForm, FieldValidationErrors} from './model';
+import {newTicketFromForm} from './ticketFromForm';
+import {newTriggerFromForm} from './triggerFromForm';
 
-class App {
-    createTicketFromPost = async (call: AppCall): Promise<FieldValidationErrors> => {
-        // get active mattermost user ID
-        const mmUserID = call.context.acting_user_id || '';
-        const zdToken = oauthStore.getToken(mmUserID);
-        if (!zdToken) {
-            throw new Error('Failed to get user access_token');
-        }
+export interface IApp {
+    createTicketFromPost(): Promise<AppCallResponse>;
+    createZDSubscription(): Promise<AppCallResponse>;
+}
 
+class App implements IApp {
+    context: AppContext
+    values: AppCallValues
+
+    constructor(call: AppCall) {
+        this.context = call.context;
+        this.values = call.values;
+    }
+    createTicketFromPost = async (): Promise<AppCallResponse> => {
         // get zendesk client for user
-        const zdClient = newZDClient(zdToken);
+        const zdClient = newZDClient(this.context);
 
         // create the ticket object from the form response
-        const [zdTicket, errors] = newTicketFromForm(call.values);
+        const [zdTicketPayload, fieldErrors] = newTicketFromForm(this.values);
 
         // respond with errors
-        if (Object.keys(errors).length !== 0) {
-            return errors;
+        if (this.hasFieldErrors(fieldErrors)) {
+            return newErrorCallResponseWithFieldErrors(fieldErrors);
         }
 
         // create the ticket in Zendesk
-        const ticket = await tryPromiseWithMessage(zdClient.tickets.create(zdTicket), 'Failed to create Zendesk ticket');
+        const createReq = zdClient.tickets.create(zdTicketPayload);
+        const zdTicket = await tryPromiseWithMessage(createReq, 'Failed to create Zendesk ticket');
 
         // get the Zendesk user
-        const zdUser = await tryPromiseWithMessage(zdClient.users.show(ticket.requester_id), 'Failed to get Zendesk user');
+        const getUserReq = zdClient.users.show(zdTicket.requester_id);
+        const zdUser = await tryPromiseWithMessage(getUserReq, 'Failed to get Zendesk user');
 
         // create a reply to the original post noting the ticket was created
-        const id = ticket.id;
-        const subject = ticket.subject;
+        const id = zdTicket.id;
+        const subject = zdTicket.subject;
         const message = `${zdUser.name} created ticket [#${id}](${Env.ZD.Host}/agent/tickets/${id}) [${subject}]`;
-        await this.createBotPost(call.context, message);
+        await this.createBotPost(message);
 
-        // respond with no errors
-        return {};
+        return newOKCallResponse();
     }
 
-    createBotPost = async (context: AppContext, message: string): Promise<void> => {
-        const adminToken = configStore.getAdminAccessToken();
-        const adminClient = newMMClient(adminToken);
+    createZDSubscription = async (): Promise<AppCallResponse> => {
+        // get zendesk client for user
+        const zdClient = newZDClient(this.context);
+
+        // create the trigger object from the form response
+        let zdTriggerPayload: any;
+        try {
+            zdTriggerPayload = newTriggerFromForm(this.context, this.values);
+        } catch (e) {
+            return newErrorCallResponseWithMessage(e.message);
+        }
+
+        let request: any;
+        let msg: string;
+        let action: string;
+        const link = '[subscription](' + Env.ZD.Host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
+        const subName = this.values[SubscriptionFields.SubTextName];
+        switch (true) {
+        case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
+            request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
+            msg = 'Successfuly deleted subscription';
+            action = 'delete';
+            break;
+        case Boolean(zdTriggerPayload.trigger.id):
+            request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
+            msg = `Successfuly updated ${link}`;
+            action = 'update';
+            break;
+        default:
+            request = zdClient.triggers.create(zdTriggerPayload);
+            msg = `Successfuly created ${link}`;
+            action = 'create';
+        }
+
+        msg += ` \`${subName}\``;
+
+        // Any zendesk error will produce an error in the modal
+        try {
+            await request;
+        } catch (e) {
+            return newErrorCallResponseWithMessage(`failed to ${action} subcription: ` + e.message);
+        }
+
+        // return the call response with successful markdown message
+        return newOKCallResponseWithMarkdown(msg);
+    }
+
+    createBotPost = async (message: string): Promise<void> => {
+        const adminClient = newMMClient().asAdmin();
 
         // add bot to team and channel
         const botUserID = configStore.getBotUserID();
-        await tryPromiseWithMessage(adminClient.addToTeam(context.team_id, botUserID), 'Failed to add bot to team');
-        await tryPromiseWithMessage(adminClient.addToChannel(botUserID, context.channel_id), 'Failed to add bot to team');
+        const addToTeamReq = adminClient.addToTeam(this.context.team_id, botUserID);
+        await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
 
-        const botToken = configStore.getBotAccessToken();
-        const botClient = newMMClient(botToken);
+        const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id);
+        await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to team');
+
+        const botClient = newMMClient().asBot();
 
         const post: Post = {
             message,
             user_id: botUserID,
-            channel_id: String(context.channel_id),
-            root_id: String(context.post_id),
+            channel_id: String(this.context.channel_id),
+            root_id: String(this.context.post_id),
         };
 
-        await tryPromiseWithMessage(botClient.createPost(post), 'Failed to create post');
+        const createPostReq = botClient.createPost(post);
+        await tryPromiseWithMessage(createPostReq, 'Failed to create post');
+    }
+
+    hasFieldErrors(errors: FieldValidationErrors): boolean {
+        return Object.keys(errors).length !== 0;
     }
 }
 
-export default new App();
+export function newApp(call: AppCall): IApp {
+    return new App(call);
+}

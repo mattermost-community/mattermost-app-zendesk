@@ -10,6 +10,7 @@ type AppConfigStore = {
     bot_access_token: string;
     bot_user_id: string;
     admin_access_token: string;
+    admin_user_id: string;
     oauth2_client_secret: string;
     mattermost_site_url: string;
 }
@@ -28,6 +29,7 @@ class ConfigFileStore implements Store {
         this.storeData = {
             bot_access_token: '',
             admin_access_token: '',
+            admin_user_id: '',
             bot_user_id: '',
             oauth2_client_secret: '',
             mattermost_site_url: '',
@@ -51,6 +53,7 @@ class ConfigFileStore implements Store {
         values.bot_access_token = context.bot_access_token;
         values.bot_user_id = context.bot_user_id;
         values.admin_access_token = context.admin_access_token;
+        values.admin_user_id = context.admin_user_id;
 
         return new Promise((resolve, reject) => {
             fs.writeFile(jsonConfigFileStore, JSON.stringify(values), (err) => {
@@ -72,6 +75,10 @@ class ConfigFileStore implements Store {
 
     getAdminAccessToken(): string {
         return this.storeData.admin_access_token;
+    }
+
+    getAdminUserID(): string {
+        return this.storeData.admin_user_id;
     }
 
     getSiteURL(): string {

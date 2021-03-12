@@ -4,8 +4,8 @@
 
 The current master branches have not been merged to work with this app and the following are needed until they are merged with master
 
-mm-webapp: `feature/cloud-apps`  
-mm-plugin-apps: `master`
+mm-webapp: `feature/cloud-apps` @837694a9b
+mm-plugin-apps: `master` @831d203
 
 ## Quick Start
 
@@ -57,6 +57,15 @@ Creating a ticket from a Mattermost post is done through the `...` post menu but
 
 ![create ticket](./assets/create-ticket.gif)
 
+## Subscribe a Channel to Notifications
+
+Subscriptions to Zendesk events can be added via the `channel header`, `post menu`, or `slash command`. Each subscription creates a [Zendesk Trigger](https://developer.zendesk.com/rest_api/docs/support/triggers) which will send a notification based on specified conditions.  Subscriptions currently support the `changed` action on a limited number of fields, but will have enhancements in the future.
+
+The definition of a Trigger is defined below:
+> A trigger consists of one or more actions performed when a ticket is created or updated. The actions are performed only if certain conditions are met. For example, a trigger can notify the customer when an agent changes the status of a ticket to Solved.
+
+Zendesk Admins are able to view these subscriptions inside Zendesk via `Settings` > `Business Rules` > `Triggers` and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`.  After creating a notification from Mattermost, it is possible to access the trigger in Zendesk and modify conditions of the trigger. If a conditions is added that is not currently supported by the Mattermost Zendesk App, the user will be notificed when trying to edit the subcription through Mattemrost and a link will be provided to the Zendesk trigger where it can be further modified.
+
 ## Installation
 
 `/apps install --url http://<your-zendesk-app>/manifest.json --app-secret thisisthesecret`  
@@ -78,52 +87,28 @@ From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/suppor
 
 > Targets are pointers to cloud-based applications and services such as Twitter and Twilio, as well as to HTTP and email addresses. You can use targets with triggers and automations to send a notification to the target when a ticket is created or updated.
 
-Because the we are sending notifying the cloud app of Zendesk triggered events,
-we will need to add an HTTP target which will accept the webhook notifications.
+We need to create the Zendesk HTTP target which will send webhook trigger notifications to the Zendesk app.  Each Zendesk trigger event will send a notficication to this target. We only need one target per Mattermost instance.
 
 1. Click the Admin icon (sprocket) in the left sidebar
 1. `Settings` > `Extensions`
 1. `Targets tab` > `Add Target`
 1. Select `HTTP` Target
 1. Fill in the following:
-    1. **Title:** Send Mattermost notification when ticket created
+    1. **Title:** Mattermost target for incoming webhooks
     1. **Url:** `<your_url/zendesk/webhook>`
     1. **Method:** POST
     1. **Content Type:** JSON
+1. Test that the target is valid
+    1. Select `Test target` in the pulldown
+    1. Click `Submit` button
+    1. Leave JSON body in the floating window empty
+    1. Click `Submit` button in floating window
+    1. Verify `HTTP/1.1 200 OK` response is shown in the resulting window
+1. Save the valid target
+    1. Select `Create target` in the pulldown
+    1. Click `Submit` button
 
 **Developer Notes:** When testing webhooks locally, you will need to expose your localhost:4040 with ngrok
-
-### Add a trigger when new ticket is created
-
-From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/support/triggers)
-
-> A trigger consists of one or more actions performed when a ticket is created or updated. The actions are performed only if certain conditions are met. For example, a trigger can notify the customer when an agent changes the status of a ticket to Solved.
-
-1. Click the Admin icon (sprocket) in the left sidebar
-1. `Settings` > `Business Rules` > `Triggers` > `Add trigger`
-1. Fill in the following:
-    1. **Trigger Name:** Notify Mattermost App when ticket created
-    1. **Description:** When a new ticket is created, trigger a notification and send to Mattermost zendesk cloud app
-    1. **Conditions:**
-        1. Under "Meet ALL of the following conditions"
-        1. `Ticket` `Is` `Created`
-    1. **Actions:**
-        1. In the first select box choose `Notify target`
-        1. In the second select box choose `Send notification when ticket
-           created`
-        1. Past the following in the JSON Body textarea.
-
-```json
-{
-  "title": "{{ticket.title}}",
-  "ticketUrl": "{{ticket.url}}",
-  "ticketDescription": "{{ticket.description}}",
-  "ticketID": "{{ticket.id}}",
-  "ticketPriority": "{{ticket.priority}}",
-  "ticketRequester": "{{ticket.requester.details}}",
-  "ticketType": "{{ticket.ticket_type}}"
-}
-```
 
 ## Provision
 
@@ -145,29 +130,7 @@ To provision this PR to AWS run `npm run dist` to generate the App bundle and th
 var rudderAnalytics = tslib_1.__importStar(require("rudder-sdk-js"));
 exports.rudderAnalytics = rudderAnalytics;
 ```
-
-### 2.  fails with warning about rudder in mattermost-redux
-
-```sh
-(node:45576) UnhandledPromiseRejectionWarning: ReferenceError: fetch is not defined
-    at Object.exports.default (/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-app-zendesk/node_modules/mattermost-redux/client/fetch_etag.js:32:26)
-    at Client4.<anonymous> (/Users/jfrerich/go/src/github.com/mattermost/plugins/mattermost-app-zendesk/node_modules/mattermost-redux/client/client4.js:1594:70)
-```
-
-- open `node_modules/mattermost-redux/client/client4.js`
-- comment out the following line:
-
-```javascript
-// var fetch_etag_1 = tslib_1.__importDefault(require("./fetch_etag"));
-```
-
-- add the following line:
-
-```javascript
-var fetch_etag_1 = require("node-fetch");
-```
-
-### 3. Log message received and bindings are not received by the 
+### 2. Log message received and binding locations do not show
 
 `The system admin has turned off OAuth2 Service Provider.`
 
@@ -177,4 +140,20 @@ Through system console -> enable oauth2 service provider
 
 ```json
 "EnableOAuthServiceProvider": true,
+```
+
+### 3. Need a branched version of the node-zendesk client so that we can query
+webhooks by title
+
+In `node_modules/node-zendesk/lib/client/triggers.js` add the following lines
+on line 15. This adds the ability for the client to access the following
+endpoint: `/api/v2/triggers/search.json?query=__mm_webhook__` which will return
+all triggers with `__mm_webhook__` in the title. This is the signature the
+Zendesk app will use to retrieve all subscription webhooks
+
+```javascript
+// ====================================== Searching Triggers
+Triggers.prototype.search = function(searchTerm, cb) {
+    return this.request('GET', ['triggers', 'search', {query: searchTerm}], cb);
+};
 ```
