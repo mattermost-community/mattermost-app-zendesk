@@ -31,9 +31,8 @@ mm-plugin-apps: `master` @831d203
             1. Ex. `https://https://testing.ngrok.io`
     1. `ZD_CLIENT_SECRET` - (will be set later in the setup)
 1. Start the node server
-    1. `npm i` - install node_moduls and dependencies
-    1. `npm run build:watch` - (to monitor typescriopt errors and watch chaning files errors)
-    1. `npm start` - (in a separate shell) start the node server
+    1. `make watch` - (to monitor typescriopt errors and watch chaning files errors)
+    1. `make run` - (in a separate shell) start the node server
 1. Install the app (In Mattermost)
     1. `/apps install --url http://<your-zendesk-app-host>/manifest.json --app-secret thisisthesecret`  
 
@@ -112,7 +111,7 @@ We need to create the Zendesk HTTP target which will send webhook trigger notifi
 
 ## Provision
 
-To provision this PR to AWS run `npm run dist` to generate the App bundle and then follow the steps [here](https://github.com/mattermost/mattermost-plugin-apps#provisioning).
+To provision this PR to AWS run `make dist` to generate the App bundle and then follow the steps [here](https://github.com/mattermost/mattermost-plugin-apps#provisioning).
 
 ## FAQ
 
