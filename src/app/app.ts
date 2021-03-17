@@ -38,15 +38,15 @@ class AppImpl implements App {
         const zdClient = await newZDClient(this.context);
 
         // create the ticket object from the form response
-        const [zdTicketPayload, fieldErrors] = newTicketFromForm(this.call);
+        const {payload, errors} = newTicketFromForm(this.call);
 
         // respond with errors
-        if (this.hasFieldErrors(fieldErrors)) {
-            return newErrorCallResponseWithFieldErrors(fieldErrors);
+        if (this.hasFieldErrors(errors)) {
+            return newErrorCallResponseWithFieldErrors(errors);
         }
 
         // create the ticket in Zendesk
-        const createReq = zdClient.tickets.create(zdTicketPayload);
+        const createReq = zdClient.tickets.create(payload);
         const zdTicket = await tryPromiseWithMessage(createReq, 'Failed to create Zendesk ticket');
 
         // get the Zendesk user

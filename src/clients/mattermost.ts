@@ -15,7 +15,7 @@ export const newMMClient = (context: AppContext): MMClient => {
 };
 
 class MMClientImpl implements MMClient {
-    context: any
+    context: AppContext
     constructor(context: AppContext) {
         this.context = context;
     }

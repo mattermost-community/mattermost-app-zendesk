@@ -166,7 +166,9 @@ export class TicketFromFormImpl implements TicketFromFrom {
     }
 }
 
-export function newTicketFromForm(call: AppCall): [Tickets.CreatePayload, FieldValidationErrors] {
+export function newTicketFromForm(call: AppCall): {payload: Tickets.CreatePayload; errors: FieldValidationErrors} {
     const ticket = new TicketFromFormImpl(call);
-    return [ticket.getTicket(), ticket.fieldValidationErrors];
+    const payload = ticket.getTicket();
+    const errors = ticket.fieldValidationErrors;
+    return {payload, errors};
 }
