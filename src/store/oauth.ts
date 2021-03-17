@@ -5,7 +5,7 @@ import {baseUrlFromContext} from '../utils';
 
 interface TokenStore {
     storeToken(userID: string, token: string): void;
-    deleteToken(userID: string): void;
+    deleteToken(userID: string): Promise<void>;
     getToken(userID: string): Promise<string>;
 }
 
@@ -21,7 +21,7 @@ class TokenStoreImpl implements TokenStore {
         this.kvClient.set(userID, token);
     }
 
-    deleteToken(userID: string): void {
+    async deleteToken(userID: string): void {
         this.kvClient.delete(userID);
     }
 
