@@ -27,7 +27,7 @@ const channelHeaderSubscribe = (): AppBinding => {
     return {
         app_id: 'zendesk',
         label: 'Create Zendesk Subscription',
-        description: 'Open Create Zendesk Subcription Modal',
+        description: 'Open Create Zendesk Subscription Modal',
         icon: ZDIcon,
         call: {
             path: Routes.App.BindingPathOpenSubscriptionsForm,

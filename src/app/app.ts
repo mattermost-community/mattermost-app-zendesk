@@ -105,7 +105,7 @@ class AppImpl implements App {
         try {
             await request;
         } catch (e) {
-            return newErrorCallResponseWithMessage(`failed to ${action} subcription: ` + e.message);
+            return newErrorCallResponseWithMessage(`failed to ${action} subscription: ` + e.message);
         }
 
         // return the call response with successful markdown message

@@ -95,7 +95,7 @@ export const SubscriptionFields = {
     ChannelPickerSelectName: 'channel_picker_name',
 
     SubSelectLabel: 'Subscription Name',
-    SubSelectName: 'subcription_select_name',
+    SubSelectName: 'subscription_select_name',
 
     UnsupportedFieldsTextName: 'unsupported_fields',
 
