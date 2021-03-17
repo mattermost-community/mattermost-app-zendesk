@@ -19,18 +19,18 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
         throw new Error('Bad Request: state param not provided'); // Express will catch this on its own.
     }
 
-    const [userID,, botToken, url, err] = parseOAuthState(state);
-    if (err !== '') {
+    const parsedState = parseOAuthState(state);
+    if (parsedState.err !== '') {
         throw new Error('Bad Request: bad state'); // Express will catch this on its own.
     }
 
-    const context = createContextFromState(botToken, url);
+    const context = createContextFromState(parsedState.botToken, parsedState.url);
     const zdAuth = await getOAuthConfig(context);
 
     const user = await zdAuth.code.getToken(req.originalUrl);
     const token = user.data.access_token;
 
-    newTokenStore(context).storeToken(userID, token);
+    newTokenStore(context).storeToken(parsedState.userID, token);
 
     const connectedString = 'You have successfuly connected the Zendesk Mattermost App to Zendesk. Please close this window.';
     const html = `
