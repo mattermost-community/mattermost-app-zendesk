@@ -5,9 +5,9 @@ import {Routes} from '../utils';
 import {fBindings} from './fBindings';
 import {fConnect} from './fConnect';
 import {fComplete} from './fComplete';
-import {fOpenCreateTicketForm, fSubmitOrUpdateCreateTicketForm} from './fCreateTicket';
-import {fOpenSubscriptionsForm, fSubmitOrUpdateSubscriptionsForm} from './fSubscriptions';
-import {fOpenZendeskConfigForm, fSubmitOrUpdateZendeskConfigForm} from './fConfig';
+import {fOpenCreateTicketForm, fSubmitOrUpdateCreateTicketForm, fSubmitOrUpdateCreateTicketSubmit} from './fCreateTicket';
+import {fOpenSubscriptionsForm, fSubmitOrUpdateSubscriptionsForm, fSubmitOrUpdateSubscriptionsSubmit} from './fSubscriptions';
+import {fOpenZendeskConfigForm, fSubmitOrUpdateZendeskConfigForm, fSubmitOrUpdateZendeskConfigSubmit} from './fConfig';
 import {fHandleSubcribeNotification} from './fIncomingWebhooks';
 import {fDisconnect} from './fDisconnect';
 import {fHelp} from './fHelp';
@@ -19,21 +19,27 @@ const router = express.Router();
 router.get(Routes.App.ManifestPath, fManifest);
 router.post(Routes.App.BindingsPath, fBindings);
 router.get(Routes.App.OAuthCompletePath, fComplete);
-
 router.post(Routes.App.InstallPath, fInstall);
 
-// Location bound calls
-router.post(Routes.App.BindingPathConnect, fConnect);
-router.post(Routes.App.BindingPathDisconnect, fDisconnect);
-router.post(Routes.App.BindingPathOpenCreateTicketForm, fOpenCreateTicketForm);
-router.post(Routes.App.BindingPathOpenSubscriptionsForm, fOpenSubscriptionsForm);
-router.post(Routes.App.BindingPathOpenZendeskConfigForm, fOpenZendeskConfigForm);
-router.post(Routes.App.BindingPathHelp, fHelp);
+// formless calls
+router.post(Routes.App.BindingPathConnectSubmit, fConnect);
+router.post(Routes.App.BindingPathDisconnectSubmit, fDisconnect);
+router.post(Routes.App.BindingPathHelpSubmit, fHelp);
 
-// Callable routes, not bound to a location
-router.post(Routes.App.CallPathSubmitOrUpdateCreateTicketForm, fSubmitOrUpdateCreateTicketForm);
-router.post(Routes.App.CallPathSubmitOrUpdateSubscriptionForm, fSubmitOrUpdateSubscriptionsForm);
-router.post(Routes.App.CallPathSubmitOrUpdateZendeskConfigForm, fSubmitOrUpdateZendeskConfigForm);
+// configuration
+router.post(Routes.App.CallPathConfigOpenFormSubmit, fOpenZendeskConfigForm);
+router.post(Routes.App.CallPathConfigSubmitOrUpdateForm, fSubmitOrUpdateZendeskConfigForm);
+router.post(Routes.App.CallPathConfigSubmitForm, fSubmitOrUpdateZendeskConfigSubmit);
+
+// subscriptions
+router.post(Routes.App.CallPathSubsOpenFormSubmit, fOpenSubscriptionsForm);
+router.post(Routes.App.CallPathSubsUpdateForm, fSubmitOrUpdateSubscriptionsForm);
+router.post(Routes.App.CallPathSubsSubmitForm, fSubmitOrUpdateSubscriptionsSubmit);
+
+// tickets
+router.post(Routes.App.CallPathTicketOpenFormSubmit, fOpenCreateTicketForm);
+router.post(Routes.App.CallPathTicketUpdateForm, fSubmitOrUpdateCreateTicketForm);
+router.post(Routes.App.CallPathTicketSubmitForm, fSubmitOrUpdateCreateTicketSubmit);
 
 // zendesk
 router.post(Routes.App.SubscribeIncomingWebhookPath, fHandleSubcribeNotification);

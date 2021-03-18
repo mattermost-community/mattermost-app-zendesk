@@ -28,7 +28,7 @@ export async function newCreateTicketForm(call: AppCall): Promise<AppForm> {
         icon: ZDIcon,
         fields,
         call: {
-            path: Routes.App.CallPathSubmitOrUpdateCreateTicketForm,
+            path: Routes.App.CallPathTicketSubmitOrUpdateForm,
         },
     };
     return form;

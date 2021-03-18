@@ -22,7 +22,7 @@ export async function newZendeskConfigForm(call: AppCall): Promise<AppForm> {
         icon: ZDIcon,
         fields,
         call: {
-            path: Routes.App.CallPathSubmitOrUpdateZendeskConfigForm,
+            path: Routes.App.CallPathConfigSubmitOrUpdateForm,
         },
     };
     return form;

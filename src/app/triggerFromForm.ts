@@ -1,6 +1,6 @@
 import {Tickets} from 'node-zendesk';
 
-import {AppContext, AppFormValues, AppCall, AppForm} from 'mattermost-redux/types/apps';
+import {AppContext, AppFormValues, AppCall} from 'mattermost-redux/types/apps';
 
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 

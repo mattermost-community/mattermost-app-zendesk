@@ -3,7 +3,6 @@ import zendesk, {ClientOptions} from 'node-zendesk';
 import {AppContext} from 'mattermost-redux/types/apps';
 
 import {Routes} from '../utils';
-
 import {newTokenStore, newConfigStore} from '../store';
 
 interface Tickets {
@@ -53,11 +52,12 @@ export const newZDClient = async (context: AppContext): Promise<ZDClient> => {
     if (!token) {
         throw new Error('Failed to get user access_token');
     }
+    const tokenValue = token.token;
     const config = await newConfigStore(context).getValues();
     const remoteUri = config.zd_url + Routes.ZD.APIVersion as string;
     const options: ClientOptions = {
         username: '',
-        token,
+        token: tokenValue,
         remoteUri,
         oauth: true,
     };

@@ -4,7 +4,7 @@ import {newKVClient, KVClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 interface TokenStore {
-    storeToken(userID: string, token: string): void;
+    storeToken(userID: string, token: string): Promise<void>;
     deleteToken(userID: string): Promise<void>;
     getToken(userID: string): Promise<string>;
 }
@@ -17,11 +17,11 @@ class TokenStoreImpl implements TokenStore {
         this.kvClient = newKVClient(botToken, baseURL);
     }
 
-    storeToken(userID: string, token: string): void {
-        this.kvClient.set(userID, token);
+    async storeToken(userID: string, token: string): Promise<void> {
+        await this.kvClient.set(userID, {token});
     }
 
-    async deleteToken(userID: string): void {
+    async deleteToken(userID: string): Promise<void> {
         this.kvClient.delete(userID);
     }
 

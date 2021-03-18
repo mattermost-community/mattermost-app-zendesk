@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import {Routes} from '../utils/constants';
 
 export interface KVClient {
-    set(key: string, value: any): void;
+    set(key: string, value: any): Promise<void>;
     get(key: string): Promise<any>;
     delete(key: string): void;
 }
@@ -20,8 +20,12 @@ class KVClientImpl implements KVClient {
         this.token = token;
         this.url = baseURL;
     }
-    set(key: string, value: any): void {
-        this.newRequest(key, value, 'post');
+    async set(key: string, value: any): Promise<void> {
+        try {
+            this.newRequest(key, value, 'post');
+        } catch (e) {
+            console.log('e', e);
+        }
     }
 
     async get(key: string): Promise<any> {
@@ -45,8 +49,9 @@ class KVClientImpl implements KVClient {
         }
 
         const url = this.url + this.getKVURL(key);
-        return fetch(url, newoptions).
+        const fetchedValue = await fetch(url, newoptions).
             then((data) => data.json());
+        return fetchedValue;
     }
 
     getKVURL(key: string): string {

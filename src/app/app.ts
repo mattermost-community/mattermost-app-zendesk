@@ -77,10 +77,14 @@ class AppImpl implements App {
             return newErrorCallResponseWithMessage(e.message);
         }
 
+        // create a reply to the original post noting the ticket was created
+        const config = await newConfigStore(this.context).getValues();
+        const host = config.zd_node_host;
+
         let request: any;
         let msg: string;
         let action: string;
-        const link = '[subscription](' + Env.ZD.Host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
+        const link = '[subscription](' + host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
         const subName = this.values[SubscriptionFields.SubTextName];
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):

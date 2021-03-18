@@ -35,7 +35,7 @@
     "eslint-plugin-import": "2.22.1",
     "express": "4.17.1",
     "jest": "24.9.0",
-    "mattermost-redux": "github:mattermost/mattermost-redux#0bb937f0ed7ba3c1cf095edbb5db2a24ea96339a",
+    "mattermost-redux": "github:mattermost/mattermost-redux#4099a3ee845c41274e94b71e3a56e8ed3150ff6f",
     "nodemon": "2.0.6",
     "prettier": "1.19.1",
     "ts-jest": "26.4.4",
