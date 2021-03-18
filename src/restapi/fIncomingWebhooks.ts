@@ -3,12 +3,12 @@ import {Post} from 'mattermost-redux/types/posts';
 import {Request, Response} from 'express';
 import {AppContext} from 'mattermost-redux/types/apps';
 
-import {Env, Routes, tryPromiseWithMessage} from '../utils';
+import {Routes, tryPromiseWithMessage, contextFromRequest} from '../utils';
 import {TriggerFields} from '../utils/constants';
 
 import {newZDClient, newMMClient} from '../clients';
 
-import {configStore} from '../store';
+import {newConfigStore} from '../store';
 
 export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
     const ticketID = req.body[TriggerFields.TicketIDKey];
@@ -19,19 +19,23 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const fakeBotContext: AppContext = {
         acting_user_id: 'rgixs6uimp88tq8x8w3yxu3oqe',
     };
-    const zdClient = newZDClient(fakeBotContext);
+    const zdClient = await newZDClient(fakeBotContext);
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);
     const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
 
-    const message: string = getNotificationMessage(ticketID, auditEvent);
+    const context = contextFromRequest(req);
+    const config = await newConfigStore(context).getValues();
+    const zdHost = config.zd_node_host;
 
-    const adminClient = newMMClient().asAdmin();
-    const botUserID = configStore.getBotUserID();
+    const message: string = getNotificationMessage(zdHost, ticketID, auditEvent);
+
+    const adminClient = newMMClient(context).asAdmin();
+
     const post: Post = {
         message,
-        user_id: botUserID,
+        user_id: fakeBotContext.acting_user_id,
         channel_id: channelID,
     };
 
@@ -41,10 +45,9 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     res.json({});
 }
 
-function getNotificationMessage(ticketID: string, auditEvent: any): string {
-    const ZDHost = Env.ZD.Host;
+function getNotificationMessage(zdHost: string, ticketID: string, auditEvent: any): string {
     const ZDTicketPath = Routes.ZD.TicketPathPrefix;
-    const ticketLink = `[${ticketID}](${ZDHost}${ZDTicketPath}/${ticketID})`;
+    const ticketLink = `[${ticketID}](${zdHost}${ZDTicketPath}/${ticketID})`;
 
     switch (auditEvent.type) {
     case 'Comment':

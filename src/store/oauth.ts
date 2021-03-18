@@ -1,61 +1,38 @@
-import fs from 'fs';
+import {AppContext} from 'mattermost-redux/types/apps';
 
-import {jsonTokenFileStore} from '../utils';
+import {newKVClient, KVClient} from '../clients';
+import {baseUrlFromContext} from '../utils';
 
 interface TokenStore {
-    [key: string]: string;
-}
-
-interface Store {
-    tokens: TokenStore;
     storeToken(userID: string, token: string): void;
-    deleteToken(userID: string): void;
-    getToken(userID: string): string;
-    storeTokens(): void;
+    deleteToken(userID: string): Promise<void>;
+    getToken(userID: string): Promise<string>;
 }
 
-class TokenFileStore implements Store {
-    tokens: TokenStore = {};
+// need to add prefix
+class TokenStoreImpl implements TokenStore {
+    kvClient: KVClient
 
-    constructor() {
-        if (fs.existsSync(jsonTokenFileStore)) {
-            fs.readFile(jsonTokenFileStore, (err, data) => {
-                if (err) {
-                    throw err;
-                }
-                this.tokens = JSON.parse(data.toString());
-            });
-        }
+    constructor(botToken: string, baseURL: string) {
+        this.kvClient = newKVClient(botToken, baseURL);
     }
 
     storeToken(userID: string, token: string): void {
-        this.tokens[userID] = token;
-        this.storeTokens();
+        this.kvClient.set(userID, token);
     }
 
-    deleteToken(userID: string): void {
-        delete this.tokens[userID];
-        this.storeTokens();
+    async deleteToken(userID: string): void {
+        this.kvClient.delete(userID);
     }
 
-    getToken(userID: string): string {
-        if (this.tokens[userID]) {
-            return this.tokens[userID];
-        }
-        return '';
-    }
-
-    storeTokens(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            fs.writeFile(jsonTokenFileStore, JSON.stringify(this.tokens), (err) => {
-                if (err) {
-                    reject(err);
-                    throw err;
-                }
-                resolve();
-            });
-        });
+    async getToken(userID: string): Promise<string> {
+        return this.kvClient.get(userID);
     }
 }
 
-export default new TokenFileStore();
+export const newTokenStore = (context: AppContext): TokenStore => {
+    const botAccessToken = context.bot_access_token;
+    const baseURL = baseUrlFromContext(context);
+    return new TokenStoreImpl(botAccessToken, baseURL);
+};
+

@@ -4,7 +4,7 @@
 
 The current master branches have not been merged to work with this app and the following are needed until they are merged with master
 
-mm-webapp: `feature/cloud-apps` @837694a9b
+mm-webapp: `feature/cloud-apps` @837694a9b  
 mm-plugin-apps: `master` @831d203
 
 ## Quick Start
@@ -21,21 +21,22 @@ mm-plugin-apps: `master` @831d203
             1. Ex. `http://localhost:4000` - Development
             1. Ex. `https://mytest.ngrok.io` - Exposed for development
         1. `Save`
-    1. Save values from Oauth Client form to the `.env` file
-        1. cp `.env.sample` `.env`
-        1. Set `ZD_CLIENT_ID` as the `Unique identifier` field
-        1. Set `ZD_CLIENT_SECRET` as the `Secret` field
-        1. Set `ZD_URL` to your zendesk account host
-            1. Ex. `https://<subdomain>.zendesk.com`
-        1. Set `ZD_NODE_HOST` to the path of you zendesk app host
-            1. Ex. `https://https://testing.ngrok.io`
-    1. `ZD_CLIENT_SECRET` - (will be set later in the setup)
-1. Start the node server
-    1. `npm i` - install node_moduls and dependencies
-    1. `npm run build:watch` - (to monitor typescriopt errors and watch chaning files errors)
-    1. `npm start` - (in a separate shell) start the node server
 1. Install the app (In Mattermost)
     1. `/apps install --url http://<your-zendesk-app-host>/manifest.json --app-secret thisisthesecret`  
+1. Configure Zendesk Client in Mattermost
+    1. `/zendesk configure` to open the configuration modal
+    1. Save values from Oauth Client form to the fields in the configuration modal
+        1. `Zendesk URL` - set to your zendesk account host
+        1. `Zendesk Client ID` - set to the `Unique identifier` field value
+        1. `Zendesk Client Secret` - set as the `Secret` field value
+            1. Ex. `https://<subdomain>.zendesk.com`
+        1. `ZD_NODE_HOST` - set to the path of your zendesk app host
+            1. Ex. `https://testing.ngrok.io`
+1. [Setup Zendesk Target](#Setup Zendesk Target)
+1. Start the node server
+    1. `npm i` - install node_modules and dependencies
+    1. `npm run build:watch` - (to monitor typescriopt errors and watch chaning files errors)
+    1. `npm start` - (in a separate shell) start the node server
 
 ### Zendesk and Mattermost Users (All users)
 
@@ -49,7 +50,9 @@ accounts via OAuth2 authorization
 ## Slash Commands
 
 `/zendesk connect` - connect your Zendesk account to Mattermost  
-`/zendesk disconnect` - disconnect your Zendesk account from Mattermost
+`/zendesk configure` - configure the Zendesk app after installation  
+`/zendesk disconnect` - disconnect your Zendesk account from Mattermost  
+`/zendesk help` - post ephemeral message with help text
 
 ## Create a ticket
 
@@ -64,20 +67,14 @@ Subscriptions to Zendesk events can be added via the `channel header`, `post men
 The definition of a Trigger is defined below:
 > A trigger consists of one or more actions performed when a ticket is created or updated. The actions are performed only if certain conditions are met. For example, a trigger can notify the customer when an agent changes the status of a ticket to Solved.
 
-Zendesk Admins are able to view these subscriptions inside Zendesk via `Settings` > `Business Rules` > `Triggers` and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`.  After creating a notification from Mattermost, it is possible to access the trigger in Zendesk and modify conditions of the trigger. If a conditions is added that is not currently supported by the Mattermost Zendesk App, the user will be notificed when trying to edit the subcription through Mattemrost and a link will be provided to the Zendesk trigger where it can be further modified.
+Zendesk Admins are able to view these subscriptions inside Zendesk via `Settings` > `Business Rules` > `Triggers` and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`.  After creating a notification from Mattermost, it is possible to access the trigger in Zendesk and modify conditions of the trigger. If a conditions is added that is not currently supported by the Mattermost Zendesk App, the user will be notificed when trying to edit the subscription through Mattemrost and a link will be provided to the Zendesk trigger where it can be further modified.
 
 ## Installation
 
 `/apps install --url http://<your-zendesk-app>/manifest.json --app-secret thisisthesecret`  
 `/apps install --url http://localhost:4000/manifest.json --app-secret thisisthesecret`  
 
-After installing the app, a provisioned bot account will be created for user `@zendesk` and posted in a DM. The following values are stored locally in `config.json`
-
-- `bot_access_token`
-- `oauth2_client_secret`
-- `mattermost_site_url`
-
-## Setup Zendesk Webhooks
+## Setup Zendesk Target
 
 Here is a helpful [Zendesk post](https://support.zendesk.com/hc/en-us/articles/204890268-Creating-webhooks-with-the-HTTP-target#topic_yf1_fs5_tr) describing the setup of webhooks
 
@@ -95,7 +92,7 @@ We need to create the Zendesk HTTP target which will send webhook trigger notifi
 1. Select `HTTP` Target
 1. Fill in the following:
     1. **Title:** Mattermost target for incoming webhooks
-    1. **Url:** `<your_url/zendesk/webhook>`
+    1. **Url:** `<node_host_url>/webhook-incoming>`
     1. **Method:** POST
     1. **Content Type:** JSON
 1. Test that the target is valid

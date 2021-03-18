@@ -1,89 +1,56 @@
-import fs from 'fs';
+import {AppCallValues, AppContext} from 'mattermost-redux/types/apps';
 
-import {Request} from 'express';
+import {StoreKeys} from '../utils/constants';
+import {newKVClient, KVClient} from '../clients';
 
-import {AppContextProps} from 'mattermost-redux/types/apps';
-
-import {jsonConfigFileStore} from '../utils';
-
-type AppConfigStore = {
-    bot_access_token: string;
-    bot_user_id: string;
-    admin_access_token: string;
-    admin_user_id: string;
-    oauth2_client_secret: string;
-    mattermost_site_url: string;
+import {baseUrlFromContext} from '../utils';
+export type AppConfigStore = {
+    zd_url: string;
+    zd_client_id: string;
+    zd_client_secret: string;
+    zd_node_host: string;
 }
 
-interface Store {
-    getBotAccessToken(): string;
-    getAdminAccessToken(): string;
-    getBotUserID(): string;
-    getSiteURL(): string;
+export interface ConfigStore {
+    getValues(): Promise<AppConfigStore>;
+    isConfigured(): Promise<boolean>;
+    storeConfigInfo(values: AppCallValues): void;
 }
 
-class ConfigFileStore implements Store {
+class ConfigStoreImpl implements ConfigStore {
     storeData: AppConfigStore;
+    kvClient: KVClient;
 
-    constructor() {
-        this.storeData = {
-            bot_access_token: '',
-            admin_access_token: '',
-            admin_user_id: '',
-            bot_user_id: '',
-            oauth2_client_secret: '',
-            mattermost_site_url: '',
-        };
+    constructor(botToken: string, url: string) {
+        this.kvClient = newKVClient(botToken, url);
+        this.storeData = {} as AppConfigStore;
+    }
 
-        if (fs.existsSync(jsonConfigFileStore)) {
-            fs.readFile(jsonConfigFileStore, (err, data) => {
-                if (err) {
-                    throw err;
-                }
-                this.storeData = JSON.parse(data.toString());
-            });
+    storeConfigInfo(store: AppConfigStore): void {
+        this.kvClient.set(StoreKeys.config, store);
+    }
+
+    async getValues(): Promise<AppConfigStore> {
+        const config = await this.kvClient.get(StoreKeys.config);
+        if (config) {
+            this.storeData.zd_url = config.zd_url || '';
+            this.storeData.zd_client_id = config.zd_client_id || '';
+            this.storeData.zd_client_secret = config.zd_client_secret || '';
+            this.storeData.zd_node_host = config.zd_node_host || '';
         }
+        return this.storeData;
     }
 
-    storeInstallInfo(req: Request): Promise<void> {
-        const values = req.body.values;
-        const context: AppContextProps = req.body.context;
-
-        values.mattermost_site_url = context.mattermost_site_url;
-        values.bot_access_token = context.bot_access_token;
-        values.bot_user_id = context.bot_user_id;
-        values.admin_access_token = context.admin_access_token;
-        values.admin_user_id = context.admin_user_id;
-
-        return new Promise((resolve, reject) => {
-            fs.writeFile(jsonConfigFileStore, JSON.stringify(values), (err) => {
-                if (err) {
-                    reject(err);
-                    throw err;
-                }
-                resolve();
-            });
-        });
-    }
-    getBotUserID(): string {
-        return this.storeData.bot_user_id;
-    }
-
-    getBotAccessToken(): string {
-        return this.storeData.bot_access_token;
-    }
-
-    getAdminAccessToken(): string {
-        return this.storeData.admin_access_token;
-    }
-
-    getAdminUserID(): string {
-        return this.storeData.admin_user_id;
-    }
-
-    getSiteURL(): string {
-        return this.storeData.mattermost_site_url;
+    // isConfigured returns true if zendesk configuration has been completed by a sysadmin
+    // TODO Validation logic needs to be improved
+    async isConfigured(): Promise<boolean> {
+        const config = await this.getValues();
+        return Boolean(config.zd_url && config.zd_client_id && config.zd_client_secret);
     }
 }
 
-export default new ConfigFileStore();
+export const newConfigStore = (context: AppContext): ConfigStore => {
+    const botAccessToken = context.bot_access_token;
+    const baseURL = baseUrlFromContext(context);
+    return new ConfigStoreImpl(botAccessToken, baseURL);
+};

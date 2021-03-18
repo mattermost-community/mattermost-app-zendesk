@@ -2,8 +2,9 @@ import zendesk, {ClientOptions} from 'node-zendesk';
 
 import {AppContext} from 'mattermost-redux/types/apps';
 
-import {Env} from '../utils';
-import {oauthStore} from '../store';
+import {Routes} from '../utils';
+
+import {newTokenStore, newConfigStore} from '../store';
 
 interface Tickets {
     create(ticket: any): any;
@@ -44,18 +45,20 @@ export interface ZDClient {
     users: Users;
 }
 
-export const newZDClient = (context: AppContext): ZDClient => {
+export const newZDClient = async (context: AppContext): Promise<ZDClient> => {
     // get active mattermost user ID
     const mmUserID = context.acting_user_id || '';
-    const token = oauthStore.getToken(mmUserID);
+    const tokenStore = newTokenStore(context);
+    const token = await tokenStore.getToken(mmUserID);
     if (!token) {
         throw new Error('Failed to get user access_token');
     }
-
+    const config = await newConfigStore(context).getValues();
+    const remoteUri = config.zd_url + Routes.ZD.APIVersion as string;
     const options: ClientOptions = {
         username: '',
         token,
-        remoteUri: Env.ZD.ApiURL,
+        remoteUri,
         oauth: true,
     };
 
