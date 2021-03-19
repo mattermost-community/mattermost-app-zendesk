@@ -3,7 +3,7 @@ import {AppCallResponse, AppCall} from 'mattermost-redux/types/apps';
 
 import {newConfigStore, AppConfigStore} from '../store/config';
 import {newZendeskConfigForm} from '../forms';
-import {newOKCallResponse, newFormCallResponse, newErrorCallResponseWithMessage} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown, newFormCallResponse, newErrorCallResponseWithMessage} from '../utils/call_responses';
 
 // fOpenZendeskConfigForm opens a new configuration form
 export async function fOpenZendeskConfigForm(req: Request, res: Response): Promise<void> {
@@ -20,7 +20,8 @@ export async function fSubmitOrUpdateZendeskConfigForm(req: Request, res: Respon
 
 export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Response): Promise<void> {
     const call: AppCall = req.body;
-    let callResponse: AppCallResponse = newOKCallResponse();
+
+    let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {
         const context = call.context;
         const configStore = newConfigStore(context);
