@@ -14,10 +14,6 @@ export const getChannelHeaderBindings = (configured: boolean, connected: boolean
         return newChannelHeaderBindings(bindings);
     }
 
-    if (sysadmin) {
-        bindings.push(channelHeaderConfig());
-    }
-
     if (connected) {
         bindings.push(channelHeaderSubscribe());
     }
