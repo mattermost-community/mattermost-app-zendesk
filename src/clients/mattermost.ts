@@ -7,7 +7,7 @@ import {baseUrlFromContext} from '../utils';
 interface MMClient {
     asBot(): Client;
     asAdmin(): Client;
-    asActingUser(context: AppContext): Client;
+    asActingUser(): Client;
 }
 
 export const newMMClient = (context: AppContext): MMClient => {
@@ -44,7 +44,7 @@ class MMClientImpl implements MMClient {
         );
     }
 
-    asActingUser(context: AppContext): Client {
+    asActingUser(): Client {
         return this.as(
             this.context.acting_user_access_token,
         );

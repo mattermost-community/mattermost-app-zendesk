@@ -30,6 +30,7 @@ const openCreateTicketForm = (): AppBinding => {
             path: Routes.App.CallPathTicketOpenForm,
             expand: {
                 post: AppExpandLevels.EXPAND_ALL,
+                acting_user_access_token: AppExpandLevels.EXPAND_ALL,
             },
         },
     } as AppBinding;

@@ -117,7 +117,7 @@ class AppImpl implements App {
     }
 
     createBotPost = async (message: string): Promise<void> => {
-        const adminClient = newMMClient(this.context).asAdmin();
+        const adminClient = newMMClient(this.context).asActingUser();
 
         // add bot to team and channel
         const botUserID = this.context.bot_user_id;
