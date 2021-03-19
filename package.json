@@ -19,7 +19,7 @@
     "cors": "2.8.5",
     "dotenv": "8.2.0",
     "node-fetch": "2.6.1",
-    "node-zendesk": "2.0.3",
+    "node-zendesk": "github:jfrerich/node-zendesk",
     "serverless-http": "2.7.0",
     "ts-node": "9.1.1"
   },
