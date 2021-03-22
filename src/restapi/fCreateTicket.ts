@@ -26,12 +26,7 @@ export async function fSubmitOrUpdateCreateTicketSubmit(req: Request, res: Respo
     let callResponse: AppCallResponse = newOKCallResponse();
     try {
         const app = newApp(call);
-        const fieldErrors = await app.createTicketFromPost();
-
-        // response with errors
-        if (Object.keys(fieldErrors).length !== 0) {
-            callResponse = newErrorCallResponseWithFieldErrors(fieldErrors);
-        }
+        callResponse = await app.createTicketFromPost();
     } catch (err) {
         callResponse = newErrorCallResponseWithMessage(err.message);
     }
