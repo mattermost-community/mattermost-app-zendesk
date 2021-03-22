@@ -1,5 +1,6 @@
-node_modules
-dist
+/.eslintcache
+/node_modules
+/dist
 .env
 config.json
 tokens.json

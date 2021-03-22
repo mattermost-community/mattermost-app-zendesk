@@ -533,12 +533,6 @@
             "functions": false,
             "variables": false
           }
-        ],
-        "@typescript-eslint/camelcase": [
-          2,
-          {
-            "properties": "never"
-          }
         ]
       }
     }
