@@ -12,7 +12,7 @@ export async function fOpenSubscriptionsForm(req: Request, res: Response): Promi
 }
 
 // SubmitOrUpdateSubscriptionsForm updates the subscriptions form with new values or
-// submits the the form if submit button is clicked
+// submits the form if submit button is clicked
 export async function fSubmitOrUpdateSubscriptionsForm(req: Request, res: Response): Promise<void> {
     const form = await newSubscriptionsForm(req.body);
     const callResponse = newFormCallResponse(form);
