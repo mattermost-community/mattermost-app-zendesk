@@ -55,7 +55,7 @@ class AppImpl implements App {
 
         // create a reply to the original post noting the ticket was created
         const config = await newConfigStore(this.context).getValues();
-        const host = config.zd_node_host;
+        const host = config.zd_url;
 
         const id = zdTicket.id;
         const subject = zdTicket.subject;
