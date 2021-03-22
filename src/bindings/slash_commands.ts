@@ -35,6 +35,7 @@ const cmdConnect = (): AppBinding => {
         label: 'connect',
         description: 'Connect your Zendesk account',
         icon: ZDIcon,
+        form: {},
         call: {
             path: Routes.App.BindingPathConnect,
         },
@@ -47,6 +48,7 @@ const cmdDisconnect = (): AppBinding => {
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
         icon: ZDIcon,
+        form: {},
         call: {
             path: Routes.App.BindingPathDisconnect,
         },
@@ -59,6 +61,7 @@ const cmdSubscribe = (): AppBinding => {
         label: 'subscribe',
         description: 'Subscribe notifications to a channel',
         icon: ZDIcon,
+        form: {},
         call: {
             path: Routes.App.CallPathSubsOpenForm,
         },
@@ -71,6 +74,7 @@ const cmdConfigure = (): AppBinding => {
         label: 'configure',
         description: 'Configure the installed Zendesk account',
         icon: ZDIcon,
+        form: {},
         call: {
             path: Routes.App.CallPathConfigOpenForm,
         },
@@ -83,9 +87,7 @@ const cmdHelp = (): AppBinding => {
         label: 'help',
         description: 'Show Zendesk Help',
         icon: ZDIcon,
-        form: {
-            fields: [],
-        },
+        form: {},
         call: {
             path: Routes.App.BindingPathHelp,
             expand: {
