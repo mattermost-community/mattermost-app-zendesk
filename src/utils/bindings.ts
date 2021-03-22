@@ -1,20 +1,17 @@
 import {AppBindingLocations} from 'mattermost-redux/constants/apps';
 import {AppBinding} from 'mattermost-redux/types/apps';
 
-import {isUserConnected, isUserSysadmin} from '../app/user';
-
 // Bindings base class stores user info for subclasses
 export class Bindings {
-    userID: string
-    private isUserSysadmin: Promise<boolean>
-    private isUserConnected: boolean
+    configured: boolean
+    connected: boolean
+    sysadmin: boolean
     private bindings: AppBinding[]
 
-    constructor(userID: string) {
-        this.userID = userID;
-        this.isUserConnected = isUserConnected(userID);
-        this.isUserSysadmin = isUserSysadmin(userID);
-
+    constructor(isConfigured: boolean, isConnected: boolean, isSysadmin: boolean) {
+        this.configured = isConfigured;
+        this.connected = isConnected;
+        this.sysadmin = isSysadmin;
         this.bindings = [];
     }
 
@@ -26,12 +23,19 @@ export class Bindings {
         return this.bindings;
     }
 
+    // check if user connected with KV store
     isConnected = (): boolean => {
-        return this.isUserConnected;
+        return this.connected;
     }
 
-    isSysadmin = (): Promise<boolean> => {
-        return this.isUserSysadmin;
+    // check if user is sysadmin through mattermost API
+    isSysadmin = (): boolean => {
+        return this.sysadmin;
+    }
+
+    // check if zendesk configuration has been complete
+    isConfigured = (): boolean => {
+        return this.configured;
     }
 }
 

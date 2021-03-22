@@ -2,7 +2,7 @@ import Client from 'mattermost-redux/client/client4.js';
 
 import {AppContext} from 'mattermost-redux/types/apps';
 
-import {configStore} from '../store';
+import {baseUrlFromContext} from '../utils';
 
 interface MMClient {
     asBot(): Client;
@@ -10,41 +10,43 @@ interface MMClient {
     asActingUser(context: AppContext): Client;
 }
 
-export const newMMClient = (): MMClient => {
-    return new MattermostClient();
+export const newMMClient = (context: AppContext): MMClient => {
+    return new MMClientImpl(context);
 };
 
-class MattermostClient implements MMClient {
-    newClient(userID: string, token: string): Client {
+class MMClientImpl implements MMClient {
+    context: AppContext
+    constructor(context: AppContext) {
+        this.context = context;
+    }
+    newClient(token: string): Client {
         const client = new Client();
-        client.setUrl(configStore.getSiteURL());
-        client.setUserId(userID);
+        const baseURL = baseUrlFromContext(this.context);
+        client.setUrl(baseURL);
         client.setToken(token);
         return client;
     }
 
-    as(id: string, token: string): Client {
-        return this.newClient(id, token);
+    as(token: string): Client {
+        return this.newClient(token);
     }
 
     asBot(): Client {
         return this.as(
-            configStore.getBotUserID(),
-            configStore.getBotAccessToken(),
+            this.context.bot_access_token,
         );
     }
 
+    // TODO: admin vs bot?
     asAdmin(): Client {
         return this.as(
-            configStore.getAdminUserID(),
-            configStore.getAdminAccessToken(),
+            this.context.bot_access_token,
         );
     }
 
     asActingUser(context: AppContext): Client {
         return this.as(
-            context.acting_user_id,
-            context.acting_user_access_token,
+            this.context.acting_user_access_token,
         );
     }
 }

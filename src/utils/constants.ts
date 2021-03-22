@@ -1,13 +1,14 @@
-export const jsonConfigFileStore = 'config.json';
-export const jsonTokenFileStore = 'tokens.json';
 export const ZDIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
 export const AppID = 'zendesk';
 
 export const FormTextAreaMinLength = 2;
 export const FormTextAreaMaxLength = 1024;
 
+import {AppSelectOption} from 'mattermost-redux/types/apps';
+
 // Routes to the Mattermost Instance
 const MMPaths = {
+    KVPath: '/plugins/com.mattermost.apps/api/v1/kv/',
 };
 
 // Routes to the Zendesk Instance
@@ -30,6 +31,7 @@ const AppPaths = {
     BindingsPath: '/bindings',
     BindingPathOpenCreateTicketForm: '/open-create-ticket-form',
     BindingPathOpenSubscriptionsForm: '/open-subscriptions-form',
+    BindingPathOpenZendeskConfigForm: '/open-zendesk-config-form',
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
     BindingPathHelp: '/help',
@@ -37,6 +39,7 @@ const AppPaths = {
     // Call routes are callable routes, but not bound to a location
     CallPathSubmitOrUpdateCreateTicketForm: '/submit-or-update-create-ticket-form',
     CallPathSubmitOrUpdateSubscriptionForm: '/submit-or-update-subscription-form',
+    CallPathSubmitOrUpdateZendeskConfigForm: '/submit-or-update-zendesk-config-form',
 };
 
 export const Routes = {
@@ -47,21 +50,14 @@ export const Routes = {
 
 export const CommandLocations = {
     Connect: 'connect',
+    Configure: 'configure',
     Disconnect: 'disconnect',
     Subscribe: 'subscribe',
     Help: 'help',
 };
 
-const ZDEnv = {
-    Host: process.env.ZD_URL as string,
-    NodeHost: process.env.ZD_NODE_HOST as string,
-    ApiURL: process.env.ZD_URL + ZDPaths.APIVersion as string,
-    ClientSecret: process.env.ZD_CLIENT_SECRET as string,
-    ClientID: process.env.ZD_CLIENT_ID as string,
-};
-
-export const Env = {
-    ZD: ZDEnv,
+export const StoreKeys = {
+    config: 'config',
 };
 
 // Fields available inside Zendesk
@@ -93,12 +89,13 @@ export const CreateTicketFields = {
     PrefixCustomField: 'custom_field_',
 };
 
+const selectOptions: AppSelectOption[] = [];
 export const SubscriptionFields = {
     ChannelPickerSelectLabel: 'Channel Name',
     ChannelPickerSelectName: 'channel_picker_name',
 
     SubSelectLabel: 'Subscription Name',
-    SubSelectName: 'subcription_select_name',
+    SubSelectName: 'subscription_select_name',
 
     UnsupportedFieldsTextName: 'unsupported_fields',
 
@@ -107,6 +104,7 @@ export const SubscriptionFields = {
 
     DeleteButtonLabel: 'Delete',
     SubmitButtonsName: 'button_action',
+    SubmitButtonsOptions: selectOptions,
     SaveButtonLabel: 'Save',
 
     NewSub_OptionLabel: 'New Subscription',

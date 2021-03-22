@@ -1,12 +1,24 @@
+import {AppContext} from 'mattermost-redux/types/apps';
+import {isAdmin} from 'mattermost-redux/utils/user_utils';
+import GeneralConstants from 'mattermost-redux/constants/general';
+
 import {newMMClient} from '../clients';
-import {oauthStore} from '../store';
+import {newTokenStore} from '../store';
 
-export function isUserConnected(userID: string): boolean {
-    return Boolean(oauthStore.getToken(userID));
+export async function isUserConnected(context: AppContext): Promise<boolean> {
+    const userID = context.acting_user_id;
+    const tokenStore = newTokenStore(context);
+    const token = await tokenStore.getToken(userID);
+    return Boolean(token);
 }
 
-export async function isUserSysadmin(userID: string): Promise<boolean> {
-    const client = newMMClient().asAdmin();
-    const user = await client.getUser(userID);
-    return user.roles.includes('system_admin');
+export async function isUserSysadmin(context: AppContext): Promise<boolean> {
+    if (context.acting_user && context.acting_user.roles) {
+        return isAdmin(context.acting_user.roles);
+    }
+
+    const client = newMMClient(context).asAdmin();
+    const user = await client.getUser(context.acting_user_id);
+    return user.roles.includes(GeneralConstants.SYSTEM_ADMIN_ROLE);
 }
+

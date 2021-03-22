@@ -2,51 +2,53 @@ import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {AppID, ZDIcon, Routes} from '../utils/constants';
-import {Bindings, newPostMenuBindings} from '../utils';
+import {newPostMenuBindings} from '../utils';
 
 // getPostMenuBindings returns the users post menu bindings
-export const getPostMenuBindings = (userID: string): AppBinding => {
-    return new PostMenuBindings(userID).getBindings();
-};
+export const getPostMenuBindings = (configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
+    const bindings: AppBinding[] = [];
 
-// PostMenuBindings class for creating post_menu location bindings
-class PostMenuBindings extends Bindings {
-    getBindings = (): AppBinding[] => {
-        const bindings: AppBinding[] = [];
-        if (this.isConnected()) {
-            bindings.push(this.openCreateTicketForm());
-            bindings.push(this.openSubscriptionsForm());
-        }
+    // only show configuration option if admin has not configured the plugin
+    if (!configured && sysadmin) {
         return newPostMenuBindings(bindings);
     }
 
-    openCreateTicketForm = (): AppBinding => {
-        return {
-            app_id: AppID,
-            label: 'Create Zendesk Ticket',
-            description: 'Create ticket in Zendesk',
-            icon: ZDIcon,
-            location: 'open_ticket',
-            call: {
-                path: Routes.App.BindingPathOpenCreateTicketForm,
-                expand: {
-                    post: AppExpandLevels.EXPAND_ALL,
-                },
-            },
-        } as AppBinding;
+    if (connected) {
+        bindings.push(openCreateTicketForm());
+        bindings.push(openSubscriptionsForm());
     }
+    return newPostMenuBindings(bindings);
+};
 
-    openSubscriptionsForm = (): AppBinding => {
-        return {
-            app_id: AppID,
-            label: 'Zendesk Subscriptions',
-            description: 'Create ticket in Zendesk',
-            icon: ZDIcon,
-            location: 'open_subscription',
-            call: {
-                path: Routes.App.BindingPathOpenSubscriptionsForm,
+const openCreateTicketForm = (): AppBinding => {
+    return {
+        app_id: AppID,
+        label: 'Create Zendesk Ticket',
+        description: 'Create ticket in Zendesk',
+        icon: ZDIcon,
+        location: 'open_ticket',
+        call: {
+            path: Routes.App.BindingPathOpenCreateTicketForm,
+            expand: {
+                post: AppExpandLevels.EXPAND_ALL,
             },
-        } as AppBinding;
-    }
-}
+        },
+    } as AppBinding;
+};
+
+const openSubscriptionsForm = (): AppBinding => {
+    return {
+        app_id: AppID,
+        label: 'Zendesk Subscriptions',
+        description: 'Subscribe channel to Zendesk notifications',
+        icon: ZDIcon,
+        location: 'open_subscription',
+        call: {
+            path: Routes.App.BindingPathOpenSubscriptionsForm,
+            expand: {
+                acting_user: AppExpandLevels.EXPAND_ALL,
+            },
+        },
+    } as AppBinding;
+};
 

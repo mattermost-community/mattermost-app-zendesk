@@ -1,21 +1,21 @@
 import {Tickets} from 'node-zendesk';
 
-import {AppContext, AppCallValues} from 'mattermost-redux/types/apps';
+import {AppContext, AppFormValues, AppCall, AppForm} from 'mattermost-redux/types/apps';
 
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
-interface ITriggerFromFrom {
+interface TriggerFromFrom {
     getTrigger(): Tickets.CreatePayload;
 }
 
-export class TriggerFromForm implements ITriggerFromFrom {
-    values: AppCallValues;
+export class TriggerFromFormImpl implements TriggerFromFrom {
+    values: AppFormValues;
     context: AppContext;
     trigger: any
 
-    constructor(context: AppContext, values: AppCallValues) {
-        this.values = values;
-        this.context = context;
+    constructor(call: AppCall) {
+        this.values = call.values as AppFormValues;
+        this.context = call.context;
         this.trigger = {};
     }
 
@@ -105,8 +105,8 @@ export class TriggerFromForm implements ITriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(context: AppContext, values: AppCallValues): any {
-    const trigger = new TriggerFromForm(context, values).getTrigger();
+export function newTriggerFromForm(call: AppCall): any {
+    const trigger = new TriggerFromFormImpl(call).getTrigger();
     return trigger;
 }
 

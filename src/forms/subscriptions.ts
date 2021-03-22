@@ -13,8 +13,8 @@ import {BaseFormFields} from '../utils/base_form_fields';
 
 // newSubscriptionsForm returns a form response to create subscriptions
 export async function newSubscriptionsForm(call: AppCall): Promise<AppForm> {
-    const zdClient = newZDClient(call.context);
-    const mmClient = newMMClient().asAdmin();
+    const zdClient = await newZDClient(call.context);
+    const mmClient = newMMClient(call.context).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient);
     const fields = await formFields.getSubscriptionFields();
 

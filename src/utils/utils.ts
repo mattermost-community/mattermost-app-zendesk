@@ -1,4 +1,4 @@
-import {AppSelectOption, AppField} from 'mattermost-redux/types/apps';
+import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps';
 import {Channel} from 'mattermost-redux/types/channels';
 
 import {SubscriptionFields} from './constants';
@@ -62,6 +62,14 @@ export async function tryPromiseWithMessage(p: Promise<any>, message: string): P
 
 export function isFieldValueSelected(field: AppField): boolean {
     return Boolean(field.value);
+}
+
+export function contextFromRequest(request: any): AppContext {
+    return request.body.context;
+}
+
+export function baseUrlFromContext(context: AppContext): string {
+    return context.mattermost_site_url || 'http://localhost:8065';
 }
 
 // getBulletedList returns a bulleted list of items with options header
