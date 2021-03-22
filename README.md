@@ -36,8 +36,6 @@ mm-plugin-apps: `master` @831d203
 1. Start the node server
     1. `make watch` - (to monitor typescript errors and watch changing files errors)
     1. `make run` - (in a separate shell) start the node server
-1. Install the app (In Mattermost)
-    1. `/apps install --url http://<your-zendesk-app-host>/manifest.json --app-secret thisisthesecret`  
 
 ### Zendesk and Mattermost Users (All users)
 
