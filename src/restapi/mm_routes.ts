@@ -22,24 +22,23 @@ router.get(Routes.App.OAuthCompletePath, fComplete);
 router.post(Routes.App.InstallPath, fInstall);
 
 // formless calls
-router.post(Routes.App.BindingPathConnectSubmit, fConnect);
-router.post(Routes.App.BindingPathDisconnectSubmit, fDisconnect);
-router.post(Routes.App.BindingPathHelpSubmit, fHelp);
+router.post(Routes.App.BindingPathConnect + '/submit', fConnect);
+router.post(Routes.App.BindingPathDisconnect + '/submit', fDisconnect);
+router.post(Routes.App.BindingPathHelp + '/submit', fHelp);
 
 // configuration
-router.post(Routes.App.CallPathConfigOpenFormSubmit, fOpenZendeskConfigForm);
-router.post(Routes.App.CallPathConfigSubmitOrUpdateForm, fSubmitOrUpdateZendeskConfigForm);
-router.post(Routes.App.CallPathConfigSubmitForm, fSubmitOrUpdateZendeskConfigSubmit);
+router.post(Routes.App.CallPathConfigOpenForm + '/submit', fOpenZendeskConfigForm);
+router.post(Routes.App.CallPathConfigSubmitOrUpdateForm + '/submit', fSubmitOrUpdateZendeskConfigSubmit);
 
 // subscriptions
-router.post(Routes.App.CallPathSubsOpenFormSubmit, fOpenSubscriptionsForm);
-router.post(Routes.App.CallPathSubsUpdateForm, fSubmitOrUpdateSubscriptionsForm);
-router.post(Routes.App.CallPathSubsSubmitForm, fSubmitOrUpdateSubscriptionsSubmit);
+router.post(Routes.App.CallPathSubsOpenForm + '/submit', fOpenSubscriptionsForm);
+router.post(Routes.App.CallPathSubsSubmitOrUpdateForm + '/form', fSubmitOrUpdateSubscriptionsForm);
+router.post(Routes.App.CallPathSubsSubmitOrUpdateForm + '/submit', fSubmitOrUpdateSubscriptionsSubmit);
 
 // tickets
-router.post(Routes.App.CallPathTicketOpenFormSubmit, fOpenCreateTicketForm);
-router.post(Routes.App.CallPathTicketUpdateForm, fSubmitOrUpdateCreateTicketForm);
-router.post(Routes.App.CallPathTicketSubmitForm, fSubmitOrUpdateCreateTicketSubmit);
+router.post(Routes.App.CallPathTicketOpenForm + '/submit', fOpenCreateTicketForm);
+router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/form', fSubmitOrUpdateCreateTicketForm);
+router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/submit', fSubmitOrUpdateCreateTicketSubmit);
 
 // zendesk
 router.post(Routes.App.SubscribeIncomingWebhookPath, fHandleSubcribeNotification);

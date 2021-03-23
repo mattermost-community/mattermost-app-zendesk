@@ -32,32 +32,19 @@ const AppPaths = {
 
     // Ticket Creation
     CallPathTicketOpenForm: '/ticket/open-form',
-    CallPathTicketOpenFormSubmit: '/ticket/open-form/submit',
     CallPathTicketSubmitOrUpdateForm: '/ticket/submit-or-update',
-    CallPathTicketUpdateForm: '/ticket/submit-or-update/form',
-    CallPathTicketSubmitForm: '/ticket/submit-or-update/submit',
 
     // Subscriptions
     CallPathSubsOpenForm: '/subscriptions/open-form',
-    CallPathSubsOpenFormSubmit: '/subscriptions/open-form/submit',
     CallPathSubsSubmitOrUpdateForm: '/subscriptions/submit-or-update',
-    CallPathSubsUpdateForm: '/subscriptions/submit-or-update/form',
-    CallPathSubsSubmitForm: '/subscriptions/submit-or-update/submit',
 
     // Zendesk Configuration
     CallPathConfigOpenForm: '/config/open-form',
-    CallPathConfigOpenFormSubmit: '/config/open-form/submit',
     CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
-    CallPathConfigSubmitForm: '/config/submit-or-update/submit',
 
     BindingPathConnect: '/connect',
-    BindingPathConnectSubmit: '/connect/submit',
-
     BindingPathDisconnect: '/disconnect',
-    BindingPathDisconnectSubmit: '/disconnect/submit',
-
     BindingPathHelp: '/help',
-    BindingPathHelpSubmit: '/help/submit',
 };
 
 export const Routes = {
