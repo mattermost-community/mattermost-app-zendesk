@@ -29,17 +29,22 @@ const AppPaths = {
 
     // Binding routes are accessed via a location call
     BindingsPath: '/bindings',
-    BindingPathOpenCreateTicketForm: '/open-create-ticket-form',
-    BindingPathOpenSubscriptionsForm: '/open-subscriptions-form',
-    BindingPathOpenZendeskConfigForm: '/open-zendesk-config-form',
+
+    // Ticket Creation
+    CallPathTicketOpenForm: '/ticket/open-form',
+    CallPathTicketSubmitOrUpdateForm: '/ticket/submit-or-update',
+
+    // Subscriptions
+    CallPathSubsOpenForm: '/subscriptions/open-form',
+    CallPathSubsSubmitOrUpdateForm: '/subscriptions/submit-or-update',
+
+    // Zendesk Configuration
+    CallPathConfigOpenForm: '/config/open-form',
+    CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
+
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
     BindingPathHelp: '/help',
-
-    // Call routes are callable routes, but not bound to a location
-    CallPathSubmitOrUpdateCreateTicketForm: '/submit-or-update-create-ticket-form',
-    CallPathSubmitOrUpdateSubscriptionForm: '/submit-or-update-subscription-form',
-    CallPathSubmitOrUpdateZendeskConfigForm: '/submit-or-update-zendesk-config-form',
 };
 
 export const Routes = {
@@ -53,6 +58,7 @@ export const CommandLocations = {
     Configure: 'configure',
     Disconnect: 'disconnect',
     Subscribe: 'subscribe',
+    Ticket: 'ticket',
     Help: 'help',
 };
 

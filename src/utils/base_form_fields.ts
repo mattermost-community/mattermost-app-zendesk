@@ -1,6 +1,5 @@
-import {AppCall} from 'mattermost-redux/types/apps';
-
 import Client4 from 'mattermost-redux/client/client4.js';
+import {AppCall} from 'mattermost-redux/types/apps';
 
 import {ZDClient} from '../clients';
 

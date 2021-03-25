@@ -55,7 +55,7 @@ class AppImpl implements App {
 
         // create a reply to the original post noting the ticket was created
         const config = await newConfigStore(this.context).getValues();
-        const host = config.zd_node_host;
+        const host = config.zd_url;
 
         const id = zdTicket.id;
         const subject = zdTicket.subject;
@@ -77,10 +77,14 @@ class AppImpl implements App {
             return newErrorCallResponseWithMessage(e.message);
         }
 
+        // create a reply to the original post noting the ticket was created
+        const config = await newConfigStore(this.context).getValues();
+        const host = config.zd_node_host;
+
         let request: any;
         let msg: string;
         let action: string;
-        const link = '[subscription](' + Env.ZD.Host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
+        const link = '[subscription](' + host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
         const subName = this.values[SubscriptionFields.SubTextName];
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
@@ -113,7 +117,7 @@ class AppImpl implements App {
     }
 
     createBotPost = async (message: string): Promise<void> => {
-        const adminClient = newMMClient(this.context).asAdmin();
+        const adminClient = newMMClient(this.context).asActingUser();
 
         // add bot to team and channel
         const botUserID = this.context.bot_user_id;
@@ -121,7 +125,7 @@ class AppImpl implements App {
         await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
 
         const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id);
-        await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to team');
+        await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to channel');
 
         const botClient = newMMClient(this.context).asBot();
 

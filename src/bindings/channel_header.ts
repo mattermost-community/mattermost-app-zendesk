@@ -2,6 +2,7 @@ import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {ZDIcon, Routes, newChannelHeaderBindings} from '../utils';
+import {CommandLocations} from '../utils/constants';
 
 // getChannelHeaderBindings returns the users command bindings
 export const getChannelHeaderBindings = (configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
@@ -13,10 +14,6 @@ export const getChannelHeaderBindings = (configured: boolean, connected: boolean
         return newChannelHeaderBindings(bindings);
     }
 
-    if (sysadmin) {
-        bindings.push(channelHeaderConfig());
-    }
-
     if (connected) {
         bindings.push(channelHeaderSubscribe());
     }
@@ -25,12 +22,12 @@ export const getChannelHeaderBindings = (configured: boolean, connected: boolean
 
 const channelHeaderSubscribe = (): AppBinding => {
     return {
-        app_id: 'zendesk',
+        location: CommandLocations.Subscribe,
         label: 'Create Zendesk Subscription',
         description: 'Open Create Zendesk Subscription Modal',
         icon: ZDIcon,
         call: {
-            path: Routes.App.BindingPathOpenSubscriptionsForm,
+            path: Routes.App.CallPathSubsOpenForm,
             expand: {
                 acting_user: AppExpandLevels.EXPAND_ALL,
             },
@@ -40,12 +37,12 @@ const channelHeaderSubscribe = (): AppBinding => {
 
 const channelHeaderConfig = (): AppBinding => {
     return {
-        app_id: 'zendesk',
+        location: CommandLocations.Configure,
         label: 'Configure Zendesk',
         description: 'Open Create Zendesk Config Modal',
         icon: ZDIcon,
         call: {
-            path: Routes.App.BindingPathOpenZendeskConfigForm,
+            path: Routes.App.CallPathConfigOpenForm,
             expand: {
                 acting_user: AppExpandLevels.EXPAND_ALL,
             },

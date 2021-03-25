@@ -1,7 +1,7 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {AppID, ZDIcon, Routes} from '../utils/constants';
+import {ZDIcon, Routes, CommandLocations} from '../utils/constants';
 import {newPostMenuBindings} from '../utils';
 
 // getPostMenuBindings returns the users post menu bindings
@@ -22,15 +22,15 @@ export const getPostMenuBindings = (configured: boolean, connected: boolean, sys
 
 const openCreateTicketForm = (): AppBinding => {
     return {
-        app_id: AppID,
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
         icon: ZDIcon,
-        location: 'open_ticket',
+        location: CommandLocations.Ticket,
         call: {
-            path: Routes.App.BindingPathOpenCreateTicketForm,
+            path: Routes.App.CallPathTicketOpenForm,
             expand: {
                 post: AppExpandLevels.EXPAND_ALL,
+                acting_user_access_token: AppExpandLevels.EXPAND_ALL,
             },
         },
     } as AppBinding;
@@ -38,13 +38,12 @@ const openCreateTicketForm = (): AppBinding => {
 
 const openSubscriptionsForm = (): AppBinding => {
     return {
-        app_id: AppID,
         label: 'Zendesk Subscriptions',
         description: 'Subscribe channel to Zendesk notifications',
         icon: ZDIcon,
-        location: 'open_subscription',
+        location: CommandLocations.Subscribe,
         call: {
-            path: Routes.App.BindingPathOpenSubscriptionsForm,
+            path: Routes.App.CallPathSubsOpenForm,
             expand: {
                 acting_user: AppExpandLevels.EXPAND_ALL,
             },

@@ -25,7 +25,7 @@ export async function newSubscriptionsForm(call: AppCall): Promise<AppForm> {
         submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
         call: {
-            path: Routes.App.CallPathSubmitOrUpdateSubscriptionForm,
+            path: Routes.App.CallPathSubsSubmitOrUpdateForm,
         },
     };
     return form;
@@ -109,13 +109,13 @@ class FormFields extends BaseFormFields {
     // addChannelPickerField adds a channel picker field when more than one
     // channel in the current team has a subscription
     addChannelPickerField(): void {
+        // only show channel picker if have subs in multiple channels
         if (this.getTeamChannelsWithSubs().length <= 1) {
             return;
         }
 
         const options = makeChannelOptions(this.getTeamChannelsWithSubs());
         const currentChannelOption = options.filter(this.getDefaultChannelOption());
-
         const f: AppField = {
             name: SubscriptionFields.ChannelPickerSelectName,
             type: AppFieldTypes.STATIC_SELECT,

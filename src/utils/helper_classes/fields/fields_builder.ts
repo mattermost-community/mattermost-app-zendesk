@@ -33,8 +33,8 @@ class FieldsBuilderImpl implements FieldsBuilder {
     // getSavedValue returns the defined AppCall value for a field or an empty string.
     // This value can be either a single value or an object in the case of a select field
     getSavedValue(fieldName: string): string {
-        if (this.values && this.values.values[fieldName]) {
-            return this.values.values[fieldName];
+        if (this.values && this.values[fieldName]) {
+            return this.values[fieldName];
         }
         return '';
     }
@@ -94,12 +94,12 @@ class FieldsBuilderImpl implements FieldsBuilder {
     // getFieldValueByName returns the defined AppCall value for a field or an empty string
     // In the case of a select field, it is the value field in the returned object.
     getFieldValueByName(fieldName: string): string {
-        if (this.values && this.values.values[fieldName]) {
+        if (this.values && this.values[fieldName]) {
             // this is select field return the value field in the object
-            if (this.values.values[fieldName].value) {
-                return this.values.values[fieldName].value;
+            if (this.values[fieldName].value) {
+                return this.values[fieldName].value;
             }
-            return this.values.values[fieldName];
+            return this.values[fieldName];
         }
         return '';
     }
@@ -107,12 +107,12 @@ class FieldsBuilderImpl implements FieldsBuilder {
     // getFieldLabelByName returns the defined AppCall label for a field or an empty string
     // In the case of a select field, it is the label field in the returned object.
     getFieldLabelByName(fieldName: string): string {
-        if (this.values && this.values.values[fieldName]) {
+        if (this.values && this.values[fieldName]) {
             // this is select field return the value field in the object
-            if (this.values.values[fieldName].label) {
-                return this.values.values[fieldName].label;
+            if (this.values[fieldName].label) {
+                return this.values[fieldName].label;
             }
-            return this.values.values[fieldName];
+            return this.values[fieldName];
         }
         return '';
     }

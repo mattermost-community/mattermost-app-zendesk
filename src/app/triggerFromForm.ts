@@ -1,6 +1,6 @@
 import {Tickets} from 'node-zendesk';
 
-import {AppContext, AppFormValues, AppCall, AppForm} from 'mattermost-redux/types/apps';
+import {AppContext, AppFormValues, AppCall} from 'mattermost-redux/types/apps';
 
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
@@ -49,7 +49,13 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
 
     // getJSONDataFields constructs the object text string for a trigger
     getJSONDataFields(): string {
-        const channelID = this.values[SubscriptionFields.ChannelPickerSelectName].value;
+        // default to the viewing channel_id
+        let channelID = this.context.channel_id;
+
+        // if channel picker exists, use its channel ID value
+        if (this.values[SubscriptionFields.ChannelPickerSelectName] && this.values[SubscriptionFields.ChannelPickerSelectName].value) {
+            channelID = this.values[SubscriptionFields.ChannelPickerSelectName].value;
+        }
         const pairs = TriggerFields.ActionValuePairs;
         pairs[TriggerFields.ChannelIDKey] = channelID;
         return JSON.stringify(pairs);

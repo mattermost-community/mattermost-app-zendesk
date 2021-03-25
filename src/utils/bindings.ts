@@ -1,6 +1,8 @@
 import {AppBindingLocations} from 'mattermost-redux/constants/apps';
 import {AppBinding} from 'mattermost-redux/types/apps';
 
+import {ZDIcon} from '../utils';
+
 // Bindings base class stores user info for subclasses
 export class Bindings {
     configured: boolean
@@ -44,15 +46,22 @@ export function newPostMenuBindings(bindings: AppBinding[]): AppBinding {
         location: AppBindingLocations.POST_MENU_ITEM,
         bindings,
     };
-    return binding || {};
+    return binding;
 }
 
 export function newCommandBindings(bindings: AppBinding[]): AppBinding {
     const binding = {
         location: AppBindingLocations.COMMAND,
-        bindings,
+        bindings: [
+            {
+                icon: ZDIcon,
+                description: '',
+                hint: '',
+                bindings,
+            },
+        ],
     };
-    return binding || {};
+    return binding;
 }
 
 export function newChannelHeaderBindings(bindings: AppBinding[]): AppBinding {
@@ -60,5 +69,5 @@ export function newChannelHeaderBindings(bindings: AppBinding[]): AppBinding {
         location: AppBindingLocations.CHANNEL_HEADER_ICON,
         bindings,
     };
-    return binding || {};
+    return binding;
 }
