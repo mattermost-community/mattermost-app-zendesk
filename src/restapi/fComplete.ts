@@ -1,11 +1,37 @@
 import {Request, Response} from 'express';
 
-import {AppContext} from 'mattermost-redux/types/apps';
+import {AppContext, AppCallResponse} from 'mattermost-redux/types/apps';
+
+import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
 import {getOAuthConfig} from '../app/oauth';
-import {parseOAuthState} from '../utils';
+import {Routes, parseOAuthState, createOAuthState, contextFromRequest} from '../utils';
 
-import {newTokenStore} from '../store';
+import {newConfigStore, newTokenStore} from '../store';
+
+export async function fRedirect(req: Request, res: Response): Promise<void> {
+    const context = contextFromRequest(req);
+    const state = createOAuthState(context);
+
+    const configStore = newConfigStore(context);
+    const config = await configStore.getValues();
+    const zdHost = config.zd_url;
+    const clientID = config.zd_client_id;
+
+    const url = zdHost + Routes.ZD.OAuthAuthorizationURI;
+    const urlWithParams = new URL(url);
+    urlWithParams.searchParams.append('response_type', 'code');
+    urlWithParams.searchParams.append('client_id', clientID);
+    urlWithParams.searchParams.append('state', state);
+    urlWithParams.searchParams.append('scope', 'read write');
+
+    const link = urlWithParams.href;
+    const callResponse: AppCallResponse = {
+        type: AppCallResponseTypes.OK,
+        data: link,
+    };
+    res.json(callResponse);
+}
 
 // fComplete is the endpoint called by zendesk after a user approves oauth
 export async function fComplete(req: Request, res: Response): Promise<void> {

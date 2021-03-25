@@ -2,26 +2,12 @@ import {Request, Response} from 'express';
 
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
-import {newConfigStore} from '../store';
-
-import {Routes, createOAuthState, contextFromRequest} from '../utils';
+import {contextFromRequest} from '../utils';
 
 export async function fConnect(req: Request, res: Response): Promise<void> {
     const context = contextFromRequest(req);
-    const state = createOAuthState(context);
-
-    const configStore = newConfigStore(context);
-    const config = await configStore.getValues();
-    const zdHost = config.zd_url;
-    const clientID = config.zd_client_id;
-
-    const url = zdHost + Routes.ZD.OAuthAuthorizationURI;
-    const urlWithParams = new URL(url);
-    urlWithParams.searchParams.append('response_type', 'code');
-    urlWithParams.searchParams.append('client_id', clientID);
-    urlWithParams.searchParams.append('state', state);
-    urlWithParams.searchParams.append('scope', 'read write');
-
-    const link = urlWithParams.href;
+    let link = context.mattermost_site_url;
+    link += context.app_path;
+    link += '/oauth2/remote/redirect';
     res.json(newOKCallResponseWithMarkdown(`Follow this link to connect: [link](${link})`));
 }

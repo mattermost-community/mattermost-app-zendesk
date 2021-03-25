@@ -11,31 +11,45 @@ mm-plugin-apps: `master` @831d203
 
 ### Zendesk and Mattermost Users (System Admin privileges required)
 
-1. Clone this repo
-1. Create Zendesk Oauth Client for Mattermost (in Zendesk)
-    1. `Zendesk` > `Admin` > `API` > `OAuth Clients`
-    1. `Add OAuth Client`
-        1. `Client Name`: (Example `Mattermost Zendesk App`)
-        1. `Description`: `Connect your Zendesk account to Mattermost`
-        1. `Redirect URLs`: `https://<your-zendesk-app-host>/oauth/complete`
-            1. Ex. `http://localhost:4000` - Development
-            1. Ex. `https://mytest.ngrok.io` - Exposed for development
-        1. `Save`
-1. Install the app (In Mattermost)
-    1. `/apps install --url http://<your-zendesk-app-host>/manifest.json --app-secret thisisthesecret`  
-1. Configure Zendesk Client in Mattermost
-    1. `/zendesk configure` to open the configuration modal
-    1. Save values from Oauth Client form to the fields in the configuration modal
-        1. `Zendesk URL` - set to your zendesk account host
-        1. `Zendesk Client ID` - set to the `Unique identifier` field value
-        1. `Zendesk Client Secret` - set as the `Secret` field value
-            1. Ex. `https://<subdomain>.zendesk.com`
-        1. `ZD_NODE_HOST` - set to the path of your zendesk app host
-            1. Ex. `https://testing.ngrok.io`
-1. [Setup Zendesk Target](#Setup Zendesk Target)
-1. Start the node server
-    1. `make watch` - (to monitor typescript errors and watch changing files errors)
-    1. `make run` - (in a separate shell) start the node server
+##### 1. Create Zendesk Oauth Client for Mattermost (in Zendesk)
+
+1. `Zendesk` > `Admin` > `API` > `OAuth Clients`
+1. `Add OAuth Client`
+    1. `Client Name`: (Example `Mattermost Zendesk App`)
+    1. `Description`: `Connect your Zendesk account to Mattermost`
+    1. `Redirect URLs`: `https://<your-zendesk-app-host>/oauth2/complete`
+        1. Ex. `http://localhost:4000` - Development
+        1. Ex. `https://mytest.ngrok.io` - Exposed for development
+    1. `Save`
+
+##### 2. [Setup Zendesk Target](#Setup-Zendesk-Target)
+
+##### 3. Install the app (In Mattermost)
+
+1. `/apps install --url http://<your-zendesk-app-host>/manifest.json --app-secret thisisthesecret`  
+
+##### 4. Configure Zendesk Client in Mattermost
+
+1. `/zendesk configure` to open the configuration modal
+1. Save values from Oauth Client form to the fields in the configuration modal
+    1. `Zendesk URL` - set to your zendesk account host
+    1. `Zendesk Client ID` - set to the `Unique identifier` field value
+    1. `Zendesk Client Secret` - set as the `Secret` field value
+        1. Ex. `https://<subdomain>.zendesk.com`
+1. `Zendesk Target ID` - set to the ID value of the target configured in [Setup Zendesk Target](#Setup-Zendesk-Target)
+    1. To get the targetID value:  
+        1. Sign into your zendesk instance in a browser
+        1. Visit the following webpage (`https://<your-zendesk-app-host>/api/v2/targets`)
+        1. In the returned JSON object, find the target object with the title used in [Setup Zendesk Target](#Setup-Zendesk-Target)
+        1. Within that object, the Target ID is the numerical field value for `id` (Example: `360002430532`).  
+        1. The TargetID is also listed at the end of the url field path in the (Example: `360002430532`.json)
+1. `ZD_NODE_HOST` - set to the path of your zendesk app host
+    1. Ex. `https://testing.ngrok.io`
+
+##### 5. Start the node server
+
+1. `make watch` - (to monitor typescript errors and watch changing files errors)
+1. `make run` - (in a separate shell) start the node server
 
 ### Zendesk and Mattermost Users (All users)
 
@@ -91,13 +105,13 @@ We need to create the Zendesk HTTP target which will send webhook trigger notifi
 1. Select `HTTP` Target
 1. Fill in the following:
     1. **Title:** Mattermost target for incoming webhooks
-    1. **Url:** `<node_host_url>/webhook-incoming>`
+    1. **Url:** `<mattermost_site_url>/plugins/com.mattermost.apps/api/v1/webhook/zendesk/webhook-target?secret=<your-webhook-secret>`
     1. **Method:** POST
     1. **Content Type:** JSON
 1. Test that the target is valid
     1. Select `Test target` in the pulldown
     1. Click `Submit` button
-    1. Leave JSON body in the floating window empty
+    1. Enter `{}` in the JSON body in the floating window
     1. Click `Submit` button in floating window
     1. Verify `HTTP/1.1 200 OK` response is shown in the resulting window
 1. Save the valid target

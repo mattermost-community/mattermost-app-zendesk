@@ -4,7 +4,7 @@ import {Routes} from '../utils';
 
 import {fBindings} from './fBindings';
 import {fConnect} from './fConnect';
-import {fComplete} from './fComplete';
+import {fComplete, fRedirect} from './fComplete';
 import {fOpenCreateTicketForm, fSubmitOrUpdateCreateTicketForm, fSubmitOrUpdateCreateTicketSubmit} from './fCreateTicket';
 import {fOpenSubscriptionsForm, fSubmitOrUpdateSubscriptionsForm, fSubmitOrUpdateSubscriptionsSubmit} from './fSubscriptions';
 import {fOpenZendeskConfigForm, fSubmitOrUpdateZendeskConfigForm, fSubmitOrUpdateZendeskConfigSubmit} from './fConfig';
@@ -18,7 +18,10 @@ const router = express.Router();
 
 router.get(Routes.App.ManifestPath, fManifest);
 router.post(Routes.App.BindingsPath, fBindings);
+
+router.post(Routes.App.OAuthRedirectPath, fRedirect);
 router.get(Routes.App.OAuthCompletePath, fComplete);
+
 router.post(Routes.App.InstallPath, fInstall);
 
 // formless calls

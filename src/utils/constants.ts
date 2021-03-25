@@ -24,8 +24,9 @@ const AppPaths = {
     ManifestPath: '/manifest.json',
     InstallPath: '/install',
 
-    OAuthCompletePath: '/oauth/complete',
-    SubscribeIncomingWebhookPath: '/webhook-incoming',
+    OAuthCompletePath: '/oauth2/complete',
+    OAuthRedirectPath: '/oauth2/redirect',
+    SubscribeIncomingWebhookPath: '/webhook-target',
 
     // Binding routes are accessed via a location call
     BindingsPath: '/bindings',
@@ -150,10 +151,6 @@ export const TriggerFields = {
     ChannelIDKey: 'channelID',
     ActionField: 'notification_target',
     ActionValuePairs: {},
-
-    // TODO this is the target id value. Need to store this value when creating the
-    // target through the app, or when the user has to create target in zendesk
-    TargetID: 360002371891,
 };
 
 // ActionValuePairs is an object of static key value pairs that will be added to a

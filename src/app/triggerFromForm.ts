@@ -11,11 +11,13 @@ interface TriggerFromFrom {
 export class TriggerFromFormImpl implements TriggerFromFrom {
     values: AppFormValues;
     context: AppContext;
+    targetID: string;
     trigger: any
 
-    constructor(call: AppCall) {
+    constructor(call: AppCall, targetID: strinb) {
         this.values = call.values as AppFormValues;
         this.context = call.context;
+        this.targetID = targetID;
         this.trigger = {};
     }
 
@@ -39,7 +41,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
             {
                 field: TriggerFields.ActionField,
                 value: [
-                    TriggerFields.TargetID,
+                    this.targetID,
                     this.getJSONDataFields(),
                 ],
             },
@@ -111,8 +113,8 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(call: AppCall): any {
-    const trigger = new TriggerFromFormImpl(call).getTrigger();
+export function newTriggerFromForm(call: AppCall, targetID: string): any {
+    const trigger = new TriggerFromFormImpl(call, targetID).getTrigger();
     return trigger;
 }
 

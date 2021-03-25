@@ -41,6 +41,7 @@ class FormFields extends BaseFormFields {
             zd_client_id: '',
             zd_client_secret: '',
             zd_node_host: '',
+            zd_target_id: '',
         };
     }
 
@@ -56,6 +57,7 @@ class FormFields extends BaseFormFields {
         this.addZDUrlField();
         this.addZDClientIDField();
         this.addZDClientSecretField();
+        this.addZDTargetIDField();
         this.addZDNodeHost();
     }
 
@@ -90,6 +92,17 @@ class FormFields extends BaseFormFields {
             label: 'Zendesk Client Secret',
             value: this.storeValues.zd_client_secret,
             description: 'Client Secret obtained when setting up Oauth client in zendesk',
+            is_required: true,
+        };
+        this.builder.addField(f);
+    }
+    addZDTargetIDField(): void {
+        const f: AppField = {
+            type: AppFieldTypes.TEXT,
+            name: 'zd_target_id',
+            label: 'Zendesk Target ID',
+            value: this.storeValues.zd_target_id,
+            description: 'Target ID needed for setting up subscriptions',
             is_required: true,
         };
         this.builder.addField(f);

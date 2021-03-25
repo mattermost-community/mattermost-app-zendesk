@@ -69,18 +69,22 @@ class AppImpl implements App {
         // get zendesk client for user
         const zdClient = await newZDClient(this.context);
 
+        const config = await newConfigStore(this.context).getValues();
+        const host = config.zd_url;
+        const targetID = config.zd_target_id;
+        if (targetID === '') {
+            return newErrorCallResponseWithMessage('failed to create subscription. TargetID is missing from the configuration data.');
+        }
+
         // create the trigger object from the form response
         let zdTriggerPayload: any;
         try {
-            zdTriggerPayload = newTriggerFromForm(this.call);
+            zdTriggerPayload = newTriggerFromForm(this.call, targetID);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }
 
         // create a reply to the original post noting the ticket was created
-        const config = await newConfigStore(this.context).getValues();
-        const host = config.zd_node_host;
-
         let request: any;
         let msg: string;
         let action: string;
@@ -89,17 +93,17 @@ class AppImpl implements App {
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
             request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
-            msg = 'Successfuly deleted subscription';
+            msg = 'Successfully deleted subscription';
             action = 'delete';
             break;
         case Boolean(zdTriggerPayload.trigger.id):
             request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
-            msg = `Successfuly updated ${link}`;
+            msg = `Successfully updated ${link}`;
             action = 'update';
             break;
         default:
             request = zdClient.triggers.create(zdTriggerPayload);
-            msg = `Successfuly created ${link}`;
+            msg = `Successfully created ${link}`;
             action = 'create';
         }
 

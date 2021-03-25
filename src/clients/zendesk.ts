@@ -45,8 +45,10 @@ export interface ZDClient {
 }
 
 export const newZDClient = async (context: AppContext): Promise<ZDClient> => {
-    // get active mattermost user ID
-    const mmUserID = context.acting_user_id || '';
+    const mmUserID = context.acting_user_id;
+    if (mmUserID === '') {
+        throw new Error('Failed to get user acting_user_id');
+    }
     const tokenStore = newTokenStore(context);
     const token = await tokenStore.getToken(mmUserID);
     if (!token) {
