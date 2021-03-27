@@ -65,7 +65,7 @@ class FormFields extends BaseFormFields {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
             name: 'zd_url',
-            label: 'Zendesk URL',
+            label: 'URL',
             value: this.storeValues.zd_url,
             hint: 'Ex. https://yourhost.zendesk.com',
             description: 'Base URL of the zendesk account',
@@ -78,7 +78,7 @@ class FormFields extends BaseFormFields {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
             name: 'zd_client_id',
-            label: 'Zendesk Client ID',
+            label: 'Client ID',
             value: this.storeValues.zd_client_id,
             description: 'Client ID obtained when setting up Oauth client in zendesk',
             is_required: true,
@@ -89,7 +89,7 @@ class FormFields extends BaseFormFields {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
             name: 'zd_client_secret',
-            label: 'Zendesk Client Secret',
+            label: 'Client Secret',
             value: this.storeValues.zd_client_secret,
             description: 'Client Secret obtained when setting up Oauth client in zendesk',
             is_required: true,
@@ -100,7 +100,7 @@ class FormFields extends BaseFormFields {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
             name: 'zd_target_id',
-            label: 'Zendesk Target ID',
+            label: 'Target ID',
             value: this.storeValues.zd_target_id,
             description: 'Target ID needed for setting up subscriptions',
             is_required: true,
@@ -113,7 +113,7 @@ class FormFields extends BaseFormFields {
             type: AppFieldTypes.TEXT,
             name: 'zd_node_host',
             hint: 'Ex. https://yourhost.ngrok.io',
-            label: 'Zendesk Node Host',
+            label: 'Node Host',
             value: this.storeValues.zd_node_host,
             description: 'Only needed for development',
         };
