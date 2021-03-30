@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {AppCallResponse, AppCall} from 'mattermost-redux/types/apps';
+import {AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {newConfigStore, AppConfigStore} from '../store/config';
 import {newZendeskConfigForm} from '../forms';
@@ -19,7 +19,7 @@ export async function fSubmitOrUpdateZendeskConfigForm(req: Request, res: Respon
 }
 
 export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Response): Promise<void> {
-    const call: AppCall = req.body;
+    const call: AppCallRequest = req.body;
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {

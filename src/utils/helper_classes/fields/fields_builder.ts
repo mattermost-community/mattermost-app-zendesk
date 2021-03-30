@@ -1,4 +1,4 @@
-import {AppCall, AppField, AppCallValues} from 'mattermost-redux/types/apps';
+import {AppCall, AppField, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 export interface FieldsBuilder {
@@ -12,7 +12,7 @@ export interface FieldsBuilder {
     setDefaultMinLength(value: number): void;
 }
 
-export function newFieldsBuilder(call: AppCall): FieldsBuilder {
+export function newFieldsBuilder(call: AppCallRequest): FieldsBuilder {
     return new FieldsBuilderImpl(call);
 }
 
@@ -23,7 +23,7 @@ class FieldsBuilderImpl implements FieldsBuilder {
     private appFields: AppField[];
     private defaultMaxLength: number;
     private defaultMinLength: number;
-    constructor(call: AppCall) {
+    constructor(call: AppCallRequest) {
         this.values = call.values;
         this.appFields = [];
         this.defaultMaxLength = 1024;

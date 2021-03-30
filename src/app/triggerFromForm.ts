@@ -1,6 +1,6 @@
 import {Tickets} from 'node-zendesk';
 
-import {AppContext, AppFormValues, AppCall} from 'mattermost-redux/types/apps';
+import {AppContext, AppFormValues, AppCall, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
@@ -111,7 +111,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(call: AppCall): any {
+export function newTriggerFromForm(call: AppCallRequest): any {
     const trigger = new TriggerFromFormImpl(call).getTrigger();
     return trigger;
 }

@@ -1,5 +1,5 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {AppCall, AppContext, AppCallValues, AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCall, AppContext, AppCallValues, AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {SubscriptionFields} from '../utils/constants';
 
@@ -28,7 +28,7 @@ class AppImpl implements App {
     context: AppContext
     values: AppCallValues
 
-    constructor(call: AppCall) {
+    constructor(call: AppCallRequest) {
         this.call = call;
         this.context = call.context;
         this.values = call.values;
@@ -145,6 +145,6 @@ class AppImpl implements App {
     }
 }
 
-export function newApp(call: AppCall): App {
+export function newApp(call: AppCallRequest): App {
     return new AppImpl(call);
 }

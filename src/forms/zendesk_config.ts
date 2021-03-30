@@ -1,4 +1,4 @@
-import {AppCall, AppField, AppForm} from 'mattermost-redux/types/apps';
+import {AppCall, AppField, AppForm, AppCallRequest} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
@@ -10,7 +10,7 @@ import {BaseFormFields} from '../utils/base_form_fields';
 import {newConfigStore, ConfigStore, AppConfigStore} from '../store/config';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
-export async function newZendeskConfigForm(call: AppCall): Promise<AppForm> {
+export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
     const mmClient = newMMClient(call.context).asAdmin();
     const configStore = newConfigStore(call.context);
     const formFields = new FormFields(call, configStore, '', mmClient);
@@ -33,7 +33,7 @@ class FormFields extends BaseFormFields {
     configStore: ConfigStore
     storeValues: AppConfigStore
 
-    constructor(call: AppCall, configStore: ConfigStore, zdClient: ZDClient, mmClient: Client4) {
+    constructor(call: AppCallRequest, configStore: ConfigStore, zdClient: ZDClient, mmClient: Client4) {
         super(call, zdClient, mmClient);
         this.configStore = configStore;
         this.storeValues = {

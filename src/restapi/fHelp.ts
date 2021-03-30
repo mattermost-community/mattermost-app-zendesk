@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import {AppCall} from 'mattermost-redux/types/apps';
+import {AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {AppID} from '../utils/constants';
@@ -20,7 +20,7 @@ function getHeader(): string {
     return h4(`Zendesk [(GitHub Link)](${homepageURL})`);
 }
 
-function getCommands(call: AppCall): string {
+function getCommands(call: AppCallRequest): string {
     const context = call.context;
     let text = getUserCommands();
     if (isUserSysadmin(context)) {
