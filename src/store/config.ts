@@ -10,6 +10,7 @@ export type AppConfigStore = {
     zd_client_secret: string;
     zd_node_host: string;
     zd_target_id: string;
+    zd_connected_mm_user_id: string;
 }
 
 export interface ConfigStore {
@@ -39,6 +40,7 @@ class ConfigStoreImpl implements ConfigStore {
             this.storeData.zd_client_secret = config.zd_client_secret || '';
             this.storeData.zd_node_host = config.zd_node_host || '';
             this.storeData.zd_target_id = config.zd_target_id || '';
+            this.storeData.zd_connected_mm_user_id = config.zd_connected_mm_user_id || '';
         }
         return this.storeData;
     }

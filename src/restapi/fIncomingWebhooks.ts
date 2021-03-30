@@ -14,29 +14,23 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const values = req.body.values.payload;
     const context = contextFromRequest(req);
 
-    console.log('context', context);
-    console.log('values', values);
-
     const ticketID = values[TriggerFields.TicketIDKey];
     const channelID = values[TriggerFields.ChannelIDKey];
 
-    console.log('ticketID', ticketID);
-    console.log('channelID', channelID);
+    const config = await newConfigStore(context).getValues();
+    const zdHost = config.zd_node_host;
 
     // TODO: we need zendesk bot admin so that admin requests can be made by the
-    // bot and not from an actiing user
-    const fakeBotContext: AppContext = {
-        acting_user_id: 'rgixs6uimp88tq8x8w3yxu3oqe',
-    };
-    const zdClient = await newZDClient(fakeBotContext);
-    console.log('2. IN HERE!');
+    const connectedUser = config.zd_connected_mm_user_id;
+    if (connectedUser === '') {
+        throw new Error('Failed to get zd_connected_mm_user_id');
+    }
+    context.acting_user_id = connectedUser;
+    const zdClient = await newZDClient(context);
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);
     const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
-
-    const config = await newConfigStore(context).getValues();
-    const zdHost = config.zd_node_host;
 
     const message: string = getNotificationMessage(zdHost, ticketID, auditEvent);
 

@@ -58,6 +58,7 @@ class FormFields extends BaseFormFields {
         this.addZDClientIDField();
         this.addZDClientSecretField();
         this.addZDTargetIDField();
+        this.addZDConnectedUserIDField();
         this.addZDNodeHost();
     }
 
@@ -104,6 +105,17 @@ class FormFields extends BaseFormFields {
             value: this.storeValues.zd_target_id,
             description: 'Target ID needed for setting up subscriptions',
             is_required: true,
+        };
+        this.builder.addField(f);
+    }
+
+    addZDConnectedUserIDField(): void {
+        const f: AppField = {
+            type: AppFieldTypes.TEXT,
+            name: 'zd_connected_mm_user_id',
+            label: 'Zendesk connected Mattermost User ID',
+            value: this.storeValues.zd_connected_mm_user_id,
+            description: 'Mattermost UserID of an account with agent Zendesk access ',
         };
         this.builder.addField(f);
     }
