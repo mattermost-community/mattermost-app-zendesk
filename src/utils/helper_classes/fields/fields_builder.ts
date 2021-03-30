@@ -24,7 +24,7 @@ class FieldsBuilderImpl implements FieldsBuilder {
     private defaultMaxLength: number;
     private defaultMinLength: number;
     constructor(call: AppCallRequest) {
-        this.values = call.values;
+        this.values = call.values as AppCallValues;
         this.appFields = [];
         this.defaultMaxLength = 1024;
         this.defaultMinLength = 2;

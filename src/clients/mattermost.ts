@@ -33,20 +33,20 @@ class MMClientImpl implements MMClient {
 
     asBot(): Client {
         return this.as(
-            this.context.bot_access_token,
+            this.context.bot_access_token || '',
         );
     }
 
     // TODO: admin vs bot?
     asAdmin(): Client {
         return this.as(
-            this.context.bot_access_token,
+            this.context.bot_access_token || '',
         );
     }
 
     asActingUser(): Client {
         return this.as(
-            this.context.acting_user_access_token,
+            this.context.acting_user_access_token || '',
         );
     }
 }

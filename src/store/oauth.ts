@@ -31,7 +31,7 @@ class TokenStoreImpl implements TokenStore {
 }
 
 export const newTokenStore = (context: AppContext): TokenStore => {
-    const botAccessToken = context.bot_access_token;
+    const botAccessToken = context.bot_access_token as string;
     const baseURL = baseUrlFromContext(context);
     return new TokenStoreImpl(botAccessToken, baseURL);
 };

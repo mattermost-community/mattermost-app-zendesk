@@ -17,6 +17,7 @@ const omitFields = ['Group', 'Status'];
 
 // newCreateTicketForm returns a form response to create a ticket from a post
 export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm> {
+    console.log('call', call);
     const zdClient = await newZDClient(call.context);
     const mmClient = newMMClient(call.context).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient);
