@@ -97,9 +97,9 @@ From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/suppor
 
 > Targets are pointers to cloud-based applications and services such as Twitter and Twilio, as well as to HTTP and email addresses. You can use targets with triggers and automations to send a notification to the target when a ticket is created or updated.
 
-We need to create the Zendesk HTTP target which will send webhook trigger notifications to the Zendesk app.  Each Zendesk trigger event will send a notficication to this target. We only need one target per Mattermost instance.
+We need to create the Zendesk HTTP target which will send webhook trigger notifications to the Zendesk app.  Each Zendesk trigger event will send a notification to this target. We only need one target per Mattermost instance.
 
-1. Click the Admin icon (sprocket) in the left sidebar
+1. Click the Admin icon (gear) in the left sidebar
 1. `Settings` > `Extensions`
 1. `Targets tab` > `Add Target`
 1. Select `HTTP` Target
