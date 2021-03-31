@@ -113,21 +113,7 @@ To provision this PR to AWS run `make dist` to generate the App bundle and then 
 
 ## FAQ
 
-### 1. `npm start` fails with warning about rudder in mattermost-redux
-
-```sh
-.../mattermost-app-zendesk/node_modules/rudder-sdk-js/index.js:8733
-        var domain = ".".concat(lib(window.location.href));
-```
-
-- open `node_modules/mattermost-redux/client/rudder.js`
-- comment out the following lines:
-
-```javascript
-var rudderAnalytics = tslib_1.__importStar(require("rudder-sdk-js"));
-exports.rudderAnalytics = rudderAnalytics;
-```
-### 2. Log message received and binding locations do not show
+### 1. Log message received and binding locations do not show
 
 `The system admin has turned off OAuth2 Service Provider.`
 
@@ -139,7 +125,7 @@ Through system console -> enable oauth2 service provider
 "EnableOAuthServiceProvider": true,
 ```
 
-### 3. Need a branched version of the node-zendesk client so that we can query
+### 2. Need a branched version of the node-zendesk client so that we can query
 webhooks by title
 
 In `node_modules/node-zendesk/lib/client/triggers.js` add the following lines
