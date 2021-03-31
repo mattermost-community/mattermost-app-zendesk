@@ -8,7 +8,7 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 
 import {Routes, ZDIcon} from '../utils';
-import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption} from '../utils/utils';
+import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption, ZDFieldOption} from '../utils/utils';
 import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields} from '../utils/constants';
 
 import {BaseFormFields} from '../utils/base_form_fields';
@@ -122,6 +122,7 @@ class FormFields extends BaseFormFields {
             const isRequired = Boolean(field.required_in_portal);
 
             const f: AppField = {
+                type: '',
                 name,
                 label,
                 is_required: isRequired,
@@ -157,7 +158,7 @@ class FormFields extends BaseFormFields {
             case ZDFieldTypes.Muliselect: {
                 f.type = AppFieldTypes.STATIC_SELECT;
                 const options = this.isSystemField(field) ? field.system_field_options : field.custom_field_options;
-                f.options = makeOptions(options);
+                f.options = makeOptions(options as ZDFieldOption[]);
 
                 f.multiselect = false;
                 if (field.type === ZDFieldTypes.Muliselect) {

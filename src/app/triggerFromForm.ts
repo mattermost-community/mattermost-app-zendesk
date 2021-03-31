@@ -1,6 +1,6 @@
 import {Tickets} from 'node-zendesk';
 
-import {AppContext, AppFormValues, AppCall, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppContext, AppFormValues, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition} from '../utils/ZDTypes';
 
@@ -11,14 +11,14 @@ interface TriggerFromFrom {
 }
 
 export class TriggerFromFormImpl implements TriggerFromFrom {
-    values: AppFormValues;
+    values: AppCallValues;
     context: AppContext;
-    trigger: any
+    trigger: ZDTrigger
 
     constructor(call: AppCallRequest) {
-        this.values = call.values as AppFormValues;
+        this.values = call.values as AppCallValues;
         this.context = call.context;
-        this.trigger = {};
+        this.trigger = {} as ZDTrigger;
     }
 
     getTrigger(): any {
