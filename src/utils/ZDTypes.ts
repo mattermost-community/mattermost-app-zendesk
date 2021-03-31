@@ -18,4 +18,3 @@ export type ZDTrigger = {
     conditions: ZDTriggerConditions
 }
 
-export type ZDTeamTriggers = Record<string, ZDTrigger[]>
