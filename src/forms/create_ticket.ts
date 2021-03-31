@@ -40,7 +40,7 @@ class FormFields extends BaseFormFields {
     postMessage: string
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4) {
         super(call, zdClient, mmClient);
-        this.postMessage = call.context.post.message;
+        this.postMessage = call?.context?.post?.message as string;
         this.zdTicketForms = [];
     }
 
@@ -99,7 +99,7 @@ class FormFields extends BaseFormFields {
 
     // getViewableFields returns a list of viewable Zendesk field IDs
     private getViewableFields(ticketFields: Users.Fields.UserField[], formIDs: number[]): Tickets.Field[] {
-        const fields = [];
+        const fields: Users.Fields.UserField[] = [];
         ticketFields.forEach((field: Users.Fields.UserField) => {
             // omit fields that do not show up in the create ticket modal in Zendesk
             // but are returned in the ticketFields query

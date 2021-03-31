@@ -9,7 +9,7 @@ import {FieldsBuilder, newFieldsBuilder} from './helper_classes/fields/fields_bu
 export class BaseFormFields {
     call: AppCallRequest;
     builder: FieldsBuilder;
-    zdClient: ZDClient;
+    zdClient?: ZDClient;
     mmClient: Client4;
 
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4) {

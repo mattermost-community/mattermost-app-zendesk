@@ -55,6 +55,7 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
 // access to the PluginKVStore and retrieves the token and url from state
 function createContextFromState(botToken: string, url: string): AppContext {
     const context: AppContext = {
+        app_id: '',
         bot_access_token: botToken,
         mattermost_site_url: url,
     };

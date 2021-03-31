@@ -13,7 +13,7 @@ import {newConfigStore, ConfigStore, AppConfigStore} from '../store/config';
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
     const mmClient = newMMClient(call.context).asAdmin();
     const configStore = newConfigStore(call.context);
-    const formFields = new FormFields(call, configStore, '', mmClient);
+    const formFields = new FormFields(call, configStore, mmClient);
     const fields = await formFields.getConfigFields();
 
     const form: AppForm = {
@@ -33,8 +33,8 @@ class FormFields extends BaseFormFields {
     configStore: ConfigStore
     storeValues: AppConfigStore
 
-    constructor(call: AppCallRequest, configStore: ConfigStore, zdClient: ZDClient, mmClient: Client4) {
-        super(call, zdClient, mmClient);
+    constructor(call: AppCallRequest, configStore: ConfigStore, mmClient: Client4) {
+        super(call, {} as ZDClient, mmClient);
         this.configStore = configStore;
         this.storeValues = {
             zd_url: '',

@@ -7,7 +7,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {Routes, ZDIcon} from '../utils';
 import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
-import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition} from '../utils/ZDTypes';
+import {ZDTrigger, ZDTriggerCondition} from '../utils/ZDTypes';
 import {SubscriptionFields} from '../utils/constants';
 
 import {BaseFormFields} from '../utils/base_form_fields';
@@ -32,15 +32,11 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
     return form;
 }
 
-type conditionOption = {
-    field: string;
-    operator: string;
-    value: string;
-}
+type ZDTeamTriggers = Record<string, ZDTrigger[]>
 
 // FormFields retrieves viewable modal app fields
 class FormFields extends BaseFormFields {
-    teamTriggers: any
+    teamTriggers: ZDTeamTriggers
     teamChannelsWithSubs: Channel[]
 
     unsupportedFields: string[]
@@ -160,7 +156,7 @@ class FormFields extends BaseFormFields {
 
     // addSubCheckBoxes adds the available check box options for subscription
     addSubCheckBoxes(): void {
-        const checkboxes = [];
+        const checkboxes: AppField[] = [];
         for (const fieldName of SubscriptionFields.ConditionsCheckBoxFields) {
             const f: AppField = {
                 name: fieldName,
@@ -264,15 +260,15 @@ class FormFields extends BaseFormFields {
 
     // isZdFieldChecked returns a boolean representing if a value in the saved
     // Zendesk trigger is true or false
-    isZdFieldChecked(conditions: conditionOption[], name: string): boolean {
+    isZdFieldChecked(conditions: ZDTriggerCondition[], name: string): boolean {
         const condition = conditions.filter(this.byName(name));
         return condition.length === 1;
     }
 
     // byName is a map filter function to retrieve a given fieldName from an
     // array of conditions
-    byName(name: string): (option: conditionOption) => boolean {
-        return (option: conditionOption): boolean => {
+    byName(name: string): (option: ZDTriggerCondition) => boolean {
+        return (option: ZDTriggerCondition): boolean => {
             return option.field === name;
         };
     }

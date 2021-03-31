@@ -2,6 +2,8 @@ import {Tickets} from 'node-zendesk';
 
 import {AppContext, AppFormValues, AppCall, AppCallRequest} from 'mattermost-redux/types/apps';
 
+import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition} from '../utils/ZDTypes';
+
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
 interface TriggerFromFrom {
@@ -89,12 +91,12 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 
     addConditions(): void {
-        const conditions = {
+        const conditions: ZDTriggerConditions = {
             any: [],
         };
         for (const checkbox of SubscriptionFields.ConditionsCheckBoxFields) {
             if (this.values[checkbox]) {
-                const entry = {
+                const entry: ZDTriggerCondition = {
                     field: checkbox,
                     operator: 'changed',
                 };
