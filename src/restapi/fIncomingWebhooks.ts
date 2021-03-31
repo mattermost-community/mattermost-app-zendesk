@@ -33,13 +33,13 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
 
     const adminClient = newMMClient(context).asAdmin();
 
-    const post: Post = {
+    const post: Partial<Post> = {
         message,
         user_id: context.bot_user_id as string,
         channel_id: channelID,
     };
 
-    const createPostReq = adminClient.createPost(post);
+    const createPostReq = adminClient.createPost(post as Post);
     await tryPromiseWithMessage(createPostReq, 'Failed to create post');
 
     res.json({});
