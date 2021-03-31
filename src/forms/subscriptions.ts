@@ -7,6 +7,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {Routes, ZDIcon} from '../utils';
 import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
+import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition} from '../utils/ZDTypes';
 import {SubscriptionFields} from '../utils/constants';
 
 import {BaseFormFields} from '../utils/base_form_fields';
@@ -224,7 +225,7 @@ class FormFields extends BaseFormFields {
     }
 
     // getAnyConditions returns an array of Zendesk ANY trigger conditions
-    getAnyConditions(): any[] {
+    getAnyConditions(): ZDTriggerCondition[] {
         if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
             return this.getSelectedSubTrigger().conditions.any;
         }
@@ -232,7 +233,7 @@ class FormFields extends BaseFormFields {
     }
 
     // getAnyConditions returns an array of Zendesk ALL trigger conditions
-    getAllConditions(): any[] {
+    getAllConditions(): ZDTriggerCondition[] {
         if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
             return this.getSelectedSubTrigger().conditions.all;
         }
@@ -351,7 +352,7 @@ class FormFields extends BaseFormFields {
         return this.builder.getFieldValueByName(SubscriptionFields.ChannelPickerSelectName);
     }
 
-    getSelectedSubTrigger(): string {
+    getSelectedSubTrigger(): ZDTrigger {
         const subID = this.getSelectedSubTriggerID();
         return this.getSubTriggerByID(subID);
     }
