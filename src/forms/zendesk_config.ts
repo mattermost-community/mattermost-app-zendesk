@@ -41,6 +41,7 @@ class FormFields extends BaseFormFields {
             zd_client_id: '',
             zd_client_secret: '',
             zd_node_host: '',
+            zd_connected_mm_user_id: '',
             zd_target_id: '',
         };
     }
