@@ -1,5 +1,5 @@
 import Client4 from 'mattermost-redux/client/client4.js';
-import {AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallValues} from 'mattermost-redux/types/apps';
 
 import {ZDClient} from '../clients';
 
@@ -29,7 +29,7 @@ export class BaseFormFields {
         return this.call.context.channel_id || '';
     }
 
-    getCallValues(): string {
-        return this.call.values;
+    getCallValues(): AppCallValues {
+        return this.call.values as AppCallValues;
     }
 }

@@ -1,5 +1,5 @@
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppSelectOption, AppCall, AppForm, AppField, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppSelectOption, AppCall, AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import Client4 from 'mattermost-redux/client/client4.js';
@@ -45,7 +45,7 @@ class FormFields extends BaseFormFields {
     unsupportedFields: string[]
     unsupportedOperators: string[]
 
-    constructor(call: AppCall, zdClient: ZDClient, mmClient: Client4) {
+    constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4) {
         super(call, zdClient, mmClient);
         this.teamTriggers = {};
         this.teamChannelsWithSubs = [];
@@ -328,7 +328,7 @@ class FormFields extends BaseFormFields {
         return this.teamChannelsWithSubs;
     }
 
-    // getSubsForSelectedChannel returns an array of channels for th currently
+    // getSubsForSelectedChannel returns an array of channels for the currently
     // selected channel
     getSubsForSelectedChannel(): Channel[] {
         // if value is not null, the user selected a value in the channel picker

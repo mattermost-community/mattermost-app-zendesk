@@ -1,6 +1,6 @@
 import {Tickets} from 'node-zendesk';
 
-import {AppFormValues, AppContext, AppCall} from 'mattermost-redux/types/apps';
+import {AppFormValues, AppContext, AppCall, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {CreateTicketFields, ZDFieldValidation} from '../utils/constants';
 import {getMultiselectValues, isFieldValueSelected, baseUrlFromContext} from '../utils/utils';
@@ -18,7 +18,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
     ticket: Tickets.CreateModel;
     fieldValidationErrors: FieldValidationErrors
 
-    constructor(call: AppCall) {
+    constructor(call: AppCallRequest) {
         this.context = call.context;
         this.formValues = call.values as AppFormValues;
         this.fieldValidationErrors = {};
@@ -166,7 +166,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
     }
 }
 
-export function newTicketFromForm(call: AppCall): {payload: Tickets.CreatePayload; errors: FieldValidationErrors} {
+export function newTicketFromForm(call: AppCallRequest): {payload: Tickets.CreatePayload; errors: FieldValidationErrors} {
     const ticket = new TicketFromFormImpl(call);
     const payload = ticket.getTicket();
     const errors = ticket.fieldValidationErrors;

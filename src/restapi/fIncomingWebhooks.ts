@@ -35,7 +35,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
 
     const post: Post = {
         message,
-        user_id: fakeBotContext.acting_user_id,
+        user_id: context.bot_user_id as string,
         channel_id: channelID,
     };
 

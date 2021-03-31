@@ -1,7 +1,5 @@
 import express from 'express';
 
-import {AppCall, AppContext} from 'mattermost-redux/types/apps';
-
 import {Routes} from '../utils';
 
 import {fBindings} from './fBindings';
@@ -16,7 +14,7 @@ import {fHelp} from './fHelp';
 import {fInstall} from './fInstall';
 import {fManifest} from './fManifest';
 
-const router = express.Router() as UserRouter;
+const router = express.Router();
 
 router.get(Routes.App.ManifestPath, fManifest);
 router.post(Routes.App.BindingsPath, fBindings);

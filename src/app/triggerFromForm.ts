@@ -13,7 +13,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     context: AppContext;
     trigger: any
 
-    constructor(call: AppCall) {
+    constructor(call: AppCallRequest) {
         this.values = call.values as AppFormValues;
         this.context = call.context;
         this.trigger = {};

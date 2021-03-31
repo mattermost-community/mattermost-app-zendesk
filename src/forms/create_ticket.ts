@@ -2,7 +2,7 @@ import {Tickets, Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppCall, AppField, AppForm, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppField, AppForm, AppCallRequest} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import {newZDClient, newMMClient, ZDClient} from '../clients';
@@ -17,7 +17,6 @@ const omitFields = ['Group', 'Status'];
 
 // newCreateTicketForm returns a form response to create a ticket from a post
 export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm> {
-    console.log('call', call);
     const zdClient = await newZDClient(call.context);
     const mmClient = newMMClient(call.context).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient);
@@ -75,9 +74,9 @@ class FormFields extends BaseFormFields {
 
     async addFormSelectDependentFields(): Promise<void> {
         // get the form id from the selected form field value
-        const formID = this.builder.getFieldValueByName(CreateTicketFields.NameFormsSelect);
+        const formID = this.builder.getFieldValueByName(CreateTicketFields.NameFormsSelect) as unknown;
 
-        const zdFormFieldIDs = this.getTicketFieldIDs(formID);
+        const zdFormFieldIDs = this.getTicketFieldIDs(formID as number);
         const fieldsListReq = this.zdClient.ticketfields.list();
         const zdTicketFields = await tryPromiseWithMessage(fieldsListReq, 'Failed to fetch ticket fields');
         const zdViewableFields = this.getViewableFields(zdTicketFields, zdFormFieldIDs);
@@ -109,7 +108,7 @@ class FormFields extends BaseFormFields {
             }
 
             // only keep fields listed in formIDs
-            if (formIDs.includes(field.id)) {
+            if (formIDs.includes(field.id as number)) {
                 fields.push(field);
             }
         });

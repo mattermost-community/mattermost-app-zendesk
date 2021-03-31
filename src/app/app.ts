@@ -24,14 +24,14 @@ export interface App {
 }
 
 class AppImpl implements App {
-    call: AppCall
+    call: AppCallRequest
     context: AppContext
     values: AppCallValues
 
     constructor(call: AppCallRequest) {
         this.call = call;
         this.context = call.context;
-        this.values = call.values;
+        this.values = call.values as AppCallValues;
     }
     createTicketFromPost = async (): Promise<AppCallResponse> => {
         // get zendesk client for user

@@ -91,20 +91,21 @@ We need to create the Zendesk HTTP target which will send webhook trigger notifi
 1. Select `HTTP` Target
 1. Fill in the following:
     1. **Title:** Mattermost target for incoming webhooks
-    1. **Url:** `<node_host_url>/webhook-incoming>`
+    1. **Url:** `<mattermost_site_url>/plugins/com.mattermost.apps/apps/zendesk/webhook/webhook-target?secret=<your-secret>`
     1. **Method:** POST
     1. **Content Type:** JSON
-1. Test that the target is valid
-    1. Select `Test target` in the pulldown
+    1. **Basic Authentication:** Leave unchecked
+1. Test that the target is valid    (THIS CANNOT BE DONE UNTIL ZENDESK CONFIGURATION IS COMPLETE)
+    1. Select `Test target` in the dropdown
     1. Click `Submit` button
     1. Leave JSON body in the floating window empty
     1. Click `Submit` button in floating window
     1. Verify `HTTP/1.1 200 OK` response is shown in the resulting window
 1. Save the valid target
-    1. Select `Create target` in the pulldown
+    1. Select `Create target` in the dropdown
     1. Click `Submit` button
 
-**Developer Notes:** When testing webhooks locally, you will need to expose your localhost:4040 with ngrok
+**Developer Notes:** When testing webhooks locally, you will need to expose your localhost:8065 with ngrok
 
 ## Provision
 

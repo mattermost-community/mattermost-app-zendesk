@@ -50,7 +50,7 @@ class ConfigStoreImpl implements ConfigStore {
 }
 
 export const newConfigStore = (context: AppContext): ConfigStore => {
-    const botAccessToken = context.bot_access_token;
+    const botAccessToken = context.bot_access_token as string;
     const baseURL = baseUrlFromContext(context);
     return new ConfigStoreImpl(botAccessToken, baseURL);
 };

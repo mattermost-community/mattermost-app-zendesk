@@ -6,7 +6,7 @@ import {newMMClient} from '../clients';
 import {newTokenStore} from '../store';
 
 export async function isUserConnected(context: AppContext): Promise<boolean> {
-    const userID = context.acting_user_id;
+    const userID = context.acting_user_id as string;
     const tokenStore = newTokenStore(context);
     const token = await tokenStore.getToken(userID as string);
     return Boolean(token);
