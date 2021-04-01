@@ -1,13 +1,15 @@
 import {Request, Response} from 'express';
 
+import {AppContext} from 'mattermost-redux/types/apps';
+
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
 import {newConfigStore} from '../store';
 
-import {Routes, createOAuthState, contextFromRequest} from '../utils';
+import {Routes, createOAuthState} from '../utils';
 
 export async function fConnect(req: Request, res: Response): Promise<void> {
-    const context = contextFromRequest(req);
+    const context: AppContext = req.body.context;
     const state = createOAuthState(context);
 
     const configStore = newConfigStore(context);

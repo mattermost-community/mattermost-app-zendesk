@@ -64,10 +64,6 @@ export function isFieldValueSelected(field: AppField): boolean {
     return Boolean(field.value);
 }
 
-export function contextFromRequest(request: any): AppContext {
-    return request.body.context;
-}
-
 export function baseUrlFromContext(context: AppContext): string {
     return context.mattermost_site_url || 'http://localhost:8065';
 }

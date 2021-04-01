@@ -3,7 +3,7 @@ import {Post} from 'mattermost-redux/types/posts';
 import {Request, Response} from 'express';
 import {AppContext} from 'mattermost-redux/types/apps';
 
-import {Routes, tryPromiseWithMessage, contextFromRequest} from '../utils';
+import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
 
 import {newZDClient, newMMClient} from '../clients';
@@ -25,7 +25,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
 
-    const context = contextFromRequest(req);
+    const context: AppContext = req.body.context;
     const config = await newConfigStore(context).getValues();
     const zdHost = config.zd_node_host;
 

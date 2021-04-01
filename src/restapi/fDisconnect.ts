@@ -1,14 +1,16 @@
 import {Request, Response} from 'express';
 
+import {AppContext} from 'mattermost-redux/types/apps';
+
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
 import {newZDClient} from '../clients';
-import {tryPromiseWithMessage, contextFromRequest} from '../utils';
+import {tryPromiseWithMessage} from '../utils';
 
 import {newTokenStore} from '../store';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
-    const context = contextFromRequest(req);
+    const context: AppContext = req.body.context;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const zdClient = await newZDClient(context);
