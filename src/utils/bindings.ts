@@ -42,7 +42,7 @@ export class Bindings {
 }
 
 export function newPostMenuBindings(bindings: AppBinding[]): AppBinding {
-    const binding = {
+    const binding: AppBinding = {
         location: AppBindingLocations.POST_MENU_ITEM,
         bindings,
     };
@@ -50,7 +50,7 @@ export function newPostMenuBindings(bindings: AppBinding[]): AppBinding {
 }
 
 export function newCommandBindings(bindings: AppBinding[]): AppBinding {
-    const binding = {
+    const binding: AppBinding = {
         location: AppBindingLocations.COMMAND,
         bindings: [
             {
@@ -65,7 +65,7 @@ export function newCommandBindings(bindings: AppBinding[]): AppBinding {
 }
 
 export function newChannelHeaderBindings(bindings: AppBinding[]): AppBinding {
-    const binding = {
+    const binding: AppBinding = {
         location: AppBindingLocations.CHANNEL_HEADER_ICON,
         bindings,
     };
