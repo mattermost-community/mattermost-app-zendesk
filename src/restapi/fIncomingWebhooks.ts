@@ -3,6 +3,7 @@ import {Post} from 'mattermost-redux/types/posts';
 import {Request, Response} from 'express';
 import {AppContext} from 'mattermost-redux/types/apps';
 
+import {getManifest} from '../manifest';
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
 
@@ -17,6 +18,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     // TODO: we need zendesk bot admin so that admin requests can be made by the
     // bot and not from an actiing user
     const fakeBotContext: AppContext = {
+        app_id: getManifest().app_id,
         acting_user_id: 'rgixs6uimp88tq8x8w3yxu3oqe',
     };
     const zdClient = await newZDClient(fakeBotContext);
