@@ -1,6 +1,7 @@
 import {Post} from 'mattermost-redux/types/posts';
 
 import {Request, Response} from 'express';
+import {AppContextWithBot} from 'types/apps';
 import {AppContext} from 'mattermost-redux/types/apps';
 
 import {getManifest} from '../manifest';
@@ -17,17 +18,17 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
 
     // TODO: we need zendesk bot admin so that admin requests can be made by the
     // bot and not from an actiing user
-    const fakeBotContext: AppContext = {
+    const fakeBotContext: AppContextWithBot = {
         app_id: getManifest().app_id,
         acting_user_id: 'rgixs6uimp88tq8x8w3yxu3oqe',
-    };
+    } as AppContextWithBot;
     const zdClient = await newZDClient(fakeBotContext);
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);
     const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
 
-    const context: AppContext = req.body.context;
+    const context: AppContextWithBot = req.body.context;
     const config = await newConfigStore(context).getValues();
     const zdHost = config.zd_node_host;
 

@@ -1,10 +1,10 @@
 import ClientOAuth2 from 'client-oauth2';
-import {AppContext} from 'mattermost-redux/types/apps';
+import {AppContextWithBot} from 'types/apps';
 
 import {Routes} from '../utils';
 import {newConfigStore} from '../store';
 
-export const getOAuthConfig = async (context: AppContext): Promise<ClientOAuth2> => {
+export const getOAuthConfig = async (context: AppContextWithBot): Promise<ClientOAuth2> => {
     const config = await newConfigStore(context).getValues();
     const zdAuth = new ClientOAuth2({
         clientId: config.zd_client_id,

@@ -1,5 +1,6 @@
 import {Channel} from 'mattermost-redux/types/channels';
 import {AppSelectOption, AppCall, AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
+import {AppContextWithBot} from 'types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import Client4 from 'mattermost-redux/client/client4.js';
@@ -14,8 +15,9 @@ import {BaseFormFields} from '../utils/base_form_fields';
 
 // newSubscriptionsForm returns a form response to create subscriptions
 export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {
-    const zdClient = await newZDClient(call.context);
-    const mmClient = newMMClient(call.context).asAdmin();
+    const context: AppContextWithBot = call.context as AppContextWithBot;
+    const zdClient = await newZDClient(context);
+    const mmClient = newMMClient(context).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient);
     const fields = await formFields.getSubscriptionFields();
 

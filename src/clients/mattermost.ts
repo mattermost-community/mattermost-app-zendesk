@@ -2,6 +2,8 @@ import Client from 'mattermost-redux/client/client4.js';
 
 import {AppContext} from 'mattermost-redux/types/apps';
 
+import {AppContextWithBot} from 'types/apps';
+
 import {baseUrlFromContext} from '../utils';
 
 interface MMClient {
@@ -10,13 +12,13 @@ interface MMClient {
     asActingUser(): Client;
 }
 
-export const newMMClient = (context: AppContext): MMClient => {
+export const newMMClient = (context: AppContextWithBot): MMClient => {
     return new MMClientImpl(context);
 };
 
 class MMClientImpl implements MMClient {
-    context: AppContext
-    constructor(context: AppContext) {
+    context: AppContextWithBot
+    constructor(context: AppContextWithBot) {
         this.context = context;
     }
     newClient(token: string): Client {
@@ -33,20 +35,20 @@ class MMClientImpl implements MMClient {
 
     asBot(): Client {
         return this.as(
-            this.context.bot_access_token as string,
+            this.context.bot_access_token,
         );
     }
 
     // TODO: admin vs bot?
     asAdmin(): Client {
         return this.as(
-            this.context.bot_access_token as string,
+            this.context.bot_access_token,
         );
     }
 
     asActingUser(): Client {
         return this.as(
-            this.context.acting_user_access_token as string,
+            this.context.acting_user_access_token,
         );
     }
 }

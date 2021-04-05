@@ -2,6 +2,8 @@ import {Request, Response} from 'express';
 
 import {AppCallRequest} from 'mattermost-redux/types/apps';
 
+import {AppContextWithBot} from 'types/apps';
+
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {AppID} from '../utils/constants';
 import {getManifest} from '../../manifest';
@@ -21,7 +23,7 @@ function getHeader(): string {
 }
 
 function getCommands(call: AppCallRequest): string {
-    const context = call.context;
+    const context = call.context as AppContextWithBot;
     let text = getUserCommands();
     if (isUserSysadmin(context)) {
         text += getAdminCommands();

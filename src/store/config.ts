@@ -1,5 +1,7 @@
 import {AppCallValues, AppContext} from 'mattermost-redux/types/apps';
 
+import {AppContextWithBot} from 'types/apps';
+
 import {StoreKeys} from '../utils/constants';
 import {newKVClient, KVClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
@@ -49,8 +51,8 @@ class ConfigStoreImpl implements ConfigStore {
     }
 }
 
-export const newConfigStore = (context: AppContext): ConfigStore => {
-    const botAccessToken = context.bot_access_token as string;
+export const newConfigStore = (context: AppContextWithBot): ConfigStore => {
+    const botAccessToken = context.bot_access_token;
     const baseURL = baseUrlFromContext(context);
     return new ConfigStoreImpl(botAccessToken, baseURL);
 };

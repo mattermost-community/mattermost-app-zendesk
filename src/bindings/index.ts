@@ -1,4 +1,6 @@
-import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'mattermost-redux/types/apps';
+
+import {AppContextWithBot} from 'types/apps';
 
 import {Bindings} from '../utils';
 
@@ -9,7 +11,7 @@ import {getCommandBindings} from './slash_commands';
 import {getPostMenuBindings} from './post_menu';
 import {getChannelHeaderBindings} from './channel_header';
 
-export async function getBindings(context: AppContext): Promise<AppBinding[]> {
+export async function getBindings(context: AppContextWithBot): Promise<AppBinding[]> {
     // prefetch these requests only one time
     const configStore = newConfigStore(context);
     const [isConfigured, isConnected, isSysadmin] = await Promise.all([

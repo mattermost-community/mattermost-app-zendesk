@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import {AppContext} from 'mattermost-redux/types/apps';
+import {AppContextWithBot} from 'types/apps';
 
 import {getOAuthConfig} from '../app/oauth';
 import {parseOAuthState} from '../utils';
@@ -24,7 +24,7 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
         throw new Error('Bad Request: bad state'); // Express will catch this on its own.
     }
 
-    const context = createContextFromState(parsedState.botToken, parsedState.url);
+    const context: AppContextWithBot = createContextFromState(parsedState.botToken, parsedState.url);
     const zdAuth = await getOAuthConfig(context);
 
     const user = await zdAuth.code.getToken(req.originalUrl);
@@ -53,12 +53,12 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
 
 // createContextFromState constructs an AppContext from state. fComplete needs
 // access to the PluginKVStore and retrieves the token and url from state
-function createContextFromState(botToken: string, url: string): AppContext {
-    const context: AppContext = {
+function createContextFromState(botToken: string, url: string): AppContextWithBot {
+    const context: AppContextWithBot = {
         app_id: '',
         bot_access_token: botToken,
         mattermost_site_url: url,
-    };
+    } as AppContextWithBot;
     return context;
 }
 

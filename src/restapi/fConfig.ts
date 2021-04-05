@@ -1,4 +1,5 @@
 import {Request, Response} from 'express';
+import {AppContextWithBot} from 'types/apps';
 import {AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {newConfigStore, AppConfigStore} from '../store/config';
@@ -20,10 +21,11 @@ export async function fSubmitOrUpdateZendeskConfigForm(req: Request, res: Respon
 
 export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Response): Promise<void> {
     const call: AppCallRequest = req.body;
+    const context: AppContextWithBot = call.context as AppContextWithBot;
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {
-        const configStore = newConfigStore(call.context);
+        const configStore = newConfigStore(context);
         const storeValues = call.values as AppConfigStore;
         configStore.storeConfigInfo(storeValues);
     } catch (err) {

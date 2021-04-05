@@ -2,6 +2,7 @@ import {Tickets, Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
+import {AppContextWithBot} from 'types/apps';
 import {AppField, AppForm, AppCallRequest} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
@@ -17,8 +18,9 @@ const omitFields = ['Group', 'Status'];
 
 // newCreateTicketForm returns a form response to create a ticket from a post
 export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm> {
-    const zdClient = await newZDClient(call.context);
-    const mmClient = newMMClient(call.context).asAdmin();
+    const context: AppContextWithBot = call.context as AppContextWithBot;
+    const zdClient = await newZDClient(context);
+    const mmClient = newMMClient(context).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient);
     const fields = await formFields.getCreateTicketFields();
 

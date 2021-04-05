@@ -1,6 +1,6 @@
 import zendesk, {ClientOptions} from 'node-zendesk';
 
-import {AppContext} from 'mattermost-redux/types/apps';
+import {AppContextWithBot} from 'types/apps';
 
 import {Routes} from '../utils';
 import {newTokenStore, newConfigStore} from '../store';
@@ -44,8 +44,8 @@ export interface ZDClient {
     users: Users;
 }
 
-export const newZDClient = async (context: AppContext): Promise<ZDClient> => {
-    const mmUserID = context.acting_user_id as string;
+export const newZDClient = async (context: AppContextWithBot): Promise<ZDClient> => {
+    const mmUserID = context.acting_user_id;
     if (mmUserID === '') {
         throw new Error('Failed to get user acting_user_id');
     }
