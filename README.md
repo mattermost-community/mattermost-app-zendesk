@@ -120,12 +120,12 @@ To provision this PR to AWS run `make dist` to generate the App bundle and then 
 Oauth2 service needs to be turned on in `config/config.json`
 Through system console -> enable oauth2 service provider
 
-
 ```json
 "EnableOAuthServiceProvider": true,
 ```
 
 ### 2. Need a branched version of the node-zendesk client so that we can query
+
 webhooks by title
 
 In `node_modules/node-zendesk/lib/client/triggers.js` add the following lines
