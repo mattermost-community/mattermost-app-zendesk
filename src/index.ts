@@ -7,6 +7,8 @@ import bodyParser from 'body-parser';
 // import zdRoutes from './restapi/zd_routes';
 import mmRoutes from './restapi/mm_routes';
 
+global.fetch = require('node-fetch');
+
 const app = express();
 
 app.use(bodyParser.json());
