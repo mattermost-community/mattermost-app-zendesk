@@ -109,13 +109,13 @@ We need to create the Zendesk HTTP target which will send webhook trigger notifi
     1. **Method:** POST
     1. **Content Type:** JSON
 1. Test that the target is valid
-    1. Select `Test target` in the pulldown
+    1. Select `Test target` in the dropdown
     1. Click `Submit` button
     1. Enter `{}` in the JSON body in the floating window
     1. Click `Submit` button in floating window
     1. Verify `HTTP/1.1 200 OK` response is shown in the resulting window
 1. Save the valid target
-    1. Select `Create target` in the pulldown
+    1. Select `Create target` in the dropdown
     1. Click `Submit` button
 
 **Developer Notes:** When testing webhooks locally, you will need to expose your localhost:4040 with ngrok
@@ -126,33 +126,19 @@ To provision this PR to AWS run `make dist` to generate the App bundle and then 
 
 ## FAQ
 
-### 1. `npm start` fails with warning about rudder in mattermost-redux
-
-```sh
-.../mattermost-app-zendesk/node_modules/rudder-sdk-js/index.js:8733
-        var domain = ".".concat(lib(window.location.href));
-```
-
-- open `node_modules/mattermost-redux/client/rudder.js`
-- comment out the following lines:
-
-```javascript
-var rudderAnalytics = tslib_1.__importStar(require("rudder-sdk-js"));
-exports.rudderAnalytics = rudderAnalytics;
-```
-### 2. Log message received and binding locations do not show
+### 1. Log message received and binding locations do not show
 
 `The system admin has turned off OAuth2 Service Provider.`
 
 Oauth2 service needs to be turned on in `config/config.json`
 Through system console -> enable oauth2 service provider
 
-
 ```json
 "EnableOAuthServiceProvider": true,
 ```
 
-### 3. Need a branched version of the node-zendesk client so that we can query
+### 2. Need a branched version of the node-zendesk client so that we can query
+
 webhooks by title
 
 In `node_modules/node-zendesk/lib/client/triggers.js` add the following lines
