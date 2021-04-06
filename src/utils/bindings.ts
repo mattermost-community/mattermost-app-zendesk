@@ -55,7 +55,8 @@ export function newCommandBindings(bindings: AppBinding[]): AppBinding {
         bindings: [
             {
                 icon: ZDIcon,
-                description: '',
+                label: 'zendesk',
+                description: 'Manage Zendesk tickets',
                 hint: '',
                 bindings,
             },
