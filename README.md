@@ -1,12 +1,5 @@
 # ZenDesk App
 
-## Development Repository Branches Needed
-
-The current master branches have not been merged to work with this app and the following are needed until they are merged with master
-
-mm-webapp: `feature/cloud-apps` @837694a9b  
-mm-plugin-apps: `master` @831d203
-
 ## Quick Start
 
 ### Zendesk and Mattermost Users (System Admin privileges required)
