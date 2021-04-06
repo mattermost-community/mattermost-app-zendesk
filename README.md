@@ -78,7 +78,7 @@ Zendesk Admins are able to view these subscriptions inside Zendesk via `Settings
 ### In Development
 
 `/apps debug-add-manifest --url http://localhost:4000/manifest.json`
-`/apps install --app-id com.mattermost.zendesk--app-secret thisisthesecret`
+`/apps install --app-id com.mattermost.zendesk --app-secret thisisthesecret`
 
 ## Setup Zendesk Target
 
