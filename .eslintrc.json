@@ -64,7 +64,12 @@
       2,
       {
         "properties": "never",
-        "allow": ["bot_access_token", "acting_user_id", "acting_user_access_token"]
+        "allow": [
+          "bot_access_token", 
+          "acting_user_id", 
+          "acting_user_access_token",
+          "ticket_field_ids"
+        ]
       }
     ],
     "capitalized-comments": 0,

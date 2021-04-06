@@ -1,5 +1,5 @@
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppSelectOption, AppCall, AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
+import {AppSelectOption, AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
 import {AppContextWithBot} from 'types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
@@ -7,7 +7,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {Routes, ZDIcon} from '../utils';
-import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
+import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage, ZDFieldOption} from '../utils/utils';
 import {ZDTrigger, ZDTriggerCondition} from '../utils/ZDTypes';
 import {SubscriptionFields} from '../utils/constants';
 
@@ -84,14 +84,16 @@ class FormFields extends BaseFormFields {
     async setState(): Promise<void> {
         // modified node-zendesk to allow hitting triggers/search api
         // returns all triggers for all channels and teams
-        const searchReq = this.zdClient.triggers.search(SubscriptionFields.PrefixTriggersTitle);
+        const searchReq = this.zdClient?.triggers.search(SubscriptionFields.PrefixTriggersTitle);
         const triggers = await tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
+        const results: Promise<void>[] = [];
         for (const trigger of triggers) {
-            await this.addChannelTrigger(trigger);
+            results.push(this.addChannelTrigger(trigger));
         }
+        await Promise.all(results);
     }
 
-    async addChannelTrigger(trigger: any): Promise<void> {
+    async addChannelTrigger(trigger: ZDTrigger): Promise<void> {
         const channelID = getChannelIDFromTriggerTitle(trigger.title);
         const channel = await this.mmClient.getChannel(channelID);
         if (channel.team_id === this.getCurrentTeamID()) {
@@ -233,7 +235,7 @@ class FormFields extends BaseFormFields {
     // getAnyConditions returns an array of Zendesk ALL trigger conditions
     getAllConditions(): ZDTriggerCondition[] {
         if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
-            return this.getSelectedSubTrigger().conditions.all;
+            return this.getSelectedSubTrigger().conditions.all as ZDTriggerCondition[];
         }
         return [];
     }
@@ -329,7 +331,7 @@ class FormFields extends BaseFormFields {
 
     // getSubsForSelectedChannel returns an array of channels for the currently
     // selected channel
-    getSubsForSelectedChannel(): Channel[] {
+    getSubsForSelectedChannel(): ZDTrigger[] {
         // if value is not null, the user selected a value in the channel picker
         let id = this.getSelectedChannelID();
         if (id === '') {
@@ -363,12 +365,12 @@ class FormFields extends BaseFormFields {
         return this.builder.getFieldLabelByName(SubscriptionFields.SubSelectName);
     }
 
-    getSubTriggerByID(subID: string): any {
-        const triggers = this.getChannelTriggers(this.getSelectedChannelID());
-        return triggers.find((trigger) => String(trigger.id) === subID);
+    getSubTriggerByID(subID: string): ZDTrigger {
+        const triggers: ZDTrigger[] = this.getChannelTriggers(this.getSelectedChannelID());
+        return triggers.find((trigger) => String(trigger.id) === subID) as ZDTrigger;
     }
 
-    getChannelTriggers(channelID: string): any[] {
+    getChannelTriggers(channelID: string): ZDTrigger[] {
         if (this.teamTriggers[channelID]) {
             return this.teamTriggers[channelID];
         }

@@ -11,6 +11,7 @@ export type ZDFieldOption = {
 export type ZDFormFieldOption = {
     name: string;
     id: number;
+    ticket_field_ids: number[];
 }
 
 type ZDSubscriptionFieldOption = {

@@ -19,7 +19,7 @@ const omitFields = ['Group', 'Status'];
 // newCreateTicketForm returns a form response to create a ticket from a post
 export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm> {
     const context: AppContextWithBot = call.context as AppContextWithBot;
-    const zdClient = await newZDClient(context);
+    const zdClient: ZDClient = await newZDClient(context);
     const mmClient = newMMClient(context).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient);
     const fields = await formFields.getCreateTicketFields();
@@ -69,7 +69,7 @@ class FormFields extends BaseFormFields {
 
     // setState sets state for the current Zendesk Form
     async setState(): Promise<void> {
-        const listReq = this.zdClient.ticketforms.list();
+        const listReq = this.zdClient?.ticketforms.list();
         const zdTicketForms = await tryPromiseWithMessage(listReq, 'Failed to fetch ticket forms');
         this.zdTicketForms = zdTicketForms;
     }
@@ -79,7 +79,7 @@ class FormFields extends BaseFormFields {
         const formID = this.builder.getFieldValueByName(CreateTicketFields.NameFormsSelect) as unknown;
 
         const zdFormFieldIDs = this.getTicketFieldIDs(formID as number);
-        const fieldsListReq = this.zdClient.ticketfields.list();
+        const fieldsListReq = this.zdClient?.ticketfields.list();
         const zdTicketFields = await tryPromiseWithMessage(fieldsListReq, 'Failed to fetch ticket fields');
         const zdViewableFields = this.getViewableFields(zdTicketFields, zdFormFieldIDs);
 
@@ -93,10 +93,11 @@ class FormFields extends BaseFormFields {
     // getTicketFieldIDs returns the list of all fields in a Zendesk form
     private getTicketFieldIDs(id: number): number[] {
         const forms = this.zdTicketForms;
-        const ids = forms.find((form: any) => {
-            return form.id.toString() === id;
+        const ids = forms.find((form: ZDFormFieldOption) => {
+            return form.id === id;
         });
-        return ids.ticket_field_ids;
+
+        return ids ? ids.ticket_field_ids : [];
     }
 
     // getViewableFields returns a list of viewable Zendesk field IDs
