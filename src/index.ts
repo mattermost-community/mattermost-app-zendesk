@@ -4,10 +4,10 @@ import express from 'express';
 import serverless from 'serverless-http';
 import bodyParser from 'body-parser';
 
+global.fetch = require('node-fetch');
+
 // import zdRoutes from './restapi/zd_routes';
 import mmRoutes from './restapi/mm_routes';
-
-global.fetch = require('node-fetch');
 
 const app = express();
 
