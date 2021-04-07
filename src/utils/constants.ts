@@ -6,9 +6,16 @@ export const FormTextAreaMaxLength = 1024;
 
 import {AppSelectOption} from 'mattermost-redux/types/apps';
 
+const AppsPluginName = 'com.mattermost.apps';
+const PathAPI = 'api/v1';
+const PathProxyAPI = `/plugins/${AppsPluginName}/${PathAPI}`;
+
 // Routes to the Mattermost Instance
 const MMPaths = {
-    KVPath: '/plugins/com.mattermost.apps/api/v1/kv/',
+    PathKV: `${PathProxyAPI}/kv/`,
+    PathOAuth2App: `${PathProxyAPI}/oauth2/app`,
+    PathOAuth2User: `${PathProxyAPI}/oauth2/user`,
+    PathOAuth2CreateState: `${PathProxyAPI}/oauth2/create-state`,
 };
 
 // Routes to the Zendesk Instance

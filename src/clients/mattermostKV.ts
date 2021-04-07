@@ -55,6 +55,6 @@ class KVClientImpl implements KVClient {
     }
 
     getKVURL(key: string): string {
-        return Routes.MM.KVPath + key;
+        return Routes.MM.PathKV + key;
     }
 }
