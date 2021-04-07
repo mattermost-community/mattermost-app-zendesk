@@ -1,12 +1,5 @@
 # ZenDesk App
 
-## Development Repository Branches Needed
-
-The current master branches have not been merged to work with this app and the following are needed until they are merged with master
-
-mm-webapp: `feature/cloud-apps` @837694a9b  
-mm-plugin-apps: `master` @831d203
-
 ## Quick Start
 
 ### Zendesk and Mattermost Users (System Admin privileges required)
@@ -141,21 +134,4 @@ Through system console -> enable oauth2 service provider
 
 ```json
 "EnableOAuthServiceProvider": true,
-```
-
-### 2. Need a branched version of the node-zendesk client so that we can query
-
-webhooks by title
-
-In `node_modules/node-zendesk/lib/client/triggers.js` add the following lines
-on line 15. This adds the ability for the client to access the following
-endpoint: `/api/v2/triggers/search.json?query=__mm_webhook__` which will return
-all triggers with `__mm_webhook__` in the title. This is the signature the
-Zendesk app will use to retrieve all subscription webhooks
-
-```javascript
-// ====================================== Searching Triggers
-Triggers.prototype.search = function(searchTerm, cb) {
-    return this.request('GET', ['triggers', 'search', {query: searchTerm}], cb);
-};
 ```
