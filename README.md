@@ -58,7 +58,7 @@ accounts via OAuth2 authorization
 
 Creating a ticket from a Mattermost post is done through the `...` post menu button
 
-![create ticket](./assets/create-ticket.gif)
+![create ticket](./docs/create-ticket.gif)
 
 ## Subscribe a Channel to Notifications
 

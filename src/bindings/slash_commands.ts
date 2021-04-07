@@ -1,40 +1,40 @@
-import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {ZDIcon, Routes, CommandLocations} from '../utils/constants';
-import {newCommandBindings} from '../utils';
+import {Routes, CommandLocations} from '../utils/constants';
+import {getStaticURL, newCommandBindings} from '../utils';
 
 // getCommandBindings returns the users slash command bindings
-export const getCommandBindings = (configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
+export const getCommandBindings = (context: AppContext, configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
     const bindings: AppBinding[] = [];
 
     // only show configuration option if admin has not configured the plugin
     if (!configured && sysadmin) {
-        bindings.push(cmdConfigure());
-        bindings.push(cmdHelp());
-        return newCommandBindings(bindings);
+        bindings.push(cmdConfigure(context));
+        bindings.push(cmdHelp(context));
+        return newCommandBindings(context, bindings);
     }
 
     if (connected) {
-        bindings.push(cmdDisconnect());
+        bindings.push(cmdDisconnect(context));
         if (sysadmin) {
-            bindings.push(cmdSubscribe());
+            bindings.push(cmdSubscribe(context));
         }
     } else {
-        bindings.push(cmdConnect());
+        bindings.push(cmdConnect(context));
     }
-    bindings.push(cmdConfigure());
-    bindings.push(cmdHelp());
-    return newCommandBindings(bindings);
+    bindings.push(cmdConfigure(context));
+    bindings.push(cmdHelp(context));
+    return newCommandBindings(context, bindings);
 };
 
 // CommandBindings class for creating slash command location bindings
-const cmdConnect = (): AppBinding => {
+const cmdConnect = (context: AppContext): AppBinding => {
     return {
         location: CommandLocations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
-        icon: ZDIcon,
+        icon: getStaticURL(context, 'zendesk.png'),
         form: {},
         call: {
             path: Routes.App.BindingPathConnect,
@@ -42,12 +42,12 @@ const cmdConnect = (): AppBinding => {
     } as AppBinding;
 };
 
-const cmdDisconnect = (): AppBinding => {
+const cmdDisconnect = (context: AppContext): AppBinding => {
     return {
         location: CommandLocations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
-        icon: ZDIcon,
+        icon: getStaticURL(context, 'zendesk.png'),
         form: {},
         call: {
             path: Routes.App.BindingPathDisconnect,
@@ -55,12 +55,12 @@ const cmdDisconnect = (): AppBinding => {
     } as AppBinding;
 };
 
-const cmdSubscribe = (): AppBinding => {
+const cmdSubscribe = (context: AppContext): AppBinding => {
     return {
         location: CommandLocations.Subscribe,
         label: 'subscribe',
         description: 'Subscribe notifications to a channel',
-        icon: ZDIcon,
+        icon: getStaticURL(context, 'zendesk.png'),
         form: {},
         call: {
             path: Routes.App.CallPathSubsOpenForm,
@@ -68,12 +68,12 @@ const cmdSubscribe = (): AppBinding => {
     } as AppBinding;
 };
 
-const cmdConfigure = (): AppBinding => {
+const cmdConfigure = (context: AppContext): AppBinding => {
     return {
         location: CommandLocations.Configure,
         label: 'configure',
         description: 'Configure the installed Zendesk account',
-        icon: ZDIcon,
+        icon: getStaticURL(context, 'zendesk.png'),
         form: {},
         call: {
             path: Routes.App.CallPathConfigOpenForm,
@@ -81,12 +81,12 @@ const cmdConfigure = (): AppBinding => {
     } as AppBinding;
 };
 
-const cmdHelp = (): AppBinding => {
+const cmdHelp = (context: AppContext): AppBinding => {
     return {
         location: CommandLocations.Help,
         label: 'help',
         description: 'Show Zendesk Help',
-        icon: ZDIcon,
+        icon: getStaticURL(context, 'zendesk.png'),
         form: {},
         call: {
             path: Routes.App.BindingPathHelp,

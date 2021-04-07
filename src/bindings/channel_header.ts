@@ -1,31 +1,31 @@
-import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {ZDIcon, Routes, newChannelHeaderBindings} from '../utils';
+import {getStaticURL, Routes, newChannelHeaderBindings} from '../utils';
 import {CommandLocations} from '../utils/constants';
 
 // getChannelHeaderBindings returns the users command bindings
-export const getChannelHeaderBindings = (configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
+export const getChannelHeaderBindings = (context: AppContext, configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
     const bindings: AppBinding[] = [];
 
     // only show configuration option if admin has not configured the plugin
     if (!configured && sysadmin) {
-        bindings.push(channelHeaderConfig());
+        bindings.push(channelHeaderConfig(context));
         return newChannelHeaderBindings(bindings);
     }
 
     if (connected) {
-        bindings.push(channelHeaderSubscribe());
+        bindings.push(channelHeaderSubscribe(context));
     }
     return newChannelHeaderBindings(bindings);
 };
 
-const channelHeaderSubscribe = (): AppBinding => {
+const channelHeaderSubscribe = (context: AppContext): AppBinding => {
     return {
         location: CommandLocations.Subscribe,
         label: 'Create Zendesk Subscription',
         description: 'Open Create Zendesk Subscription Modal',
-        icon: ZDIcon,
+        icon: getStaticURL(context, 'zendesk.png'),
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
@@ -35,12 +35,12 @@ const channelHeaderSubscribe = (): AppBinding => {
     } as AppBinding;
 };
 
-const channelHeaderConfig = (): AppBinding => {
+const channelHeaderConfig = (context: AppContext): AppBinding => {
     return {
         location: CommandLocations.Configure,
         label: 'Configure Zendesk',
         description: 'Open Create Zendesk Config Modal',
-        icon: ZDIcon,
+        icon: getStaticURL(context, 'zendesk.png'),
         call: {
             path: Routes.App.CallPathConfigOpenForm,
             expand: {

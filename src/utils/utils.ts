@@ -1,6 +1,8 @@
 import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps';
 import {Channel} from 'mattermost-redux/types/channels';
 
+import {getManifest} from '../manifest';
+
 import {SubscriptionFields} from './constants';
 
 export type ZDFieldOption = {
@@ -80,4 +82,8 @@ export function getBulletedList(pretext: string, items: string[]): string {
         text = `###  ${pretext}\n` + text;
     }
     return text;
+}
+
+export function getStaticURL(context: AppContext, name:string): string {
+    return context.mattermost_site_url + '/plugins/com.mattermost.apps/apps/' + getManifest().app_id + '/static/' + name;
 }
