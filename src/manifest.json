@@ -8,7 +8,10 @@
     "root_url": "",
     "requested_permissions": [
         "act_as_user",
-        "act_as_bot"
+        "act_as_bot",
+        "act_as_admin",
+        "remote_webhooks",
+        "remote_oauth2"
     ],
     "requested_locations": [
         "/command",
