@@ -2,6 +2,7 @@ import {AppBindingLocations} from 'mattermost-redux/constants/apps';
 import {AppBinding} from 'mattermost-redux/types/apps';
 
 import {ZDIcon} from '../utils';
+import {CommandTrigger} from '../utils/constants';
 
 // Bindings base class stores user info for subclasses
 export class Bindings {
@@ -55,7 +56,7 @@ export function newCommandBindings(bindings: AppBinding[]): AppBinding {
         bindings: [
             {
                 icon: ZDIcon,
-                label: 'zendesk',
+                label: CommandTrigger,
                 description: 'Manage Zendesk tickets',
                 hint: '',
                 bindings,
