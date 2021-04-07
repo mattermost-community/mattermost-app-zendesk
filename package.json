@@ -17,12 +17,9 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "1.19.0",
-    "cors": "2.8.5",
-    "dotenv": "8.2.0",
     "node-fetch": "2.6.1",
     "node-zendesk": "github:jfrerich/node-zendesk",
-    "serverless-http": "2.7.0",
-    "ts-node": "9.1.1"
+    "serverless-http": "2.7.0"
   },
   "devDependencies": {
     "@types/cors": "2.8.9",
