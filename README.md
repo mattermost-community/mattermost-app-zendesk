@@ -15,7 +15,8 @@
             1. Ex. `https://mytest.ngrok.io` - Exposed for development
         1. `Save`
 1. Install the app (In Mattermost)
-    1. `/apps install --url http://<your-zendesk-app-host>/manifest.json --app-secret thisisthesecret`  
+    1. `/apps debug-add-manifest --url http://<your-zendesk-app-host>/manifest.json`
+    1. `/apps install --app-id com.mattermost.zendesk--app-secret thisisthesecret`
 1. Configure Zendesk Client in Mattermost
     1. `/zendesk configure` to open the configuration modal
     1. Save values from Oauth Client form to the fields in the configuration modal
@@ -63,8 +64,14 @@ Zendesk Admins are able to view these subscriptions inside Zendesk via `Settings
 
 ## Installation
 
-`/apps install --url http://<your-zendesk-app>/manifest.json --app-secret thisisthesecret`  
-`/apps install --url http://localhost:4000/manifest.json --app-secret thisisthesecret`  
+### In Production
+
+`/apps install --app-id com.mattermost.zendesk`
+
+### In Development
+
+`/apps debug-add-manifest --url http://localhost:4000/manifest.json`
+`/apps install --app-id com.mattermost.zendesk --app-secret thisisthesecret`
 
 ## Setup Zendesk Target
 

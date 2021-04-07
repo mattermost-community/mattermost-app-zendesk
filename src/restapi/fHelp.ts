@@ -3,10 +3,9 @@ import {Request, Response} from 'express';
 import {AppCall} from 'mattermost-redux/types/apps';
 
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
-import {AppID} from '../utils/constants';
-import {getManifest} from '../../manifest';
-
+import {getManifest} from '../manifest';
 import {isUserSysadmin} from '../app/user';
+import {CommandTrigger} from '../utils/constants';
 
 export async function fHelp(req: Request, res: Response): Promise<void> {
     let helpText = getHeader();
@@ -57,7 +56,7 @@ function addBullet(text: string): string {
 }
 
 function addBulletSlashCommand(text: string): string {
-    return `* \`/${AppID} ${text}\`\n`;
+    return `* \`/${CommandTrigger} ${text}\`\n`;
 }
 
 function h5(text: string): string {
