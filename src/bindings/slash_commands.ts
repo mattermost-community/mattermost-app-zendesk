@@ -1,7 +1,7 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, CommandLocations} from '../utils/constants';
+import {Routes, CommandLocations, ZendeskIcon} from '../utils/constants';
 import {getStaticURL, newCommandBindings} from '../utils';
 
 // getCommandBindings returns the users slash command bindings
@@ -34,7 +34,7 @@ const cmdConnect = (context: AppContext): AppBinding => {
         location: CommandLocations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
-        icon: getStaticURL(context, 'zendesk.png'),
+        icon: getStaticURL(context, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.BindingPathConnect,
@@ -47,7 +47,7 @@ const cmdDisconnect = (context: AppContext): AppBinding => {
         location: CommandLocations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
-        icon: getStaticURL(context, 'zendesk.png'),
+        icon: getStaticURL(context, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.BindingPathDisconnect,
@@ -60,7 +60,7 @@ const cmdSubscribe = (context: AppContext): AppBinding => {
         location: CommandLocations.Subscribe,
         label: 'subscribe',
         description: 'Subscribe notifications to a channel',
-        icon: getStaticURL(context, 'zendesk.png'),
+        icon: getStaticURL(context, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.CallPathSubsOpenForm,
@@ -73,7 +73,7 @@ const cmdConfigure = (context: AppContext): AppBinding => {
         location: CommandLocations.Configure,
         label: 'configure',
         description: 'Configure the installed Zendesk account',
-        icon: getStaticURL(context, 'zendesk.png'),
+        icon: getStaticURL(context, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.CallPathConfigOpenForm,
@@ -86,7 +86,7 @@ const cmdHelp = (context: AppContext): AppBinding => {
         location: CommandLocations.Help,
         label: 'help',
         description: 'Show Zendesk Help',
-        icon: getStaticURL(context, 'zendesk.png'),
+        icon: getStaticURL(context, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.BindingPathHelp,

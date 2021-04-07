@@ -7,7 +7,7 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {getStaticURL, Routes} from '../utils';
 import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption} from '../utils/utils';
-import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields} from '../utils/constants';
+import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 
 const omitFields = ['Group', 'Status'];
@@ -22,7 +22,7 @@ export async function newCreateTicketForm(call: AppCall): Promise<AppForm> {
     const form: AppForm = {
         title: 'Create Zendesk Ticket',
         header: 'Create a Zendesk ticket from Mattermost by filling out and submitting this form. Additional text can be added in the `Optional Message` field.',
-        icon: getStaticURL(call.context, 'zendesk.png'),
+        icon: getStaticURL(call.context, ZendeskIcon),
         fields,
         call: {
             path: Routes.App.CallPathTicketSubmitOrUpdateForm,
