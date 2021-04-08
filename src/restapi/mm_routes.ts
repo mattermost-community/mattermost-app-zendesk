@@ -43,6 +43,11 @@ router.post(Routes.App.CallPathTicketOpenForm + '/submit', fOpenCreateTicketForm
 router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/form', fSubmitOrUpdateCreateTicketForm);
 router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/submit', fSubmitOrUpdateCreateTicketSubmit);
 
+// static files
+const staticRouter = express.Router();
+staticRouter.use(express.static('static'));
+router.use('/static', staticRouter);
+
 // zendesk
 router.post(Routes.App.SubscribeIncomingWebhookPath, fHandleSubcribeNotification);
 export default router;

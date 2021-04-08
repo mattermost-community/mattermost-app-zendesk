@@ -1,6 +1,7 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 
 import {Bindings} from '../utils';
+import {getManifest} from '../manifest';
 
 import {isUserConnected, isUserSysadmin} from '../app/user';
 import {newConfigStore} from '../store/config';
@@ -19,9 +20,8 @@ export async function getBindings(context: AppContext): Promise<AppBinding[]> {
     ]);
 
     const b = new Bindings(isConfigured, isConnected, isSysadmin);
-    b.addBindings(getPostMenuBindings(isConfigured, isConnected, isSysadmin));
-    b.addBindings(getCommandBindings(isConfigured, isConnected, isSysadmin));
-    b.addBindings(getChannelHeaderBindings(isConfigured, isConnected, isSysadmin));
+    b.addBindings(getPostMenuBindings(context, isConfigured, isConnected, isSysadmin));
+    b.addBindings(getCommandBindings(context, isConfigured, isConnected, isSysadmin));
+    b.addBindings(getChannelHeaderBindings(context, isConfigured, isConnected, isSysadmin));
     return b.getAllBindings();
 }
-
