@@ -1,6 +1,5 @@
-export const ZDIcon = 'https://raw.githubusercontent.com/mattermost/mattermost-app-zendesk/master/assets/zendesk.svg';
 export const CommandTrigger = 'zendesk';
-
+export const ZendeskIcon = 'zendesk.png';
 export const FormTextAreaMinLength = 2;
 export const FormTextAreaMaxLength = 1024;
 
