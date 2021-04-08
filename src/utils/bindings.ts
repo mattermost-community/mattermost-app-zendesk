@@ -1,8 +1,8 @@
 import {AppBindingLocations} from 'mattermost-redux/constants/apps';
-import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 
-import {ZDIcon} from '../utils';
-import {CommandTrigger} from '../utils/constants';
+import {CommandTrigger, ZendeskIcon} from '../utils/constants';
+import {getStaticURL} from '../utils';
 
 // Bindings base class stores user info for subclasses
 export class Bindings {
@@ -50,12 +50,12 @@ export function newPostMenuBindings(bindings: AppBinding[]): AppBinding {
     return binding;
 }
 
-export function newCommandBindings(bindings: AppBinding[]): AppBinding {
+export function newCommandBindings(context: AppContext, bindings: AppBinding[]): AppBinding {
     const binding = {
         location: AppBindingLocations.COMMAND,
         bindings: [
             {
-                icon: ZDIcon,
+                icon: getStaticURL(context, ZendeskIcon),
                 label: CommandTrigger,
                 description: 'Manage Zendesk tickets',
                 hint: '',

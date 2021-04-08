@@ -1,11 +1,11 @@
-import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {ZDIcon, Routes, CommandLocations} from '../utils/constants';
-import {newPostMenuBindings} from '../utils';
+import {Routes, CommandLocations, ZendeskIcon} from '../utils/constants';
+import {getStaticURL, newPostMenuBindings} from '../utils';
 
 // getPostMenuBindings returns the users post menu bindings
-export const getPostMenuBindings = (configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
+export const getPostMenuBindings = (context: AppContext, configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
     const bindings: AppBinding[] = [];
 
     // only show configuration option if admin has not configured the plugin
@@ -14,17 +14,17 @@ export const getPostMenuBindings = (configured: boolean, connected: boolean, sys
     }
 
     if (connected) {
-        bindings.push(openCreateTicketForm());
-        bindings.push(openSubscriptionsForm());
+        bindings.push(openCreateTicketForm(context));
+        bindings.push(openSubscriptionsForm(context));
     }
     return newPostMenuBindings(bindings);
 };
 
-const openCreateTicketForm = (): AppBinding => {
+const openCreateTicketForm = (context: AppContext): AppBinding => {
     return {
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
-        icon: ZDIcon,
+        icon: getStaticURL(context, ZendeskIcon),
         location: CommandLocations.Ticket,
         call: {
             path: Routes.App.CallPathTicketOpenForm,
@@ -36,11 +36,11 @@ const openCreateTicketForm = (): AppBinding => {
     } as AppBinding;
 };
 
-const openSubscriptionsForm = (): AppBinding => {
+const openSubscriptionsForm = (context: AppContext): AppBinding => {
     return {
         label: 'Zendesk Subscriptions',
         description: 'Subscribe channel to Zendesk notifications',
-        icon: ZDIcon,
+        icon: getStaticURL(context, ZendeskIcon),
         location: CommandLocations.Subscribe,
         call: {
             path: Routes.App.CallPathSubsOpenForm,

@@ -1,14 +1,12 @@
 import {Channel} from 'mattermost-redux/types/channels';
 import {AppSelectOption, AppCall, AppForm, AppField} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
-
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {newZDClient, newMMClient, ZDClient} from '../clients';
-import {Routes, ZDIcon} from '../utils';
+import {getStaticURL, Routes} from '../utils';
 import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
-import {SubscriptionFields} from '../utils/constants';
-
+import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 
 // newSubscriptionsForm returns a form response to create subscriptions
@@ -21,7 +19,7 @@ export async function newSubscriptionsForm(call: AppCall): Promise<AppForm> {
     const form: AppForm = {
         title: 'Create or Edit Zendesk Subscriptions',
         header: 'Create or edit channel subscriptions to Zendesk notifications',
-        icon: ZDIcon,
+        icon: getStaticURL(call.context, ZendeskIcon),
         submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
         call: {
