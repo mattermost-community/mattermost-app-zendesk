@@ -1,7 +1,7 @@
 import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps';
 import {Channel} from 'mattermost-redux/types/channels';
 
-import {getManifest} from '../manifest';
+import {getManifest} from 'manifest';
 
 import {SubscriptionFields} from './constants';
 

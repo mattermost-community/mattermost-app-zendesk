@@ -1,10 +1,8 @@
 import Client from 'mattermost-redux/client/client4.js';
 
-import {AppContext} from 'mattermost-redux/types/apps';
-
 import {AppContextWithBot} from 'types/apps';
 
-import {baseUrlFromContext} from '../utils';
+import {baseUrlFromContext} from 'utils';
 
 interface MMClient {
     asBot(): Client;

@@ -2,9 +2,9 @@ import {Request, Response} from 'express';
 
 import {AppContextWithBot} from 'types/apps';
 
-import {newOKCallResponseWithData} from '../utils/call_responses';
+import {newOKCallResponseWithData} from 'utils/call_responses';
 
-import {getBindings} from '../bindings';
+import {getBindings} from 'bindings';
 
 export async function fBindings(req: Request, res: Response): Promise<void> {
     const context: AppContextWithBot = req.body.context;

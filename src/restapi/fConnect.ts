@@ -2,11 +2,11 @@ import {Request, Response} from 'express';
 
 import {AppContextWithBot} from 'types/apps';
 
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown} from 'utils/call_responses';
 
-import {newConfigStore} from '../store';
+import {newConfigStore} from 'store';
 
-import {Routes, createOAuthState} from '../utils';
+import {Routes, createOAuthState} from 'utils';
 
 export async function fConnect(req: Request, res: Response): Promise<void> {
     const context: AppContextWithBot = req.body.context;

@@ -2,8 +2,8 @@ import zendesk, {ClientOptions} from 'node-zendesk';
 
 import {AppContextWithBot} from 'types/apps';
 
-import {Routes} from '../utils';
-import {newTokenStore, newConfigStore} from '../store';
+import {Routes} from 'utils';
+import {newTokenStore, newConfigStore} from 'store';
 
 interface Tickets {
     create(ticket: any): any;

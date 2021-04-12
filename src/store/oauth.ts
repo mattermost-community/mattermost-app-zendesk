@@ -1,7 +1,7 @@
-import {AppContextWithBot} from '../types/apps';
+import {AppContextWithBot} from 'types/apps';
 
-import {newKVClient, KVClient} from '../clients';
-import {baseUrlFromContext} from '../utils';
+import {newKVClient, KVClient} from 'clients';
+import {baseUrlFromContext} from 'utils';
 
 interface TokenStore {
     storeToken(userID: string, token: string): Promise<void>;
@@ -31,7 +31,7 @@ class TokenStoreImpl implements TokenStore {
 }
 
 export const newTokenStore = (context: AppContextWithBot): TokenStore => {
-    const botAccessToken = context.bot_access_token as string;
+    const botAccessToken = context.bot_access_token;
     const baseURL = baseUrlFromContext(context);
     return new TokenStoreImpl(botAccessToken, baseURL);
 };

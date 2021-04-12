@@ -2,16 +2,17 @@ import {Tickets, Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppContextWithBot} from 'types/apps';
 import {AppField, AppForm, AppCallRequest} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
-import {newZDClient, newMMClient, ZDClient} from '../clients';
+import {AppContextWithBot} from 'types/apps';
 
-import {getStaticURL, Routes} from '../utils';
-import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption, ZDFieldOption} from '../utils/utils';
-import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields, ZendeskIcon} from '../utils/constants';
-import {BaseFormFields} from '../utils/base_form_fields';
+import {newZDClient, newMMClient, ZDClient} from 'clients';
+
+import {getStaticURL, Routes} from 'utils';
+import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption, ZDFieldOption} from 'utils/utils';
+import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields, ZendeskIcon} from 'utils/constants';
+import {BaseFormFields} from 'utils/base_form_fields';
 
 const omitFields = ['Group', 'Status'];
 

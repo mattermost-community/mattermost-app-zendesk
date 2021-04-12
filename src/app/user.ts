@@ -3,8 +3,8 @@ import GeneralConstants from 'mattermost-redux/constants/general';
 
 import {AppContextWithBot} from 'types/apps';
 
-import {newMMClient} from '../clients';
-import {newTokenStore} from '../store';
+import {newMMClient} from 'clients';
+import {newTokenStore} from 'store';
 
 export async function isUserConnected(context: AppContextWithBot): Promise<boolean> {
     const userID = context.acting_user_id;

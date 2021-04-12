@@ -1,8 +1,8 @@
 import {Request, Response} from 'express';
 
-import {newFormCallResponse} from '../utils/call_responses';
-import {newSubscriptionsForm} from '../forms';
-import {newApp} from '../app/app';
+import {newFormCallResponse} from 'utils/call_responses';
+import {newSubscriptionsForm} from 'forms';
+import {newApp} from 'app/app';
 
 // OpenSubscriptionsForm opens a new subscriptions form
 export async function fOpenSubscriptionsForm(req: Request, res: Response): Promise<void> {

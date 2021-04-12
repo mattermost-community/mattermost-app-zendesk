@@ -2,10 +2,10 @@ import {Request, Response} from 'express';
 
 import {AppContextWithBot} from 'types/apps';
 
-import {getOAuthConfig} from '../app/oauth';
-import {parseOAuthState} from '../utils';
+import {getOAuthConfig} from 'app/oauth';
+import {parseOAuthState} from 'utils';
 
-import {newTokenStore} from '../store';
+import {newTokenStore} from 'store';
 
 // fComplete is the endpoint called by zendesk after a user approves oauth
 export async function fComplete(req: Request, res: Response): Promise<void> {

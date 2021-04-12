@@ -1,10 +1,10 @@
 import {Tickets} from 'node-zendesk';
 
-import {AppContext, AppFormValues, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition} from '../utils/ZDTypes';
+import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition} from 'utils/ZDTypes';
 
-import {SubscriptionFields, TriggerFields} from '../utils/constants';
+import {SubscriptionFields, TriggerFields} from 'utils/constants';
 
 interface TriggerFromFrom {
     getTrigger(): Tickets.CreatePayload;

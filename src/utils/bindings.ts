@@ -1,8 +1,8 @@
 import {AppBindingLocations} from 'mattermost-redux/constants/apps';
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 
-import {CommandTrigger, ZendeskIcon} from '../utils/constants';
-import {getStaticURL} from '../utils';
+import {CommandTrigger, ZendeskIcon} from 'utils/constants';
+import {getStaticURL} from 'utils';
 
 // Bindings base class stores user info for subclasses
 export class Bindings {

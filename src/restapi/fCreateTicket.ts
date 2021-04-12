@@ -1,9 +1,9 @@
 import {Request, Response} from 'express';
 import {AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {newFormCallResponse, newOKCallResponse, newErrorCallResponseWithMessage, newErrorCallResponseWithFieldErrors} from '../utils/call_responses';
-import {newCreateTicketForm} from '../forms';
-import {newApp} from '../app/app';
+import {newFormCallResponse, newOKCallResponse, newErrorCallResponseWithMessage} from 'utils/call_responses';
+import {newCreateTicketForm} from 'forms';
+import {newApp} from 'app/app';
 
 // fOpenCreateTicketForm opens a new create ticket form
 export async function fOpenCreateTicketForm(req: Request, res: Response): Promise<void> {

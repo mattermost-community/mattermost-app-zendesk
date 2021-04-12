@@ -1,8 +1,8 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, CommandLocations, ZendeskIcon} from '../utils/constants';
-import {getStaticURL, newPostMenuBindings} from '../utils';
+import {Routes, CommandLocations, ZendeskIcon} from 'utils/constants';
+import {getStaticURL, newPostMenuBindings} from 'utils';
 
 // getPostMenuBindings returns the users post menu bindings
 export const getPostMenuBindings = (context: AppContext, configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {

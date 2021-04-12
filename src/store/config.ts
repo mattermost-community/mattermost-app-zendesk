@@ -1,10 +1,10 @@
-import {AppCallValues, AppContext} from 'mattermost-redux/types/apps';
+import {AppCallValues} from 'mattermost-redux/types/apps';
 
 import {AppContextWithBot} from 'types/apps';
 
-import {StoreKeys} from '../utils/constants';
-import {newKVClient, KVClient} from '../clients';
-import {baseUrlFromContext} from '../utils';
+import {StoreKeys} from 'utils/constants';
+import {newKVClient, KVClient} from 'clients';
+import {baseUrlFromContext} from 'utils';
 
 export type AppConfigStore = {
     zd_url: string;

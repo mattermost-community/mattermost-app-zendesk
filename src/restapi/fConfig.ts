@@ -1,10 +1,12 @@
 import {Request, Response} from 'express';
-import {AppContextWithBot} from 'types/apps';
+
 import {AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {newConfigStore, AppConfigStore} from '../store/config';
-import {newZendeskConfigForm} from '../forms';
-import {newOKCallResponseWithMarkdown, newFormCallResponse, newErrorCallResponseWithMessage} from '../utils/call_responses';
+import {AppContextWithBot} from 'types/apps';
+
+import {newConfigStore, AppConfigStore} from 'store/config';
+import {newZendeskConfigForm} from 'forms';
+import {newOKCallResponseWithMarkdown, newFormCallResponse, newErrorCallResponseWithMessage} from 'utils/call_responses';
 
 // fOpenZendeskConfigForm opens a new configuration form
 export async function fOpenZendeskConfigForm(req: Request, res: Response): Promise<void> {

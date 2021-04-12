@@ -1,13 +1,15 @@
 import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
-import {AppContextWithBot} from 'types/apps';
+
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {newMMClient, ZDClient} from '../clients';
-import {getStaticURL, Routes} from '../utils';
-import {BaseFormFields} from '../utils/base_form_fields';
-import {ZendeskIcon} from '../utils/constants';
-import {newConfigStore, ConfigStore, AppConfigStore} from '../store/config';
+import {AppContextWithBot} from 'types/apps';
+
+import {newMMClient, ZDClient} from 'clients';
+import {getStaticURL, Routes} from 'utils';
+import {BaseFormFields} from 'utils/base_form_fields';
+import {ZendeskIcon} from 'utils/constants';
+import {newConfigStore, ConfigStore, AppConfigStore} from 'store/config';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {

@@ -6,10 +6,8 @@
       "strict": true, 
       "noImplicitAny": false,
       "moduleResolution": "node",
-      "baseUrl": ".",                       
+      "baseUrl": "./src",                       
       "paths": {
-         "mattermost/*": ["./src/mattermost/*"],
-         "zendesk/*": ["./src/zendesk/*"],
          "src/*": ["./src/*"]
       },
       "typeRoots": [

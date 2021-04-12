@@ -2,12 +2,12 @@ import {Request, Response} from 'express';
 
 import {AppContextWithBot} from 'types/apps';
 
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown} from 'utils/call_responses';
 
-import {newZDClient} from '../clients';
-import {tryPromiseWithMessage} from '../utils';
+import {newZDClient} from 'clients';
+import {tryPromiseWithMessage} from 'utils';
 
-import {newTokenStore} from '../store';
+import {newTokenStore} from 'store';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const context: AppContextWithBot = req.body.context;

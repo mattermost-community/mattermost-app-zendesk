@@ -2,11 +2,10 @@ import {AppBinding} from 'mattermost-redux/types/apps';
 
 import {AppContextWithBot} from 'types/apps';
 
-import {Bindings} from '../utils';
-import {getManifest} from '../manifest';
+import {Bindings} from 'utils';
 
-import {isUserConnected, isUserSysadmin} from '../app/user';
-import {newConfigStore} from '../store/config';
+import {isUserConnected, isUserSysadmin} from 'app/user';
+import {newConfigStore} from 'store/config';
 
 import {getCommandBindings} from './slash_commands';
 import {getPostMenuBindings} from './post_menu';

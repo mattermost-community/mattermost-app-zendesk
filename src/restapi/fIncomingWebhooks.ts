@@ -1,16 +1,16 @@
 import {Post} from 'mattermost-redux/types/posts';
 
 import {Request, Response} from 'express';
+
 import {AppContextWithBot} from 'types/apps';
-import {AppContext} from 'mattermost-redux/types/apps';
 
-import {getManifest} from '../manifest';
-import {Routes, tryPromiseWithMessage} from '../utils';
-import {TriggerFields} from '../utils/constants';
+import {getManifest} from 'manifest';
+import {Routes, tryPromiseWithMessage} from 'utils';
+import {TriggerFields} from 'utils/constants';
 
-import {newZDClient, newMMClient} from '../clients';
+import {newZDClient, newMMClient} from 'clients';
 
-import {newConfigStore} from '../store';
+import {newConfigStore} from 'store';
 
 export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
     const ticketID = req.body[TriggerFields.TicketIDKey];

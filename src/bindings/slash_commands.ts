@@ -1,8 +1,8 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, CommandLocations, ZendeskIcon} from '../utils/constants';
-import {getStaticURL, newCommandBindings} from '../utils';
+import {Routes, CommandLocations, ZendeskIcon} from 'utils/constants';
+import {getStaticURL, newCommandBindings} from 'utils';
 
 // getCommandBindings returns the users slash command bindings
 export const getCommandBindings = (context: AppContext, configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {

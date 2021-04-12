@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid';
 import {AppContext} from 'mattermost-redux/types/apps';
 
-import {baseUrlFromContext} from '../utils';
+import {baseUrlFromContext} from 'utils';
 
 export type parseOAuthStateReturnValue = {
     uuid: string;

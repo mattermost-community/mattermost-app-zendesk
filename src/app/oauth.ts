@@ -1,8 +1,9 @@
 import ClientOAuth2 from 'client-oauth2';
+
 import {AppContextWithBot} from 'types/apps';
 
-import {Routes} from '../utils';
-import {newConfigStore} from '../store';
+import {Routes} from 'utils';
+import {newConfigStore} from 'store';
 
 export const getOAuthConfig = async (context: AppContextWithBot): Promise<ClientOAuth2> => {
     const config = await newConfigStore(context).getValues();

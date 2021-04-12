@@ -1,5 +1,3 @@
-import {Dictionary} from 'mattermost-redux/types/utilities';
-
 export type ZDTriggerCondition = {
     field: string;
     operator: string;

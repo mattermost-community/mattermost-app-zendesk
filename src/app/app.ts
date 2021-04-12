@@ -3,19 +3,19 @@ import {AppCallValues, AppCallResponse, AppCallRequest} from 'mattermost-redux/t
 
 import {AppContextWithBot} from 'types/apps';
 
-import {SubscriptionFields} from '../utils/constants';
+import {SubscriptionFields} from 'utils/constants';
 
-import {newConfigStore} from '../store';
+import {newConfigStore} from 'store';
 
 import {
     newErrorCallResponseWithFieldErrors,
     newOKCallResponse,
     newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
-    FieldValidationErrors} from '../utils/call_responses';
-import {tryPromiseWithMessage} from '../utils';
+    FieldValidationErrors} from 'utils/call_responses';
+import {tryPromiseWithMessage} from 'utils';
 
-import {newMMClient, newZDClient} from '../clients';
+import {newMMClient, newZDClient} from 'clients';
 
 import {newTicketFromForm} from './ticketFromForm';
 import {newTriggerFromForm} from './triggerFromForm';
@@ -123,7 +123,7 @@ class AppImpl implements App {
 
         // add bot to team and channel
         const botUserID = this.context.bot_user_id as string;
-        const addToTeamReq = adminClient.addToTeam(this.context.team_id as string, botUserID);
+        const addToTeamReq = adminClient.addToTeam(this.context.team_id, botUserID);
         await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
 
         const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id as string);

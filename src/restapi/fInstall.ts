@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import {newOKCallResponse} from '../utils/call_responses';
+import {newOKCallResponse} from 'utils/call_responses';
 
 // import {OpenZendeskConfigForm, SubmitOrUpdateZendeskConfigForm} from '../call_handlers';
 

@@ -4,14 +4,14 @@ import {AppSelectOption, AppCallRequest, AppForm, AppField} from 'mattermost-red
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppContextWithBot} from '../types/apps';
+import {AppContextWithBot} from 'types/apps';
 
-import {newZDClient, newMMClient, ZDClient} from '../clients';
-import {getStaticURL, Routes} from '../utils';
-import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
-import {ZDTrigger, ZDTriggerCondition} from '../utils/ZDTypes';
-import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
-import {BaseFormFields} from '../utils/base_form_fields';
+import {newZDClient, newMMClient, ZDClient} from 'clients';
+import {getStaticURL, Routes} from 'utils';
+import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from 'utils/utils';
+import {ZDTrigger, ZDTriggerCondition} from 'utils/ZDTypes';
+import {SubscriptionFields, ZendeskIcon} from 'utils/constants';
+import {BaseFormFields} from 'utils/base_form_fields';
 
 // newSubscriptionsForm returns a form response to create subscriptions
 export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {

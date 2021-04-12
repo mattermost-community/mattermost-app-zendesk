@@ -1,7 +1,7 @@
 import Client4 from 'mattermost-redux/client/client4.js';
 import {AppCallRequest, AppCallValues} from 'mattermost-redux/types/apps';
 
-import {ZDClient} from '../clients';
+import {ZDClient} from 'clients';
 
 import {FieldsBuilder, newFieldsBuilder} from './helper_classes/fields/fields_builder';
 

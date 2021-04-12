@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-import {Routes} from '../utils/constants';
+import {Routes} from 'utils/constants';
 
 export interface KVClient {
     set(key: string, value: any): Promise<void>;

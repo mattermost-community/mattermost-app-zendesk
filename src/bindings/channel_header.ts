@@ -1,8 +1,8 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {getStaticURL, Routes, newChannelHeaderBindings} from '../utils';
-import {CommandLocations, ZendeskIcon} from '../utils/constants';
+import {getStaticURL, Routes, newChannelHeaderBindings} from 'utils';
+import {CommandLocations, ZendeskIcon} from 'utils/constants';
 
 // getChannelHeaderBindings returns the users command bindings
 export const getChannelHeaderBindings = (context: AppContext, configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
