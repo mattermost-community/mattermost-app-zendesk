@@ -74,9 +74,9 @@ export function baseUrlFromContext(context: AppContext): string {
     return context.mattermost_site_url || 'http://localhost:8065';
 }
 
-// getBulletedList returns a bulleted list of items with options header
+// makeBulletedList returns a bulleted list of items with options header
 // pretext
-export function getBulletedList(pretext: string, items: string[]): string {
+export function makeBulletedList(pretext: string, items: string[]): string {
     let text = '* ' + items.join('\n* ');
     if (pretext) {
         text = `###  ${pretext}\n` + text;

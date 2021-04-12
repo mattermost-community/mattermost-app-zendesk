@@ -1,12 +1,14 @@
 import {Channel} from 'mattermost-redux/types/channels';
 import {AppSelectOption, AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
-import {AppContextWithBot} from 'types/apps';
+
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
+import {AppContextWithBot} from '../types/apps';
+
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {getStaticURL, Routes} from '../utils';
-import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage, ZDFieldOption} from '../utils/utils';
+import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
 import {ZDTrigger, ZDTriggerCondition} from '../utils/ZDTypes';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
@@ -243,9 +245,9 @@ class FormFields extends BaseFormFields {
     addErrorMessageField(link: string): void {
         let text = 'The following condition fields are not currently supported by the app. Please visit the trigger link to modify the conditions for this subscription';
         text += '\n\n';
-        text += getBulletedList('Unsupported Fields', this.unsupportedFields);
+        text += makeBulletedList('Unsupported Fields', this.unsupportedFields);
         text += '\n\n';
-        text += getBulletedList('Unsupported Field Operators', this.unsupportedOperators);
+        text += makeBulletedList('Unsupported Field Operators', this.unsupportedOperators);
         text += '\n\n' + link;
 
         const f: AppField = {
