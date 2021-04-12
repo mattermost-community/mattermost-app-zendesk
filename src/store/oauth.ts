@@ -1,4 +1,4 @@
-import {AppContext} from 'mattermost-redux/types/apps';
+import {AppContextWithBot} from '../types/apps';
 
 import {newKVClient, KVClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
@@ -30,7 +30,7 @@ class TokenStoreImpl implements TokenStore {
     }
 }
 
-export const newTokenStore = (context: AppContext): TokenStore => {
+export const newTokenStore = (context: AppContextWithBot): TokenStore => {
     const botAccessToken = context.bot_access_token as string;
     const baseURL = baseUrlFromContext(context);
     return new TokenStoreImpl(botAccessToken, baseURL);
