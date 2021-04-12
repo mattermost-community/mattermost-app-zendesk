@@ -54,7 +54,7 @@ export async function fComplete(req: Request, res: Response): Promise<void> {
 // createContextFromState constructs an AppContext from state. fComplete needs
 // access to the PluginKVStore and retrieves the token and url from state
 function createContextFromState(botToken: string, url: string): AppContextWithBot {
-    const context: AppContextWithBot = {
+    const context = {
         app_id: '',
         bot_access_token: botToken,
         mattermost_site_url: url,
