@@ -18,6 +18,10 @@ export type ZDTrigger = {
     conditions: ZDTriggerConditions
 }
 
+export type ZDTriggerPayload = {
+    trigger: ZDTrigger;
+}
+
 interface CustomFieldOptions {
     [key: string]: unknown;
 }

@@ -16,7 +16,7 @@ export function newOKCallResponseWithMarkdown(markdown: string): AppCallResponse
     };
 }
 
-export function newOKCallResponseWithData(data: {}): AppCallResponse {
+export function newOKCallResponseWithData(data: unknown): AppCallResponse {
     return {
         type: AppCallResponseTypes.OK,
         data,

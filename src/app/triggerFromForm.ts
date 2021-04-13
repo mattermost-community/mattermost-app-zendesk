@@ -1,13 +1,11 @@
-import {Tickets} from 'node-zendesk';
-
 import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition} from 'utils/ZDTypes';
+import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from 'utils/ZDTypes';
 
 import {SubscriptionFields, TriggerFields} from 'utils/constants';
 
 interface TriggerFromFrom {
-    getTrigger(): Tickets.CreatePayload;
+    getTrigger(): ZDTriggerPayload;
 }
 
 export class TriggerFromFormImpl implements TriggerFromFrom {
@@ -21,7 +19,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         this.trigger = {} as ZDTrigger;
     }
 
-    getTrigger(): any {
+    getTrigger(): ZDTriggerPayload {
         // If not a new trigger, add the trigger ID to the payload
         // This is a signal to update the trigger, not create a new one
         if (!this.isNewTrigger()) {
@@ -61,12 +59,6 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         const pairs = TriggerFields.ActionValuePairs;
         pairs[TriggerFields.ChannelIDKey] = channelID;
         return JSON.stringify(pairs);
-    }
-
-    getChannelIDobject(): {} {
-        const fieldName = SubscriptionFields.ChannelPickerSelectName;
-        const channelID = this.values[fieldName].value;
-        return {fieldName: channelID};
     }
 
     addTitle(): void {
@@ -113,7 +105,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(call: AppCallRequest): any {
+export function newTriggerFromForm(call: AppCallRequest): ZDTriggerPayload {
     const trigger = new TriggerFromFormImpl(call).getTrigger();
     return trigger;
 }
