@@ -349,7 +349,7 @@ class FormFields extends BaseFormFields {
     }
 
     getSelectedChannelID(): string {
-        return this.builder.getFieldValueByName(SubscriptionFields.ChannelPickerSelectName);
+        return this.builder.getFieldValueByName(SubscriptionFields.ChannelPickerSelectName) as string;
     }
 
     getSelectedSubTrigger(): ZDTrigger {
@@ -358,7 +358,7 @@ class FormFields extends BaseFormFields {
     }
 
     getSelectedSubTriggerID(): string {
-        return this.builder.getFieldValueByName(SubscriptionFields.SubSelectName);
+        return this.builder.getFieldValueByName(SubscriptionFields.SubSelectName) as string;
     }
 
     getSelectedSubTriggerName(): string {
