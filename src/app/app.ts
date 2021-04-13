@@ -131,12 +131,12 @@ class AppImpl implements App {
 
         const botClient = newMMClient(this.context).asBot();
 
-        const post: Post = {
+        const post = {
             message,
             user_id: botUserID,
             channel_id: String(this.context.channel_id),
             root_id: String(this.context.post_id),
-        };
+        } as Post;
 
         const createPostReq = botClient.createPost(post);
         await tryPromiseWithMessage(createPostReq, 'Failed to create post');
