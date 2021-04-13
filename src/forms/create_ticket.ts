@@ -184,7 +184,7 @@ class FormFields extends BaseFormFields {
     }
 
     isSystemField(field: ZDUserField): boolean {
-        return (SystemFields.includes(String(field.type)) || field.system_field_options) as boolean;
+        return (SystemFields.includes(String(field.type)) || Boolean(field.system_field_options));
     }
 
     // getMappedName gets the mapped field name for a zendesk field.
