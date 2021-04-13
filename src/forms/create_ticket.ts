@@ -13,6 +13,7 @@ import {getStaticURL, Routes} from 'utils';
 import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption, ZDFieldOption} from 'utils/utils';
 import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields, ZendeskIcon} from 'utils/constants';
 import {BaseFormFields} from 'utils/base_form_fields';
+import {ZDUserField} from 'utils/ZDTypes';
 
 const omitFields = ['Group', 'Status'];
 
@@ -76,9 +77,9 @@ class FormFields extends BaseFormFields {
 
     async addFormSelectDependentFields(): Promise<void> {
         // get the form id from the selected form field value
-        const formID = this.builder.getFieldValueByName(CreateTicketFields.NameFormsSelect) as unknown;
+        const formID = this.builder.getFieldValueByName(CreateTicketFields.NameFormsSelect);
 
-        const zdFormFieldIDs = this.getTicketFieldIDs(formID as number);
+        const zdFormFieldIDs = this.getTicketFieldIDs(formID as string);
         const fieldsListReq = this.zdClient?.ticketfields.list();
         const zdTicketFields = await tryPromiseWithMessage(fieldsListReq, 'Failed to fetch ticket fields');
         const zdViewableFields = this.getViewableFields(zdTicketFields, zdFormFieldIDs);
@@ -91,7 +92,7 @@ class FormFields extends BaseFormFields {
     }
 
     // getTicketFieldIDs returns the list of all fields in a Zendesk form
-    private getTicketFieldIDs(id: number): number[] {
+    private getTicketFieldIDs(id: string): string[] {
         const forms = this.zdTicketForms;
         const ids = forms.find((form: ZDFormFieldOption) => {
             return form.id === id;
@@ -101,25 +102,30 @@ class FormFields extends BaseFormFields {
     }
 
     // getViewableFields returns a list of viewable Zendesk field IDs
-    private getViewableFields(ticketFields: Users.Fields.UserField[], formIDs: number[]): Tickets.Field[] {
-        const fields: Users.Fields.UserField[] = [];
-        ticketFields.forEach((field: Users.Fields.UserField) => {
+    private getViewableFields(ticketFields: ZDUserField[], formIDs: string[]): ZDUserField[] {
+        const fields: ZDUserField[] = [];
+        ticketFields.forEach((field: ZDUserField) => {
             // omit fields that do not show up in the create ticket modal in Zendesk
             // but are returned in the ticketFields query
             if (omitFields.includes(field.title)) {
                 return;
             }
 
+            // fields should always have an id, but if not return
+            if (!field.id) {
+                return;
+            }
+
             // only keep fields listed in formIDs
-            if (formIDs.includes(field.id as number)) {
+            if (formIDs.includes(field.id.toString())) {
                 fields.push(field);
             }
         });
         return fields;
     }
 
-    mapZdFieldsToAppFields(fields: Users.Fields.UserField[]): void {
-        fields.forEach((field: Users.Fields.UserField) => {
+    mapZdFieldsToAppFields(fields: ZDUserField[]): void {
+        fields.forEach((field: ZDUserField) => {
             const name = this.getMappedName(field);
             const label = field.title;
             const isRequired = Boolean(field.required_in_portal);
@@ -177,14 +183,14 @@ class FormFields extends BaseFormFields {
         });
     }
 
-    isSystemField(field: Users.Fields.UserField): boolean {
+    isSystemField(field: ZDUserField): boolean {
         return (SystemFields.includes(String(field.type)) || field.system_field_options) as boolean;
     }
 
     // getMappedName gets the mapped field name for a zendesk field.
     // custom zendesk field names are prefixed so that it can be easily parsed
     // when form is submitted
-    getMappedName(field: Users.Fields.UserField): string {
+    getMappedName(field: ZDUserField): string {
         const strFieldType = String(field.type);
         if (strFieldType in MappedZDNames) {
             return MappedZDNames[strFieldType];

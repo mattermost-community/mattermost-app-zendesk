@@ -1,3 +1,5 @@
+import {Request} from 'express';
+
 import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps';
 import {Channel} from 'mattermost-redux/types/channels';
 
@@ -12,8 +14,8 @@ export type ZDFieldOption = {
 
 export type ZDFormFieldOption = {
     name: string;
-    id: number;
-    ticket_field_ids: number[];
+    id: string;
+    ticket_field_ids: string[];
 }
 
 type ZDSubscriptionFieldOption = {

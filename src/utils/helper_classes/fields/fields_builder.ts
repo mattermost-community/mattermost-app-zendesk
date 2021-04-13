@@ -45,7 +45,7 @@ class FieldsBuilderImpl implements FieldsBuilder {
         if (f.type === AppFieldTypes.BOOL) {
             value = true;
             if (f.value === 'false') {
-                value = false;
+                value = f.value;
             }
         }
 
