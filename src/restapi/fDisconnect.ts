@@ -29,7 +29,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
 
     // delete the token from the store
     const tokenStore = newTokenStore(context);
-    const deleteTokenReq = tokenStore.deleteToken(context.acting_user_id as string);
+    const deleteTokenReq = tokenStore.deleteToken(context.acting_user_id);
     await tryPromiseWithMessage(deleteTokenReq, 'failed to delete user token from store');
     res.json(newOKCallResponseWithMarkdown('You have disconnected your Zendesk account'));
 }
