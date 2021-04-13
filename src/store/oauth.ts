@@ -1,4 +1,4 @@
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithActingUserExpanded} from 'types/apps';
 
 import {newKVClient, KVClient} from 'clients';
 import {baseUrlFromContext} from 'utils';
@@ -30,8 +30,8 @@ class TokenStoreImpl implements TokenStore {
     }
 }
 
-export const newTokenStore = (context: AppContextWithBot): TokenStore => {
-    const botAccessToken = context.bot_access_token;
+export const newTokenStore = (context: CtxWithActingUserExpanded): TokenStore => {
+    const botAccessToken = context.acting_user_access_token;
     const baseURL = baseUrlFromContext(context);
     return new TokenStoreImpl(botAccessToken, baseURL);
 };

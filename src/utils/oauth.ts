@@ -1,5 +1,6 @@
 import {v4 as uuidv4} from 'uuid';
-import {AppContext} from 'mattermost-redux/types/apps';
+
+import {CtxWithActingUserExpanded} from 'types/apps';
 
 import {baseUrlFromContext} from 'utils';
 
@@ -12,12 +13,12 @@ export type parseOAuthStateReturnValue = {
     err: string;
 }
 
-export function createOAuthState(context: AppContext): string {
+export function createOAuthState(context: CtxWithActingUserExpanded): string {
     const userID = context.acting_user_id;
-    const botToken = context.bot_access_token;
+    const token = context.acting_user_access_token;
     const baseURL = baseUrlFromContext(context);
     const channelID = context.channel_id;
-    return [uuidv4(), userID, channelID, botToken, baseURL].join('_');
+    return [uuidv4(), userID, channelID, token, baseURL].join('_');
 }
 
 export function parseOAuthState(state: string): parseOAuthStateReturnValue {

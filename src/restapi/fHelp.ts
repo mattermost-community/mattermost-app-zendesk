@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 
 import {AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
 
 import {newOKCallResponseWithMarkdown} from 'utils/call_responses';
 import {getManifest} from 'manifest';
@@ -22,7 +22,7 @@ function getHeader(): string {
 }
 
 function getCommands(call: AppCallRequest): string {
-    const context = call.context as AppContextWithBot;
+    const context = call.context as CtxWithBotAdminActingUserExpanded;
     let text = getUserCommands();
     if (isUserSysadmin(context)) {
         text += getAdminCommands();

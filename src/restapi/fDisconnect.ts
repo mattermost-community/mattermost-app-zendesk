@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithActingUserExpanded} from 'types/apps';
 
 import {newOKCallResponseWithMarkdown} from 'utils/call_responses';
 
@@ -10,7 +10,7 @@ import {tryPromiseWithMessage} from 'utils';
 import {newTokenStore} from 'store';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
-    const context: AppContextWithBot = req.body.context;
+    const context: CtxWithActingUserExpanded = req.body.context;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const zdClient = await newZDClient(context);

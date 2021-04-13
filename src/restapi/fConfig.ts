@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 
 import {AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithActingUserExpanded} from 'types/apps';
 
 import {newConfigStore, AppConfigStore} from 'store/config';
 import {newZendeskConfigForm} from 'forms';
@@ -23,7 +23,7 @@ export async function fSubmitOrUpdateZendeskConfigForm(req: Request, res: Respon
 
 export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Response): Promise<void> {
     const call: AppCallRequest = req.body;
-    const context: AppContextWithBot = call.context as AppContextWithBot;
+    const context = call.context as CtxWithActingUserExpanded;
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {

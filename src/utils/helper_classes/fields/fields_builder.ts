@@ -1,4 +1,4 @@
-import {AppCallRequest, AppField, AppCallValues} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppField, AppCallValues, AppFormValue} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 export interface FieldsBuilder {
@@ -6,7 +6,7 @@ export interface FieldsBuilder {
     addFields(field: AppField[]): void;
     currentFieldValuesAreDefined(): boolean;
     getFields(): AppField[];
-    getFieldValueByName(fieldName: string): string;
+    getFieldValueByName(fieldName: string): AppFormValue;
     getFieldLabelByName(fieldName: string): string;
     setDefaultMaxLength(value: number): void;
     setDefaultMinLength(value: number): void;
@@ -87,13 +87,13 @@ class FieldsBuilderImpl implements FieldsBuilder {
     }
 
     // addFields adds multiple fields to the current fields list array.
-    addFields(fields: AppField[]): void{
+    addFields(fields: AppField[]): void {
         this.appFields.push(...fields);
     }
 
     // getFieldValueByName returns the defined AppCall value for a field or an empty string
     // In the case of a select field, it is the value field in the returned object.
-    getFieldValueByName(fieldName: string): string {
+    getFieldValueByName(fieldName: string): AppFormValue {
         if (this.values && this.values[fieldName]) {
             // this is select field return the value field in the object
             if (this.values[fieldName].value) {

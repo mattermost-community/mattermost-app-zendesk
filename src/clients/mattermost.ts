@@ -1,6 +1,6 @@
 import Client from 'mattermost-redux/client/client4.js';
 
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
 
 import {baseUrlFromContext} from 'utils';
 
@@ -10,13 +10,13 @@ interface MMClient {
     asActingUser(): Client;
 }
 
-export const newMMClient = (context: AppContextWithBot): MMClient => {
+export const newMMClient = (context: CtxWithBotAdminActingUserExpanded): MMClient => {
     return new MMClientImpl(context);
 };
 
 class MMClientImpl implements MMClient {
-    context: AppContextWithBot
-    constructor(context: AppContextWithBot) {
+    context: CtxWithBotAdminActingUserExpanded
+    constructor(context: CtxWithBotAdminActingUserExpanded) {
         this.context = context;
     }
     newClient(token: string): Client {
@@ -40,7 +40,7 @@ class MMClientImpl implements MMClient {
     // TODO: admin vs bot?
     asAdmin(): Client {
         return this.as(
-            this.context.bot_access_token,
+            this.context.admin_access_token,
         );
     }
 

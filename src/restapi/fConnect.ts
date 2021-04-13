@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithActingUserExpanded} from 'types/apps';
 
 import {newOKCallResponseWithMarkdown} from 'utils/call_responses';
 
@@ -9,7 +9,7 @@ import {newConfigStore} from 'store';
 import {Routes, createOAuthState} from 'utils';
 
 export async function fConnect(req: Request, res: Response): Promise<void> {
-    const context: AppContextWithBot = req.body.context;
+    const context: CtxWithActingUserExpanded = req.body.context;
     const state = createOAuthState(context);
 
     const configStore = newConfigStore(context);

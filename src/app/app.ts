@@ -1,7 +1,7 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {AppCallValues, AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
 
 import {SubscriptionFields} from 'utils/constants';
 
@@ -27,12 +27,12 @@ export interface App {
 
 class AppImpl implements App {
     call: AppCallRequest
-    context: AppContextWithBot
+    context: CtxWithBotAdminActingUserExpanded
     values: AppCallValues
 
     constructor(call: AppCallRequest) {
         this.call = call;
-        this.context = call.context as AppContextWithBot;
+        this.context = call.context as CtxWithBotAdminActingUserExpanded;
         this.values = call.values as AppCallValues;
     }
     createTicketFromPost = async (): Promise<AppCallResponse> => {

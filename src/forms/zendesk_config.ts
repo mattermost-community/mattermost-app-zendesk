@@ -3,7 +3,7 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
 
 import {newMMClient, ZDClient} from 'clients';
 import {getStaticURL, Routes} from 'utils';
@@ -13,7 +13,7 @@ import {newConfigStore, ConfigStore, AppConfigStore} from 'store/config';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
-    const context: AppContextWithBot = call.context as AppContextWithBot;
+    const context = call.context as CtxWithBotAdminActingUserExpanded;
     const mmClient = newMMClient(context).asAdmin();
     const configStore = newConfigStore(context);
     const formFields = new FormFields(call, configStore, mmClient);

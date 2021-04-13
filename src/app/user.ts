@@ -1,19 +1,19 @@
 import {isAdmin} from 'mattermost-redux/utils/user_utils';
 import GeneralConstants from 'mattermost-redux/constants/general';
 
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithBotAdminActingUserExpanded, CtxWithActingUserExpanded} from 'types/apps';
 
 import {newMMClient} from 'clients';
 import {newTokenStore} from 'store';
 
-export async function isUserConnected(context: AppContextWithBot): Promise<boolean> {
+export async function isUserConnected(context: CtxWithActingUserExpanded): Promise<boolean> {
     const userID = context.acting_user_id;
     const tokenStore = newTokenStore(context);
     const token = await tokenStore.getToken(userID);
     return Boolean(token);
 }
 
-export async function isUserSysadmin(context: AppContextWithBot): Promise<boolean> {
+export async function isUserSysadmin(context: CtxWithBotAdminActingUserExpanded): Promise<boolean> {
     if (context.acting_user && context.acting_user.roles) {
         return isAdmin(context.acting_user.roles);
     }
