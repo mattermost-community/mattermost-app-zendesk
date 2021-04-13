@@ -1,11 +1,11 @@
-import {Tickets, Users} from 'node-zendesk';
+import {Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {AppField, AppForm, AppCallRequest} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
-import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
+import {CtxWithBotAdminActingUserExpanded, CtxWithPostExpanded} from 'types/apps';
 
 import {newZDClient, newMMClient, ZDClient} from 'clients';
 
@@ -43,7 +43,8 @@ class FormFields extends BaseFormFields {
     postMessage: string
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4) {
         super(call, zdClient, mmClient);
-        this.postMessage = call?.context?.post?.message as string;
+        const context = call.context as CtxWithPostExpanded;
+        this.postMessage = context.post.message;
         this.zdTicketForms = [];
     }
 
