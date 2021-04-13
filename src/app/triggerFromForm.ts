@@ -73,7 +73,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         this.addField('description', description);
     }
 
-    addField(key: string, value: any): void {
+    addField(key: string, value: unknown): void {
         this.trigger[key] = value;
     }
 

@@ -1,5 +1,3 @@
-import {Request} from 'express';
-
 import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps';
 import {Channel} from 'mattermost-redux/types/channels';
 
