@@ -1,6 +1,6 @@
 import {AppContext} from 'mattermost-redux/types/apps';
 
-import {newKVClient, KVClient} from '../clients';
+import {newProxyClient, ProxyClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 interface TokenStore {
@@ -11,22 +11,22 @@ interface TokenStore {
 
 // need to add prefix
 class TokenStoreImpl implements TokenStore {
-    kvClient: KVClient
+    ppClient: ProxyClient
 
     constructor(botToken: string, baseURL: string) {
-        this.kvClient = newKVClient(botToken, baseURL);
+        this.ppClient = newProxyClient(botToken, baseURL);
     }
 
     async storeToken(userID: string, token: string): Promise<void> {
-        await this.kvClient.set(userID, {token});
+        await this.ppClient.kvSet(userID, {token});
     }
 
     async deleteToken(userID: string): Promise<void> {
-        this.kvClient.delete(userID);
+        this.ppClient.kvDelete(userID);
     }
 
     async getToken(userID: string): Promise<string> {
-        return this.kvClient.get(userID);
+        return this.ppClient.kvGet(userID);
     }
 }
 

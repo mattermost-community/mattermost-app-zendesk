@@ -1,7 +1,7 @@
 import {AppCallValues, AppContext} from 'mattermost-redux/types/apps';
 
 import {StoreKeys} from '../utils/constants';
-import {newKVClient, KVClient} from '../clients';
+import {newProxyClient, ProxyClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 export type AppConfigStore = {
@@ -21,19 +21,19 @@ export interface ConfigStore {
 
 class ConfigStoreImpl implements ConfigStore {
     storeData: AppConfigStore;
-    kvClient: KVClient;
+    ppClient: ProxyClient;
 
     constructor(botToken: string, url: string) {
-        this.kvClient = newKVClient(botToken, url);
+        this.ppClient = newProxyClient(botToken, url);
         this.storeData = {} as AppConfigStore;
     }
 
     storeConfigInfo(store: AppConfigStore): void {
-        this.kvClient.set(StoreKeys.config, store);
+        this.ppClient.kvSet(StoreKeys.config, store);
     }
 
     async getValues(): Promise<AppConfigStore> {
-        const config = await this.kvClient.get(StoreKeys.config);
+        const config = await this.ppClient.kvGet(StoreKeys.config);
         if (config) {
             this.storeData.zd_url = config.zd_url || '';
             this.storeData.zd_client_id = config.zd_client_id || '';

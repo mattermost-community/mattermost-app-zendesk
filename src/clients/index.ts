@@ -1,3 +1,3 @@
 export {newMMClient} from './mattermost';
-export {newKVClient, KVClient} from './mattermostKV';
+export {newProxyClient, ProxyClient} from './mattermost_proxy_plugin';
 export {newZDClient, ZDClient} from './zendesk';
