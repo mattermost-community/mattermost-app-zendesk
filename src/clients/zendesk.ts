@@ -1,6 +1,6 @@
 import zendesk, {ClientOptions} from 'node-zendesk';
 
-import {AppContextWithBot} from 'types/apps';
+import {CtxWithActingUserExpanded} from 'types/apps';
 
 import {Routes} from 'utils';
 import {newTokenStore, newConfigStore} from 'store';
@@ -44,7 +44,7 @@ export interface ZDClient {
     users: Users;
 }
 
-export const newZDClient = async (context: AppContextWithBot): Promise<ZDClient> => {
+export const newZDClient = async (context: CtxWithActingUserExpanded): Promise<ZDClient> => {
     const mmUserID = context.acting_user_id;
     if (mmUserID === '') {
         throw new Error('Failed to get user acting_user_id');
@@ -56,7 +56,7 @@ export const newZDClient = async (context: AppContextWithBot): Promise<ZDClient>
     }
     const tokenValue = token.token;
     const config = await newConfigStore(context).getValues();
-    const remoteUri = config.zd_url + Routes.ZD.APIVersion as string;
+    const remoteUri = config.zd_url + Routes.ZD.APIVersion;
     const options: ClientOptions = {
         username: '',
         token: tokenValue,

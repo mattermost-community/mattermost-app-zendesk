@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch, {RequestInit} from 'node-fetch';
 
 import {Routes} from 'utils/constants';
 
@@ -37,19 +37,19 @@ class KVClientImpl implements KVClient {
     }
 
     async newRequest(key: string, value: any, method: string): Promise<any> {
-        const newoptions = {
+        const options = {
             headers: {
                 Authorization: `BEARER ${this.token}`,
                 'content-type': 'application/json; charset=UTF-8',
             },
             method,
-        };
+        } as RequestInit;
         if (method === 'post') {
-            newoptions.body = JSON.stringify(value);
+            options.body = JSON.stringify(value);
         }
 
         const url = this.url + this.getKVURL(key);
-        const fetchedValue = await fetch(url, newoptions).
+        const fetchedValue = await fetch(url, options).
             then((data) => data.json());
         return fetchedValue;
     }
