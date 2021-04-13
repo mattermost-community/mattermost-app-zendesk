@@ -3,10 +3,14 @@ import {CtxWithActingUserExpanded} from 'types/apps';
 import {newKVClient, KVClient} from 'clients';
 import {baseUrlFromContext} from 'utils';
 
+export type UserToken = {
+    token: string
+}
+
 interface TokenStore {
     storeToken(userID: string, token: string): Promise<void>;
     deleteToken(userID: string): Promise<void>;
-    getToken(userID: string): Promise<string>;
+    getToken(userID: string): Promise<UserToken>;
 }
 
 // need to add prefix
@@ -25,7 +29,7 @@ class TokenStoreImpl implements TokenStore {
         this.kvClient.delete(userID);
     }
 
-    async getToken(userID: string): Promise<string> {
+    async getToken(userID: string): Promise<UserToken> {
         return this.kvClient.get(userID);
     }
 }
