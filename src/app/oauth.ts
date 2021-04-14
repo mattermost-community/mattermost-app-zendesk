@@ -32,4 +32,3 @@ export const getOAuthConfig = async (context: AppContext): any => {
 // &response_type=code
 // &scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email
 // &state=5sD3ESAn1mtyqAiF4E-t.rgixs6uimp88tq8x8w3yxu3oqe
-

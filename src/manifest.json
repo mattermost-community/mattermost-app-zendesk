@@ -1,7 +1,7 @@
 {
     "app_id": "com.mattermost.zendesk",
     "app_type": "aws_lambda",
-    "version": "0_0_1",
+    "version": "0_0_2",
     "display_name": "Zendesk",
     "description": "Zendesk cloud app for Mattermost",
     "homepage_url": "https://github.com/mattermost/mattermost-app-zendesk",
@@ -10,6 +10,7 @@
         "act_as_user",
         "act_as_bot",
         "act_as_admin",
+        "act_as_sysadmin",
         "remote_webhooks",
         "remote_oauth2"
     ],
