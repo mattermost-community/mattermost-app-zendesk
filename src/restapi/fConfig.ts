@@ -24,13 +24,10 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
     const call: AppCall = req.body;
     const url = baseUrlFromContext(call.context);
 
-    console.log('call', call);
     const id = call.values.zd_client_id || '';
     const secret = call.values.zd_client_secret || '';
-    console.log('id', id);
-    console.log('secret', secret);
 
-    const ppClient = newProxyClient(call.context.bot_access_token, url);
+    const ppClient = newProxyClient(call.context.acting_user_access_token, url);
     ppClient.storeOauth2App(id, secret);
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');

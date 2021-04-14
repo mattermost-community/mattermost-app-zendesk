@@ -6,8 +6,6 @@ import {baseUrlFromContext} from '../utils';
 
 export type AppConfigStore = {
     zd_url: string;
-    zd_client_id: string;
-    zd_client_secret: string;
     zd_node_host: string;
     zd_target_id: string;
     zd_connected_mm_user_id: string;
@@ -36,8 +34,6 @@ class ConfigStoreImpl implements ConfigStore {
         const config = await this.ppClient.kvGet(StoreKeys.config);
         if (config) {
             this.storeData.zd_url = config.zd_url || '';
-            this.storeData.zd_client_id = config.zd_client_id || '';
-            this.storeData.zd_client_secret = config.zd_client_secret || '';
             this.storeData.zd_node_host = config.zd_node_host || '';
             this.storeData.zd_target_id = config.zd_target_id || '';
             this.storeData.zd_connected_mm_user_id = config.zd_connected_mm_user_id || '';
@@ -49,7 +45,7 @@ class ConfigStoreImpl implements ConfigStore {
     // TODO Validation logic needs to be improved
     async isConfigured(): Promise<boolean> {
         const config = await this.getValues();
-        return Boolean(config.zd_url && config.zd_client_id && config.zd_client_secret && config.zd_target_id);
+        return Boolean(config.zd_url && config.zd_target_id);
     }
 }
 

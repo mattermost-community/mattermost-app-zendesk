@@ -45,6 +45,8 @@ const channelHeaderConfig = (context: AppContext): AppBinding => {
             path: Routes.App.CallPathConfigOpenForm,
             expand: {
                 acting_user: AppExpandLevels.EXPAND_ALL,
+                acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+                oauth2_app: AppExpandLevels.EXPAND_ALL,
             },
         },
     } as AppBinding;

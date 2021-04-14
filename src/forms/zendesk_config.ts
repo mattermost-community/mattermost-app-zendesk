@@ -27,18 +27,26 @@ export async function newZendeskConfigForm(call: AppCall): Promise<AppForm> {
     return form;
 }
 
+type OauthValues = {
+    client_id: string
+    client_secret: string
+}
+
 // FormFields retrieves viewable modal app fields
 class FormFields extends BaseFormFields {
     configStore: ConfigStore
     storeValues: AppConfigStore
+    OauthValues: OauthValues
 
     constructor(call: AppCall, configStore: ConfigStore, zdClient: ZDClient, mmClient: Client4) {
         super(call, zdClient, mmClient);
         this.configStore = configStore;
+        this.OauthValues = {
+            client_id: call.context.oauth2.client_id,
+            client_secret: call.context.oauth2.client_secret,
+        };
         this.storeValues = {
             zd_url: '',
-            zd_client_id: '',
-            zd_client_secret: '',
             zd_node_host: '',
             zd_connected_mm_user_id: '',
             zd_target_id: '',
@@ -80,7 +88,7 @@ class FormFields extends BaseFormFields {
             type: AppFieldTypes.TEXT,
             name: 'zd_client_id',
             label: 'Client ID',
-            value: this.storeValues.zd_client_id,
+            value: this.OauthValues.client_id,
             description: 'Client ID obtained when setting up Oauth client in zendesk',
             is_required: true,
         };
@@ -91,7 +99,7 @@ class FormFields extends BaseFormFields {
             type: AppFieldTypes.TEXT,
             name: 'zd_client_secret',
             label: 'Client Secret',
-            value: this.storeValues.zd_client_secret,
+            value: this.OauthValues.client_secret,
             description: 'Client Secret obtained when setting up Oauth client in zendesk',
             is_required: true,
         };

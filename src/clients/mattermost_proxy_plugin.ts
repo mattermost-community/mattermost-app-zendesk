@@ -22,7 +22,7 @@ class ProxyClientImpl implements ProxyClient {
         this.token = token;
         this.url = baseURL;
     }
-    async kvSet(value: any): Promise<void> {
+    async kvSet(key: string, value: any): Promise<void> {
         const url = this.url + this.kvPath(key);
         try {
             this.doAPIPost(url, value);
@@ -57,9 +57,7 @@ class ProxyClientImpl implements ProxyClient {
     async doAPIPost(url: string, value: any): Promise<any> {
         const options = this.getFetchOptions('post');
         options.body = JSON.stringify(value);
-        console.log('options', options);
-        const fetchedValue = await fetch(url, options).
-            then((data) => data.json());
+        const fetchedValue = await fetch(url, options);
         return fetchedValue;
     }
 
