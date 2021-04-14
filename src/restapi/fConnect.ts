@@ -3,7 +3,7 @@ import {Request, Response} from 'express';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
-import {newProxyClient, ProxyClient} from '../clients';
+import {newProxyClient} from '../clients';
 
 import {getOAuthConfig} from '../app/oauth';
 import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
