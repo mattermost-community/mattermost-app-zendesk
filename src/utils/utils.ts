@@ -5,6 +5,11 @@ import {getManifest} from '../manifest';
 
 import {SubscriptionFields} from './constants';
 
+export type Oauth2App = {
+    client_id: string;
+    client_secret: string;
+}
+
 export type ZDFieldOption = {
     name: string;
     value: string;

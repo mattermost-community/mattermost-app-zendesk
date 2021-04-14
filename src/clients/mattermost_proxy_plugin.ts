@@ -1,5 +1,7 @@
 import fetch from 'node-fetch';
 
+import {Oauth2App} from 'src/utils';
+
 import {Routes, AppsPluginName, PathAPI, PathKV} from '../utils/constants';
 import {getManifest} from '../manifest';
 
@@ -38,12 +40,12 @@ class ProxyClientImpl implements ProxyClient {
 
     kvDelete(key: string): void {
         const url = this.url + this.kvPath(key);
-        this.doAPIDelete(url, key);
+        this.doAPIDelete(url);
     }
 
     storeOauth2App(id: string, secret: string): void {
         const url = this.url + this.oauth2AppPath();
-        const data = {
+        const data: Oauth2App = {
             client_id: id,
             client_secret: secret,
         };

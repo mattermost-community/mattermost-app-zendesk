@@ -3,7 +3,7 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {newMMClient, ZDClient} from '../clients';
-import {getStaticURL, Routes} from '../utils';
+import {getStaticURL, Routes, Oauth2App} from '../utils';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {ZendeskIcon} from '../utils/constants';
 import {newConfigStore, ConfigStore, AppConfigStore} from '../store/config';
@@ -27,16 +27,11 @@ export async function newZendeskConfigForm(call: AppCall): Promise<AppForm> {
     return form;
 }
 
-type OauthValues = {
-    client_id: string
-    client_secret: string
-}
-
 // FormFields retrieves viewable modal app fields
 class FormFields extends BaseFormFields {
     configStore: ConfigStore
     storeValues: AppConfigStore
-    OauthValues: OauthValues
+    OauthValues: Oauth2App
 
     constructor(call: AppCall, configStore: ConfigStore, zdClient: ZDClient, mmClient: Client4) {
         super(call, zdClient, mmClient);
