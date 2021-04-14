@@ -3,7 +3,7 @@ import express from 'express';
 import {Routes} from '../utils';
 
 import {fBindings} from './fBindings';
-import {fConnect} from './fConnect';
+import {fConnect, fOauth2Connect, fOauth2Complete} from './fConnect';
 import {fComplete, fRedirect} from './fComplete';
 import {fOpenCreateTicketForm, fSubmitOrUpdateCreateTicketForm, fSubmitOrUpdateCreateTicketSubmit} from './fCreateTicket';
 import {fOpenSubscriptionsForm, fSubmitOrUpdateSubscriptionsForm, fSubmitOrUpdateSubscriptionsSubmit} from './fSubscriptions';
@@ -18,6 +18,10 @@ const router = express.Router();
 
 router.get(Routes.App.ManifestPath, fManifest);
 router.post(Routes.App.BindingsPath, fBindings);
+
+// oauth2 Connect
+router.post(Routes.App.OAuthConnectPath, fOauth2Connect);
+router.post(Routes.App.OAuthCompletePath, fOauth2Complete);
 
 router.post(Routes.App.OAuthRedirectPath, fRedirect);
 router.get(Routes.App.OAuthCompletePath, fComplete);

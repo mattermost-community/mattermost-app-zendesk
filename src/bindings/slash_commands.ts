@@ -37,6 +37,9 @@ const cmdConnect = (context: AppContext): AppBinding => {
         icon: getStaticURL(context, ZendeskIcon),
         form: {},
         call: {
+            expand: {
+                oauth2_app: AppExpandLevels.EXPAND_ALL,
+            },
             path: Routes.App.BindingPathConnect,
         },
     } as AppBinding;

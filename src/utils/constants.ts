@@ -31,6 +31,7 @@ const AppPaths = {
     InstallPath: '/install',
 
     OAuthCompletePath: '/oauth2/complete',
+    OAuthConnectPath: '/oauth2/connect',
     OAuthRedirectPath: '/oauth2/redirect',
     SubscribeIncomingWebhookPath: '/webhook-target',
 
