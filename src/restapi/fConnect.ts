@@ -3,8 +3,10 @@ import {Request, Response} from 'express';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
+import {newProxyClient, ProxyClient} from '../clients';
+
 import {getOAuthConfig} from '../app/oauth';
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newConfigStore} from '../store';
 
 import {contextFromRequest, Routes} from '../utils';
@@ -16,7 +18,6 @@ export async function fConnect(req: Request, res: Response): Promise<void> {
 }
 
 export async function fOauth2Connect(req: Request, res: Response): Promise<void> {
-    console.log('call', req.body);
     const context = contextFromRequest(req);
     const state = req.body.values.state;
 
@@ -37,104 +38,22 @@ export async function fOauth2Connect(req: Request, res: Response): Promise<void>
         type: AppCallResponseTypes.OK,
         data: link,
     };
-    console.log('link', link);
     res.json(callResponse);
 }
 
 export async function fOauth2Complete(req: Request, res: Response): Promise<void> {
-    console.log('<><><> !!!. IN HERE!');
-    console.log('req.body', req.body);
+    const call: AppCall = req.body;
     const context = contextFromRequest(req);
-    const url = context.oauth2.connect_url;
-
-    // res.json(newOKCallResponseWithMarkdown(`Follow this link to connect Mattermost to your Zendesk Account: [link](${url})`));
-
-    const code = req.body.values.code;
+    const code = call.values.code;
     if (code === '') {
         throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
     }
 
-    const state = req.body.values.state;
-    if (state === '') {
-        throw new Error('Bad Request: state param not provided'); // Express will catch this on its own.
-    }
-
-    // const parsedState = parseOAuthState(state);
-    // if (parsedState.err !== '') {
-    //     throw new Error('Bad Request: bad state'); // Express will catch this on its own.
-    // }
-    //
-    // const context = createContextFromState(parsedState.botToken, parsedState.url);
     const zdAuth = await getOAuthConfig(context);
-
-    let newurl = context.oauth2.complete_url;
-    newurl += '?code=' + code;
-
-    // const user = await zdAuth.code.getToken(req.originalUrl);
-    const user = await zdAuth.code.getToken(newurl);
-
+    const url = context.oauth2.complete_url + '?code=' + code;
+    const user = await zdAuth.code.getToken(url);
     const token = user.data.access_token;
-    console.log('token', token);
-
-    //
-    // newTokenStore(context).storeToken(parsedState.userID, token);
-    //
-    // const connectedString = 'You have successfuly connected the Zendesk Mattermost App to Zendesk. Please close this window.';
-    // const html = `
-    // <!DOCTYPE html>
-    // <html>
-    // 	<head>
-    // 		<script>
-    // 			window.close();
-    // 		</script>
-    // 	</head>
-    // 	<body>
-    // 		<p>${connectedString}</p>
-    // 	</body>
-    // </html>
-    // `;
-    //
-    // res.setHeader('Content-Type', 'text/html');
-    // res.send(html);
-
-    // const code = req.query.code;
-    // if (code === '') {
-    //     throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
-    // }
-    //
-    // const state = String(req.query.state);
-    // if (state === '') {
-    //     throw new Error('Bad Request: state param not provided'); // Express will catch this on its own.
-    // }
-    //
-    // const parsedState = parseOAuthState(state);
-    // if (parsedState.err !== '') {
-    //     throw new Error('Bad Request: bad state'); // Express will catch this on its own.
-    // }
-    //
-    // const context = createContextFromState(parsedState.botToken, parsedState.url);
-    // const zdAuth = await getOAuthConfig(context);
-    //
-    // const user = await zdAuth.code.getToken(req.originalUrl);
-    // const token = user.data.access_token;
-    //
-    // newTokenStore(context).storeToken(parsedState.userID, token);
-    //
-    // const connectedString = 'You have successfuly connected the Zendesk Mattermost App to Zendesk. Please close this window.';
-    // const html = `
-    // <!DOCTYPE html>
-    // <html>
-    // 	<head>
-    // 		<script>
-    // 			window.close();
-    // 		</script>
-    // 	</head>
-    // 	<body>
-    // 		<p>${connectedString}</p>
-    // 	</body>
-    // </html>
-    // `;
-    //
-    // res.setHeader('Content-Type', 'text/html');
-    // res.send(html);
+    const ppClient = newProxyClient(call.context.acting_user_access_token, url);
+    ppClient.storeOauth2User(token);
+    res.json(newOKCallResponse());
 }

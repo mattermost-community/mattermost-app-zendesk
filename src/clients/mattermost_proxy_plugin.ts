@@ -10,6 +10,7 @@ export interface ProxyClient {
     kvGet(key: string): Promise<any>;
     kvDelete(key: string): void;
     storeOauth2App(id: string, secret: string): void;
+    storeOauth2User(token: string): void
 }
 
 export const newProxyClient = (botAccessToken: string, baseURL: string): ProxyClient => {
@@ -56,6 +57,16 @@ class ProxyClientImpl implements ProxyClient {
         }
     }
 
+    storeOauth2User(token: string): void {
+        const url = this.url + this.oauth2UserPath();
+        const data = {token};
+        try {
+            this.doAPIPost(url, data);
+        } catch (e) {
+            console.log('e', e);
+        }
+    }
+
     async doAPIPost(url: string, value: any): Promise<any> {
         const options = this.getFetchOptions('post');
         options.body = JSON.stringify(value);
@@ -93,6 +104,10 @@ class ProxyClientImpl implements ProxyClient {
 
     oauth2AppPath(): string {
         return this.apiPath(Routes.MM.PathOAuth2App) + '/' + getManifest().app_id;
+    }
+
+    oauth2UserPath(): string {
+        return this.apiPath(Routes.MM.PathOAuth2User) + '/' + getManifest().app_id;
     }
 
     apiPath(p: string): string {
