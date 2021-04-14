@@ -67,8 +67,8 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     // const context = createContextFromState(parsedState.botToken, parsedState.url);
     const zdAuth = await getOAuthConfig(context);
 
-    const newurl = context.oauth2.connect_url;
-    console.log('newurl', newurl);
+    let newurl = context.oauth2.complete_url;
+    newurl += '?code=' + code;
 
     // const user = await zdAuth.code.getToken(req.originalUrl);
     const user = await zdAuth.code.getToken(newurl);
