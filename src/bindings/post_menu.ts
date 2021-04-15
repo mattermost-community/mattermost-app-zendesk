@@ -46,6 +46,7 @@ const openSubscriptionsForm = (context: AppContext): AppBinding => {
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
+                admin_access_token: AppExpandLevels.EXPAND_ALL,
                 acting_user: AppExpandLevels.EXPAND_ALL,
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
