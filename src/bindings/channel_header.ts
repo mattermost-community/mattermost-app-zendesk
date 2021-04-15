@@ -1,20 +1,20 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {getStaticURL, Routes, newChannelHeaderBindings} from '../utils';
+import {getStaticURL, Routes, newChannelHeaderBindings, isConfigured, isConnected} from '../utils';
 import {CommandLocations, ZendeskIcon} from '../utils/constants';
 
 // getChannelHeaderBindings returns the users command bindings
-export const getChannelHeaderBindings = (context: AppContext, configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
+export const getChannelHeaderBindings = (context: AppContext, sysadmin: boolean): AppBinding => {
     const bindings: AppBinding[] = [];
 
     // only show configuration option if admin has not configured the plugin
-    if (!configured && sysadmin) {
+    if (!isConfigured(context) && sysadmin) {
         bindings.push(channelHeaderConfig(context));
         return newChannelHeaderBindings(bindings);
     }
 
-    if (connected) {
+    if (isConnected(context)) {
         bindings.push(channelHeaderSubscribe(context));
     }
     return newChannelHeaderBindings(bindings);

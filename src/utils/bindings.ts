@@ -6,14 +6,10 @@ import {getStaticURL} from '../utils';
 
 // Bindings base class stores user info for subclasses
 export class Bindings {
-    configured: boolean
-    connected: boolean
     sysadmin: boolean
     private bindings: AppBinding[]
 
-    constructor(isConfigured: boolean, isConnected: boolean, isSysadmin: boolean) {
-        this.configured = isConfigured;
-        this.connected = isConnected;
+    constructor(isSysadmin: boolean) {
         this.sysadmin = isSysadmin;
         this.bindings = [];
     }
@@ -26,19 +22,9 @@ export class Bindings {
         return this.bindings;
     }
 
-    // check if user connected with KV store
-    isConnected = (): boolean => {
-        return this.connected;
-    }
-
     // check if user is sysadmin through mattermost API
     isSysadmin = (): boolean => {
         return this.sysadmin;
-    }
-
-    // check if zendesk configuration has been complete
-    isConfigured = (): boolean => {
-        return this.configured;
     }
 }
 

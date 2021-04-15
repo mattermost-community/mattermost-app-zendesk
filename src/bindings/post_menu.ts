@@ -2,18 +2,18 @@ import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {Routes, CommandLocations, ZendeskIcon} from '../utils/constants';
-import {getStaticURL, newPostMenuBindings} from '../utils';
+import {getStaticURL, newPostMenuBindings, isConfigured, isConnected} from '../utils';
 
 // getPostMenuBindings returns the users post menu bindings
-export const getPostMenuBindings = (context: AppContext, configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
+export const getPostMenuBindings = (context: AppContext, sysadmin: boolean): AppBinding => {
     const bindings: AppBinding[] = [];
 
     // only show configuration option if admin has not configured the plugin
-    if (!configured && sysadmin) {
+    if (!isConfigured(context) && sysadmin) {
         return newPostMenuBindings(bindings);
     }
 
-    if (connected) {
+    if (isConnected(context)) {
         bindings.push(openCreateTicketForm(context));
         bindings.push(openSubscriptionsForm(context));
     }
@@ -47,6 +47,7 @@ const openSubscriptionsForm = (context: AppContext): AppBinding => {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
                 acting_user: AppExpandLevels.EXPAND_ALL,
+                oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
     } as AppBinding;

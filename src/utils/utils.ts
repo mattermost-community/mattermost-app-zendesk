@@ -92,3 +92,11 @@ export function getBulletedList(pretext: string, items: string[]): string {
 export function getStaticURL(context: AppContext, name:string): string {
     return context.mattermost_site_url + '/plugins/com.mattermost.apps/apps/' + getManifest().app_id + '/static/' + name;
 }
+
+export function isConfigured(context: AppContext): boolean {
+    return Boolean(context.oauth2.client_id && context.oauth2.client_secret);
+}
+
+export function isConnected(context: AppContext): boolean {
+    return context.oauth2.user.access_token !== '';
+}
