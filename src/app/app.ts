@@ -122,11 +122,11 @@ class AppImpl implements App {
 
     createActingUserPost = async (message: string): Promise<void> => {
         const actingUserClient = newMMClient(this.context).asActingUser();
-        const actingUserId = this.context.acting_user_id;
+        const user_id = this.context.acting_user_id;
 
         const post: Post = {
             message,
-            user_id: actingUserId,
+            user_id,
             channel_id: String(this.context.channel_id),
             root_id: String(this.context.post_id),
         };
