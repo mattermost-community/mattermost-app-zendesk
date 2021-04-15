@@ -67,6 +67,10 @@ const cmdSubscribe = (context: AppContext): AppBinding => {
         form: {},
         call: {
             path: Routes.App.CallPathSubsOpenForm,
+            expand: {
+                oauth2_app: AppExpandLevels.EXPAND_ALL,
+                oauth2_user: AppExpandLevels.EXPAND_ALL,
+            },
         },
     } as AppBinding;
 };

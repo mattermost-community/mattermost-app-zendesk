@@ -49,17 +49,16 @@ export const newZDClient = async (context: AppContext): Promise<ZDClient> => {
     if (mmUserID === '') {
         throw new Error('Failed to get user acting_user_id');
     }
-    const tokenStore = newTokenStore(context);
-    const token = await tokenStore.getToken(mmUserID);
+
+    const token = context.oauth2.user.access_token;
     if (!token) {
         throw new Error('Failed to get user access_token');
     }
-    const tokenValue = token.token;
     const config = await newConfigStore(context).getValues();
     const remoteUri = config.zd_url + Routes.ZD.APIVersion as string;
     const options: ClientOptions = {
         username: '',
-        token: tokenValue,
+        token,
         remoteUri,
         oauth: true,
     };

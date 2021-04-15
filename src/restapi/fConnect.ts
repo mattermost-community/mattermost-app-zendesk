@@ -50,10 +50,12 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     }
 
     const zdAuth = await getOAuthConfig(context);
-    const url = context.oauth2.complete_url + '?code=' + code;
-    const user = await zdAuth.code.getToken(url);
-    const token = user.data.access_token;
-    const ppClient = newProxyClient(call.context.acting_user_access_token, url);
+    const zdURL = context.oauth2.complete_url + '?code=' + code;
+    const user = await zdAuth.code.getToken(zdURL);
+    const token = user.data;
+
+    const mmURL = context.mattermost_site_url;
+    const ppClient = newProxyClient(call.context.acting_user_access_token, mmURL);
     ppClient.storeOauth2User(token);
     res.json(newOKCallResponse());
 }

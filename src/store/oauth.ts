@@ -4,7 +4,6 @@ import {newProxyClient, ProxyClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 interface TokenStore {
-    storeToken(userID: string, token: string): Promise<void>;
     deleteToken(userID: string): Promise<void>;
     getToken(userID: string): Promise<string>;
 }
@@ -15,10 +14,6 @@ class TokenStoreImpl implements TokenStore {
 
     constructor(botToken: string, baseURL: string) {
         this.ppClient = newProxyClient(botToken, baseURL);
-    }
-
-    async storeToken(userID: string, token: string): Promise<void> {
-        await this.ppClient.kvSet(userID, {token});
     }
 
     async deleteToken(userID: string): Promise<void> {

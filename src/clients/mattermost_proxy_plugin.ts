@@ -57,9 +57,9 @@ class ProxyClientImpl implements ProxyClient {
         }
     }
 
-    storeOauth2User(token: string): void {
+    storeOauth2User(token: any): void {
         const url = this.url + this.oauth2UserPath();
-        const data = {token};
+        const data = token;
         try {
             this.doAPIPost(url, data);
         } catch (e) {

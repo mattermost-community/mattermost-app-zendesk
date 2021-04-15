@@ -27,5 +27,12 @@
             "runtime": "nodejs14.x"
         }
     ],
+    "bindings": {
+        "path": "/bindings",
+        "expand": {
+            "oauth2_app": "all",
+            "oauth2_user": "all"
+        }
+    },
     "assets": []
 }

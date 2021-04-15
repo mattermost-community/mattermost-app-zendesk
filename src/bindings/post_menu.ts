@@ -31,6 +31,7 @@ const openCreateTicketForm = (context: AppContext): AppBinding => {
             expand: {
                 post: AppExpandLevels.EXPAND_ALL,
                 acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+                oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
     } as AppBinding;
