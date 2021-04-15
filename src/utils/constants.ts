@@ -32,7 +32,7 @@ const AppPaths = {
 
     OAuthCompletePath: '/oauth2/complete',
     OAuthConnectPath: '/oauth2/connect',
-    SubscribeIncomingWebhookPath: '/webhook-target',
+    SubscribeIncomingWebhookPath: '/webhook/webhook-target',
 
     // Binding routes are accessed via a location call
     BindingsPath: '/bindings',

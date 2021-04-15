@@ -1,7 +1,6 @@
 import {Post} from 'mattermost-redux/types/posts';
 
 import {Request, Response} from 'express';
-import {AppContext} from 'mattermost-redux/types/apps';
 
 import {Routes, tryPromiseWithMessage, contextFromRequest} from '../utils';
 import {TriggerFields} from '../utils/constants';
@@ -11,7 +10,7 @@ import {newZDClient, newMMClient} from '../clients';
 import {newConfigStore} from '../store';
 
 export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
-    const values = req.body.values.payload;
+    const values = req.body.values.data;
     const context = contextFromRequest(req);
 
     const ticketID = values[TriggerFields.TicketIDKey];
