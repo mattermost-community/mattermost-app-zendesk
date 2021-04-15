@@ -60,7 +60,7 @@ class AppImpl implements App {
         const id = zdTicket.id;
         const subject = zdTicket.subject;
         const message = `${zdUser.name} created ticket [#${id}](${host}/agent/tickets/${id}) [${subject}]`;
-        await this.createBotPost(message);
+        await this.createActingUserPost(message);
 
         return newOKCallResponse();
     }
@@ -118,6 +118,21 @@ class AppImpl implements App {
 
         // return the call response with successful markdown message
         return newOKCallResponseWithMarkdown(msg);
+    }
+
+    createActingUserPost = async (message: string): Promise<void> => {
+        const actingUserClient = newMMClient(this.context).asActingUser();
+        const actingUserId = this.context.acting_user_id;
+
+        const post: Post = {
+            message,
+            user_id: actingUserId,
+            channel_id: String(this.context.channel_id),
+            root_id: String(this.context.post_id),
+        };
+
+        const createPostReq = actingUserClient.createPost(post);
+        await tryPromiseWithMessage(createPostReq, 'Failed to create post');
     }
 
     createBotPost = async (message: string): Promise<void> => {
