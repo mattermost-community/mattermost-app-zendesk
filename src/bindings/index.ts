@@ -1,7 +1,5 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 
-import {Bindings} from '../utils';
-
 import {isUserSysadmin} from '../app/user';
 
 import {getCommandBindings} from './slash_commands';
@@ -12,9 +10,9 @@ export async function getBindings(context: AppContext): Promise<AppBinding[]> {
     // prefetch these requests only one time
     const isSysadmin = await isUserSysadmin(context);
 
-    const b = new Bindings(isSysadmin);
-    b.addBindings(getPostMenuBindings(context, isSysadmin));
-    b.addBindings(getCommandBindings(context, isSysadmin));
-    b.addBindings(getChannelHeaderBindings(context, isSysadmin));
-    return b.getAllBindings();
+    const bindings: AppBinding[] = [];
+    bindings.push(getPostMenuBindings(context, isSysadmin));
+    bindings.push(getCommandBindings(context, isSysadmin));
+    bindings.push(getChannelHeaderBindings(context, isSysadmin));
+    return bindings;
 }
