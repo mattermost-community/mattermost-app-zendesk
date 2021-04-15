@@ -118,7 +118,7 @@ class FormFields extends BaseFormFields {
             name: 'zd_connected_mm_user_id',
             label: 'Zendesk connected Mattermost User ID',
             value: this.storeValues.zd_connected_mm_user_id,
-            description: 'Mattermost UserID of an account with agent Zendesk access ',
+            description: 'Mattermost UserID of an account with agent Zendesk access',
         };
         this.builder.addField(f);
     }
