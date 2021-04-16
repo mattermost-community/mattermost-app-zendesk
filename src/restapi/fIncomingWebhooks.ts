@@ -19,12 +19,15 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const config = await newConfigStore(context).getValues();
     const zdHost = config.zd_node_host;
 
-    // TODO: we need zendesk bot admin so that admin requests can be made by the
-    const connectedUser = config.zd_connected_mm_user_id;
+    const connectedUser = config.zd_oauth_access_token;
     if (connectedUser === '') {
-        throw new Error('Failed to get zd_connected_mm_user_id');
+        throw new Error('Failed to get zd_oauth_access_token');
     }
-    context.acting_user_id = connectedUser;
+
+    // add the configured access_token to the context so the ZD client can make
+    // API requests
+    context.oauth2 = {user: {access_token: connectedUser}};
+
     const zdClient = await newZDClient(context);
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);

@@ -43,7 +43,7 @@ class FormFields extends BaseFormFields {
         this.storeValues = {
             zd_url: '',
             zd_node_host: '',
-            zd_connected_mm_user_id: '',
+            zd_oauth_access_token: '',
             zd_target_id: '',
         };
     }
@@ -115,10 +115,10 @@ class FormFields extends BaseFormFields {
     addZDConnectedUserIDField(): void {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
-            name: 'zd_connected_mm_user_id',
-            label: 'Zendesk connected Mattermost User ID',
-            value: this.storeValues.zd_connected_mm_user_id,
-            description: 'Mattermost UserID of an account with agent Zendesk access',
+            name: 'zd_oauth_access_token',
+            label: 'Oauth2 Access Token',
+            value: this.storeValues.zd_oauth_access_token,
+            description: 'Oauth2 Connected Mattermost Account with Zendesk agent access. This field is needed for subscriptions',
         };
         this.builder.addField(f);
     }

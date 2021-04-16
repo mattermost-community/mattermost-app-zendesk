@@ -22,11 +22,10 @@
 ##### 4. Configure Zendesk Client in Mattermost
 
 1. `/zendesk configure` to open the configuration modal
-1. Save values from Oauth Client form to the fields in the configuration modal
-    1. `URL` - set to your zendesk account host
-    1. `Client ID` - set to the `Unique identifier` Oauth value
-    1. `Client Secret` - set as the `Secret` Oauth value
-        1. Ex. `https://<subdomain>.zendesk.com`
+    1. Save values from Oauth Client form to the fields in the configuration modal
+1. `URL` - set to your zendesk account host
+1. `Client ID` - set to the `Unique identifier` Oauth value
+1. `Client Secret` - set as the `Secret` Oauth value
 1. `Target ID` - set to the ID value of the target configured in [Setup Zendesk Target](#Setup-Zendesk-Target)
     1. To get the targetID value:  
         1. Sign into your zendesk instance in a browser
@@ -34,7 +33,10 @@
         1. In the returned JSON object, find the target object with the title used in [Setup Zendesk Target](#Setup-Zendesk-Target)
         1. Within that object, the Target ID is the numerical field value for `id` (Example: `360002430532`).  
         1. The TargetID is also listed at the end of the url field path in the (Example: `360002430532`.json)
-1. `ZD_NODE_HOST` - set to the path of your zendesk app host
+1. `Oauth2 Access Token`
+    1. This access token is used for subscriptions and can be obtained via the `/zendesk me` slash command.
+    1. The access_token must come from an oauth connected user with Zendesk agent access.
+1. `Node Host` - set to the path of your zendesk app host
     1. Ex. `https://testing.ngrok.io`
 
 ##### 5. Start the node server

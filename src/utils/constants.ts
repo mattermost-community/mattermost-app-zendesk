@@ -52,6 +52,7 @@ const AppPaths = {
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
     BindingPathHelp: '/help',
+    BindingPathMe: '/me',
 };
 
 export const Routes = {
@@ -67,6 +68,7 @@ export const CommandLocations = {
     Subscribe: 'subscribe',
     Ticket: 'ticket',
     Help: 'help',
+    Me: 'me',
 };
 
 export const StoreKeys = {

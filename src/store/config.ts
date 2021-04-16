@@ -8,7 +8,7 @@ export type AppConfigStore = {
     zd_url: string;
     zd_node_host: string;
     zd_target_id: string;
-    zd_connected_mm_user_id: string;
+    zd_oauth_access_token: string;
 }
 
 export interface ConfigStore {
@@ -35,7 +35,7 @@ class ConfigStoreImpl implements ConfigStore {
             this.storeData.zd_url = config.zd_url || '';
             this.storeData.zd_node_host = config.zd_node_host || '';
             this.storeData.zd_target_id = config.zd_target_id || '';
-            this.storeData.zd_connected_mm_user_id = config.zd_connected_mm_user_id || '';
+            this.storeData.zd_oauth_access_token = config.zd_oauth_access_token || '';
         }
         return this.storeData;
     }
