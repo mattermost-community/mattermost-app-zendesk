@@ -23,11 +23,11 @@
 
 1. `/zendesk configure` to open the configuration modal
 1. Save values from Oauth Client form to the fields in the configuration modal
-    1. `Zendesk URL` - set to your zendesk account host
-    1. `Zendesk Client ID` - set to the `Unique identifier` field value
-    1. `Zendesk Client Secret` - set as the `Secret` field value
+    1. `URL` - set to your zendesk account host
+    1. `Client ID` - set to the `Unique identifier` Oauth value
+    1. `Client Secret` - set as the `Secret` Oauth value
         1. Ex. `https://<subdomain>.zendesk.com`
-1. `Zendesk Target ID` - set to the ID value of the target configured in [Setup Zendesk Target](#Setup-Zendesk-Target)
+1. `Target ID` - set to the ID value of the target configured in [Setup Zendesk Target](#Setup-Zendesk-Target)
     1. To get the targetID value:  
         1. Sign into your zendesk instance in a browser
         1. Visit the following webpage (`https://<your-zendesk-app-host>/api/v2/targets`)
