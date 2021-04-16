@@ -33,7 +33,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
 
     const message: string = getNotificationMessage(zdHost, ticketID, auditEvent);
 
-    const adminClient = newMMClient(context).asAdmin();
+    const adminClient = newMMClient(context).asBot();
 
     const post: Post = {
         message,
