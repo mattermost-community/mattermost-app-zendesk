@@ -2,14 +2,15 @@ import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {Routes, CommandLocations, ZendeskIcon} from '../utils/constants';
-import {getStaticURL, newCommandBindings, isConfigured, isConnected} from '../utils';
+import {getStaticURL, newCommandBindings, isConfigured, isConnected, isUserSystemAdmin} from '../utils';
 
 // getCommandBindings returns the users slash command bindings
-export const getCommandBindings = (context: AppContext, sysadmin: boolean): AppBinding => {
+export const getCommandBindings = (context: AppContext): AppBinding => {
     const bindings: AppBinding[] = [];
+    const isSysadmin = isUserSystemAdmin(context);
 
     // only show configuration option if admin has not configured the plugin
-    if (!isConfigured(context) && sysadmin) {
+    if (!isConfigured(context) && isSysadmin) {
         bindings.push(cmdConfigure(context));
         bindings.push(cmdHelp(context));
         return newCommandBindings(context, bindings);
@@ -17,7 +18,7 @@ export const getCommandBindings = (context: AppContext, sysadmin: boolean): AppB
 
     if (isConnected(context)) {
         bindings.push(cmdDisconnect(context));
-        if (sysadmin) {
+        if (isSysadmin) {
             bindings.push(cmdSubscribe(context));
         }
     } else {

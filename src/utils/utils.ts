@@ -1,4 +1,5 @@
 import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps';
+import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 
 import {getManifest} from '../manifest';
@@ -95,6 +96,10 @@ export function getStaticURL(context: AppContext, name:string): string {
 
 export function isConfigured(context: AppContext): boolean {
     return Boolean(context.oauth2.client_id && context.oauth2.client_secret);
+}
+
+export function isUserSystemAdmin(context: AppContext): boolean {
+    return Boolean(context.acting_user.roles && context.acting_user.roles.includes(GeneralConstants.SYSTEM_ADMIN_ROLE));
 }
 
 export function isConnected(context: AppContext): boolean {

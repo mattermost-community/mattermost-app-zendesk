@@ -30,6 +30,7 @@
     "bindings": {
         "path": "/bindings",
         "expand": {
+            "acting_user": "all",
             "admin_access_token": "all",
             "oauth2_app": "all",
             "oauth2_user": "all"
