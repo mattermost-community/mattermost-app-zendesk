@@ -10,9 +10,7 @@
 1. `Add OAuth Client`
     1. `Client Name`: (Example `Mattermost Zendesk App`)
     1. `Description`: `Connect your Zendesk account to Mattermost`
-    1. `Redirect URLs`: `https://<your-zendesk-app-host>/oauth2/complete`
-        1. Ex. `http://localhost:4000` - Development
-        1. Ex. `https://mytest.ngrok.io` - Exposed for development
+    1. `Redirect URLs`: `https://<mattermost-site-url>/plugins/com.mattermost.apps/apps/com.mattermost.zendesk/oauth2/remote/complete`
     1. `Save`
 
 ##### 2. [Setup Zendesk Target](#Setup-Zendesk-Target)
