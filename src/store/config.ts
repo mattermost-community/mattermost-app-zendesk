@@ -13,7 +13,6 @@ export type AppConfigStore = {
 
 export interface ConfigStore {
     getValues(): Promise<AppConfigStore>;
-    isConfigured(): Promise<boolean>;
     storeConfigInfo(values: AppCallValues): void;
 }
 
@@ -39,13 +38,6 @@ class ConfigStoreImpl implements ConfigStore {
             this.storeData.zd_connected_mm_user_id = config.zd_connected_mm_user_id || '';
         }
         return this.storeData;
-    }
-
-    // isConfigured returns true if zendesk configuration has been completed by a sysadmin
-    // TODO Validation logic needs to be improved
-    async isConfigured(): Promise<boolean> {
-        const config = await this.getValues();
-        return Boolean(config.zd_url && config.zd_target_id);
     }
 }
 
