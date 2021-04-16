@@ -103,5 +103,5 @@ export function isUserSystemAdmin(context: AppContext): boolean {
 }
 
 export function isConnected(context: AppContext): boolean {
-    return context.oauth2.user.access_token !== '';
+    Boolean(context.oauth2.user && context.oauth2.user.access_token && context.oauth2.user.access_token !== '');
 }
