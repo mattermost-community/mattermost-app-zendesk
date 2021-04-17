@@ -51,6 +51,7 @@ const AppPaths = {
 
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
+    BindingPathTargetCreate: '/target-create',
     BindingPathHelp: '/help',
     BindingPathMe: '/me',
 };
@@ -67,6 +68,7 @@ export const CommandLocations = {
     Disconnect: 'disconnect',
     Subscribe: 'subscribe',
     Ticket: 'ticket',
+    Target: 'target',
     Help: 'help',
     Me: 'me',
 };

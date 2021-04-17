@@ -26,6 +26,7 @@ export const getCommandBindings = (context: AppContext): AppBinding => {
     }
     bindings.push(cmdConfigure(context));
     bindings.push(cmdHelp(context));
+    bindings.push(cmdTarget(context));
     bindings.push(cmdMe(context));
     return newCommandBindings(context, bindings);
 };
@@ -106,6 +107,25 @@ const cmdMe = (context: AppContext): AppBinding => {
         call: {
             path: Routes.App.BindingPathMe,
             expand: {
+                oauth2_user: AppExpandLevels.EXPAND_ALL,
+            },
+        },
+    } as AppBinding;
+};
+
+const cmdTarget = (context: AppContext): AppBinding => {
+    return {
+        location: CommandLocations.Target,
+        label: 'setup-target',
+        description: 'Setup Zendesk Target',
+        icon: getStaticURL(context, ZendeskIcon),
+        form: {},
+        call: {
+            path: Routes.App.BindingPathTargetCreate,
+            expand: {
+                app: AppExpandLevels.EXPAND_ALL,
+
+                // acting_user: AppExpandLevels.EXPAND_ALL,
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },

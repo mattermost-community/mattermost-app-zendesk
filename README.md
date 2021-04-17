@@ -13,31 +13,34 @@
     1. `Redirect URLs`: `https://<mattermost-site-url>/plugins/com.mattermost.apps/apps/com.mattermost.zendesk/oauth2/remote/complete`
     1. `Save`
 
-##### 2. [Setup Zendesk Target](#Setup-Zendesk-Target)
-
-##### 3. Install the app (In Mattermost)
+##### 2. Install the app (In Mattermost)
 
 1. `/apps install --url http://<your-zendesk-app-host>/manifest.json --app-secret thisisthesecret`  
 
-##### 4. Configure Zendesk Client in Mattermost
+##### 3. Configure Zendesk Client in Mattermost
 
-1. `/zendesk configure` to open the configuration modal
-    1. Save values from Oauth Client form to the fields in the configuration modal
-1. `URL` - set to your zendesk account host
+`/zendesk configure` to open the configuration modal
+
+Insert values from Oauth Client setup (step 1) fields in the configuration modal
+
+1. `URL` - set to your zendesk URL
 1. `Client ID` - set to the `Unique identifier` Oauth value
 1. `Client Secret` - set as the `Secret` Oauth value
-1. `Target ID` - set to the ID value of the target configured in [Setup Zendesk Target](#Setup-Zendesk-Target)
-    1. To get the targetID value:  
-        1. Sign into your zendesk instance in a browser
-        1. Visit the following webpage (`https://<your-zendesk-app-host>/api/v2/targets`)
-        1. In the returned JSON object, find the target object with the title used in [Setup Zendesk Target](#Setup-Zendesk-Target)
-        1. Within that object, the Target ID is the numerical field value for `id` (Example: `360002430532`).  
-        1. The TargetID is also listed at the end of the url field path in the (Example: `360002430532`.json)
-1. `Oauth2 Access Token`
-    1. This access token is used for subscriptions and can be obtained via the `/zendesk me` slash command.
-    1. The access_token must come from an oauth connected user with Zendesk agent access.
-1. `Node Host` - set to the path of your zendesk app host
-    1. Ex. `https://testing.ngrok.io`
+1. `Oauth2 Access Token` - leave empty for now (You will configure this once you are connected)
+1. click `Submit`
+
+`/zendesk connect` to connect to Mattermost to your Zendesk account
+
+##### 4. Setup Subscriptions
+
+This step requires a Zendesk connected Mattermost user and uses an access token needed for subscriptions integration.  The token can be any connected Zendesk user with agent permissions in Zendesk.  Another option is to create a "bot" agent user in Zendesk and connect them to mattermost.
+
+Note, the access token is only used to read ticket information when a subcription is triggered.  This token will not post on behalf of the user.
+
+1. `/zendesk me` - save this access token value
+1. `/zendesk configure`
+    1. `Oauth2 Access Token` - set this value to the token saved in the step above
+1. `/zendesk setup-target` - this command will setup a zendesk target pointing to your mattermost server (it only needs to be run one time)
 
 ##### 5. Start the node server
 
@@ -59,6 +62,8 @@ accounts via OAuth2 authorization
 `/zendesk configure` - configure the Zendesk app after installation  
 `/zendesk disconnect` - disconnect your Zendesk account from Mattermost  
 `/zendesk help` - post ephemeral message with help text
+`/zendesk me` - post ephemeral message with your connection information  
+`/zendesk subscribe` - setup a channel subscription  
 
 ## Create a ticket
 
@@ -85,39 +90,6 @@ Zendesk Admins are able to view these subscriptions inside Zendesk via `Settings
 
 `/apps debug-add-manifest --url http://localhost:4000/manifest.json`
 `/apps install --app-id com.mattermost.zendesk --app-secret thisisthesecret`
-
-## Setup Zendesk Target
-
-Here is a helpful [Zendesk post](https://support.zendesk.com/hc/en-us/articles/204890268-Creating-webhooks-with-the-HTTP-target#topic_yf1_fs5_tr) describing the setup of webhooks
-
-### Add a notification target
-
-From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/support/targets)
-
-> Targets are pointers to cloud-based applications and services such as Twitter and Twilio, as well as to HTTP and email addresses. You can use targets with triggers and automations to send a notification to the target when a ticket is created or updated.
-
-We need to create the Zendesk HTTP target which will send webhook trigger notifications to the Zendesk app.  Each Zendesk trigger event will send a notification to this target. We only need one target per Mattermost instance.
-
-1. Click the Admin icon (gear) in the left sidebar
-1. `Settings` > `Extensions`
-1. `Targets tab` > `Add Target`
-1. Select `HTTP` Target
-1. Fill in the following:
-    1. **Title:** Mattermost target for incoming webhooks
-    1. **Url:** `<mattermost_site_url>/plugins/com.mattermost.apps/api/v1/webhook/zendesk/webhook-target?secret=<your-webhook-secret>`
-    1. **Method:** POST
-    1. **Content Type:** JSON
-1. Test that the target is valid
-    1. Select `Test target` in the dropdown
-    1. Click `Submit` button
-    1. Enter `{}` in the JSON body in the floating window
-    1. Click `Submit` button in floating window
-    1. Verify `HTTP/1.1 200 OK` response is shown in the resulting window
-1. Save the valid target
-    1. Select `Create target` in the dropdown
-    1. Click `Submit` button
-
-**Developer Notes:** When testing webhooks locally, you will need to expose your localhost:4040 with ngrok
 
 ## Provision
 
