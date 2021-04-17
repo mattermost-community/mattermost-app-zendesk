@@ -40,7 +40,7 @@ Note, the access token is only used to read ticket information when a subcriptio
 1. `/zendesk me` - save this access token value
 1. `/zendesk configure`
     1. `Oauth2 Access Token` - set this value to the token saved in the step above
-1. `/zendesk setup-target` - this command will setup a zendesk target pointing to your mattermost server (it only needs to be run one time)
+1. `/zendesk setup-target` - this command will setup a zendesk target pointing to your mattermost instance (it only needs to be run one time)
 
 ##### 5. Start the node server
 

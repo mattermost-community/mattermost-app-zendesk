@@ -2,6 +2,8 @@ import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 
+import {AppConfigStore} from '../store/config';
+
 import {getManifest} from '../manifest';
 
 import {SubscriptionFields} from './constants';
@@ -107,4 +109,8 @@ export function isConnected(context: AppContext): boolean {
         return true;
     }
     return false;
+}
+
+export function webhookConfigured(config: AppConfigStore): boolean {
+    return Boolean(config.zd_target_id && config.zd_target_id !== '');
 }

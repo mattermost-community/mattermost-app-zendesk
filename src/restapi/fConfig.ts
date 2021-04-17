@@ -33,7 +33,10 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {
         const configStore = newConfigStore(call.context);
+        const cValues = await configStore.getValues();
+        const targetID = cValues.zd_target_id;
         const storeValues = call.values as AppConfigStore;
+        storeValues.zd_target_id = targetID;
         configStore.storeConfigInfo(storeValues);
     } catch (err) {
         callResponse = newErrorCallResponseWithMessage(err.message);

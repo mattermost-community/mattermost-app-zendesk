@@ -10,10 +10,12 @@ export const getCommandBindings = (context: AppContext): AppBinding => {
     const isSysadmin = isUserSystemAdmin(context);
 
     // only show configuration option if admin has not configured the plugin
-    if (!isConfigured(context) && isSysadmin) {
-        bindings.push(cmdConfigure(context));
-        bindings.push(cmdHelp(context));
-        return newCommandBindings(context, bindings);
+    if (!isConfigured(context)) {
+        if (isSysadmin) {
+            bindings.push(cmdConfigure(context));
+            bindings.push(cmdHelp(context));
+            return newCommandBindings(context, bindings);
+        }
     }
 
     if (isConnected(context)) {

@@ -5,6 +5,7 @@ import {AppContext} from 'mattermost-redux/types/apps';
 
 import {getManifest} from '../manifest';
 import {Routes, tryPromiseWithMessage, contextFromRequest} from '../utils';
+import {webhookConfigured} from '../utils/utils';
 import {newZDClient, ZDClient} from '../clients';
 import {newConfigStore} from '../store';
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
@@ -35,7 +36,7 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: AppContext): Pr
     };
 
     // update or create the target
-    if (cValues.zd_target_id && cValues.zd_target_id !== '') {
+    if (webhookConfigured(cValues)) {
         const id = cValues.zd_target_id;
 
         // reuse the saved targetID. Failing to do so will invalidate all
