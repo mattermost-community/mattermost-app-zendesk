@@ -14,12 +14,12 @@ export async function fCreateTarget(req: Request, res: Response): Promise<void> 
     const context = contextFromRequest(req);
     const zdClient = await newZDClient(context);
 
-    updateOrCreateTarget(zdClient, context);
-    res.json(newOKCallResponseWithMarkdown('Successfully setup Zendesk target'));
+    const text = await updateOrCreateTarget(zdClient, context);
+    res.json(newOKCallResponseWithMarkdown(text));
 }
 
 // updateOrCreateTarget creates a target or updates an the exising target
-async function updateOrCreateTarget(zdClient: ZDClient, context: AppContext): Promise<void> {
+async function updateOrCreateTarget(zdClient: ZDClient, context: AppContext): Promise<string> {
     const config = newConfigStore(context);
     const cValues = await config.getValues();
     const siteUrl = context.mattermost_site_url;
@@ -44,14 +44,16 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: AppContext): Pr
         payload.target.id = id;
         const createReq = zdClient.targets.update(id, payload);
         await tryPromiseWithMessage(createReq, 'Failed to update Zendesk target');
-    } else {
-        const createReq = zdClient.targets.create(payload);
-        const zdTarget = await tryPromiseWithMessage(createReq, 'Failed to create Zendesk target');
-        cValues.zd_target_id = zdTarget.id;
-
-        // save the targetID
-        config.storeConfigInfo(cValues);
+        return 'Successfully updated Zendesk target';
     }
+
+    const createReq = zdClient.targets.create(payload);
+    const zdTarget = await tryPromiseWithMessage(createReq, 'Failed to create Zendesk target');
+    cValues.zd_target_id = zdTarget.id;
+
+    // save the targetID
+    config.storeConfigInfo(cValues);
+    return 'Successfully created Zendesk target';
 }
 
 function getTargetUrl(context: AppContext): string {
