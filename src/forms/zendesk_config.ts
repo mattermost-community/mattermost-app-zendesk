@@ -91,6 +91,7 @@ class FormFields extends BaseFormFields {
     addZDClientSecretField(): void {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
+            subtype: 'password',
             name: 'zd_client_secret',
             label: 'Client Secret',
             value: this.OauthValues.client_secret,
@@ -103,6 +104,7 @@ class FormFields extends BaseFormFields {
     addZDConnectedUserIDField(): void {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
+            subtype: 'password',
             name: 'zd_oauth_access_token',
             label: 'Oauth2 Access Token',
             value: this.storeValues.zd_oauth_access_token,
