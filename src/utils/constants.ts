@@ -127,8 +127,10 @@ export const SubscriptionFields = {
     NewSub_OptionLabel: 'New Subscription',
     NewSub_OptionValue: 'newsubscription',
 
-    PrefixTriggersTitle: '__mm_webhook__channelID:',
-    RegexTriggerTitle: '__mm_webhook__channelID:(\\w+) (.*)',
+    PrefixTriggersTitle: '__mm_webhook',
+    RegexTriggerInstance: '__instance_',
+    RegexTriggerChannelID: '__channelID_',
+    RegexTriggerTitle: '__mm_webhook__instance_(.*)__channelID_(\\w+) (.*)',
 
     // TODO add ticket is created and ticket is updated options
     ConditionsCheckBoxFields: [

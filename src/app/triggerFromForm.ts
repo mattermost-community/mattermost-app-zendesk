@@ -14,7 +14,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     targetID: string;
     trigger: any
 
-    constructor(call: AppCall, targetID: strinb) {
+    constructor(call: AppCall, targetID: string) {
         this.values = call.values as AppFormValues;
         this.context = call.context;
         this.targetID = targetID;
@@ -71,7 +71,8 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
 
     addTitle(): void {
         let title = SubscriptionFields.PrefixTriggersTitle;
-        title += this.context.channel_id;
+        title += SubscriptionFields.RegexTriggerInstance + this.context.mattermost_site_url;
+        title += SubscriptionFields.RegexTriggerChannelID + this.context.channel_id;
         title += ' ' + this.values[SubscriptionFields.SubTextName];
         this.addField('title', title);
     }

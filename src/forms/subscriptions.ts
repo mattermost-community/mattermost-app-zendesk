@@ -5,7 +5,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {getStaticURL, Routes} from '../utils';
-import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
+import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, parseTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 
@@ -83,7 +83,11 @@ class FormFields extends BaseFormFields {
     async setState(): Promise<void> {
         // modified node-zendesk to allow hitting triggers/search api
         // returns all triggers for all channels and teams
-        const searchReq = this.zdClient.triggers.search(SubscriptionFields.PrefixTriggersTitle);
+
+        let search = SubscriptionFields.PrefixTriggersTitle;
+        search += SubscriptionFields.RegexTriggerInstance;
+        search += this.call.context.mattermost_site_url;
+        const searchReq = this.zdClient.triggers.search(search);
         const triggers = await tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
         for (const trigger of triggers) {
             await this.addChannelTrigger(trigger);
@@ -91,7 +95,8 @@ class FormFields extends BaseFormFields {
     }
 
     async addChannelTrigger(trigger: any): Promise<void> {
-        const channelID = getChannelIDFromTriggerTitle(trigger.title);
+        const parsedTitle = parseTriggerTitle(trigger.title);
+        const channelID = parsedTitle.channelID;
         const channel = await this.mmClient.getChannel(channelID);
         if (channel.team_id === this.getCurrentTeamID()) {
             if (this.teamTriggers[channelID]) {

@@ -30,19 +30,30 @@ type ZDSubscriptionFieldOption = {
 
 const getDisplaySubTitleOption = (option: ZDSubscriptionFieldOption): string => {
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
-    const newTitle = option.title.match(re)[2];
+    const newTitle = option.title.match(re)[3];
+    console.log('newTitle', newTitle);
     return newTitle;
 };
 
-// getChannelIDFromTriggerTitle extracts the channelID from a saved Zendesk
+export type parsedTriggerTitle = {
+    title: string;
+    channelID: string;
+    instance: string
+}
+
+// parseTriggerTitle extracts the name, instance, and channelID from a saved Zendesk
 // trigger title
-export const getChannelIDFromTriggerTitle = (title: string): string => {
+export const parseTriggerTitle = (title: string): parsedTriggerTitle => {
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
     const match = title.match(re);
     if (!match) {
-        console.log('malformed Mattermost Trigger title', match[1]);
+        console.log('malformed Mattermost Trigger title', match[0]);
     }
-    return match[1];
+    return {
+        title: match[0],
+        instance: match[1],
+        channelID: match[2],
+    };
 };
 
 export const makeOption = (option: ZDFieldOption): AppSelectOption => ({label: option.name, value: option.value});
