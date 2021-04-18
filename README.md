@@ -29,9 +29,13 @@ Insert values from Oauth Client setup (step 1) fields in the configuration modal
 1. `Oauth2 Access Token` - leave empty for now (You will configure this once you are connected)
 1. click `Submit`
 
-`/zendesk connect` to connect to Mattermost to your Zendesk account
+##### 4. Connect your Account
 
-##### 4. Setup Subscriptions
+1. `/zendesk connect` to connect you Mattermost user to your Zendesk account
+1. Click on the connect link to authenticate your user
+1. Authenticate in Zendesk and close the broweser tab to complete the process
+
+##### 5. Setup Subscriptions
 
 This step requires a Zendesk connected Mattermost user and uses an access token needed for subscriptions integration.  The token can be any connected Zendesk user with agent permissions in Zendesk.  Another option is to create a "bot" agent user in Zendesk and connect them to mattermost.
 
@@ -42,7 +46,7 @@ Note, the access token is only used to read ticket information when a subcriptio
     1. `Oauth2 Access Token` - set this value to the token saved in the step above
 1. `/zendesk setup-target` - this command will setup a zendesk target pointing to your mattermost instance (it only needs to be run one time)
 
-##### 5. Start the node server
+##### 6. Start the node server
 
 1. `make watch` - (to monitor typescript errors and watch changing files errors)
 1. `make run` - (in a separate shell) start the node server
