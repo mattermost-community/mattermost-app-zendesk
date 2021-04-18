@@ -15,7 +15,7 @@
 
 ##### 2. Install the app (In Mattermost)
 
-1. `/apps install --app-id com.mattermost.zendesk --app-secret thisisthesecret`
+1. `/apps install --app-id com.mattermost.zendesk`
 
 ##### 3. Configure Zendesk Client in Mattermost
 
