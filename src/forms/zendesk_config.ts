@@ -83,7 +83,7 @@ class FormFields extends BaseFormFields {
             name: 'zd_client_id',
             label: 'Client ID',
             value: this.OauthValues.client_id,
-            description: 'Client ID obtained when setting up Oauth client in zendesk',
+            description: 'Client ID obtained from Zendesk Oauth client Unique Identifier',
             is_required: true,
         };
         this.builder.addField(f);
@@ -95,7 +95,7 @@ class FormFields extends BaseFormFields {
             name: 'zd_client_secret',
             label: 'Client Secret',
             value: this.OauthValues.client_secret,
-            description: 'Client Secret obtained when setting up Oauth client in zendesk',
+            description: 'Client Secret obtained from Zendesk Oauth client secret',
             is_required: true,
         };
         this.builder.addField(f);
