@@ -26,9 +26,12 @@ export const getCommandBindings = (context: AppContext): AppBinding => {
     } else {
         bindings.push(cmdConnect(context));
     }
-    bindings.push(cmdConfigure(context));
+
+    if (isSysadmin) {
+        bindings.push(cmdConfigure(context));
+        bindings.push(cmdTarget(context));
+    }
     bindings.push(cmdHelp(context));
-    bindings.push(cmdTarget(context));
     bindings.push(cmdMe(context));
     return newCommandBindings(context, bindings);
 };

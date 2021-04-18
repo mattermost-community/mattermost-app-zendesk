@@ -14,10 +14,8 @@ export const getChannelHeaderBindings = (context: AppContext): AppBinding => {
         bindings.push(channelHeaderConfig(context));
         return newChannelHeaderBindings(bindings);
     }
-    if (isConnected(context)) {
-        if (isSysadmin) {
-            bindings.push(channelHeaderSubscribe(context));
-        }
+    if (isConnected(context) && isSysadmin) {
+        bindings.push(channelHeaderSubscribe(context));
     }
     return newChannelHeaderBindings(bindings);
 };
