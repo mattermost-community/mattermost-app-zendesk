@@ -60,11 +60,17 @@ accounts via OAuth2 authorization
 
 ## Slash Commands
 
+### User Commands
+
 `/zendesk connect` - connect your Zendesk account to Mattermost  
-`/zendesk configure` - configure the Zendesk app after installation  
 `/zendesk disconnect` - disconnect your Zendesk account from Mattermost  
 `/zendesk help` - post ephemeral message with help text
 `/zendesk me` - post ephemeral message with your connection information  
+
+### System Admin Commands
+
+`/zendesk configure` - configure the Zendesk app after installation  
+`/zendesk setup-target` - setup the Zendesk target for your instance
 `/zendesk subscribe` - setup a channel subscription  
 
 ## Create a ticket
