@@ -35,6 +35,9 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: AppContext): Pr
         },
     };
 
+    const host = cValues.zd_url;
+    const link = '[Zendesk target](' + host + '/agent/admin/extensions)';
+
     // update or create the target
     if (webhookConfigured(cValues)) {
         const id = cValues.zd_target_id;
@@ -44,7 +47,7 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: AppContext): Pr
         payload.target.id = id;
         const createReq = zdClient.targets.update(id, payload);
         await tryPromiseWithMessage(createReq, 'Failed to update Zendesk target');
-        return 'Successfully updated Zendesk target';
+        return `Successfully updated ${link}`;
     }
 
     const createReq = zdClient.targets.create(payload);
@@ -53,7 +56,7 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: AppContext): Pr
 
     // save the targetID
     config.storeConfigInfo(cValues);
-    return 'Successfully created Zendesk target';
+    return `Successfully created ${link}`;
 }
 
 function getTargetUrl(context: AppContext): string {
