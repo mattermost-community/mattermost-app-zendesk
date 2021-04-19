@@ -88,26 +88,26 @@ class AppImpl implements App {
         let request: any;
         let msg: string;
         let action: string;
-        const link = '[subscription](' + host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
         const subName = this.values[SubscriptionFields.SubTextName];
+        const link = `[${subName}](` + host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
             request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
-            msg = 'Successfully deleted subscription';
+            msg = `Deleting subscription ${link}. `;
             action = 'delete';
             break;
         case Boolean(zdTriggerPayload.trigger.id):
             request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
-            msg = `Successfully updated ${link}`;
+            msg = `Updating subscription ${link}. `;
             action = 'update';
             break;
         default:
             request = zdClient.triggers.create(zdTriggerPayload);
-            msg = `Successfully created ${link}`;
+            msg = `Creating subscription ${link}. `;
             action = 'create';
         }
 
-        msg += ` \`${subName}\``;
+        msg += 'This could take a moment before your subscription data is saved in Zendesk';
 
         // Any zendesk error will produce an error in the modal
         try {
