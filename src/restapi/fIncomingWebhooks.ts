@@ -19,14 +19,14 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const config = await newConfigStore(context).getValues();
     const zdHost = config.zd_node_host;
 
-    const connectedUser = config.zd_oauth_access_token;
-    if (connectedUser === '') {
+    const token = config.zd_oauth_access_token;
+    if (token === '') {
         throw new Error('Failed to get zd_oauth_access_token');
     }
 
     // add the configured access_token to the context so the ZD client can make
     // API requests
-    context.oauth2 = {user: {access_token: connectedUser}};
+    context.oauth2 = {user: {access_token: token}};
 
     const zdClient = await newZDClient(context);
     const auditReq = zdClient.tickets.exportAudit(ticketID);

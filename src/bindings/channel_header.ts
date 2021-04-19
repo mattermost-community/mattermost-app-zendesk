@@ -2,7 +2,7 @@ import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {getStaticURL, Routes, newChannelHeaderBindings, isConfigured, isConnected, isUserSystemAdmin} from '../utils';
-import {CommandLocations, ZendeskIcon} from '../utils/constants';
+import {Locations, ZendeskIcon} from '../utils/constants';
 
 // getChannelHeaderBindings returns the users command bindings
 export const getChannelHeaderBindings = (context: AppContext): AppBinding => {
@@ -22,7 +22,7 @@ export const getChannelHeaderBindings = (context: AppContext): AppBinding => {
 
 const channelHeaderSubscribe = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Subscribe,
+        location: Locations.Subscribe,
         label: 'Create Zendesk Subscription',
         description: 'Open Create Zendesk Subscription Modal',
         icon: getStaticURL(context, ZendeskIcon),
@@ -41,7 +41,7 @@ const channelHeaderSubscribe = (context: AppContext): AppBinding => {
 
 const channelHeaderConfig = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Configure,
+        location: Locations.Configure,
         label: 'Configure Zendesk',
         description: 'Open Create Zendesk Config Modal',
         icon: getStaticURL(context, ZendeskIcon),

@@ -1,7 +1,7 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, CommandLocations, ZendeskIcon} from '../utils/constants';
+import {Routes, Locations, ZendeskIcon} from '../utils/constants';
 import {getStaticURL, newCommandBindings, isConfigured, isConnected, isUserSystemAdmin} from '../utils';
 
 // getCommandBindings returns the users slash command bindings
@@ -39,7 +39,7 @@ export const getCommandBindings = (context: AppContext): AppBinding => {
 // CommandBindings class for creating slash command location bindings
 const cmdConnect = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Connect,
+        location: Locations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
         icon: getStaticURL(context, ZendeskIcon),
@@ -55,7 +55,7 @@ const cmdConnect = (context: AppContext): AppBinding => {
 
 const cmdDisconnect = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Disconnect,
+        location: Locations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
         icon: getStaticURL(context, ZendeskIcon),
@@ -68,7 +68,7 @@ const cmdDisconnect = (context: AppContext): AppBinding => {
 
 const cmdSubscribe = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Subscribe,
+        location: Locations.Subscribe,
         label: 'subscribe',
         description: 'Subscribe notifications to a channel',
         icon: getStaticURL(context, ZendeskIcon),
@@ -86,7 +86,7 @@ const cmdSubscribe = (context: AppContext): AppBinding => {
 
 const cmdConfigure = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Configure,
+        location: Locations.Configure,
         label: 'configure',
         description: 'Configure the installed Zendesk account',
         icon: getStaticURL(context, ZendeskIcon),
@@ -104,7 +104,7 @@ const cmdConfigure = (context: AppContext): AppBinding => {
 
 const cmdMe = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Me,
+        location: Locations.Me,
         label: 'me',
         description: 'Show Your Zendesk User Info',
         icon: getStaticURL(context, ZendeskIcon),
@@ -120,7 +120,7 @@ const cmdMe = (context: AppContext): AppBinding => {
 
 const cmdTarget = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Target,
+        location: Locations.Target,
         label: 'setup-target',
         description: 'Setup Zendesk Target',
         icon: getStaticURL(context, ZendeskIcon),
@@ -139,7 +139,7 @@ const cmdTarget = (context: AppContext): AppBinding => {
 
 const cmdHelp = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Help,
+        location: Locations.Help,
         label: 'help',
         description: 'Show Zendesk Help',
         icon: getStaticURL(context, ZendeskIcon),

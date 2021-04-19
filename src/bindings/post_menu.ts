@@ -1,7 +1,7 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, CommandLocations, ZendeskIcon} from '../utils/constants';
+import {Routes, Locations, ZendeskIcon} from '../utils/constants';
 import {getStaticURL, newPostMenuBindings, isConfigured, isConnected, isUserSystemAdmin} from '../utils';
 
 // getPostMenuBindings returns the users post menu bindings
@@ -24,7 +24,7 @@ const openCreateTicketForm = (context: AppContext): AppBinding => {
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
         icon: getStaticURL(context, ZendeskIcon),
-        location: CommandLocations.Ticket,
+        location: Locations.Ticket,
         call: {
             path: Routes.App.CallPathTicketOpenForm,
             expand: {
@@ -41,7 +41,7 @@ const openSubscriptionsForm = (context: AppContext): AppBinding => {
         label: 'Zendesk Subscriptions',
         description: 'Subscribe channel to Zendesk notifications',
         icon: getStaticURL(context, ZendeskIcon),
-        location: CommandLocations.Subscribe,
+        location: Locations.Subscribe,
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {

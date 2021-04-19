@@ -62,7 +62,7 @@ export const Routes = {
     App: AppPaths,
 };
 
-export const CommandLocations = {
+export const Locations = {
     Connect: 'connect',
     Configure: 'configure',
     Disconnect: 'disconnect',
