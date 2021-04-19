@@ -7,14 +7,17 @@ import {getStaticURL, newPostMenuBindings, isConfigured, isConnected, isUserSyst
 // getPostMenuBindings returns the users post menu bindings
 export const getPostMenuBindings = (context: AppContext): AppBinding => {
     const bindings: AppBinding[] = [];
+    const isSysadmin = isUserSystemAdmin(context);
 
-    // only show configuration option if admin has not configured the plugin
-    if (!isConfigured(context) && isUserSystemAdmin(context)) {
+    // do not show any post menu options if the app is not configured
+    if (!isConfigured(context)) {
         return newPostMenuBindings(bindings);
     }
     if (isConnected(context)) {
         bindings.push(openCreateTicketForm(context));
-        bindings.push(openSubscriptionsForm(context));
+        if (isSysadmin) {
+            bindings.push(openSubscriptionsForm(context));
+        }
     }
     return newPostMenuBindings(bindings);
 };

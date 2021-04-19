@@ -19,20 +19,18 @@ export const getCommandBindings = (context: AppContext): AppBinding => {
     }
 
     if (isConnected(context)) {
-        bindings.push(cmdDisconnect(context));
         if (isSysadmin) {
             bindings.push(cmdSubscribe(context));
+            bindings.push(cmdConfigure(context));
+            bindings.push(cmdTarget(context));
         }
+        bindings.push(cmdDisconnect(context));
+        bindings.push(cmdMe(context));
     } else {
         bindings.push(cmdConnect(context));
     }
 
-    if (isSysadmin) {
-        bindings.push(cmdConfigure(context));
-        bindings.push(cmdTarget(context));
-    }
     bindings.push(cmdHelp(context));
-    bindings.push(cmdMe(context));
     return newCommandBindings(context, bindings);
 };
 

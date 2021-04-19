@@ -9,13 +9,13 @@ export const getChannelHeaderBindings = (context: AppContext): AppBinding => {
     const bindings: AppBinding[] = [];
     const isSysadmin = isUserSystemAdmin(context);
 
-    // only show configuration option if admin has not configured the plugin
-    if (!isConfigured(context) && isSysadmin) {
-        bindings.push(channelHeaderConfig(context));
-        return newChannelHeaderBindings(bindings);
-    }
-    if (isConnected(context) && isSysadmin) {
-        bindings.push(channelHeaderSubscribe(context));
+    if (isSysadmin) {
+        // only show configuration option if admin has not configured the plugin
+        if (!isConfigured(context)) {
+            bindings.push(channelHeaderConfig(context));
+        } else if (isConnected(context)) {
+            bindings.push(channelHeaderSubscribe(context));
+        }
     }
     return newChannelHeaderBindings(bindings);
 };
