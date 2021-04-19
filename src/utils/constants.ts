@@ -111,7 +111,7 @@ export const SubscriptionFields = {
     ChannelPickerSelectLabel: 'Channel Name',
     ChannelPickerSelectName: 'channel_picker_name',
 
-    SubSelectLabel: 'Subscription Name',
+    SubSelectLabel: 'Select Subscription',
     SubSelectName: 'subscription_select_name',
 
     UnsupportedFieldsTextName: 'unsupported_fields',
@@ -124,7 +124,7 @@ export const SubscriptionFields = {
     SubmitButtonsOptions: selectOptions,
     SaveButtonLabel: 'Save',
 
-    NewSub_OptionLabel: 'New Subscription',
+    NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
 
     PrefixTriggersTitle: '__mm_webhook',
