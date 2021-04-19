@@ -1,7 +1,7 @@
 import {AppCallValues, AppContext} from 'mattermost-redux/types/apps';
 
 import {StoreKeys} from '../utils/constants';
-import {newProxyClient, ProxyClient} from '../clients';
+import {newAppsClient, AppsClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 export type AppConfigStore = {
@@ -18,10 +18,10 @@ export interface ConfigStore {
 
 class ConfigStoreImpl implements ConfigStore {
     storeData: AppConfigStore;
-    ppClient: ProxyClient;
+    ppClient: AppsClient;
 
     constructor(botToken: string, url: string) {
-        this.ppClient = newProxyClient(botToken, url);
+        this.ppClient = newAppsClient(botToken, url);
         this.storeData = {} as AppConfigStore;
     }
 

@@ -1,6 +1,6 @@
 import {AppContext} from 'mattermost-redux/types/apps';
 
-import {newProxyClient, ProxyClient} from '../clients';
+import {newAppsClient, AppsClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 interface TokenStore {
@@ -10,10 +10,10 @@ interface TokenStore {
 
 // need to add prefix
 class TokenStoreImpl implements TokenStore {
-    ppClient: ProxyClient
+    ppClient: AppsClient
 
     constructor(botToken: string, baseURL: string) {
-        this.ppClient = newProxyClient(botToken, baseURL);
+        this.ppClient = newAppsClient(botToken, baseURL);
     }
 
     async deleteToken(userID: string): Promise<void> {

@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import {AppCallResponse, AppCall} from 'mattermost-redux/types/apps';
 
 import {newConfigStore, AppConfigStore} from '../store/config';
-import {newProxyClient, ProxyClient} from '../clients';
+import {newAppsClient} from '../clients';
 import {newZendeskConfigForm} from '../forms';
 import {newOKCallResponseWithMarkdown, newFormCallResponse, newErrorCallResponseWithMessage} from '../utils/call_responses';
 import {baseUrlFromContext} from '../utils/utils';
@@ -27,7 +27,7 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
     const id = call.values.zd_client_id || '';
     const secret = call.values.zd_client_secret || '';
 
-    const ppClient = newProxyClient(call.context.acting_user_access_token, url);
+    const ppClient = newAppsClient(call.context.acting_user_access_token, url);
     ppClient.storeOauth2App(id, secret);
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');

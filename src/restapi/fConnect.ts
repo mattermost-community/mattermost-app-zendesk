@@ -3,7 +3,7 @@ import {Request, Response} from 'express';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
-import {newProxyClient} from '../clients';
+import {newAppsClient} from '../clients';
 
 import {getOAuthConfig} from '../app/oauth';
 import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
@@ -55,7 +55,7 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     const token = user.data;
 
     const mmURL = context.mattermost_site_url;
-    const ppClient = newProxyClient(call.context.acting_user_access_token, mmURL);
+    const ppClient = newAppsClient(call.context.acting_user_access_token, mmURL);
     ppClient.storeOauth2User(token);
     res.json(newOKCallResponse());
 }

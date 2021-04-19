@@ -6,7 +6,7 @@ import {Routes, AppsPluginName, PathAPI} from '../utils/constants';
 import {tryPromiseWithMessage} from '../utils/utils';
 import {getManifest} from '../manifest';
 
-export interface ProxyClient {
+export interface AppsClient {
     kvSet(key: string, value: any): Promise<void>;
     kvGet(key: string): Promise<any>;
     kvDelete(key: string): void;
@@ -14,11 +14,11 @@ export interface ProxyClient {
     storeOauth2User(token: string): void
 }
 
-export const newProxyClient = (botAccessToken: string, baseURL: string): ProxyClient => {
-    return new ProxyClientImpl(botAccessToken, baseURL);
+export const newAppsClient = (botAccessToken: string, baseURL: string): AppsClient => {
+    return new AppsClientImpl(botAccessToken, baseURL);
 };
 
-class ProxyClientImpl implements ProxyClient {
+class AppsClientImpl implements AppsClient {
     token: string
     url: string
 
