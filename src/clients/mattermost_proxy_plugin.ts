@@ -9,9 +9,9 @@ import {getManifest} from '../manifest';
 export interface AppsClient {
     kvSet(key: string, value: any): Promise<void>;
     kvGet(key: string): Promise<any>;
-    kvDelete(key: string): void;
-    storeOauth2App(id: string, secret: string): void;
-    storeOauth2User(token: string): void
+    kvDelete(key: string): Promise<void>;
+    storeOauth2App(id: string, secret: string): Promise<void>;
+    storeOauth2User(token: string): Promise<void>
 }
 
 export const newAppsClient = (botAccessToken: string, baseURL: string): AppsClient => {
