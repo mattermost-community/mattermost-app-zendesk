@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 import {Oauth2App} from 'src/utils';
 
-import {Routes, AppsPluginName, PathAPI, PathKV} from '../utils/constants';
+import {Routes, AppsPluginName, PathAPI} from '../utils/constants';
 import {tryPromiseWithMessage} from '../utils/utils';
 import {getManifest} from '../manifest';
 
@@ -50,10 +50,9 @@ class ProxyClientImpl implements ProxyClient {
         return tryPromiseWithMessage(this.doAPIPost(url, data), 'storeOauth2App failed');
     }
 
-    storeOauth2User(token: any): Promise<void> {
+    storeOauth2User(token: string): Promise<void> {
         const url = this.url + this.oauth2UserPath();
-        const data = token;
-        return tryPromiseWithMessage(this.doAPIPost(url, data), 'storeOauth2User failed');
+        return tryPromiseWithMessage(this.doAPIPost(url, token), 'storeOauth2User failed');
     }
 
     async doAPIPost(url: string, value: any): Promise<any> {

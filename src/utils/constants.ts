@@ -7,7 +7,6 @@ import {AppSelectOption} from 'mattermost-redux/types/apps';
 
 export const AppsPluginName = 'com.mattermost.apps';
 export const PathAPI = '/api/v1';
-export const PathProxyAPI = `/plugins/${AppsPluginName}/${PathAPI}`;
 
 // Routes to the Mattermost Instance
 const MMPaths = {

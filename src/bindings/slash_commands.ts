@@ -127,8 +127,6 @@ const cmdTarget = (context: AppContext): AppBinding => {
             path: Routes.App.BindingPathTargetCreate,
             expand: {
                 app: AppExpandLevels.EXPAND_ALL,
-
-                // acting_user: AppExpandLevels.EXPAND_ALL,
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
