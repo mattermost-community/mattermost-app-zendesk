@@ -31,25 +31,23 @@ Insert values from Oauth Client setup (step 1) fields in the configuration modal
 
 ##### 4. Connect your Account
 
-1. `/zendesk connect` to connect you Mattermost user to your Zendesk account
-1. Click on the connect link to authenticate your user
+1. Type `/zendesk connect` to connect your Mattermost user to your Zendesk
+1. Click on the connection link to authenticate your user
 1. Authenticate in Zendesk and close the broweser tab to complete the process
 
 ##### 5. Setup Subscriptions
 
-This step requires a Zendesk connected Mattermost user and uses an access token needed for subscriptions integration.  The token can be any connected Zendesk user with agent permissions in Zendesk.  Another option is to create a "bot" agent user in Zendesk and connect them to mattermost.
+This step requires a Zendesk connected Mattermost user and uses an access token needed for subscriptions functionality.  The token can be any connected Zendesk user with agent permissions in Zendesk.  Another option is to create a "bot" agent user in Zendesk, that will function as a service account, and connect them to mattermost.
 
 Note, the access token is only used to read ticket information when a subcription is triggered.  This token will not post on behalf of the user.
 
 1. `/zendesk me` - save this access token value
 1. `/zendesk configure`
-    1. `Oauth2 Access Token` - set this value to the token saved in the step above
+    1. `Oauth2 Access Token` - set this value to the token saved in the step above and click Submit
 1. `/zendesk setup-target` - this command will setup a zendesk target pointing to your mattermost instance (it only needs to be run one time)
+1. An ephemeral post will confirm that a target was created and that subscriptions functionality has been configured
 
-##### 6. Start the node server
-
-1. `make watch` - (to monitor typescript errors and watch changing files errors)
-1. `make run` - (in a separate shell) start the node server
+## Help
 
 ### Zendesk and Mattermost Users (All users)
 
@@ -94,6 +92,11 @@ Zendesk Admins are able to view these subscriptions inside Zendesk via `Settings
 
 `/apps debug-add-manifest --url http://localhost:4000/manifest.json`  
 `/apps install --app-id com.mattermost.zendesk --app-secret thisisthesecret`
+
+Start the node server
+
+1. `make watch` - (to monitor typescript errors and watch changing files errors)
+1. `make run` - (in a separate shell) start the node server
 
 ## Provision
 
