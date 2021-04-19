@@ -31,7 +31,6 @@ type ZDSubscriptionFieldOption = {
 const getDisplaySubTitleOption = (option: ZDSubscriptionFieldOption): string => {
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
     const newTitle = option.title.match(re)[3];
-    console.log('newTitle', newTitle);
     return newTitle;
 };
 
