@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import {Oauth2App} from 'src/utils';
 
 import {Routes, AppsPluginName, PathAPI, PathKV} from '../utils/constants';
+import {tryPromiseWithMessage} from '../utils/utils';
 import {getManifest} from '../manifest';
 
 export interface ProxyClient {
@@ -27,44 +28,32 @@ class ProxyClientImpl implements ProxyClient {
     }
     async kvSet(key: string, value: any): Promise<void> {
         const url = this.url + this.kvPath(key);
-        try {
-            this.doAPIPost(url, value);
-        } catch (e) {
-            console.log('e', e);
-        }
+        return tryPromiseWithMessage(this.doAPIPost(url, value), 'kvSet failed');
     }
 
     async kvGet(key: string): Promise<any> {
         const url = this.url + this.kvPath(key);
-        return this.doAPIGet(url, key);
+        return tryPromiseWithMessage(this.doAPIGet(url), 'kvGet failed');
     }
 
-    kvDelete(key: string): void {
+    kvDelete(key: string): Promise<void> {
         const url = this.url + this.kvPath(key);
-        this.doAPIDelete(url);
+        return tryPromiseWithMessage(this.doAPIDelete(url), 'kvDelete failed');
     }
 
-    storeOauth2App(id: string, secret: string): void {
+    storeOauth2App(id: string, secret: string): Promise<void> {
         const url = this.url + this.oauth2AppPath();
         const data: Oauth2App = {
             client_id: id,
             client_secret: secret,
         };
-        try {
-            this.doAPIPost(url, data);
-        } catch (e) {
-            console.log('e', e);
-        }
+        return tryPromiseWithMessage(this.doAPIPost(url, data), 'storeOauth2App failed');
     }
 
-    storeOauth2User(token: any): void {
+    storeOauth2User(token: any): Promise<void> {
         const url = this.url + this.oauth2UserPath();
         const data = token;
-        try {
-            this.doAPIPost(url, data);
-        } catch (e) {
-            console.log('e', e);
-        }
+        return tryPromiseWithMessage(this.doAPIPost(url, data), 'storeOauth2User failed');
     }
 
     async doAPIPost(url: string, value: any): Promise<any> {
