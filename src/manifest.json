@@ -32,6 +32,7 @@
         "path": "/bindings",
         "expand": {
             "acting_user": "all",
+            "channel": "summary",
             "admin_access_token": "all",
             "oauth2_app": "all",
             "oauth2_user": "all"

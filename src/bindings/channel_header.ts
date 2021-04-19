@@ -30,6 +30,7 @@ const channelHeaderSubscribe = (context: AppContext): AppBinding => {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
                 acting_user: AppExpandLevels.EXPAND_ALL,
+                channel: AppExpandLevels.EXPAND_SUMMARY,
                 admin_access_token: AppExpandLevels.EXPAND_ALL,
                 acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
