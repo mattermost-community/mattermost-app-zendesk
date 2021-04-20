@@ -37,10 +37,9 @@ class MMClientImpl implements MMClient {
         );
     }
 
-    // TODO: admin vs bot?
     asAdmin(): Client {
         return this.as(
-            this.context.bot_access_token,
+            this.context.admin_access_token,
         );
     }
 

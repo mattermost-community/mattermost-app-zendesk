@@ -10,6 +10,11 @@ interface Tickets {
     exportAudit(id: number): any;
 }
 
+interface Targets {
+    create(target: any): any;
+    update(id: string, target: any): any;
+}
+
 interface TicketForms {
     list(): any;
 }
@@ -39,25 +44,27 @@ export interface ZDClient {
     tickets: Tickets;
     ticketforms: TicketForms;
     ticketfields: TicketFields;
+    targets: Targets;
     triggers: Triggers;
     oauthtokens: OauthTokens;
     users: Users;
 }
 
 export const newZDClient = async (context: AppContext): Promise<ZDClient> => {
-    // get active mattermost user ID
-    const mmUserID = context.acting_user_id || '';
-    const tokenStore = newTokenStore(context);
-    const token = await tokenStore.getToken(mmUserID);
+    const mmUserID = context.acting_user_id;
+    if (mmUserID === '') {
+        throw new Error('Failed to get user acting_user_id');
+    }
+
+    const token = context.oauth2.user.access_token;
     if (!token) {
         throw new Error('Failed to get user access_token');
     }
-    const tokenValue = token.token;
     const config = await newConfigStore(context).getValues();
     const remoteUri = config.zd_url + Routes.ZD.APIVersion as string;
     const options: ClientOptions = {
         username: '',
-        token: tokenValue,
+        token,
         remoteUri,
         oauth: true,
     };

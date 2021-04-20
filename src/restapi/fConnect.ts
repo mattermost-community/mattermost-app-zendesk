@@ -1,19 +1,30 @@
 import {Request, Response} from 'express';
 
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
+import {newAppsClient} from '../clients';
+
+import {getOAuthConfig} from '../app/oauth';
+import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newConfigStore} from '../store';
 
-import {Routes, createOAuthState, contextFromRequest} from '../utils';
+import {contextFromRequest, Routes} from '../utils';
 
 export async function fConnect(req: Request, res: Response): Promise<void> {
     const context = contextFromRequest(req);
-    const state = createOAuthState(context);
+    const url = context.oauth2.connect_url;
+    res.json(newOKCallResponseWithMarkdown(`Follow this link to connect Mattermost to your Zendesk Account: [link](${url})`));
+}
+
+export async function fOauth2Connect(req: Request, res: Response): Promise<void> {
+    const context = contextFromRequest(req);
+    const state = req.body.values.state;
 
     const configStore = newConfigStore(context);
     const config = await configStore.getValues();
     const zdHost = config.zd_url;
-    const clientID = config.zd_client_id;
+    const clientID = context.oauth2.client_id;
 
     const url = zdHost + Routes.ZD.OAuthAuthorizationURI;
     const urlWithParams = new URL(url);
@@ -23,5 +34,28 @@ export async function fConnect(req: Request, res: Response): Promise<void> {
     urlWithParams.searchParams.append('scope', 'read write');
 
     const link = urlWithParams.href;
-    res.json(newOKCallResponseWithMarkdown(`Follow this link to connect: [link](${link})`));
+    const callResponse: AppCallResponse = {
+        type: AppCallResponseTypes.OK,
+        data: link,
+    };
+    res.json(callResponse);
+}
+
+export async function fOauth2Complete(req: Request, res: Response): Promise<void> {
+    const call: AppCall = req.body;
+    const context = contextFromRequest(req);
+    const code = call.values.code;
+    if (code === '') {
+        throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
+    }
+
+    const zdAuth = await getOAuthConfig(context);
+    const zdURL = context.oauth2.complete_url + '?code=' + code;
+    const user = await zdAuth.code.getToken(zdURL);
+    const token = user.data;
+
+    const mmURL = context.mattermost_site_url;
+    const ppClient = newAppsClient(call.context.acting_user_access_token, mmURL);
+    ppClient.storeOauth2User(token);
+    res.json(newOKCallResponse());
 }

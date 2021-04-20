@@ -3,8 +3,8 @@ import {Request, Response} from 'express';
 import {AppCall} from 'mattermost-redux/types/apps';
 
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {isUserSystemAdmin} from '../utils';
 import {getManifest} from '../manifest';
-import {isUserSysadmin} from '../app/user';
 import {CommandTrigger} from '../utils/constants';
 
 export async function fHelp(req: Request, res: Response): Promise<void> {
@@ -22,7 +22,7 @@ function getHeader(): string {
 function getCommands(call: AppCall): string {
     const context = call.context;
     let text = getUserCommands();
-    if (isUserSysadmin(context)) {
+    if (isUserSystemAdmin(context)) {
         text += getAdminCommands();
     }
     return text;
@@ -32,13 +32,15 @@ function getUserCommands(): string {
     let text = h5('User Commands');
     text += addBulletSlashCommand('connect');
     text += addBulletSlashCommand('disconnect');
+    text += addBulletSlashCommand('me');
     text += addBulletSlashCommand('help');
     return text;
 }
 
 function getAdminCommands(): string {
     let text = h5('System Admin Commands');
-    text += addBulletSlashCommand('connect');
+    text += addBulletSlashCommand('configure');
+    text += addBulletSlashCommand('setup-target');
     text += addBulletSlashCommand('subscribe');
     return text;
 }

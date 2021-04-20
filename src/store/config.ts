@@ -1,51 +1,43 @@
 import {AppCallValues, AppContext} from 'mattermost-redux/types/apps';
 
 import {StoreKeys} from '../utils/constants';
-import {newKVClient, KVClient} from '../clients';
+import {newAppsClient, AppsClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 export type AppConfigStore = {
     zd_url: string;
-    zd_client_id: string;
-    zd_client_secret: string;
     zd_node_host: string;
+    zd_target_id: string;
+    zd_oauth_access_token: string;
 }
 
 export interface ConfigStore {
     getValues(): Promise<AppConfigStore>;
-    isConfigured(): Promise<boolean>;
     storeConfigInfo(values: AppCallValues): void;
 }
 
 class ConfigStoreImpl implements ConfigStore {
     storeData: AppConfigStore;
-    kvClient: KVClient;
+    ppClient: AppsClient;
 
     constructor(botToken: string, url: string) {
-        this.kvClient = newKVClient(botToken, url);
+        this.ppClient = newAppsClient(botToken, url);
         this.storeData = {} as AppConfigStore;
     }
 
     storeConfigInfo(store: AppConfigStore): void {
-        this.kvClient.set(StoreKeys.config, store);
+        this.ppClient.kvSet(StoreKeys.config, store);
     }
 
     async getValues(): Promise<AppConfigStore> {
-        const config = await this.kvClient.get(StoreKeys.config);
+        const config = await this.ppClient.kvGet(StoreKeys.config);
         if (config) {
             this.storeData.zd_url = config.zd_url || '';
-            this.storeData.zd_client_id = config.zd_client_id || '';
-            this.storeData.zd_client_secret = config.zd_client_secret || '';
             this.storeData.zd_node_host = config.zd_node_host || '';
+            this.storeData.zd_target_id = config.zd_target_id || '';
+            this.storeData.zd_oauth_access_token = config.zd_oauth_access_token || '';
         }
         return this.storeData;
-    }
-
-    // isConfigured returns true if zendesk configuration has been completed by a sysadmin
-    // TODO Validation logic needs to be improved
-    async isConfigured(): Promise<boolean> {
-        const config = await this.getValues();
-        return Boolean(config.zd_url && config.zd_client_id && config.zd_client_secret);
     }
 }
 

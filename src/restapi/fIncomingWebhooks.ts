@@ -1,7 +1,6 @@
 import {Post} from 'mattermost-redux/types/posts';
 
 import {Request, Response} from 'express';
-import {AppContext} from 'mattermost-redux/types/apps';
 
 import {Routes, tryPromiseWithMessage, contextFromRequest} from '../utils';
 import {TriggerFields} from '../utils/constants';
@@ -11,31 +10,37 @@ import {newZDClient, newMMClient} from '../clients';
 import {newConfigStore} from '../store';
 
 export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
-    const ticketID = req.body[TriggerFields.TicketIDKey];
-    const channelID = req.body[TriggerFields.ChannelIDKey];
+    const values = req.body.values.data;
+    const context = contextFromRequest(req);
 
-    // TODO: we need zendesk bot admin so that admin requests can be made by the
-    // bot and not from an actiing user
-    const fakeBotContext: AppContext = {
-        acting_user_id: 'rgixs6uimp88tq8x8w3yxu3oqe',
-    };
-    const zdClient = await newZDClient(fakeBotContext);
+    const ticketID = values[TriggerFields.TicketIDKey];
+    const channelID = values[TriggerFields.ChannelIDKey];
+
+    const config = await newConfigStore(context).getValues();
+    const zdHost = config.zd_node_host;
+
+    const token = config.zd_oauth_access_token;
+    if (token === '') {
+        throw new Error('Failed to get zd_oauth_access_token');
+    }
+
+    // add the configured access_token to the context so the ZD client can make
+    // API requests
+    context.oauth2 = {user: {access_token: token}};
+
+    const zdClient = await newZDClient(context);
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);
     const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
 
-    const context = contextFromRequest(req);
-    const config = await newConfigStore(context).getValues();
-    const zdHost = config.zd_node_host;
-
     const message: string = getNotificationMessage(zdHost, ticketID, auditEvent);
 
-    const adminClient = newMMClient(context).asAdmin();
+    const adminClient = newMMClient(context).asBot();
 
     const post: Post = {
         message,
-        user_id: fakeBotContext.acting_user_id,
+        user_id: context.bot_user_id,
         channel_id: channelID,
     };
 

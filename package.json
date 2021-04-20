@@ -10,7 +10,7 @@
     "check-types": "tsc",
     "lint": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --cache",
     "fix": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --fix --cache",
-    "start": "nodemon dist/src/index.js",
+    "start": "nodemon dist/index.js",
     "test": "jest --coverage"
   },
   "author": "",
@@ -19,7 +19,8 @@
     "body-parser": "1.19.0",
     "node-fetch": "2.6.1",
     "node-zendesk": "github:jfrerich/node-zendesk",
-    "serverless-http": "2.7.0"
+    "serverless-http": "2.7.0",
+    "ts-node": "^9.1.1"
   },
   "devDependencies": {
     "@types/cors": "2.8.9",
@@ -36,7 +37,7 @@
     "eslint-plugin-import": "2.22.1",
     "express": "4.17.1",
     "jest": "24.9.0",
-    "mattermost-redux": "github:mattermost/mattermost-redux#4099a3ee845c41274e94b71e3a56e8ed3150ff6f",
+    "mattermost-redux": "github:mattermost/mattermost-redux#feature/cloud-apps",
     "nodemon": "2.0.6",
     "prettier": "1.19.1",
     "ts-jest": "26.4.4",

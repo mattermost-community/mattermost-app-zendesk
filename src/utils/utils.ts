@@ -1,9 +1,17 @@
 import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps';
+import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
+
+import {AppConfigStore} from '../store/config';
 
 import {getManifest} from '../manifest';
 
 import {SubscriptionFields} from './constants';
+
+export type Oauth2App = {
+    client_id: string;
+    client_secret: string;
+}
 
 export type ZDFieldOption = {
     name: string;
@@ -22,19 +30,29 @@ type ZDSubscriptionFieldOption = {
 
 const getDisplaySubTitleOption = (option: ZDSubscriptionFieldOption): string => {
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
-    const newTitle = option.title.match(re)[2];
+    const newTitle = option.title.match(re)[3];
     return newTitle;
 };
 
-// getChannelIDFromTriggerTitle extracts the channelID from a saved Zendesk
+export type parsedTriggerTitle = {
+    title: string;
+    channelID: string;
+    instance: string
+}
+
+// parseTriggerTitle extracts the name, instance, and channelID from a saved Zendesk
 // trigger title
-export const getChannelIDFromTriggerTitle = (title: string): string => {
+export const parseTriggerTitle = (title: string): parsedTriggerTitle => {
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
     const match = title.match(re);
     if (!match) {
-        console.log('malformed Mattermost Trigger title', match[1]);
+        console.log('malformed Mattermost Trigger title', match[0]);
     }
-    return match[1];
+    return {
+        title: match[0],
+        instance: match[1],
+        channelID: match[2],
+    };
 };
 
 export const makeOption = (option: ZDFieldOption): AppSelectOption => ({label: option.name, value: option.value});
@@ -86,4 +104,23 @@ export function getBulletedList(pretext: string, items: string[]): string {
 
 export function getStaticURL(context: AppContext, name:string): string {
     return context.mattermost_site_url + '/plugins/com.mattermost.apps/apps/' + getManifest().app_id + '/static/' + name;
+}
+
+export function isConfigured(context: AppContext): boolean {
+    return Boolean(context.oauth2.client_id && context.oauth2.client_secret);
+}
+
+export function isUserSystemAdmin(context: AppContext): boolean {
+    return Boolean(context.acting_user.roles && context.acting_user.roles.includes(GeneralConstants.SYSTEM_ADMIN_ROLE));
+}
+
+export function isConnected(context: AppContext): boolean {
+    if (context.oauth2.user && context.oauth2.user.access_token && context.oauth2.user.access_token !== '') {
+        return true;
+    }
+    return false;
+}
+
+export function webhookConfigured(config: AppConfigStore): boolean {
+    return Boolean(config.zd_target_id && config.zd_target_id !== '');
 }

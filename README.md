@@ -4,32 +4,50 @@
 
 ### Zendesk and Mattermost Users (System Admin privileges required)
 
-1. Clone this repo
-1. Create Zendesk Oauth Client for Mattermost (in Zendesk)
-    1. `Zendesk` > `Admin` > `API` > `OAuth Clients`
-    1. `Add OAuth Client`
-        1. `Client Name`: (Example `Mattermost Zendesk App`)
-        1. `Description`: `Connect your Zendesk account to Mattermost`
-        1. `Redirect URLs`: `https://<your-zendesk-app-host>/oauth/complete`
-            1. Ex. `http://localhost:4000` - Development
-            1. Ex. `https://mytest.ngrok.io` - Exposed for development
-        1. `Save`
-1. Install the app (In Mattermost)
-    1. `/apps debug-add-manifest --url http://<your-zendesk-app-host>/manifest.json`
-    1. `/apps install --app-id com.mattermost.zendesk--app-secret thisisthesecret`
-1. Configure Zendesk Client in Mattermost
-    1. `/zendesk configure` to open the configuration modal
-    1. Save values from Oauth Client form to the fields in the configuration modal
-        1. `Zendesk URL` - set to your zendesk account host
-        1. `Zendesk Client ID` - set to the `Unique identifier` field value
-        1. `Zendesk Client Secret` - set as the `Secret` field value
-            1. Ex. `https://<subdomain>.zendesk.com`
-        1. `ZD_NODE_HOST` - set to the path of your zendesk app host
-            1. Ex. `https://testing.ngrok.io`
-1. [Setup Zendesk Target](#Setup Zendesk Target)
-1. Start the node server
-    1. `make watch` - (to monitor typescript errors and watch changing files errors)
-    1. `make run` - (in a separate shell) start the node server
+##### 1. Create Zendesk Oauth Client for Mattermost (in Zendesk)
+
+1. `Zendesk` > `Admin` > `API` > `OAuth Clients`
+1. `Add OAuth Client`
+    1. `Client Name`: (Example `Mattermost Zendesk App`)
+    1. `Description`: `Connect your Zendesk account to Mattermost`
+    1. `Redirect URLs`: `https://<mattermost-site-url>/plugins/com.mattermost.apps/apps/com.mattermost.zendesk/oauth2/remote/complete`
+    1. `Save`
+
+##### 2. Install the app (In Mattermost)
+
+1. `/apps install --app-id com.mattermost.zendesk`
+
+##### 3. Configure Zendesk Client in Mattermost
+
+`/zendesk configure` to open the configuration modal
+
+Insert values from Oauth Client setup (step 1) fields in the configuration modal
+
+1. `URL` - set to your zendesk URL
+1. `Client ID` - set to the `Unique identifier` Oauth value
+1. `Client Secret` - set as the `Secret` Oauth value
+1. `Oauth2 Access Token` - leave empty for now (You will configure this once you are connected)
+1. click `Submit`
+
+##### 4. Connect your Account
+
+1. Type `/zendesk connect` to connect your Mattermost user to your Zendesk
+1. Click on the connection link to authenticate your user
+1. Authenticate in Zendesk and close the broweser tab to complete the process
+
+##### 5. Setup Subscriptions
+
+This step requires a Zendesk connected Mattermost user and uses an access token needed for subscriptions functionality.  The token can be any connected Zendesk user with agent permissions in Zendesk.  Another option is to create a "bot" agent user in Zendesk, that will function as a service account, and connect them to mattermost.
+
+Note, the access token is only used to read ticket information when a subcription is triggered.  This token will not post on behalf of the user.
+
+1. `/zendesk me` - save this access token value
+1. `/zendesk configure`
+    1. `Oauth2 Access Token` - set this value to the token saved in the step above and click Submit
+1. `/zendesk setup-target` - this command will setup a zendesk target pointing to your mattermost instance (it only needs to be run one time)
+1. An ephemeral post will confirm that a target was created and that subscriptions functionality has been configured
+
+## Help
 
 ### Zendesk and Mattermost Users (All users)
 
@@ -42,10 +60,18 @@ accounts via OAuth2 authorization
 
 ## Slash Commands
 
+### User Commands
+
 `/zendesk connect` - connect your Zendesk account to Mattermost  
-`/zendesk configure` - configure the Zendesk app after installation  
 `/zendesk disconnect` - disconnect your Zendesk account from Mattermost  
 `/zendesk help` - post ephemeral message with help text
+`/zendesk me` - post ephemeral message with your connection information  
+
+### System Admin Commands
+
+`/zendesk configure` - configure the Zendesk app after installation  
+`/zendesk setup-target` - setup the Zendesk target for your instance
+`/zendesk subscribe` - setup a channel subscription  
 
 ## Create a ticket
 
@@ -70,41 +96,13 @@ Zendesk Admins are able to view these subscriptions inside Zendesk via `Settings
 
 ### In Development
 
-`/apps debug-add-manifest --url http://localhost:4000/manifest.json`
+`/apps debug-add-manifest --url http://localhost:4000/manifest.json`  
 `/apps install --app-id com.mattermost.zendesk --app-secret thisisthesecret`
 
-## Setup Zendesk Target
+Start the node server
 
-Here is a helpful [Zendesk post](https://support.zendesk.com/hc/en-us/articles/204890268-Creating-webhooks-with-the-HTTP-target#topic_yf1_fs5_tr) describing the setup of webhooks
-
-### Add a notification target
-
-From [Zendesk Documentation:](https://developer.zendesk.com/rest_api/docs/support/targets)
-
-> Targets are pointers to cloud-based applications and services such as Twitter and Twilio, as well as to HTTP and email addresses. You can use targets with triggers and automations to send a notification to the target when a ticket is created or updated.
-
-We need to create the Zendesk HTTP target which will send webhook trigger notifications to the Zendesk app.  Each Zendesk trigger event will send a notficication to this target. We only need one target per Mattermost instance.
-
-1. Click the Admin icon (sprocket) in the left sidebar
-1. `Settings` > `Extensions`
-1. `Targets tab` > `Add Target`
-1. Select `HTTP` Target
-1. Fill in the following:
-    1. **Title:** Mattermost target for incoming webhooks
-    1. **Url:** `<node_host_url>/webhook-incoming>`
-    1. **Method:** POST
-    1. **Content Type:** JSON
-1. Test that the target is valid
-    1. Select `Test target` in the dropdown
-    1. Click `Submit` button
-    1. Leave JSON body in the floating window empty
-    1. Click `Submit` button in floating window
-    1. Verify `HTTP/1.1 200 OK` response is shown in the resulting window
-1. Save the valid target
-    1. Select `Create target` in the dropdown
-    1. Click `Submit` button
-
-**Developer Notes:** When testing webhooks locally, you will need to expose your localhost:4040 with ngrok
+1. `make watch` - (to monitor typescript errors and watch changing files errors)
+1. `make run` - (in a separate shell) start the node server
 
 ## Provision
 

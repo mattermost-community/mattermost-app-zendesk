@@ -5,7 +5,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {getStaticURL, Routes} from '../utils';
-import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, getChannelIDFromTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
+import {getBulletedList, makeSubscriptionOptions, makeChannelOptions, parseTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 
@@ -83,7 +83,11 @@ class FormFields extends BaseFormFields {
     async setState(): Promise<void> {
         // modified node-zendesk to allow hitting triggers/search api
         // returns all triggers for all channels and teams
-        const searchReq = this.zdClient.triggers.search(SubscriptionFields.PrefixTriggersTitle);
+
+        let search = SubscriptionFields.PrefixTriggersTitle;
+        search += SubscriptionFields.RegexTriggerInstance;
+        search += this.call.context.mattermost_site_url;
+        const searchReq = this.zdClient.triggers.search(search);
         const triggers = await tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
         for (const trigger of triggers) {
             await this.addChannelTrigger(trigger);
@@ -91,7 +95,8 @@ class FormFields extends BaseFormFields {
     }
 
     async addChannelTrigger(trigger: any): Promise<void> {
-        const channelID = getChannelIDFromTriggerTitle(trigger.title);
+        const parsedTitle = parseTriggerTitle(trigger.title);
+        const channelID = parsedTitle.channelID;
         const channel = await this.mmClient.getChannel(channelID);
         if (channel.team_id === this.getCurrentTeamID()) {
             if (this.teamTriggers[channelID]) {
@@ -107,13 +112,19 @@ class FormFields extends BaseFormFields {
     // addChannelPickerField adds a channel picker field when more than one
     // channel in the current team has a subscription
     addChannelPickerField(): void {
-        // only show channel picker if have subs in multiple channels
-        if (this.getTeamChannelsWithSubs().length <= 1) {
-            return;
-        }
-
         const options = makeChannelOptions(this.getTeamChannelsWithSubs());
         const currentChannelOption = options.filter(this.getDefaultChannelOption());
+        const context = this.call.context;
+
+        // channel does not have any subscriptions. add default channel as the
+        // selected option
+        if (currentChannelOption.length === 0) {
+            const option: AppSelectOption = {
+                label: context.channel.display_name,
+                value: context.channel.id,
+            };
+            currentChannelOption.push(option);
+        }
         const f: AppField = {
             name: SubscriptionFields.ChannelPickerSelectName,
             type: AppFieldTypes.STATIC_SELECT,
