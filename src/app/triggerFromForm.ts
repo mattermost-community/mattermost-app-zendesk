@@ -11,11 +11,13 @@ interface TriggerFromFrom {
 export class TriggerFromFormImpl implements TriggerFromFrom {
     values: AppCallValues;
     context: AppContext;
+    targetID: string;
     trigger: ZDTrigger
 
-    constructor(call: AppCallRequest) {
+    constructor(call: AppCallRequest, targetID: string) {
         this.values = call.values as AppCallValues;
         this.context = call.context;
+        this.targetID = targetID;
         this.trigger = {} as ZDTrigger;
     }
 
@@ -39,7 +41,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
             {
                 field: TriggerFields.ActionField,
                 value: [
-                    TriggerFields.TargetID,
+                    this.targetID,
                     this.getJSONDataFields(),
                 ],
             },
@@ -63,7 +65,8 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
 
     addTitle(): void {
         let title = SubscriptionFields.PrefixTriggersTitle;
-        title += this.context.channel_id;
+        title += SubscriptionFields.RegexTriggerInstance + this.context.mattermost_site_url;
+        title += SubscriptionFields.RegexTriggerChannelID + this.context.channel_id;
         title += ' ' + this.values[SubscriptionFields.SubTextName];
         this.addField('title', title);
     }
@@ -105,8 +108,8 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(call: AppCallRequest): ZDTriggerPayload {
-    const trigger = new TriggerFromFormImpl(call).getTrigger();
+export function newTriggerFromForm(call: AppCallRequest, targetID: string): ZDTriggerPayload {
+    const trigger = new TriggerFromFormImpl(call, targetID).getTrigger();
     return trigger;
 }
 

@@ -5,9 +5,15 @@ export const FormTextAreaMaxLength = 1024;
 
 import {AppSelectOption} from 'mattermost-redux/types/apps';
 
+export const AppsPluginName = 'com.mattermost.apps';
+export const PathAPI = '/api/v1';
+
 // Routes to the Mattermost Instance
 const MMPaths = {
-    KVPath: '/plugins/com.mattermost.apps/api/v1/kv/',
+    PathKV: '/kv',
+    PathOAuth2App: '/oauth2/app',
+    PathOAuth2User: '/oauth2/user',
+    PathOAuth2CreateState: '/oauth2/create-state',
 };
 
 // Routes to the Zendesk Instance
@@ -23,8 +29,9 @@ const AppPaths = {
     ManifestPath: '/manifest.json',
     InstallPath: '/install',
 
-    OAuthCompletePath: '/oauth/complete',
-    SubscribeIncomingWebhookPath: '/webhook-incoming',
+    OAuthCompletePath: '/oauth2/complete',
+    OAuthConnectPath: '/oauth2/connect',
+    SubscribeIncomingWebhookPath: '/webhook/webhook-target',
 
     // Binding routes are accessed via a location call
     BindingsPath: '/bindings',
@@ -43,7 +50,9 @@ const AppPaths = {
 
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
+    BindingPathTargetCreate: '/target-create',
     BindingPathHelp: '/help',
+    BindingPathMe: '/me',
 };
 
 export const Routes = {
@@ -52,13 +61,15 @@ export const Routes = {
     App: AppPaths,
 };
 
-export const CommandLocations = {
+export const Locations = {
     Connect: 'connect',
     Configure: 'configure',
     Disconnect: 'disconnect',
     Subscribe: 'subscribe',
     Ticket: 'ticket',
+    Target: 'target',
     Help: 'help',
+    Me: 'me',
 };
 
 export const StoreKeys = {
@@ -99,7 +110,7 @@ export const SubscriptionFields = {
     ChannelPickerSelectLabel: 'Channel Name',
     ChannelPickerSelectName: 'channel_picker_name',
 
-    SubSelectLabel: 'Subscription Name',
+    SubSelectLabel: 'Select Subscription',
     SubSelectName: 'subscription_select_name',
 
     UnsupportedFieldsTextName: 'unsupported_fields',
@@ -112,11 +123,13 @@ export const SubscriptionFields = {
     SubmitButtonsOptions: selectOptions,
     SaveButtonLabel: 'Save',
 
-    NewSub_OptionLabel: 'New Subscription',
+    NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
 
-    PrefixTriggersTitle: '__mm_webhook__channelID:',
-    RegexTriggerTitle: '__mm_webhook__channelID:(\\w+) (.*)',
+    PrefixTriggersTitle: '__mm_webhook',
+    RegexTriggerInstance: '__instance_',
+    RegexTriggerChannelID: '__channelID_',
+    RegexTriggerTitle: '__mm_webhook__instance_(.*)__channelID_(\\w+) (.*)',
 
     // TODO add ticket is created and ticket is updated options
     ConditionsCheckBoxFields: [
@@ -149,10 +162,6 @@ export const TriggerFields = {
     ChannelIDKey: 'channelID',
     ActionField: 'notification_target',
     ActionValuePairs: {},
-
-    // TODO this is the target id value. Need to store this value when creating the
-    // target through the app, or when the user has to create target in zendesk
-    TargetID: 360002371891,
 };
 
 // ActionValuePairs is an object of static key value pairs that will be added to a

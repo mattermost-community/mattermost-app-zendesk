@@ -8,7 +8,11 @@
     "root_url": "",
     "requested_permissions": [
         "act_as_user",
-        "act_as_bot"
+        "act_as_bot",
+        "act_as_admin",
+        "post_all_as_bot",
+        "remote_webhooks",
+        "remote_oauth2"
     ],
     "requested_locations": [
         "/command",
@@ -23,5 +27,15 @@
             "runtime": "nodejs14.x"
         }
     ],
+    "bindings": {
+        "path": "/bindings",
+        "expand": {
+            "acting_user": "all",
+            "channel": "summary",
+            "admin_access_token": "all",
+            "oauth2_app": "all",
+            "oauth2_user": "all"
+        }
+    },
     "assets": []
 }

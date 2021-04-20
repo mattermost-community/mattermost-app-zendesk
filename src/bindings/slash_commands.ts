@@ -1,29 +1,35 @@
 import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, CommandLocations, ZendeskIcon} from 'utils/constants';
-import {getStaticURL, newCommandBindings} from 'utils';
+import {Routes, Locations, ZendeskIcon} from 'utils/constants';
+import {getStaticURL, newCommandBindings, isConfigured, isConnected, isUserSystemAdmin} from 'utils';
 
 // getCommandBindings returns the users slash command bindings
-export const getCommandBindings = (context: AppContext, configured: boolean, connected: boolean, sysadmin: boolean): AppBinding => {
+export const getCommandBindings = (context: AppContext): AppBinding => {
     const bindings: AppBinding[] = [];
+    const isSysadmin = isUserSystemAdmin(context);
 
     // only show configuration option if admin has not configured the plugin
-    if (!configured && sysadmin) {
-        bindings.push(cmdConfigure(context));
-        bindings.push(cmdHelp(context));
-        return newCommandBindings(context, bindings);
+    if (!isConfigured(context)) {
+        if (isSysadmin) {
+            bindings.push(cmdConfigure(context));
+            bindings.push(cmdHelp(context));
+            return newCommandBindings(context, bindings);
+        }
     }
 
-    if (connected) {
-        bindings.push(cmdDisconnect(context));
-        if (sysadmin) {
+    if (isConnected(context)) {
+        if (isSysadmin) {
             bindings.push(cmdSubscribe(context));
+            bindings.push(cmdConfigure(context));
+            bindings.push(cmdTarget(context));
         }
+        bindings.push(cmdDisconnect(context));
+        bindings.push(cmdMe(context));
     } else {
         bindings.push(cmdConnect(context));
     }
-    bindings.push(cmdConfigure(context));
+
     bindings.push(cmdHelp(context));
     return newCommandBindings(context, bindings);
 };
@@ -31,12 +37,15 @@ export const getCommandBindings = (context: AppContext, configured: boolean, con
 // CommandBindings class for creating slash command location bindings
 const cmdConnect = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Connect,
+        location: Locations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
         icon: getStaticURL(context, ZendeskIcon),
         form: {},
         call: {
+            expand: {
+                oauth2_app: AppExpandLevels.EXPAND_ALL,
+            },
             path: Routes.App.BindingPathConnect,
         },
     } as AppBinding;
@@ -44,7 +53,7 @@ const cmdConnect = (context: AppContext): AppBinding => {
 
 const cmdDisconnect = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Disconnect,
+        location: Locations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
         icon: getStaticURL(context, ZendeskIcon),
@@ -57,33 +66,76 @@ const cmdDisconnect = (context: AppContext): AppBinding => {
 
 const cmdSubscribe = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Subscribe,
+        location: Locations.Subscribe,
         label: 'subscribe',
         description: 'Subscribe notifications to a channel',
         icon: getStaticURL(context, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.CallPathSubsOpenForm,
+            expand: {
+                admin_access_token: AppExpandLevels.EXPAND_ALL,
+                oauth2_app: AppExpandLevels.EXPAND_ALL,
+                oauth2_user: AppExpandLevels.EXPAND_ALL,
+            },
         },
     } as AppBinding;
 };
 
 const cmdConfigure = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Configure,
+        location: Locations.Configure,
         label: 'configure',
         description: 'Configure the installed Zendesk account',
         icon: getStaticURL(context, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.CallPathConfigOpenForm,
+            expand: {
+                acting_user: AppExpandLevels.EXPAND_ALL,
+                acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+                oauth2_app: AppExpandLevels.EXPAND_ALL,
+            },
+        },
+    } as AppBinding;
+};
+
+const cmdMe = (context: AppContext): AppBinding => {
+    return {
+        location: Locations.Me,
+        label: 'me',
+        description: 'Show Your Zendesk User Info',
+        icon: getStaticURL(context, ZendeskIcon),
+        form: {},
+        call: {
+            path: Routes.App.BindingPathMe,
+            expand: {
+                oauth2_user: AppExpandLevels.EXPAND_ALL,
+            },
+        },
+    } as AppBinding;
+};
+
+const cmdTarget = (context: AppContext): AppBinding => {
+    return {
+        location: Locations.Target,
+        label: 'setup-target',
+        description: 'Setup Zendesk Target',
+        icon: getStaticURL(context, ZendeskIcon),
+        form: {},
+        call: {
+            path: Routes.App.BindingPathTargetCreate,
+            expand: {
+                app: AppExpandLevels.EXPAND_ALL,
+                oauth2_user: AppExpandLevels.EXPAND_ALL,
+            },
         },
     } as AppBinding;
 };
 
 const cmdHelp = (context: AppContext): AppBinding => {
     return {
-        location: CommandLocations.Help,
+        location: Locations.Help,
         label: 'help',
         description: 'Show Zendesk Help',
         icon: getStaticURL(context, ZendeskIcon),

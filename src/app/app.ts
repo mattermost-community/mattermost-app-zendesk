@@ -62,7 +62,7 @@ class AppImpl implements App {
         const id = zdTicket.id;
         const subject = zdTicket.subject;
         const message = `${zdUser.name} created ticket [#${id}](${host}/agent/tickets/${id}) [${subject}]`;
-        await this.createBotPost(message);
+        await this.createActingUserPost(message);
 
         return newOKCallResponse();
     }
@@ -71,41 +71,45 @@ class AppImpl implements App {
         // get zendesk client for user
         const zdClient = await newZDClient(this.context);
 
+        const config = await newConfigStore(this.context).getValues();
+        const host = config.zd_url;
+        const targetID = config.zd_target_id;
+        if (targetID === '') {
+            return newErrorCallResponseWithMessage('failed to create subscription. TargetID is missing from the configuration data.');
+        }
+
         // create the trigger object from the form response
         let zdTriggerPayload: any;
         try {
-            zdTriggerPayload = newTriggerFromForm(this.call);
+            zdTriggerPayload = newTriggerFromForm(this.call, targetID);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }
 
         // create a reply to the original post noting the ticket was created
-        const config = await newConfigStore(this.context).getValues();
-        const host = config.zd_node_host;
-
         let request: any;
         let msg: string;
         let action: string;
-        const link = '[subscription](' + host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
         const subName = this.values[SubscriptionFields.SubTextName];
+        const link = `[${subName}](` + host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
             request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
-            msg = 'Successfuly deleted subscription';
+            msg = `Deleting subscription ${link}. `;
             action = 'delete';
             break;
         case Boolean(zdTriggerPayload.trigger.id):
             request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
-            msg = `Successfuly updated ${link}`;
+            msg = `Updating subscription ${link}. `;
             action = 'update';
             break;
         default:
             request = zdClient.triggers.create(zdTriggerPayload);
-            msg = `Successfuly created ${link}`;
+            msg = `Creating subscription ${link}. `;
             action = 'create';
         }
 
-        msg += ` \`${subName}\``;
+        msg += 'This could take a moment before your subscription data is saved in Zendesk';
 
         // Any zendesk error will produce an error in the modal
         try {
@@ -116,6 +120,21 @@ class AppImpl implements App {
 
         // return the call response with successful markdown message
         return newOKCallResponseWithMarkdown(msg);
+    }
+
+    createActingUserPost = async (message: string): Promise<void> => {
+        const actingUserClient = newMMClient(this.context).asActingUser();
+        const user_id = this.context.acting_user_id;
+
+        const post: Post = {
+            message,
+            user_id,
+            channel_id: String(this.context.channel_id),
+            root_id: String(this.context.post_id),
+        };
+
+        const createPostReq = actingUserClient.createPost(post);
+        await tryPromiseWithMessage(createPostReq, 'Failed to create post');
     }
 
     createBotPost = async (message: string): Promise<void> => {

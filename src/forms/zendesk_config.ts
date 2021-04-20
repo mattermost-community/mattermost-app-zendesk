@@ -6,7 +6,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
 
 import {newMMClient, ZDClient} from 'clients';
-import {getStaticURL, Routes} from 'utils';
+import {getStaticURL, Routes, Oauth2App} from 'utils';
 import {BaseFormFields} from 'utils/base_form_fields';
 import {ZendeskIcon} from 'utils/constants';
 import {newConfigStore, ConfigStore, AppConfigStore} from 'store/config';
@@ -35,15 +35,20 @@ export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppFor
 class FormFields extends BaseFormFields {
     configStore: ConfigStore
     storeValues: AppConfigStore
+    OauthValues: Oauth2App
 
     constructor(call: AppCallRequest, configStore: ConfigStore, mmClient: Client4) {
         super(call, {} as ZDClient, mmClient);
         this.configStore = configStore;
+        this.OauthValues = {
+            client_id: call.context.oauth2.client_id,
+            client_secret: call.context.oauth2.client_secret,
+        };
         this.storeValues = {
             zd_url: '',
-            zd_client_id: '',
-            zd_client_secret: '',
             zd_node_host: '',
+            zd_oauth_access_token: '',
+            zd_target_id: '',
         };
     }
 
@@ -59,6 +64,7 @@ class FormFields extends BaseFormFields {
         this.addZDUrlField();
         this.addZDClientIDField();
         this.addZDClientSecretField();
+        this.addZDConnectedUserIDField();
         this.addZDNodeHost();
     }
 
@@ -66,7 +72,7 @@ class FormFields extends BaseFormFields {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
             name: 'zd_url',
-            label: 'Zendesk URL',
+            label: 'URL',
             value: this.storeValues.zd_url,
             hint: 'Ex. https://yourhost.zendesk.com',
             description: 'Base URL of the zendesk account',
@@ -79,9 +85,9 @@ class FormFields extends BaseFormFields {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
             name: 'zd_client_id',
-            label: 'Zendesk Client ID',
-            value: this.storeValues.zd_client_id,
-            description: 'Client ID obtained when setting up Oauth client in zendesk',
+            label: 'Client ID',
+            value: this.OauthValues.client_id,
+            description: 'Client ID obtained from Zendesk Oauth client Unique Identifier',
             is_required: true,
         };
         this.builder.addField(f);
@@ -89,11 +95,24 @@ class FormFields extends BaseFormFields {
     addZDClientSecretField(): void {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
+            subtype: 'password',
             name: 'zd_client_secret',
-            label: 'Zendesk Client Secret',
-            value: this.storeValues.zd_client_secret,
-            description: 'Client Secret obtained when setting up Oauth client in zendesk',
+            label: 'Client Secret',
+            value: this.OauthValues.client_secret,
+            description: 'Client Secret obtained from Zendesk Oauth client secret',
             is_required: true,
+        };
+        this.builder.addField(f);
+    }
+
+    addZDConnectedUserIDField(): void {
+        const f: AppField = {
+            type: AppFieldTypes.TEXT,
+            subtype: 'password',
+            name: 'zd_oauth_access_token',
+            label: 'Oauth2 Access Token',
+            value: this.storeValues.zd_oauth_access_token,
+            description: 'Oauth2 Connected Mattermost Account with Zendesk agent access. This field is needed for subscriptions',
         };
         this.builder.addField(f);
     }
@@ -103,7 +122,7 @@ class FormFields extends BaseFormFields {
             type: AppFieldTypes.TEXT,
             name: 'zd_node_host',
             hint: 'Ex. https://yourhost.ngrok.io',
-            label: 'Zendesk Node Host',
+            label: 'Node Host',
             value: this.storeValues.zd_node_host,
             description: 'Only needed for development',
         };

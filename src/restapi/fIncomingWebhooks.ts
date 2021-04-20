@@ -4,7 +4,6 @@ import {Request, Response} from 'express';
 
 import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
 
-import {getManifest} from 'manifest';
 import {Routes, tryPromiseWithMessage} from 'utils';
 import {TriggerFields} from 'utils/constants';
 
@@ -13,28 +12,33 @@ import {newZDClient, newMMClient} from 'clients';
 import {newConfigStore} from 'store';
 
 export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
-    const ticketID = req.body[TriggerFields.TicketIDKey];
-    const channelID = req.body[TriggerFields.ChannelIDKey];
+    const values = req.body.values.data;
+    const context: CtxWithBotAdminActingUserExpanded = req.body.context;
 
-    // TODO: we need zendesk bot admin so that admin requests can be made by the
-    // bot and not from an actiing user
-    const fakeBotContext = {
-        app_id: getManifest().app_id,
-        acting_user_id: 'rgixs6uimp88tq8x8w3yxu3oqe',
-    } as CtxWithBotAdminActingUserExpanded;
-    const zdClient = await newZDClient(fakeBotContext);
+    const ticketID = values[TriggerFields.TicketIDKey];
+    const channelID = values[TriggerFields.ChannelIDKey];
+
+    const config = await newConfigStore(context).getValues();
+    const zdHost = config.zd_node_host;
+
+    const token = config.zd_oauth_access_token;
+    if (token === '') {
+        throw new Error('Failed to get zd_oauth_access_token');
+    }
+
+    // add the configured access_token to the context so the ZD client can make
+    // API requests
+    context.oauth2 = {user: {access_token: token}};
+
+    const zdClient = await newZDClient(context);
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);
     const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
 
-    const context: CtxWithBotAdminActingUserExpanded = req.body.context;
-    const config = await newConfigStore(context).getValues();
-    const zdHost = config.zd_node_host;
-
     const message: string = getNotificationMessage(zdHost, ticketID, auditEvent);
 
-    const adminClient = newMMClient(context).asAdmin();
+    const adminClient = newMMClient(context).asBot();
 
     const post: Partial<Post> = {
         message,

@@ -5,44 +5,6 @@ import {CommandTrigger, ZendeskIcon} from 'utils/constants';
 import {getStaticURL} from 'utils';
 import {getManifest} from 'manifest';
 
-// Bindings base class stores user info for subclasses
-export class Bindings {
-    configured: boolean
-    connected: boolean
-    sysadmin: boolean
-    private bindings: AppBinding[]
-
-    constructor(isConfigured: boolean, isConnected: boolean, isSysadmin: boolean) {
-        this.configured = isConfigured;
-        this.connected = isConnected;
-        this.sysadmin = isSysadmin;
-        this.bindings = [];
-    }
-
-    addBindings = (binding: AppBinding): void => {
-        this.bindings.push(binding);
-    }
-
-    getAllBindings = (): AppBinding[] => {
-        return this.bindings;
-    }
-
-    // check if user connected with KV store
-    isConnected = (): boolean => {
-        return this.connected;
-    }
-
-    // check if user is sysadmin through mattermost API
-    isSysadmin = (): boolean => {
-        return this.sysadmin;
-    }
-
-    // check if zendesk configuration has been complete
-    isConfigured = (): boolean => {
-        return this.configured;
-    }
-}
-
 export function newPostMenuBindings(bindings: AppBinding[]): AppBinding {
     const binding: AppBinding = {
         app_id: getManifest().app_id,

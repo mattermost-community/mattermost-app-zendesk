@@ -7,13 +7,15 @@ import {newConfigStore} from 'store';
 
 export const getOAuthConfig = async (context: CtxWithActingUserExpanded): Promise<ClientOAuth2> => {
     const config = await newConfigStore(context).getValues();
-    const zdAuth = new ClientOAuth2({
-        clientId: config.zd_client_id,
-        clientSecret: config.zd_client_secret,
+    const options = {
+        clientId: context.oauth2.client_id,
+        clientSecret: context.oauth2.client_secret,
         accessTokenUri: config.zd_url + Routes.ZD.OAuthAccessTokenURI,
         authorizationUri: config.zd_url + Routes.ZD.OAuthAuthorizationURI,
-        redirectUri: config.zd_node_host + Routes.App.OAuthCompletePath,
+        redirectUri: context.oauth2.complete_url,
         scopes: ['read', 'write'],
-    });
+    };
+
+    const zdAuth = new ClientOAuth2(options);
     return zdAuth;
 };
