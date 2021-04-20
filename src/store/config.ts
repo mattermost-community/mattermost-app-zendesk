@@ -3,7 +3,7 @@ import {AppCallValues} from 'mattermost-redux/types/apps';
 import {CtxWithActingUserExpanded} from 'types/apps';
 
 import {StoreKeys} from 'utils/constants';
-import {newAppsClient, AppsClient} from '../clients';
+import {newAppsClient, AppsClient} from 'clients';
 import {baseUrlFromContext} from 'utils';
 
 export type AppConfigStore = {

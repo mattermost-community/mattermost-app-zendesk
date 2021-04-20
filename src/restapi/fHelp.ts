@@ -7,7 +7,7 @@ import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
 import {newOKCallResponseWithMarkdown} from 'utils/call_responses';
 import {getManifest} from 'manifest';
 import {CommandTrigger} from 'utils/constants';
-import {isUserSystemAdmin} from '../utils';
+import {isUserSystemAdmin} from 'utils';
 
 export async function fHelp(req: Request, res: Response): Promise<void> {
     let helpText = getHeader();

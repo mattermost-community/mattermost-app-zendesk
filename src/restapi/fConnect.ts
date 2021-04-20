@@ -1,18 +1,14 @@
 import {Request, Response} from 'express';
 
-import {CtxWithActingUserExpanded} from 'types/apps';
-
-import {newOKCallResponse,newOKCallResponseWithMarkdown} from 'utils/call_responses';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
-import {newAppsClient} from '../clients';
-
-import {getOAuthConfig} from '../app/oauth';
-
+import {CtxWithActingUserExpanded} from 'types/apps';
+import {newOKCallResponse, newOKCallResponseWithMarkdown} from 'utils/call_responses';
 import {newConfigStore} from 'store';
-
 import {Routes} from 'utils';
+import {newAppsClient} from 'clients';
+import {getOAuthConfig} from 'app/oauth';
 
 export async function fConnect(req: Request, res: Response): Promise<void> {
     const context: CtxWithActingUserExpanded = req.body.context;

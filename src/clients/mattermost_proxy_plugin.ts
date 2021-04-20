@@ -1,10 +1,10 @@
 import fetch from 'node-fetch';
 
-import {Oauth2App} from 'src/utils';
+import {Oauth2App} from 'utils';
 
-import {Routes, AppsPluginName, PathAPI} from '../utils/constants';
-import {tryPromiseWithMessage} from '../utils/utils';
-import {getManifest} from '../manifest';
+import {Routes, AppsPluginName, PathAPI} from 'utils/constants';
+import {tryPromiseWithMessage} from 'utils/utils';
+import {getManifest} from 'manifest';
 
 export interface AppsClient {
     kvSet(key: string, value: any): Promise<void>;

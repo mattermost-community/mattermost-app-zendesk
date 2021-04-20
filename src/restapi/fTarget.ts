@@ -3,15 +3,15 @@
 import {Request, Response} from 'express';
 import {AppContext} from 'mattermost-redux/types/apps';
 
-import {getManifest} from '../manifest';
-import {Routes, tryPromiseWithMessage, contextFromRequest} from '../utils';
-import {webhookConfigured} from '../utils/utils';
-import {newZDClient, ZDClient} from '../clients';
-import {newConfigStore} from '../store';
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {getManifest} from 'manifest';
+import {Routes, tryPromiseWithMessage} from 'utils';
+import {webhookConfigured} from 'utils/utils';
+import {newZDClient, ZDClient} from 'clients';
+import {newConfigStore} from 'store';
+import {newOKCallResponseWithMarkdown} from 'utils/call_responses';
 
 export async function fCreateTarget(req: Request, res: Response): Promise<void> {
-    const context = contextFromRequest(req);
+    const context = req.body.context;
     const zdClient = await newZDClient(context);
 
     const text = await updateOrCreateTarget(zdClient, context);
