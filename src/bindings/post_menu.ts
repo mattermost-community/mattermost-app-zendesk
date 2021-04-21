@@ -1,34 +1,35 @@
-import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, Locations, ZendeskIcon} from 'utils/constants';
-import {getStaticURL, newPostMenuBindings, isConfigured, isConnected, isUserSystemAdmin} from 'utils';
-import {getManifest} from 'manifest';
+import {Routes, Locations, ZendeskIcon} from '../utils/constants';
+import {getStaticURL, newPostMenuBindings} from '../utils';
+import {getManifest} from '../manifest';
+
+import {BindingOptions} from './index';
 
 // getPostMenuBindings returns the users post menu bindings
-export const getPostMenuBindings = (context: AppContext): AppBinding => {
+export const getPostMenuBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
-    const isSysadmin = isUserSystemAdmin(context);
 
     // do not show any post menu options if the app is not configured
-    if (!isConfigured(context)) {
+    if (!options.isConfigured) {
         return newPostMenuBindings(bindings);
     }
-    if (isConnected(context)) {
-        bindings.push(openCreateTicketForm(context));
-        if (isSysadmin) {
-            bindings.push(openSubscriptionsForm(context));
+    if (options.isConnected) {
+        bindings.push(openCreateTicketForm(options.mattermostSiteUrl));
+        if (options.isSystemAdmin) {
+            bindings.push(openSubscriptionsForm(options.mattermostSiteUrl));
         }
     }
     return newPostMenuBindings(bindings);
 };
 
-const openCreateTicketForm = (context: AppContext): AppBinding => {
+export const openCreateTicketForm = (mmSiteUrl: string): AppBinding => {
     return {
         app_id: getManifest().app_id,
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         location: Locations.Ticket,
         call: {
             path: Routes.App.CallPathTicketOpenForm,
@@ -42,11 +43,11 @@ const openCreateTicketForm = (context: AppContext): AppBinding => {
     };
 };
 
-const openSubscriptionsForm = (context: AppContext): AppBinding => {
+export const openSubscriptionsForm = (mmSiteUrl: string): AppBinding => {
     return {
         label: 'Zendesk Subscriptions',
         description: 'Subscribe channel to Zendesk notifications',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         location: Locations.Subscribe,
         call: {
             path: Routes.App.CallPathSubsOpenForm,

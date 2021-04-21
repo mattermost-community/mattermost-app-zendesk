@@ -2,23 +2,25 @@ import {Post} from 'mattermost-redux/types/posts';
 
 import {Request, Response} from 'express';
 
-import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
+import {CtxExpandedBotAdminActingUser} from '../types/apps';
 
-import {Routes, tryPromiseWithMessage} from 'utils';
-import {TriggerFields} from 'utils/constants';
+import {Routes, tryPromiseWithMessage} from '../utils';
+import {TriggerFields} from '../utils/constants';
 
-import {newZDClient, newMMClient} from 'clients';
+import {newZDClient, newMMClient} from '../clients';
+import {ZDClientOptions} from 'clients/zendesk';
+import {MMClientOptions} from 'clients/mattermost';
 
-import {newConfigStore} from 'store';
+import {newConfigStore} from '../store';
 
 export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
     const values = req.body.values.data;
-    const context: CtxWithBotAdminActingUserExpanded = req.body.context;
+    const context: CtxExpandedBotAdminActingUser = req.body.context;
 
     const ticketID = values[TriggerFields.TicketIDKey];
     const channelID = values[TriggerFields.ChannelIDKey];
 
-    const config = await newConfigStore(context).getValues();
+    const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
     const zdHost = config.zd_node_host;
 
     const token = config.zd_oauth_access_token;
@@ -26,11 +28,12 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
         throw new Error('Failed to get zd_oauth_access_token');
     }
 
-    // add the configured access_token to the context so the ZD client can make
-    // API requests
-    context.oauth2 = {user: {access_token: token}};
-
-    const zdClient = await newZDClient(context);
+    const zdOptions: ZDClientOptions = {
+        oauth2UserAccessToken: token,
+        botAccessToken: context.bot_access_token,
+        mattermostSiteUrl: context.mattermost_site_url,
+    };
+    const zdClient = await newZDClient(zdOptions);
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);
     const ticketAudit = ticketAudits.pop();
@@ -38,7 +41,13 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
 
     const message: string = getNotificationMessage(zdHost, ticketID, auditEvent);
 
-    const adminClient = newMMClient(context).asBot();
+    const mmOptions: MMClientOptions = {
+        mattermostSiteURL: context.mattermost_site_url,
+        actingUserAccessToken: context.acting_user_access_token,
+        botAccessToken: context.bot_access_token,
+        adminAccessToken: context.mattermost_site_url,
+    };
+    const adminClient = newMMClient(mmOptions).asBot();
 
     const post: Partial<Post> = {
         message,

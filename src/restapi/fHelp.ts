@@ -2,12 +2,12 @@ import {Request, Response} from 'express';
 
 import {AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
+import {CtxExpandedBotAdminActingUser} from '../types/apps';
 
-import {newOKCallResponseWithMarkdown} from 'utils/call_responses';
-import {getManifest} from 'manifest';
-import {CommandTrigger} from 'utils/constants';
-import {isUserSystemAdmin} from 'utils';
+import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {getManifest} from '../manifest';
+import {CommandTrigger} from '../utils/constants';
+import {isUserSystemAdmin} from '../utils';
 
 export async function fHelp(req: Request, res: Response): Promise<void> {
     let helpText = getHeader();
@@ -22,9 +22,9 @@ function getHeader(): string {
 }
 
 function getCommands(call: AppCallRequest): string {
-    const context = call.context as CtxWithBotAdminActingUserExpanded;
+    const context = call.context as CtxExpandedBotAdminActingUser;
     let text = getUserCommands();
-    if (isUserSystemAdmin(context)) {
+    if (isUserSystemAdmin(context.acting_user)) {
         text += getAdminCommands();
     }
     return text;

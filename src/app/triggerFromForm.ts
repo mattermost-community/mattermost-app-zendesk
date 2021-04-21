@@ -1,8 +1,8 @@
 import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from 'utils/ZDTypes';
+import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
 
-import {SubscriptionFields, TriggerFields} from 'utils/constants';
+import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
 interface TriggerFromFrom {
     getTrigger(): ZDTriggerPayload;

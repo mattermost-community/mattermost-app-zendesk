@@ -1,9 +1,9 @@
 import {AppBindingLocations} from 'mattermost-redux/constants/apps';
-import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'mattermost-redux/types/apps';
 
-import {CommandTrigger, ZendeskIcon} from 'utils/constants';
-import {getStaticURL} from 'utils';
-import {getManifest} from 'manifest';
+import {CommandTrigger, ZendeskIcon} from '../utils/constants';
+import {getStaticURL} from '../utils';
+import {getManifest} from '../manifest';
 
 export function newPostMenuBindings(bindings: AppBinding[]): AppBinding {
     const binding: AppBinding = {
@@ -15,7 +15,7 @@ export function newPostMenuBindings(bindings: AppBinding[]): AppBinding {
     return binding;
 }
 
-export function newCommandBindings(context: AppContext, bindings: AppBinding[]): AppBinding {
+export function newCommandBindings(mmSiteUrl: string, bindings: AppBinding[]): AppBinding {
     const binding: AppBinding = {
         app_id: getManifest().app_id,
         label: CommandTrigger,
@@ -23,7 +23,7 @@ export function newCommandBindings(context: AppContext, bindings: AppBinding[]):
         bindings: [
             {
                 app_id: getManifest().app_id,
-                icon: getStaticURL(context, ZendeskIcon),
+                icon: getStaticURL(mmSiteUrl, ZendeskIcon),
                 label: CommandTrigger,
                 description: 'Manage Zendesk tickets',
                 hint: '',

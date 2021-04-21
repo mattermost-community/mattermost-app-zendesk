@@ -1,16 +1,14 @@
 import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps';
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
+import {UserProfile} from 'mattermost-redux/types/users';
 
-import {getManifest} from 'manifest';
-import {AppConfigStore} from 'store/config';
+import {CtxExpandedOauth2App, CtxExpandedActingUser, Oauth2App, ZDOauth2User} from '../types/apps';
+
+import {getManifest} from '../manifest';
+import {AppConfigStore} from '../store/config';
 
 import {SubscriptionFields} from './constants';
-
-export type Oauth2App = {
-    client_id: string;
-    client_secret: string;
-}
 
 export type ZDFieldOption = {
     name: string;
@@ -87,8 +85,8 @@ export function isFieldValueSelected(field: AppField): boolean {
     return Boolean(field.value);
 }
 
-export function baseUrlFromContext(context: AppContext): string {
-    return context.mattermost_site_url || 'http://localhost:8065';
+export function baseUrlFromContext(mattermostSiteUrl: string): string {
+    return mattermostSiteUrl || 'http://localhost:8065';
 }
 
 // makeBulletedList returns a bulleted list of items with options header
@@ -101,20 +99,20 @@ export function makeBulletedList(pretext: string, items: string[]): string {
     return text;
 }
 
-export function getStaticURL(context: AppContext, name:string): string {
-    return context.mattermost_site_url + '/plugins/com.mattermost.apps/apps/' + getManifest().app_id + '/static/' + name;
+export function getStaticURL(mattermostSiteUrl: string, name:string): string {
+    return mattermostSiteUrl + '/plugins/com.mattermost.apps/apps/' + getManifest().app_id + '/static/' + name;
 }
 
-export function isConfigured(context: AppContext): boolean {
-    return Boolean(context.oauth2.client_id && context.oauth2.client_secret);
+export function isConfigured(oauth2: Oauth2App): boolean {
+    return Boolean(oauth2.client_id && oauth2.client_secret);
 }
 
-export function isUserSystemAdmin(context: AppContext): boolean {
-    return Boolean(context.acting_user.roles && context.acting_user.roles.includes(GeneralConstants.SYSTEM_ADMIN_ROLE));
+export function isUserSystemAdmin(actingUser: UserProfile): boolean {
+    return Boolean(actingUser.roles && actingUser.roles.includes(GeneralConstants.SYSTEM_ADMIN_ROLE));
 }
 
-export function isConnected(context: AppContext): boolean {
-    if (context.oauth2.user && context.oauth2.user.access_token && context.oauth2.user.access_token !== '') {
+export function isConnected(oauth2user: ZDOauth2User): boolean {
+    if (oauth2user && oauth2user.access_token && oauth2user.access_token !== '') {
         return true;
     }
     return false;

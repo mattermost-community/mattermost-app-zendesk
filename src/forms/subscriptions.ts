@@ -4,27 +4,41 @@ import {AppSelectOption, AppCallRequest, AppForm, AppField} from 'mattermost-red
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
+import {CtxExpandedBotAdminActingUserOauth2User, ExpandedChannel} from '../types/apps';
 
-import {newZDClient, newMMClient, ZDClient} from 'clients';
-import {getStaticURL, Routes} from 'utils';
-import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions, parseTriggerTitle, tryPromiseWithMessage} from 'utils/utils';
-import {ZDTrigger, ZDTriggerCondition} from 'utils/ZDTypes';
-import {SubscriptionFields, ZendeskIcon} from 'utils/constants';
-import {BaseFormFields} from 'utils/base_form_fields';
+import {newZDClient, newMMClient, ZDClient} from '../clients';
+import {ZDClientOptions} from 'clients/zendesk';
+import {MMClientOptions} from 'clients/mattermost';
+import {getStaticURL, Routes} from '../utils';
+import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions, parseTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
+import {ZDTrigger, ZDTriggerCondition} from '../utils/ZDTypes';
+import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
+import {BaseFormFields} from '../utils/base_form_fields';
 
 // newSubscriptionsForm returns a form response to create subscriptions
 export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {
-    const context = call.context as CtxWithBotAdminActingUserExpanded;
-    const zdClient = await newZDClient(context);
-    const mmClient = newMMClient(context).asAdmin();
+    const context = call.context as CtxExpandedBotAdminActingUserOauth2User;
+    const zdOptions: ZDClientOptions = {
+        oauth2UserAccessToken: context.oauth2.user.access_token,
+        botAccessToken: context.bot_access_token,
+        mattermostSiteUrl: context.mattermost_site_url,
+    };
+    const zdClient = await newZDClient(zdOptions);
+
+    const mmOptions: MMClientOptions = {
+        mattermostSiteURL: context.mattermost_site_url,
+        actingUserAccessToken: context.acting_user_access_token,
+        botAccessToken: context.bot_access_token,
+        adminAccessToken: context.mattermost_site_url,
+    };
+    const mmClient = newMMClient(mmOptions).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient);
     const fields = await formFields.getSubscriptionFields();
 
     const form: AppForm = {
         title: 'Create or Edit Zendesk Subscriptions',
         header: 'Create or edit channel subscriptions to Zendesk notifications',
-        icon: getStaticURL(call.context, ZendeskIcon),
+        icon: getStaticURL(call.context.mattermost_site_url, ZendeskIcon),
         submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
         call: {
@@ -87,7 +101,8 @@ class FormFields extends BaseFormFields {
         let search = SubscriptionFields.PrefixTriggersTitle;
         search += SubscriptionFields.RegexTriggerInstance;
         search += this.call.context.mattermost_site_url;
-        const searchReq = this.zdClient.triggers.search(search);
+        const client = this.zdClient as ZDClient;
+        const searchReq = client.triggers.search(search) || '';
         const triggers = await tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
         const results: Promise<void>[] = [];
         for (const trigger of triggers) {
@@ -116,7 +131,7 @@ class FormFields extends BaseFormFields {
     addChannelPickerField(): void {
         const options = makeChannelOptions(this.getTeamChannelsWithSubs());
         const currentChannelOption = options.filter(this.getDefaultChannelOption());
-        const context = this.call.context;
+        const context = this.call.context as ExpandedChannel;
 
         // channel does not have any subscriptions. add default channel as the
         // selected option

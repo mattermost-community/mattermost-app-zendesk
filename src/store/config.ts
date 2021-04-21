@@ -1,10 +1,10 @@
 import {AppCallValues} from 'mattermost-redux/types/apps';
 
-import {CtxWithActingUserExpanded} from 'types/apps';
+import {CtxExpandedActingUser, CtxExpandedBot} from '../types/apps';
 
-import {StoreKeys} from 'utils/constants';
-import {newAppsClient, AppsClient} from 'clients';
-import {baseUrlFromContext} from 'utils';
+import {StoreKeys} from '../utils/constants';
+import {newAppsClient, AppsClient} from '../clients';
+import {baseUrlFromContext} from '../utils';
 
 export type AppConfigStore = {
     zd_url: string;
@@ -43,8 +43,7 @@ class ConfigStoreImpl implements ConfigStore {
     }
 }
 
-export const newConfigStore = (context: CtxWithActingUserExpanded): ConfigStore => {
-    const botAccessToken = context.acting_user_access_token;
-    const baseURL = baseUrlFromContext(context);
+export const newConfigStore = (botAccessToken: string, mattermostSiteUrl: string): ConfigStore => {
+    const baseURL = baseUrlFromContext(mattermostSiteUrl);
     return new ConfigStoreImpl(botAccessToken, baseURL);
 };

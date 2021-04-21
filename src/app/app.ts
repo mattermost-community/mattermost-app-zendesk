@@ -1,21 +1,24 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {AppCallValues, AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
-
-import {SubscriptionFields} from 'utils/constants';
-
-import {newConfigStore} from 'store';
-
 import {
     newErrorCallResponseWithFieldErrors,
     newOKCallResponse,
     newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
-    FieldValidationErrors} from 'utils/call_responses';
-import {tryPromiseWithMessage} from 'utils';
+    FieldValidationErrors} from '../utils/call_responses';
 
-import {newMMClient, newZDClient} from 'clients';
+import {tryPromiseWithMessage} from '../utils';
+
+import {newMMClient, newZDClient} from '../clients';
+import {ZDClientOptions} from 'clients/zendesk';
+import {MMClientOptions} from 'clients/mattermost';
+
+import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
+
+import {SubscriptionFields} from '../utils/constants';
+
+import {newConfigStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
 import {newTriggerFromForm} from './triggerFromForm';
@@ -27,17 +30,21 @@ export interface App {
 
 class AppImpl implements App {
     call: AppCallRequest
-    context: CtxWithBotAdminActingUserExpanded
+    context: CtxExpandedBotAdminActingUserOauth2User
     values: AppCallValues
 
     constructor(call: AppCallRequest) {
         this.call = call;
-        this.context = call.context as CtxWithBotAdminActingUserExpanded;
+        this.context = call.context as CtxExpandedBotAdminActingUserOauth2User;
         this.values = call.values as AppCallValues;
     }
     createTicketFromPost = async (): Promise<AppCallResponse> => {
-        // get zendesk client for user
-        const zdClient = await newZDClient(this.context);
+        const zdOptions: ZDClientOptions = {
+            oauth2UserAccessToken: this.context.oauth2.user.access_token,
+            botAccessToken: this.context.bot_access_token,
+            mattermostSiteUrl: this.context.mattermost_site_url,
+        };
+        const zdClient = await newZDClient(zdOptions);
 
         // create the ticket object from the form response
         const {payload, errors} = newTicketFromForm(this.call);
@@ -56,7 +63,7 @@ class AppImpl implements App {
         const zdUser = await tryPromiseWithMessage(getUserReq, 'Failed to get Zendesk user');
 
         // create a reply to the original post noting the ticket was created
-        const config = await newConfigStore(this.context).getValues();
+        const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
 
         const id = zdTicket.id;
@@ -68,10 +75,16 @@ class AppImpl implements App {
     }
 
     createZDSubscription = async (): Promise<AppCallResponse> => {
-        // get zendesk client for user
-        const zdClient = await newZDClient(this.context);
+        const zdOptions: ZDClientOptions = {
+            oauth2UserAccessToken: this.context.oauth2.user.access_token,
+            botAccessToken: this.context.bot_access_token,
+            mattermostSiteUrl: this.context.mattermost_site_url,
+        };
 
-        const config = await newConfigStore(this.context).getValues();
+        // get zendesk client for user
+        const zdClient = await newZDClient(zdOptions);
+
+        const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
         const targetID = config.zd_target_id;
         if (targetID === '') {
@@ -123,22 +136,34 @@ class AppImpl implements App {
     }
 
     createActingUserPost = async (message: string): Promise<void> => {
-        const actingUserClient = newMMClient(this.context).asActingUser();
-        const user_id = this.context.acting_user_id;
+        const mmOptions: MMClientOptions = {
+            mattermostSiteURL: this.context.mattermost_site_url,
+            actingUserAccessToken: this.context.acting_user_access_token,
+            botAccessToken: this.context.bot_access_token,
+            adminAccessToken: this.context.mattermost_site_url,
+        };
+        const actingUserClient = newMMClient(mmOptions).asActingUser();
+        const userID = this.context.acting_user_id;
 
-        const post: Post = {
+        const post = {
             message,
-            user_id,
+            user_id: userID,
             channel_id: String(this.context.channel_id),
             root_id: String(this.context.post_id),
-        };
+        } as Post;
 
         const createPostReq = actingUserClient.createPost(post);
         await tryPromiseWithMessage(createPostReq, 'Failed to create post');
     }
 
     createBotPost = async (message: string): Promise<void> => {
-        const adminClient = newMMClient(this.context).asActingUser();
+        const mmOptions: MMClientOptions = {
+            mattermostSiteURL: this.context.mattermost_site_url,
+            actingUserAccessToken: this.context.acting_user_access_token,
+            botAccessToken: this.context.bot_access_token,
+            adminAccessToken: this.context.mattermost_site_url,
+        };
+        const adminClient = newMMClient(mmOptions).asActingUser();
 
         // add bot to team and channel
         const botUserID = this.context.bot_user_id as string;
@@ -148,7 +173,7 @@ class AppImpl implements App {
         const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id as string);
         await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to channel');
 
-        const botClient = newMMClient(this.context).asBot();
+        const botClient = newMMClient(mmOptions).asBot();
 
         const post = {
             message,

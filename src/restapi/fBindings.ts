@@ -1,13 +1,13 @@
 import {Request, Response} from 'express';
 
-import {CtxWithBotAdminActingUserExpanded} from 'types/apps';
+import {getBindings} from '../bindings';
 
-import {newOKCallResponseWithData} from 'utils/call_responses';
+import {CtxExpandedActingUserOauth2AppOauth2User} from '../types/apps';
 
-import {getBindings} from 'bindings';
+import {newOKCallResponseWithData} from '../utils/call_responses';
 
 export async function fBindings(req: Request, res: Response): Promise<void> {
-    const context: CtxWithBotAdminActingUserExpanded = req.body.context;
+    const context: CtxExpandedActingUserOauth2AppOauth2User = req.body.context;
     const bindings = await getBindings(context);
     res.json(newOKCallResponseWithData(bindings));
 }

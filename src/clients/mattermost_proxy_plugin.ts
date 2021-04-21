@@ -1,17 +1,19 @@
 import fetch from 'node-fetch';
 
-import {Oauth2App} from 'utils';
+import ClientOAuth2 from 'client-oauth2';
 
-import {Routes, AppsPluginName, PathAPI} from 'utils/constants';
-import {tryPromiseWithMessage} from 'utils/utils';
-import {getManifest} from 'manifest';
+import {Oauth2App} from '../types/apps';
+
+import {Routes, AppsPluginName, PathAPI} from '../utils/constants';
+import {tryPromiseWithMessage} from '../utils/utils';
+import {getManifest} from '../manifest';
 
 export interface AppsClient {
     kvSet(key: string, value: any): Promise<void>;
     kvGet(key: string): Promise<any>;
     kvDelete(key: string): Promise<void>;
     storeOauth2App(id: string, secret: string): Promise<void>;
-    storeOauth2User(token: string): Promise<void>
+    storeOauth2User(token: ClientOAuth2.Data): Promise<void>
 }
 
 export const newAppsClient = (botAccessToken: string, baseURL: string): AppsClient => {
@@ -50,7 +52,7 @@ class AppsClientImpl implements AppsClient {
         return tryPromiseWithMessage(this.doAPIPost(url, data), 'storeOauth2App failed');
     }
 
-    storeOauth2User(token: string): Promise<void> {
+    storeOauth2User(token: ClientOAuth2.Data): Promise<void> {
         const url = this.url + this.oauth2UserPath();
         return tryPromiseWithMessage(this.doAPIPost(url, token), 'storeOauth2User failed');
     }

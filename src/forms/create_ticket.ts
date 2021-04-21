@@ -5,30 +5,43 @@ import Client4 from 'mattermost-redux/client/client4.js';
 import {AppField, AppForm, AppCallRequest} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
-import {CtxWithBotAdminActingUserExpanded, CtxWithPostExpanded} from 'types/apps';
+import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption, ZDFieldOption} from '../utils/utils';
+import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields, ZendeskIcon} from '../utils/constants';
+import {BaseFormFields} from '../utils/base_form_fields';
+import {ZDUserField} from '../utils/ZDTypes';
 
-import {newZDClient, newMMClient, ZDClient} from 'clients';
-
-import {getStaticURL, Routes} from 'utils';
-import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption, ZDFieldOption} from 'utils/utils';
-import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields, ZendeskIcon} from 'utils/constants';
-import {BaseFormFields} from 'utils/base_form_fields';
-import {ZDUserField} from 'utils/ZDTypes';
+import {getStaticURL, Routes} from '../utils';
+import {newZDClient, newMMClient, ZDClient} from '../clients';
+import {ZDClientOptions} from 'clients/zendesk';
+import {MMClientOptions} from 'clients/mattermost';
+import {CtxExpandedPost, CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
 
 const omitFields = ['Group', 'Status'];
 
 // newCreateTicketForm returns a form response to create a ticket from a post
 export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm> {
-    const context = call.context as CtxWithBotAdminActingUserExpanded;
-    const zdClient: ZDClient = await newZDClient(context);
-    const mmClient = newMMClient(context).asAdmin();
+    const context = call.context as CtxExpandedBotAdminActingUserOauth2User;
+    const zdOptions: ZDClientOptions = {
+        oauth2UserAccessToken: context.oauth2.user.access_token,
+        botAccessToken: context.bot_access_token,
+        mattermostSiteUrl: context.mattermost_site_url,
+    };
+    const zdClient: ZDClient = await newZDClient(zdOptions);
+
+    const mmOptions: MMClientOptions = {
+        mattermostSiteURL: context.mattermost_site_url,
+        actingUserAccessToken: context.acting_user_access_token,
+        botAccessToken: context.bot_access_token,
+        adminAccessToken: context.mattermost_site_url,
+    };
+    const mmClient = newMMClient(mmOptions).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient);
     const fields = await formFields.getCreateTicketFields();
 
     const form: AppForm = {
         title: 'Create Zendesk Ticket',
         header: 'Create a Zendesk ticket from Mattermost by filling out and submitting this form. Additional text can be added in the `Optional Message` field.',
-        icon: getStaticURL(call.context, ZendeskIcon),
+        icon: getStaticURL(call.context.mattermost_site_url, ZendeskIcon),
         fields,
         call: {
             path: Routes.App.CallPathTicketSubmitOrUpdateForm,
@@ -43,7 +56,7 @@ class FormFields extends BaseFormFields {
     postMessage: string
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4) {
         super(call, zdClient, mmClient);
-        const context = call.context as CtxWithPostExpanded;
+        const context = call.context as CtxExpandedPost;
         this.postMessage = context.post.message;
         this.zdTicketForms = [];
     }

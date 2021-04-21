@@ -1,9 +1,9 @@
 import zendesk, {ClientOptions} from 'node-zendesk';
 
-import {CtxWithActingUserExpanded} from 'types/apps';
+import {CtxExpandedActingUserOauth2AppBot} from '../types/apps';
 
-import {Routes} from 'utils';
-import {newTokenStore, newConfigStore} from 'store';
+import {Routes} from '../utils';
+import {newConfigStore} from '../store';
 
 interface Tickets {
     create(ticket: any): any;
@@ -50,16 +50,19 @@ export interface ZDClient {
     users: Users;
 }
 
-export const newZDClient = async (context: CtxWithActingUserExpanded): Promise<ZDClient> => {
-    const mmUserID = context.acting_user_id;
-    if (mmUserID === '') {
-        throw new Error('Failed to get user acting_user_id');
-    }
-    const token = context.oauth2.user.access_token;
+export type ZDClientOptions = {
+    oauth2UserAccessToken: string,
+    botAccessToken: string,
+    mattermostSiteUrl: string
+}
+
+export const newZDClient = async (zdOptions: ZDClientOptions): Promise<ZDClient> => {
+    // const token = context.oauth2.user.access_token;
+    const token = zdOptions.oauth2UserAccessToken;
     if (!token) {
         throw new Error('Failed to get user access_token');
     }
-    const config = await newConfigStore(context).getValues();
+    const config = await newConfigStore(zdOptions.botAccessToken, zdOptions.mattermostSiteUrl).getValues();
     const remoteUri = config.zd_url + Routes.ZD.APIVersion;
     const options: ClientOptions = {
         username: '',

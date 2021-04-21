@@ -1,46 +1,48 @@
-import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, Locations, ZendeskIcon} from 'utils/constants';
-import {getStaticURL, newCommandBindings, isConfigured, isConnected, isUserSystemAdmin} from 'utils';
+import {Routes, Locations, ZendeskIcon} from '../utils/constants';
+import {getStaticURL, newCommandBindings} from '../utils';
+import {BindingOptions} from 'bindings';
 
 // getCommandBindings returns the users slash command bindings
-export const getCommandBindings = (context: AppContext): AppBinding => {
+export const getCommandBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
-    const isSysadmin = isUserSystemAdmin(context);
+
+    const mmSiteURL = options.mattermostSiteUrl;
 
     // only show configuration option if admin has not configured the plugin
-    if (!isConfigured(context)) {
-        if (isSysadmin) {
-            bindings.push(cmdConfigure(context));
-            bindings.push(cmdHelp(context));
-            return newCommandBindings(context, bindings);
+    if (!options.isConfigured) {
+        if (options.isSystemAdmin) {
+            bindings.push(cmdConfigure(mmSiteURL));
+            bindings.push(cmdHelp(mmSiteURL));
+            return newCommandBindings(mmSiteURL, bindings);
         }
     }
 
-    if (isConnected(context)) {
-        if (isSysadmin) {
-            bindings.push(cmdSubscribe(context));
-            bindings.push(cmdConfigure(context));
-            bindings.push(cmdTarget(context));
+    if (options.isConnected) {
+        if (options.isSystemAdmin) {
+            bindings.push(cmdSubscribe(mmSiteURL));
+            bindings.push(cmdConfigure(mmSiteURL));
+            bindings.push(cmdTarget(mmSiteURL));
         }
-        bindings.push(cmdDisconnect(context));
-        bindings.push(cmdMe(context));
+        bindings.push(cmdDisconnect(mmSiteURL));
+        bindings.push(cmdMe(mmSiteURL));
     } else {
-        bindings.push(cmdConnect(context));
+        bindings.push(cmdConnect(mmSiteURL));
     }
 
-    bindings.push(cmdHelp(context));
-    return newCommandBindings(context, bindings);
+    bindings.push(cmdHelp(mmSiteURL));
+    return newCommandBindings(mmSiteURL, bindings);
 };
 
 // CommandBindings class for creating slash command location bindings
-const cmdConnect = (context: AppContext): AppBinding => {
+const cmdConnect = (mmSiteUrl: string): AppBinding => {
     return {
         location: Locations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         form: {},
         call: {
             expand: {
@@ -51,12 +53,12 @@ const cmdConnect = (context: AppContext): AppBinding => {
     } as AppBinding;
 };
 
-const cmdDisconnect = (context: AppContext): AppBinding => {
+const cmdDisconnect = (mmSiteUrl: string): AppBinding => {
     return {
         location: Locations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.BindingPathDisconnect,
@@ -64,12 +66,12 @@ const cmdDisconnect = (context: AppContext): AppBinding => {
     } as AppBinding;
 };
 
-const cmdSubscribe = (context: AppContext): AppBinding => {
+const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
     return {
         location: Locations.Subscribe,
         label: 'subscribe',
         description: 'Subscribe notifications to a channel',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.CallPathSubsOpenForm,
@@ -82,12 +84,12 @@ const cmdSubscribe = (context: AppContext): AppBinding => {
     } as AppBinding;
 };
 
-const cmdConfigure = (context: AppContext): AppBinding => {
+const cmdConfigure = (mmSiteUrl: string): AppBinding => {
     return {
         location: Locations.Configure,
         label: 'configure',
         description: 'Configure the installed Zendesk account',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.CallPathConfigOpenForm,
@@ -95,17 +97,18 @@ const cmdConfigure = (context: AppContext): AppBinding => {
                 acting_user: AppExpandLevels.EXPAND_ALL,
                 acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                 oauth2_app: AppExpandLevels.EXPAND_ALL,
+                oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
     } as AppBinding;
 };
 
-const cmdMe = (context: AppContext): AppBinding => {
+const cmdMe = (mmSiteUrl: string): AppBinding => {
     return {
         location: Locations.Me,
         label: 'me',
         description: 'Show Your Zendesk User Info',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.BindingPathMe,
@@ -116,12 +119,12 @@ const cmdMe = (context: AppContext): AppBinding => {
     } as AppBinding;
 };
 
-const cmdTarget = (context: AppContext): AppBinding => {
+const cmdTarget = (mmSiteUrl: string): AppBinding => {
     return {
         location: Locations.Target,
         label: 'setup-target',
         description: 'Setup Zendesk Target',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.BindingPathTargetCreate,
@@ -133,12 +136,12 @@ const cmdTarget = (context: AppContext): AppBinding => {
     } as AppBinding;
 };
 
-const cmdHelp = (context: AppContext): AppBinding => {
+const cmdHelp = (mmSiteUrl: string): AppBinding => {
     return {
         location: Locations.Help,
         label: 'help',
         description: 'Show Zendesk Help',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         form: {},
         call: {
             path: Routes.App.BindingPathHelp,

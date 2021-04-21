@@ -1,6 +1,6 @@
 import express from 'express';
 
-import {Routes} from 'utils';
+import {Routes} from '../utils';
 
 import {fBindings} from './fBindings';
 import {fConnect, fOauth2Connect, fOauth2Complete} from './fConnect';

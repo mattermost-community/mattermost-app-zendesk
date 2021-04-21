@@ -1,17 +1,21 @@
 import {Request, Response} from 'express';
 
-import {CtxWithActingUserExpanded} from '../types/apps';
+import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
 
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
 import {newZDClient} from '../clients';
+import {ZDClientOptions} from 'clients/zendesk';
 import {tryPromiseWithMessage} from '../utils';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
-    const context: CtxWithActingUserExpanded = req.body.context;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const zdClient = await newZDClient(context);
+    const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;
+    const zdOptions: ZDClientOptions = {
+        oauth2UserAccessToken: context.oauth2.user.access_token,
+        botAccessToken: context.bot_access_token,
+        mattermostSiteUrl: context.mattermost_site_url,
+    };
+    const zdClient = await newZDClient(zdOptions);
 
     // get current token. this request will be recognized as the token coming
     // from the zendesk app
