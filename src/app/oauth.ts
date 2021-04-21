@@ -1,6 +1,6 @@
 import ClientOAuth2 from 'client-oauth2';
 
-import {CtxExpandedActingUser, CtxExpandedActingUserOauth2App} from '../types/apps';
+import {CtxExpandedActingUserOauth2App} from '../types/apps';
 
 import {Routes} from '../utils';
 import {newConfigStore} from '../store';

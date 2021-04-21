@@ -30,7 +30,7 @@ export type Oauth2UserExpanded = {
     user: ZDOauth2User
 }
 
-export type CtxExpandedBot = AppContext & {
+export type ExpandedBot = AppContext & {
     bot_user_id: string,
     bot_access_token: string,
 }
@@ -90,6 +90,6 @@ export type CtxExpandedBotAdminActingUserOauth2User = CtxExpandedActingUser & Ex
 export type CtxExpandedBotAdminActingUserOauth2UserChannel = CtxExpandedActingUser & ExpandedOauth2User & ExpandedChannel
 export type CtxExpandedActingUserOauth2App = CtxExpandedActingUser & CtxExpandedOauth2App
 export type CtxExpandedActingUserOauth2AppOauth2User = CtxExpandedActingUser & CtxExpandedOauth2App & ExpandedOauth2User
-export type CtxExpandedActingUserOauth2AppBot = CtxExpandedActingUser & CtxExpandedOauth2App & CtxExpandedBot
-export type CtxExpandedBotActingUserAccessToken = CtxExpandedActingUserAccessToken & CtxExpandedBot
-export type CtxExpandedBotApp = CtxExpandedBot & CtxExpandedApp
+export type CtxExpandedActingUserOauth2AppBot = CtxExpandedActingUser & CtxExpandedOauth2App & ExpandedBot
+export type CtxExpandedBotActingUserAccessToken = CtxExpandedActingUserAccessToken & ExpandedBot
+export type CtxExpandedBotApp = ExpandedBot & CtxExpandedApp
