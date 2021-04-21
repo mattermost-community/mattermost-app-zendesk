@@ -3,6 +3,7 @@ import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {getStaticURL, Routes, newChannelHeaderBindings} from '../utils';
 import {Locations, ZendeskIcon} from '../utils/constants';
+import {getManifest} from '../manifest';
 
 import {BindingOptions} from './index';
 
@@ -22,6 +23,7 @@ export const getChannelHeaderBindings = (options: BindingOptions): AppBinding =>
 
 const channelHeaderSubscribe = (mmSiteURL): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Subscribe,
         label: 'Create Zendesk Subscription',
         description: 'Open Create Zendesk Subscription Modal',
@@ -41,6 +43,7 @@ const channelHeaderSubscribe = (mmSiteURL): AppBinding => {
 
 const channelHeaderConfig = (mmSiteURL: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Configure,
         label: 'Configure Zendesk',
         description: 'Open Create Zendesk Config Modal',

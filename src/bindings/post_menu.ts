@@ -45,6 +45,7 @@ export const openCreateTicketForm = (mmSiteUrl: string): AppBinding => {
 
 export const openSubscriptionsForm = (mmSiteUrl: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         label: 'Zendesk Subscriptions',
         description: 'Subscribe channel to Zendesk notifications',
         icon: getStaticURL(mmSiteUrl, ZendeskIcon),

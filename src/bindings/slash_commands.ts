@@ -4,6 +4,7 @@ import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 import {Routes, Locations, ZendeskIcon} from '../utils/constants';
 import {getStaticURL, newCommandBindings} from '../utils';
 import {BindingOptions} from 'bindings';
+import {getManifest} from '../manifest';
 
 // getCommandBindings returns the users slash command bindings
 export const getCommandBindings = (options: BindingOptions): AppBinding => {
@@ -39,6 +40,7 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
 // CommandBindings class for creating slash command location bindings
 const cmdConnect = (mmSiteUrl: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
@@ -55,6 +57,7 @@ const cmdConnect = (mmSiteUrl: string): AppBinding => {
 
 const cmdDisconnect = (mmSiteUrl: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
@@ -68,6 +71,7 @@ const cmdDisconnect = (mmSiteUrl: string): AppBinding => {
 
 const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Subscribe,
         label: 'subscribe',
         description: 'Subscribe notifications to a channel',
@@ -86,6 +90,7 @@ const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
 
 const cmdConfigure = (mmSiteUrl: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Configure,
         label: 'configure',
         description: 'Configure the installed Zendesk account',
@@ -105,6 +110,7 @@ const cmdConfigure = (mmSiteUrl: string): AppBinding => {
 
 const cmdMe = (mmSiteUrl: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Me,
         label: 'me',
         description: 'Show Your Zendesk User Info',
@@ -121,6 +127,7 @@ const cmdMe = (mmSiteUrl: string): AppBinding => {
 
 const cmdTarget = (mmSiteUrl: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Target,
         label: 'setup-target',
         description: 'Setup Zendesk Target',
@@ -138,6 +145,7 @@ const cmdTarget = (mmSiteUrl: string): AppBinding => {
 
 const cmdHelp = (mmSiteUrl: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Help,
         label: 'help',
         description: 'Show Zendesk Help',
