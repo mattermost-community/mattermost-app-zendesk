@@ -1,11 +1,11 @@
 import ClientOAuth2 from 'client-oauth2';
 
-import {CtxExpandedActingUserOauth2App} from '../types/apps';
+import {CtxExpandedActingUserOauth2AppBot} from '../types/apps';
 
 import {Routes} from '../utils';
 import {newConfigStore} from '../store';
 
-export const getOAuthConfig = async (context: CtxExpandedActingUserOauth2App): Promise<ClientOAuth2> => {
+export const getOAuthConfig = async (context: CtxExpandedActingUserOauth2AppBot): Promise<ClientOAuth2> => {
     const config = newConfigStore(context.bot_access_token, context.mattermost_site_url);
     const cValues = await config.getValues();
     const options = {
