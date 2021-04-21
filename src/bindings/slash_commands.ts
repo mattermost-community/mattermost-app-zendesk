@@ -76,7 +76,7 @@ const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
         label: 'subscribe',
         description: 'Subscribe notifications to a channel',
         icon: getStaticURL(mmSiteUrl, ZendeskIcon),
-        form: {},
+        form: {fields: []},
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
