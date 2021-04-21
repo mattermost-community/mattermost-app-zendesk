@@ -4,7 +4,7 @@ import ClientOAuth2 from 'client-oauth2';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
-import {AppCallRequestWithValues, CtxExpandedActingUserOauth2App, CtxExpandedOauth2App, CtxExpandedActingUserOauth2AppBot} from '../types/apps';
+import {AppCallRequestWithValues, CtxExpandedOauth2App, CtxExpandedActingUserOauth2AppBot} from '../types/apps';
 
 import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newConfigStore} from '../store';
@@ -44,7 +44,7 @@ export async function fOauth2Connect(req: Request, res: Response): Promise<void>
 
 export async function fOauth2Complete(req: Request, res: Response): Promise<void> {
     const call: AppCallRequestWithValues = req.body;
-    const context: CtxExpandedActingUserOauth2App = req.body.context;
+    const context: CtxExpandedActingUserOauth2AppBot = req.body.context;
     const code = call.values.code;
     if (code === '') {
         throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
