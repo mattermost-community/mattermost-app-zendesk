@@ -20,6 +20,7 @@
     "mattermost-redux": "github:mattermost/mattermost-redux#app-types",
     "node-fetch": "2.6.1",
     "node-zendesk": "github:jfrerich/node-zendesk",
+    "reactstrap": "^8.9.0",
     "serverless-http": "2.7.0"
   },
   "devDependencies": {
