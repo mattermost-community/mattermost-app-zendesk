@@ -84,7 +84,7 @@ class FormFields extends BaseFormFields {
 
     // setState sets state for the current Zendesk Form
     async setState(): Promise<void> {
-        const listReq = this.zdClient?.ticketforms.list();
+        const listReq = this.zdClient.ticketforms.list();
         const zdTicketForms = await tryPromiseWithMessage(listReq, 'Failed to fetch ticket forms');
         this.zdTicketForms = zdTicketForms;
     }
@@ -94,7 +94,7 @@ class FormFields extends BaseFormFields {
         const formID = this.builder.getFieldValueByName(CreateTicketFields.NameFormsSelect);
 
         const zdFormFieldIDs = this.getTicketFieldIDs(formID as string);
-        const fieldsListReq = this.zdClient?.ticketfields.list();
+        const fieldsListReq = this.zdClient.ticketfields.list();
         const zdTicketFields = await tryPromiseWithMessage(fieldsListReq, 'Failed to fetch ticket fields');
         const zdViewableFields = this.getViewableFields(zdTicketFields, zdFormFieldIDs);
 
