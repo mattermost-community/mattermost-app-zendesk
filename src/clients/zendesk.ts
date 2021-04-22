@@ -1,7 +1,5 @@
 import zendesk, {ClientOptions} from 'node-zendesk';
 
-import {CtxExpandedActingUserOauth2AppBot} from '../types/apps';
-
 import {Routes} from '../utils';
 import {newConfigStore} from '../store';
 
@@ -57,7 +55,6 @@ export type ZDClientOptions = {
 }
 
 export const newZDClient = async (zdOptions: ZDClientOptions): Promise<ZDClient> => {
-    // const token = context.oauth2.user.access_token;
     const token = zdOptions.oauth2UserAccessToken;
     if (!token) {
         throw new Error('Failed to get user access_token');

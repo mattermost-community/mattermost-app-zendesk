@@ -7,17 +7,12 @@ import {
     newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
     FieldValidationErrors} from '../utils/call_responses';
-
 import {tryPromiseWithMessage} from '../utils';
-
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-
 import {CtxExpandedBotAdminActingUserOauth2UserChannel} from '../types/apps';
-
 import {SubscriptionFields} from '../utils/constants';
-
 import {newConfigStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
@@ -32,19 +27,20 @@ class AppImpl implements App {
     call: AppCallRequest
     context: CtxExpandedBotAdminActingUserOauth2UserChannel
     values: AppCallValues
+    zdOptions: ZDClientOptions
 
     constructor(call: AppCallRequest) {
         this.call = call;
         this.context = call.context as CtxExpandedBotAdminActingUserOauth2UserChannel;
         this.values = call.values as AppCallValues;
-    }
-    createTicketFromPost = async (): Promise<AppCallResponse> => {
-        const zdOptions: ZDClientOptions = {
+        this.zdOptions = {
             oauth2UserAccessToken: this.context.oauth2.user.access_token,
             botAccessToken: this.context.bot_access_token,
             mattermostSiteUrl: this.context.mattermost_site_url,
         };
-        const zdClient = await newZDClient(zdOptions);
+    }
+    createTicketFromPost = async (): Promise<AppCallResponse> => {
+        const zdClient = await newZDClient(this.zdOptions);
 
         // create the ticket object from the form response
         const {payload, errors} = newTicketFromForm(this.call);
@@ -55,7 +51,7 @@ class AppImpl implements App {
         }
 
         // create the ticket in Zendesk
-        const createReq = zdClient.tickets.create(payload);
+        const createReq = await zdClient.tickets.create(payload);
         const zdTicket = await tryPromiseWithMessage(createReq, 'Failed to create Zendesk ticket');
 
         // get the Zendesk user
@@ -75,14 +71,8 @@ class AppImpl implements App {
     }
 
     createZDSubscription = async (): Promise<AppCallResponse> => {
-        const zdOptions: ZDClientOptions = {
-            oauth2UserAccessToken: this.context.oauth2.user.access_token,
-            botAccessToken: this.context.bot_access_token,
-            mattermostSiteUrl: this.context.mattermost_site_url,
-        };
-
         // get zendesk client for user
-        const zdClient = await newZDClient(zdOptions);
+        const zdClient = await newZDClient(this.zdOptions);
 
         const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
