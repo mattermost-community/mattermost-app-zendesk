@@ -163,18 +163,7 @@ class AppImpl implements App {
             botAccessToken: this.context.bot_access_token,
             adminAccessToken: this.context.admin_access_token,
         };
-        const adminClient = newMMClient(mmOptions).asActingUser();
-
-        // add bot to team and channel
         const botUserID = this.context.bot_user_id;
-        const addToTeamReq = adminClient.addToTeam(this.context.team_id, botUserID);
-        await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
-
-        const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id as string);
-        await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to channel');
-
-        const botClient = newMMClient(mmOptions).asBot();
-
         const post = {
             message,
             user_id: botUserID,
@@ -182,6 +171,7 @@ class AppImpl implements App {
             root_id: String(this.context.post_id),
         } as Post;
 
+        const botClient = newMMClient(mmOptions).asBot();
         const createPostReq = botClient.createPost(post);
         await tryPromiseWithMessage(createPostReq, 'Failed to create post');
     }
