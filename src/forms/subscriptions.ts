@@ -11,7 +11,7 @@ import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {getStaticURL, Routes} from '../utils';
 import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions, parseTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
-import {ZDTrigger, ZDTriggerCondition} from '../utils/ZDTypes';
+import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../utils/ZDTypes';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 
@@ -200,9 +200,9 @@ class FormFields extends BaseFormFields {
             }
 
             // add checkbox field and set the value
-            if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
-                const anyConditions = this.getAnyConditions();
-                if (this.isZdFieldChecked(anyConditions, fieldName)) {
+            if (this.getConditions()) {
+                const anyConditions = this.getConditions()?.any;
+                if (anyConditions && this.isZdFieldChecked(anyConditions, fieldName)) {
                     f.value = true;
                 }
             }
@@ -211,17 +211,20 @@ class FormFields extends BaseFormFields {
         this.builder.addFields(checkboxes);
     }
 
-    // validateFields validates fields base on conditions supported by the app
+    // validateFields validates fields bases on conditions supported by the app
     validateConditions(): boolean {
         // fields are valid for new subscriptions because
         if (this.isNewSub()) {
             return true;
         }
 
-        const anyConditions = this.getAnyConditions();
-        const allConditions = this.getAllConditions();
-        for (const conditions of [anyConditions, allConditions]) {
-            for (const condition of conditions) {
+        const conditions = this.getConditions();
+        if (!conditions) {
+            return true;
+        }
+
+        for (const cType of ['any', 'all']) {
+            for (const condition of conditions[cType]) {
                 this.validateFieldName(condition);
                 this.validateFieldOperator(condition);
             }
@@ -236,33 +239,25 @@ class FormFields extends BaseFormFields {
     }
 
     // validateFieldName validates the trigger name is supported by the app
-    validateFieldName(condition: any): void {
+    validateFieldName(condition: ZDTriggerCondition): void {
         if (!SubscriptionFields.ConditionsCheckBoxFields.includes(condition.field)) {
             this.unsupportedFields.push(condition.field);
         }
     }
 
     // validateFieldOperator validates the trigger operator is supported by the app
-    validateFieldOperator(condition: any): void {
+    validateFieldOperator(condition: ZDTriggerCondition): void {
         if (condition.operator !== 'changed') {
             this.unsupportedOperators.push(`${condition.field} - ${condition.operator}`);
         }
     }
 
     // getAnyConditions returns an array of Zendesk ANY trigger conditions
-    getAnyConditions(): ZDTriggerCondition[] {
+    getConditions(): ZDTriggerConditions | undefined {
         if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
-            return this.getSelectedSubTrigger().conditions.any;
+            return this.getSelectedSubTrigger().conditions;
         }
-        return [];
-    }
-
-    // getAnyConditions returns an array of Zendesk ALL trigger conditions
-    getAllConditions(): ZDTriggerCondition[] {
-        if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
-            return this.getSelectedSubTrigger().conditions.all as ZDTriggerCondition[];
-        }
-        return [];
+        return undefined;
     }
 
     // addErrorMessageField adds a text field with a message when a trigger has
