@@ -87,7 +87,7 @@ export type CtxExpandedActingUser = AppContext & {
 
 // export type CtxExpandedOauth2User = AppContext & CtxExpandedOauth2User
 export type CtxExpandedBotAdminActingUserOauth2User = CtxExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin
-export type CtxExpandedBotAdminActingUserOauth2UserChannel = CtxExpandedActingUser & ExpandedOauth2User & ExpandedChannel
+export type CtxExpandedBotAdminActingUserOauth2UserChannel = CtxExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin & ExpandedChannel
 export type CtxExpandedActingUserOauth2App = CtxExpandedActingUser & CtxExpandedOauth2App
 export type CtxExpandedActingUserOauth2AppOauth2User = CtxExpandedActingUser & CtxExpandedOauth2App & ExpandedOauth2User
 export type CtxExpandedActingUserOauth2AppBot = CtxExpandedActingUser & CtxExpandedOauth2App & ExpandedBot

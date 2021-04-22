@@ -45,7 +45,7 @@ class FormFields extends BaseFormFields {
     OauthValues: Oauth2App
 
     constructor(call: AppCallRequest, configStore: ConfigStore, mmClient: Client4) {
-        super(call, {} as ZDClient, mmClient);
+        super(call, mmClient, undefined);
         const context = call.context as CtxExpandedOauth2App;
         this.configStore = configStore;
         this.OauthValues = {

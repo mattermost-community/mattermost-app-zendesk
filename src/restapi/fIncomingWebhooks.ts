@@ -51,7 +51,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
 
     const post: Partial<Post> = {
         message,
-        user_id: context.bot_user_id as string,
+        user_id: context.bot_user_id,
         channel_id: channelID,
     };
 

@@ -12,7 +12,7 @@ export class BaseFormFields {
     zdClient?: ZDClient;
     mmClient: Client4;
 
-    constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4) {
+    constructor(call: AppCallRequest, mmClient: Client4, zdClient?: ZDClient) {
         this.call = call;
         this.builder = newFieldsBuilder(this.call);
         this.builder.setDefaultMinLength(2);

@@ -55,7 +55,7 @@ class FormFields extends BaseFormFields {
     zdTicketForms: ZDFormFieldOption[]
     postMessage: string
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4) {
-        super(call, zdClient, mmClient);
+        super(call, mmClient, zdClient);
         const context = call.context as CtxExpandedPost;
         this.postMessage = context.post.message;
         this.zdTicketForms = [];

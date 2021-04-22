@@ -59,7 +59,7 @@ class FormFields extends BaseFormFields {
     unsupportedOperators: string[]
 
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4) {
-        super(call, zdClient, mmClient);
+        super(call, mmClient, zdClient);
         this.teamTriggers = {};
         this.teamChannelsWithSubs = [];
         this.unsupportedFields = [];
