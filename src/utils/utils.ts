@@ -3,7 +3,7 @@ import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
 
-import {CtxExpandedOauth2App, CtxExpandedActingUser, Oauth2App, ZDOauth2User} from '../types/apps';
+import {Oauth2App, ZDOauth2User} from '../types/apps';
 
 import {getManifest} from '../manifest';
 import {AppConfigStore} from '../store/config';

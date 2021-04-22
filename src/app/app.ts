@@ -170,7 +170,7 @@ class AppImpl implements App {
         const addToTeamReq = adminClient.addToTeam(this.context.team_id, botUserID);
         await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
 
-        const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id);
+        const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id as string);
         await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to channel');
 
         const botClient = newMMClient(mmOptions).asBot();

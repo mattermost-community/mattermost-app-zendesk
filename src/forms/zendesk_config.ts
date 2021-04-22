@@ -3,7 +3,7 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {CtxExpandedBotAdminActingUser, CtxExpandedOauth2App, Oauth2App} from '../types/apps';
+import {CtxExpandedBotAdminActingUser, ExpandedOauth2App, Oauth2App} from '../types/apps';
 
 import {newMMClient, ZDClient} from '../clients';
 import {MMClientOptions} from 'clients/mattermost';
@@ -46,7 +46,7 @@ class FormFields extends BaseFormFields {
 
     constructor(call: AppCallRequest, configStore: ConfigStore, mmClient: Client4) {
         super(call, mmClient, undefined);
-        const context = call.context as CtxExpandedOauth2App;
+        const context = call.context as ExpandedOauth2App;
         this.configStore = configStore;
         this.OauthValues = {
             client_id: context.oauth2.client_id,

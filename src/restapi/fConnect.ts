@@ -4,7 +4,7 @@ import ClientOAuth2 from 'client-oauth2';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
-import {AppCallRequestWithValues, CtxExpandedOauth2App, CtxExpandedActingUserOauth2AppBot} from '../types/apps';
+import {AppCallRequestWithValues, ExpandedOauth2App, CtxExpandedActingUserOauth2AppBot} from '../types/apps';
 
 import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newConfigStore} from '../store';
@@ -13,7 +13,7 @@ import {newAppsClient} from '../clients';
 import {getOAuthConfig} from '../app/oauth';
 
 export async function fConnect(req: Request, res: Response): Promise<void> {
-    const context: CtxExpandedOauth2App = req.body.context;
+    const context: ExpandedOauth2App = req.body.context;
     const url = context.oauth2.connect_url;
     res.json(newOKCallResponseWithMarkdown(`Follow this link to connect Mattermost to your Zendesk Account: [link](${url})`));
 }

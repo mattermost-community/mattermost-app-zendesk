@@ -14,7 +14,7 @@ import {getStaticURL, Routes} from '../utils';
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-import {CtxExpandedPost, CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
+import {ExpandedPost, CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
 
 const omitFields = ['Group', 'Status'];
 
@@ -56,7 +56,7 @@ class FormFields extends BaseFormFields {
     postMessage: string
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4) {
         super(call, mmClient, zdClient);
-        const context = call.context as CtxExpandedPost;
+        const context = call.context as ExpandedPost;
         this.postMessage = context.post.message;
         this.zdTicketForms = [];
     }
