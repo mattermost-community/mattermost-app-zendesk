@@ -182,8 +182,9 @@ class FormFields extends BaseFormFields {
             case ZDFieldTypes.Muliselect: {
                 f.type = AppFieldTypes.STATIC_SELECT;
                 const options = this.isSystemField(field) ? field.system_field_options : field.custom_field_options;
-                f.options = makeOptions(options as ZDFieldOption[]);
-                console.log('f.options', f.options);
+                if (options) {
+                    f.options = makeOptions(options as ZDFieldOption[]);
+                }
 
                 f.multiselect = false;
                 if (field.type === ZDFieldTypes.Muliselect) {
