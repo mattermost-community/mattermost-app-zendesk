@@ -20,8 +20,9 @@
         "/post_menu",
         "/in_post"
     ],
-    "functions": [
+    "aws_lambda": [
         {
+            "path": "/",
             "name": "js-function",
             "handler": "index.handler",
             "runtime": "nodejs14.x"
