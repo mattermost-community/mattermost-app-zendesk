@@ -94,9 +94,10 @@ class FormFields extends BaseFormFields {
         const formID = this.builder.getFieldValueByName(CreateTicketFields.NameFormsSelect);
 
         const zdFormFieldIDs = this.getTicketFieldIDs(formID as string);
+        const zdFormFieldIDsAsStrings = zdFormFieldIDs.map((x) => x.toString());
         const fieldsListReq = this.zdClient?.ticketfields.list();
         const zdTicketFields = await tryPromiseWithMessage(fieldsListReq, 'Failed to fetch ticket fields');
-        const zdViewableFields = this.getViewableFields(zdTicketFields, zdFormFieldIDs);
+        const zdViewableFields = this.getViewableFields(zdTicketFields, zdFormFieldIDsAsStrings);
 
         this.mapZdFieldsToAppFields(zdViewableFields);
 
@@ -109,7 +110,7 @@ class FormFields extends BaseFormFields {
     private getTicketFieldIDs(id: string): string[] {
         const forms = this.zdTicketForms;
         const ids = forms.find((form: ZDFormFieldOption) => {
-            return form.id === id;
+            return form.id.toString() === id;
         });
 
         return ids ? ids.ticket_field_ids : [];
