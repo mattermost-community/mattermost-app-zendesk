@@ -23,7 +23,6 @@ export async function getBindings(context: CtxExpandedActingUserOauth2AppOauth2U
         mattermostSiteUrl: context.mattermost_site_url,
     };
 
-    console.log('bindingOptions', bindingOptions);
     const bindings: AppBinding[] = [];
     bindings.push(getPostMenuBindings(bindingOptions));
     bindings.push(getCommandBindings(bindingOptions));
