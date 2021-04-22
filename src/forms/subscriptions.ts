@@ -392,7 +392,12 @@ class FormFields extends BaseFormFields {
 
     getSubTriggerByID(subID: string): ZDTrigger {
         const triggers: ZDTrigger[] = this.getChannelTriggers(this.getSelectedChannelID());
-        return triggers.find((trigger) => String(trigger.id) === subID) as ZDTrigger;
+        const trigger = triggers.find((t) => t.id.toString() === subID) as ZDTrigger;
+        if (!trigger) {
+            throw new Error('unable to trigger by ID ' + subID);
+        }
+
+        return trigger;
     }
 
     getChannelTriggers(channelID: string): ZDTrigger[] {

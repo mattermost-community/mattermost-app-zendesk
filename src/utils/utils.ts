@@ -30,7 +30,7 @@ const getDisplaySubTitleOption = (option: ZDSubscriptionFieldOption): string => 
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
     const newTitle = option.title.match(re) || '';
     if (!newTitle) {
-        console.log('malformed Mattermost Trigger title', newTitle);
+        throw new Error('malformed Mattermost Trigger title ' + newTitle);
     }
     return newTitle[3];
 };
@@ -45,9 +45,9 @@ export type parsedTriggerTitle = {
 // trigger title
 export const parseTriggerTitle = (title: string): parsedTriggerTitle => {
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
-    const match = title.match(re) || '';
+    const match = title.match(re);
     if (!match) {
-        console.log('malformed Mattermost Trigger title', title);
+        throw new Error('unable to parse Mattermost Trigger title ' + title);
     }
     return {
         title: match[0],

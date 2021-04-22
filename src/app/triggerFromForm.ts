@@ -19,9 +19,14 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         this.context = call.context;
         this.targetID = targetID;
         this.trigger = {} as ZDTrigger;
+        this.buildTrigger();
     }
 
     getTrigger(): ZDTriggerPayload {
+        return {trigger: this.trigger};
+    }
+
+    buildTrigger(): void {
         // If not a new trigger, add the trigger ID to the payload
         // This is a signal to update the trigger, not create a new one
         if (!this.isNewTrigger()) {
@@ -32,8 +37,6 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         this.addDescription();
         this.addActions();
         this.addConditions();
-
-        return {trigger: this.trigger};
     }
 
     addActions(): void {

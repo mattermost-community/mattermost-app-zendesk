@@ -78,7 +78,6 @@ export type ExpandedActingUser = AppContext & {
     acting_user_access_token: string
 }
 
-// export type CtxExpandedOauth2User = AppContext & CtxExpandedOauth2User
 export type CtxExpandedBotAdminActingUserOauth2User = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin
 export type CtxExpandedBotAdminActingUserOauth2UserChannel = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin & ExpandedChannel
 export type CtxExpandedActingUserOauth2App = ExpandedActingUser & ExpandedOauth2App
