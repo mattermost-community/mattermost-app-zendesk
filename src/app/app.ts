@@ -14,7 +14,7 @@ import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
-import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
+import {CtxExpandedBotAdminActingUserOauth2UserChannel} from '../types/apps';
 
 import {SubscriptionFields} from '../utils/constants';
 
@@ -30,12 +30,12 @@ export interface App {
 
 class AppImpl implements App {
     call: AppCallRequest
-    context: CtxExpandedBotAdminActingUserOauth2User
+    context: CtxExpandedBotAdminActingUserOauth2UserChannel
     values: AppCallValues
 
     constructor(call: AppCallRequest) {
         this.call = call;
-        this.context = call.context as CtxExpandedBotAdminActingUserOauth2User;
+        this.context = call.context as CtxExpandedBotAdminActingUserOauth2UserChannel;
         this.values = call.values as AppCallValues;
     }
     createTicketFromPost = async (): Promise<AppCallResponse> => {
