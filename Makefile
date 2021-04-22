@@ -43,7 +43,7 @@ clean:
 
 ## node_modules: ensures NPM dependencies are installed without having to run this all the time
 node_modules: $(wildcard package.json)
-	$(NPM) install --only=production
+	$(NPM) install
 	touch $@
 
 .PHONY: help
