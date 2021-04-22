@@ -45,7 +45,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
         mattermostSiteURL: context.mattermost_site_url,
         actingUserAccessToken: context.acting_user_access_token,
         botAccessToken: context.bot_access_token,
-        adminAccessToken: context.mattermost_site_url,
+        adminAccessToken: context.admin_access_token,
     };
     const adminClient = newMMClient(mmOptions).asBot();
 

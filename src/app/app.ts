@@ -140,7 +140,7 @@ class AppImpl implements App {
             mattermostSiteURL: this.context.mattermost_site_url,
             actingUserAccessToken: this.context.acting_user_access_token,
             botAccessToken: this.context.bot_access_token,
-            adminAccessToken: this.context.mattermost_site_url,
+            adminAccessToken: this.context.admin_access_token,
         };
         const actingUserClient = newMMClient(mmOptions).asActingUser();
         const userID = this.context.acting_user_id;
@@ -161,7 +161,7 @@ class AppImpl implements App {
             mattermostSiteURL: this.context.mattermost_site_url,
             actingUserAccessToken: this.context.acting_user_access_token,
             botAccessToken: this.context.bot_access_token,
-            adminAccessToken: this.context.mattermost_site_url,
+            adminAccessToken: this.context.admin_access_token,
         };
         const adminClient = newMMClient(mmOptions).asActingUser();
 
