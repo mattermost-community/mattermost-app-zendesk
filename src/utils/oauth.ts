@@ -1,6 +1,6 @@
 import {v4 as uuidv4} from 'uuid';
 
-import {CtxExpandedActingUser} from '../types/apps';
+import {ExpandedActingUser} from '../types/apps';
 
 import {baseUrlFromContext} from '../utils';
 
@@ -13,7 +13,7 @@ export type parseOAuthStateReturnValue = {
     err: string;
 }
 
-export function createOAuthState(context: CtxExpandedActingUser): string {
+export function createOAuthState(context: ExpandedActingUser): string {
     const userID = context.acting_user_id;
     const token = context.acting_user_access_token;
     const baseURL = baseUrlFromContext(context.mattermost_site_url);

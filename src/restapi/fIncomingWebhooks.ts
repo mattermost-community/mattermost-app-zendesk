@@ -2,7 +2,7 @@ import {Post} from 'mattermost-redux/types/posts';
 
 import {Request, Response} from 'express';
 
-import {CtxExpandedBotAdminActingUser} from '../types/apps';
+import {ExpandedBotAdminActingUser} from '../types/apps';
 
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
@@ -15,7 +15,7 @@ import {newConfigStore} from '../store';
 
 export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
     const values = req.body.values.data;
-    const context: CtxExpandedBotAdminActingUser = req.body.context;
+    const context: ExpandedBotAdminActingUser = req.body.context;
 
     const ticketID = values[TriggerFields.TicketIDKey];
     const channelID = values[TriggerFields.ChannelIDKey];
