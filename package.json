@@ -19,7 +19,7 @@
     "body-parser": "1.19.0",
     "node-fetch": "2.6.1",
     "node-zendesk": "github:jfrerich/node-zendesk",
-    "mattermost-redux": "github:mattermost/mattermost-redux#app-types",
+    "mattermost-redux": "github:mattermost/mattermost-redux#5fa256e1f5ae6ba237a276e35ec23a4c1f73af7b",
     "serverless-http": "2.7.0",
     "ts-node": "^9.1.1"
   },
