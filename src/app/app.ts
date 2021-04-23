@@ -13,7 +13,7 @@ import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {CtxExpandedBotAdminActingUserOauth2UserChannel} from '../types/apps';
 import {SubscriptionFields} from '../utils/constants';
-import {ZDTriggerPayload} from '../utils/ZDTypes';
+import {ZDTriggerPayload, ZDTrigger} from '../utils/ZDTypes';
 import {newConfigStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
@@ -99,35 +99,36 @@ class AppImpl implements App {
 
         // create a reply to the original post noting the ticket was created
         let request: any;
-        let msg: string;
         let action: string;
+        let actionType: string;
         const subName = this.values[SubscriptionFields.SubTextName];
-        const link = `[${subName}](` + host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
             request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
-            msg = `Deleting subscription ${link}. `;
-            action = 'delete';
+            action = 'Deleting';
+            actionType = 'delete';
             break;
         case Boolean(zdTriggerPayload.trigger.id):
             request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
-            msg = `Updating subscription ${link}. `;
-            action = 'update';
+            action = 'Updating';
+            actionType = 'update';
             break;
         default:
             request = zdClient.triggers.create(zdTriggerPayload);
-            msg = `Creating subscription ${link}. `;
-            action = 'create';
+            action = 'Creating';
+            actionType = 'create';
+        }
+
+        // Any zendesk error will produce an error in the modal
+        let msg: string;
+        try {
+            const trigger = await request;
+            msg = `${action} subscription [${subName}](` + host + '/agent/admin/triggers/' + trigger.id + '). ';
+        } catch (e) {
+            return newErrorCallResponseWithMessage(`failed to ${actionType} subscription: ` + e.message);
         }
 
         msg += 'This could take a moment before your subscription data is saved in Zendesk';
-
-        // Any zendesk error will produce an error in the modal
-        try {
-            await request;
-        } catch (e) {
-            return newErrorCallResponseWithMessage(`failed to ${action} subscription: ` + e.message);
-        }
 
         // return the call response with successful markdown message
         return newOKCallResponseWithMarkdown(msg);
