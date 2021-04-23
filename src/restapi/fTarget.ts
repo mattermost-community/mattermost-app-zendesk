@@ -1,26 +1,30 @@
-// import {Post} from 'mattermost-redux/types/posts';
-
 import {Request, Response} from 'express';
-import {AppContext} from 'mattermost-redux/types/apps';
 
 import {getManifest} from '../manifest';
-import {Routes, tryPromiseWithMessage, contextFromRequest} from '../utils';
+import {Routes, tryPromiseWithMessage} from '../utils';
 import {webhookConfigured} from '../utils/utils';
 import {newZDClient, ZDClient} from '../clients';
+import {ZDClientOptions} from 'clients/zendesk';
 import {newConfigStore} from '../store';
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {CtxExpandedBotApp} from 'types/apps';
 
 export async function fCreateTarget(req: Request, res: Response): Promise<void> {
-    const context = contextFromRequest(req);
-    const zdClient = await newZDClient(context);
+    const context = req.body.context;
+    const zdOptions: ZDClientOptions = {
+        oauth2UserAccessToken: context.oauth2.user.access_token,
+        botAccessToken: context.bot_access_token,
+        mattermostSiteUrl: context.mattermost_site_url,
+    };
+    const zdClient = await newZDClient(zdOptions);
 
     const text = await updateOrCreateTarget(zdClient, context);
     res.json(newOKCallResponseWithMarkdown(text));
 }
 
 // updateOrCreateTarget creates a target or updates an the exising target
-async function updateOrCreateTarget(zdClient: ZDClient, context: AppContext): Promise<string> {
-    const config = newConfigStore(context);
+async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotApp): Promise<string> {
+    const config = newConfigStore(context.bot_access_token, context.mattermost_site_url);
     const cValues = await config.getValues();
     const siteUrl = context.mattermost_site_url;
     const url = getTargetUrl(context);
@@ -59,7 +63,7 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: AppContext): Pr
     return `Successfully created ${link}`;
 }
 
-function getTargetUrl(context: AppContext): string {
+function getTargetUrl(context: CtxExpandedBotApp): string {
     const whSecret = context.app.webhook_secret;
     const pluginName = getManifest().app_id;
     const whPath = Routes.App.SubscribeIncomingWebhookPath;

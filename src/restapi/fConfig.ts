@@ -1,6 +1,7 @@
 import {Request, Response} from 'express';
-import {AppCallResponse, AppCall} from 'mattermost-redux/types/apps';
+import {AppCallResponse} from 'mattermost-redux/types/apps';
 
+import {AppCallRequestWithValues, CtxExpandedBotActingUserAccessToken} from '../types/apps';
 import {newConfigStore, AppConfigStore} from '../store/config';
 import {newAppsClient} from '../clients';
 import {newZendeskConfigForm} from '../forms';
@@ -21,18 +22,19 @@ export async function fSubmitOrUpdateZendeskConfigForm(req: Request, res: Respon
 }
 
 export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Response): Promise<void> {
-    const call: AppCall = req.body;
-    const url = baseUrlFromContext(call.context);
+    const call: AppCallRequestWithValues = req.body;
+    const context = call.context as CtxExpandedBotActingUserAccessToken;
+    const url = baseUrlFromContext(call.context.mattermost_site_url);
 
     const id = call.values.zd_client_id || '';
     const secret = call.values.zd_client_secret || '';
 
-    const ppClient = newAppsClient(call.context.acting_user_access_token, url);
+    const ppClient = newAppsClient(context.acting_user_access_token, url);
     ppClient.storeOauth2App(id, secret);
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {
-        const configStore = newConfigStore(call.context);
+        const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
         const cValues = await configStore.getValues();
         const targetID = cValues.zd_target_id;
         const storeValues = call.values as AppConfigStore;

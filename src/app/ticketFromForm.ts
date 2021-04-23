@@ -1,11 +1,9 @@
 import {Tickets} from 'node-zendesk';
-
-import {AppFormValues, AppContext, AppCall} from 'mattermost-redux/types/apps';
-
-import {CreateTicketFields, ZDFieldValidation} from '../utils/constants';
-import {getMultiselectValues, isFieldValueSelected, baseUrlFromContext} from '../utils/utils';
+import {AppFormValues, AppContext, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {FieldValidationErrors} from '../utils/call_responses';
+import {CreateTicketFields, ZDFieldValidation} from '../utils/constants';
+import {getMultiselectValues, isFieldValueSelected, baseUrlFromContext} from '../utils/utils';
 
 interface TicketFromFrom {
     getTicket(): Tickets.CreatePayload;
@@ -18,7 +16,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
     ticket: Tickets.CreateModel;
     fieldValidationErrors: FieldValidationErrors
 
-    constructor(call: AppCall) {
+    constructor(call: AppCallRequest) {
         this.context = call.context;
         this.formValues = call.values as AppFormValues;
         this.fieldValidationErrors = {};
@@ -30,7 +28,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
     }
 
     getPostMessage(): string {
-        const baseURL = baseUrlFromContext(this.context);
+        const baseURL = baseUrlFromContext(this.context.mattermost_site_url);
         const postID = this.context.post_id;
         const mmSignature = `\n*message created from [Mattermost message](${baseURL}/_redirect/pl/${postID}).*\n`;
 
@@ -167,7 +165,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
     }
 }
 
-export function newTicketFromForm(call: AppCall): {payload: Tickets.CreatePayload; errors: FieldValidationErrors} {
+export function newTicketFromForm(call: AppCallRequest): {payload: Tickets.CreatePayload; errors: FieldValidationErrors} {
     const ticket = new TicketFromFormImpl(call);
     const payload = ticket.getTicket();
     const errors = ticket.fieldValidationErrors;

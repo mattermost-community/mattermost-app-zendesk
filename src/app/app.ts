@@ -1,9 +1,5 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {AppCall, AppContext, AppCallValues, AppCallResponse} from 'mattermost-redux/types/apps';
-
-import {SubscriptionFields} from '../utils/constants';
-
-import {newConfigStore} from '../store';
+import {AppCallValues, AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {
     newErrorCallResponseWithFieldErrors,
@@ -12,8 +8,13 @@ import {
     newErrorCallResponseWithMessage,
     FieldValidationErrors} from '../utils/call_responses';
 import {tryPromiseWithMessage} from '../utils';
-
 import {newMMClient, newZDClient} from '../clients';
+import {ZDClientOptions} from 'clients/zendesk';
+import {MMClientOptions} from 'clients/mattermost';
+import {CtxExpandedBotAdminActingUserOauth2UserChannel} from '../types/apps';
+import {SubscriptionFields} from '../utils/constants';
+import {ZDTriggerPayload} from '../utils/ZDTypes';
+import {newConfigStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
 import {newTriggerFromForm} from './triggerFromForm';
@@ -24,18 +25,30 @@ export interface App {
 }
 
 class AppImpl implements App {
-    call: AppCall
-    context: AppContext
+    call: AppCallRequest
+    context: CtxExpandedBotAdminActingUserOauth2UserChannel
     values: AppCallValues
+    zdOptions: ZDClientOptions
+    mmOptions: MMClientOptions
 
-    constructor(call: AppCall) {
+    constructor(call: AppCallRequest) {
         this.call = call;
-        this.context = call.context;
-        this.values = call.values;
+        this.context = call.context as CtxExpandedBotAdminActingUserOauth2UserChannel;
+        this.values = call.values as AppCallValues;
+        this.zdOptions = {
+            oauth2UserAccessToken: this.context.oauth2.user.access_token,
+            botAccessToken: this.context.bot_access_token,
+            mattermostSiteUrl: this.context.mattermost_site_url,
+        };
+        this.mmOptions = {
+            mattermostSiteURL: this.context.mattermost_site_url,
+            actingUserAccessToken: this.context.acting_user_access_token,
+            botAccessToken: this.context.bot_access_token,
+            adminAccessToken: this.context.admin_access_token,
+        };
     }
     createTicketFromPost = async (): Promise<AppCallResponse> => {
-        // get zendesk client for user
-        const zdClient = await newZDClient(this.context);
+        const zdClient = await newZDClient(this.zdOptions);
 
         // create the ticket object from the form response
         const {payload, errors} = newTicketFromForm(this.call);
@@ -54,7 +67,7 @@ class AppImpl implements App {
         const zdUser = await tryPromiseWithMessage(getUserReq, 'Failed to get Zendesk user');
 
         // create a reply to the original post noting the ticket was created
-        const config = await newConfigStore(this.context).getValues();
+        const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
 
         const id = zdTicket.id;
@@ -67,9 +80,9 @@ class AppImpl implements App {
 
     createZDSubscription = async (): Promise<AppCallResponse> => {
         // get zendesk client for user
-        const zdClient = await newZDClient(this.context);
+        const zdClient = await newZDClient(this.zdOptions);
 
-        const config = await newConfigStore(this.context).getValues();
+        const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
         const targetID = config.zd_target_id;
         if (targetID === '') {
@@ -77,7 +90,7 @@ class AppImpl implements App {
         }
 
         // create the trigger object from the form response
-        let zdTriggerPayload: any;
+        let zdTriggerPayload: ZDTriggerPayload;
         try {
             zdTriggerPayload = newTriggerFromForm(this.call, targetID);
         } catch (e) {
@@ -121,40 +134,30 @@ class AppImpl implements App {
     }
 
     createActingUserPost = async (message: string): Promise<void> => {
-        const actingUserClient = newMMClient(this.context).asActingUser();
-        const user_id = this.context.acting_user_id;
+        const actingUserClient = newMMClient(this.mmOptions).asActingUser();
+        const userID = this.context.acting_user_id;
 
-        const post: Post = {
+        const post = {
             message,
-            user_id,
+            user_id: userID,
             channel_id: String(this.context.channel_id),
             root_id: String(this.context.post_id),
-        };
+        } as Post;
 
         const createPostReq = actingUserClient.createPost(post);
         await tryPromiseWithMessage(createPostReq, 'Failed to create post');
     }
 
     createBotPost = async (message: string): Promise<void> => {
-        const adminClient = newMMClient(this.context).asActingUser();
-
-        // add bot to team and channel
         const botUserID = this.context.bot_user_id;
-        const addToTeamReq = adminClient.addToTeam(this.context.team_id, botUserID);
-        await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
-
-        const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id);
-        await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to channel');
-
-        const botClient = newMMClient(this.context).asBot();
-
-        const post: Post = {
+        const post = {
             message,
             user_id: botUserID,
             channel_id: String(this.context.channel_id),
             root_id: String(this.context.post_id),
-        };
+        } as Post;
 
+        const botClient = newMMClient(this.mmOptions).asBot();
         const createPostReq = botClient.createPost(post);
         await tryPromiseWithMessage(createPostReq, 'Failed to create post');
     }
@@ -164,6 +167,6 @@ class AppImpl implements App {
     }
 }
 
-export function newApp(call: AppCall): App {
+export function newApp(call: AppCallRequest): App {
     return new AppImpl(call);
 }

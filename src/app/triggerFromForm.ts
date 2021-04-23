@@ -1,27 +1,32 @@
-import {Tickets} from 'node-zendesk';
+import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {AppContext, AppFormValues, AppCall} from 'mattermost-redux/types/apps';
+import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
 
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
 interface TriggerFromFrom {
-    getTrigger(): Tickets.CreatePayload;
+    getTrigger(): ZDTriggerPayload;
 }
 
 export class TriggerFromFormImpl implements TriggerFromFrom {
-    values: AppFormValues;
+    values: AppCallValues;
     context: AppContext;
     targetID: string;
-    trigger: any
+    trigger: ZDTrigger
 
-    constructor(call: AppCall, targetID: string) {
-        this.values = call.values as AppFormValues;
+    constructor(call: AppCallRequest, targetID: string) {
+        this.values = call.values as AppCallValues;
         this.context = call.context;
         this.targetID = targetID;
-        this.trigger = {};
+        this.trigger = {} as ZDTrigger;
+        this.buildTrigger();
     }
 
-    getTrigger(): any {
+    getTrigger(): ZDTriggerPayload {
+        return {trigger: this.trigger};
+    }
+
+    buildTrigger(): void {
         // If not a new trigger, add the trigger ID to the payload
         // This is a signal to update the trigger, not create a new one
         if (!this.isNewTrigger()) {
@@ -32,8 +37,6 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         this.addDescription();
         this.addActions();
         this.addConditions();
-
-        return {trigger: this.trigger};
     }
 
     addActions(): void {
@@ -63,12 +66,6 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         return JSON.stringify(pairs);
     }
 
-    getChannelIDobject(): {} {
-        const fieldName = SubscriptionFields.ChannelPickerSelectName;
-        const channelID = this.values[fieldName].value;
-        return {fieldName: channelID};
-    }
-
     addTitle(): void {
         let title = SubscriptionFields.PrefixTriggersTitle;
         title += SubscriptionFields.RegexTriggerInstance + this.context.mattermost_site_url;
@@ -82,7 +79,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         this.addField('description', description);
     }
 
-    addField(key: string, value: any): void {
+    addField(key: string, value: unknown): void {
         this.trigger[key] = value;
     }
 
@@ -92,12 +89,12 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 
     addConditions(): void {
-        const conditions = {
+        const conditions: ZDTriggerConditions = {
             any: [],
         };
         for (const checkbox of SubscriptionFields.ConditionsCheckBoxFields) {
             if (this.values[checkbox]) {
-                const entry = {
+                const entry: ZDTriggerCondition = {
                     field: checkbox,
                     operator: 'changed',
                 };
@@ -114,7 +111,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(call: AppCall, targetID: string): any {
+export function newTriggerFromForm(call: AppCallRequest, targetID: string): ZDTriggerPayload {
     const trigger = new TriggerFromFormImpl(call, targetID).getTrigger();
     return trigger;
 }

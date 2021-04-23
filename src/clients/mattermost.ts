@@ -1,7 +1,5 @@
 import Client from 'mattermost-redux/client/client4.js';
 
-import {AppContext} from 'mattermost-redux/types/apps';
-
 import {baseUrlFromContext} from '../utils';
 
 interface MMClient {
@@ -10,18 +8,25 @@ interface MMClient {
     asActingUser(): Client;
 }
 
-export const newMMClient = (context: AppContext): MMClient => {
-    return new MMClientImpl(context);
+export type MMClientOptions = {
+    mattermostSiteURL: string,
+    actingUserAccessToken: string,
+    botAccessToken: string,
+    adminAccessToken: string
+}
+
+export const newMMClient = (mmOptions: MMClientOptions): MMClient => {
+    return new MMClientImpl(mmOptions);
 };
 
 class MMClientImpl implements MMClient {
-    context: AppContext
-    constructor(context: AppContext) {
-        this.context = context;
+    options: MMClientOptions
+    constructor(options: MMClientOptions) {
+        this.options = options;
     }
     newClient(token: string): Client {
         const client = new Client();
-        const baseURL = baseUrlFromContext(this.context);
+        const baseURL = baseUrlFromContext(this.options.mattermostSiteURL);
         client.setUrl(baseURL);
         client.setToken(token);
         return client;
@@ -33,19 +38,19 @@ class MMClientImpl implements MMClient {
 
     asBot(): Client {
         return this.as(
-            this.context.bot_access_token,
+            this.options.botAccessToken,
         );
     }
 
     asAdmin(): Client {
         return this.as(
-            this.context.admin_access_token,
+            this.options.adminAccessToken,
         );
     }
 
     asActingUser(): Client {
         return this.as(
-            this.context.acting_user_access_token,
+            this.options.actingUserAccessToken,
         );
     }
 }

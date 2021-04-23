@@ -1,31 +1,33 @@
-import {AppBinding, AppContext} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {getStaticURL, Routes, newChannelHeaderBindings, isConfigured, isConnected, isUserSystemAdmin} from '../utils';
+import {getStaticURL, Routes, newChannelHeaderBindings} from '../utils';
 import {Locations, ZendeskIcon} from '../utils/constants';
+import {getManifest} from '../manifest';
+
+import {BindingOptions} from './index';
 
 // getChannelHeaderBindings returns the users command bindings
-export const getChannelHeaderBindings = (context: AppContext): AppBinding => {
+export const getChannelHeaderBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
-    const isSysadmin = isUserSystemAdmin(context);
-
-    if (isSysadmin) {
+    if (options.isSystemAdmin) {
         // only show configuration option if admin has not configured the plugin
-        if (!isConfigured(context)) {
-            bindings.push(channelHeaderConfig(context));
-        } else if (isConnected(context)) {
-            bindings.push(channelHeaderSubscribe(context));
+        if (!options.isConfigured) {
+            bindings.push(channelHeaderConfig(options.mattermostSiteUrl));
+        } else if (options.isConnected) {
+            bindings.push(channelHeaderSubscribe(options.mattermostSiteUrl));
         }
     }
     return newChannelHeaderBindings(bindings);
 };
 
-const channelHeaderSubscribe = (context: AppContext): AppBinding => {
+const channelHeaderSubscribe = (mmSiteURL: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Subscribe,
         label: 'Create Zendesk Subscription',
         description: 'Open Create Zendesk Subscription Modal',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteURL, ZendeskIcon),
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
@@ -39,12 +41,13 @@ const channelHeaderSubscribe = (context: AppContext): AppBinding => {
     } as AppBinding;
 };
 
-const channelHeaderConfig = (context: AppContext): AppBinding => {
+const channelHeaderConfig = (mmSiteURL: string): AppBinding => {
     return {
+        app_id: getManifest().app_id,
         location: Locations.Configure,
         label: 'Configure Zendesk',
         description: 'Open Create Zendesk Config Modal',
-        icon: getStaticURL(context, ZendeskIcon),
+        icon: getStaticURL(mmSiteURL, ZendeskIcon),
         call: {
             path: Routes.App.CallPathConfigOpenForm,
             expand: {
@@ -53,5 +56,5 @@ const channelHeaderConfig = (context: AppContext): AppBinding => {
                 oauth2_app: AppExpandLevels.EXPAND_ALL,
             },
         },
-    } as AppBinding;
+    };
 };

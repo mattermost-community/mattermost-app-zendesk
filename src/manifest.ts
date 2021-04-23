@@ -1,8 +1,6 @@
-import {AppBindingLocations} from 'mattermost-redux/constants/apps';
+import manifest from './manifest.json';
 
-import {getHTTPPath, isRunningInHTTPMode} from './index'
-
-import manifest from './manifest.json'
+import {getHTTPPath, isRunningInHTTPMode} from './index';
 
 export type Manifest = {
     app_id: string;

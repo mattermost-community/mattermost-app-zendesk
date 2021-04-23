@@ -1,22 +1,25 @@
 import Client4 from 'mattermost-redux/client/client4.js';
-import {AppCall} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallValues} from 'mattermost-redux/types/apps';
 
-import {ZDClient} from '../clients';
+import {ZDClient} from 'clients';
 
 import {FieldsBuilder, newFieldsBuilder} from './helper_classes/fields/fields_builder';
 
+const DefaultMinLength = 2;
+const DefaultMaxLength = 1024;
+
 // BaseFormFields call provides base methods for retrieving viewable modal app fields
 export class BaseFormFields {
-    call: AppCall;
+    call: AppCallRequest;
     builder: FieldsBuilder;
-    zdClient: ZDClient;
+    zdClient?: ZDClient;
     mmClient: Client4;
 
-    constructor(call: AppCall, zdClient: ZDClient, mmClient: Client4) {
+    constructor(call: AppCallRequest, mmClient: Client4, zdClient?: ZDClient) {
         this.call = call;
         this.builder = newFieldsBuilder(this.call);
-        this.builder.setDefaultMinLength(2);
-        this.builder.setDefaultMaxLength(1024);
+        this.builder.setDefaultMinLength(DefaultMinLength);
+        this.builder.setDefaultMaxLength(DefaultMaxLength);
         this.zdClient = zdClient;
         this.mmClient = mmClient;
     }
@@ -29,7 +32,7 @@ export class BaseFormFields {
         return this.call.context.channel_id || '';
     }
 
-    getCallValues(): string {
-        return this.call.values;
+    getCallValues(): AppCallValues {
+        return this.call.values as AppCallValues;
     }
 }

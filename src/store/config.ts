@@ -1,4 +1,4 @@
-import {AppCallValues, AppContext} from 'mattermost-redux/types/apps';
+import {AppCallValues} from 'mattermost-redux/types/apps';
 
 import {StoreKeys} from '../utils/constants';
 import {newAppsClient, AppsClient} from '../clients';
@@ -41,8 +41,7 @@ class ConfigStoreImpl implements ConfigStore {
     }
 }
 
-export const newConfigStore = (context: AppContext): ConfigStore => {
-    const botAccessToken = context.bot_access_token;
-    const baseURL = baseUrlFromContext(context);
+export const newConfigStore = (botAccessToken: string, mattermostSiteUrl: string): ConfigStore => {
+    const baseURL = baseUrlFromContext(mattermostSiteUrl);
     return new ConfigStoreImpl(botAccessToken, baseURL);
 };

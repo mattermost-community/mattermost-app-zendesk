@@ -1,18 +1,14 @@
 {
-  "extends": "eslint:recommended",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 8,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true,
-      "impliedStrict": true,
-      "modules": true,
-      "experimentalObjectRestSpread": true
-    }
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
   },
-  "parser": "babel-eslint",
-  "plugins": [
+  "plugins": [ "@typescript-eslint",
     "import"
+  ],
+  "extends": [
+    "plugin:@typescript-eslint/recommended"
   ],
   "env": {
     "browser": true,
@@ -31,14 +27,15 @@
     "beforeEach": true
   },
   "settings": {
-    "import/resolver": "webpack"
+    "import/resolver": {
+         "typescript": {}
+    }
   },
   "rules": {
     "array-bracket-spacing": [
       2,
       "never"
     ],
-    "space-in-brackets": [2, "never"],
     "array-callback-return": 2,
     "arrow-body-style": 0,
     "arrow-parens": [
@@ -61,10 +58,7 @@
       }
     ],
     "camelcase": [
-      2,
-      {
-        "properties": "never"
-      }
+      1, { "properties": "never" }
     ],
     "capitalized-comments": 0,
     "class-methods-use-this": 0,
@@ -212,7 +206,7 @@
       1,
       "never"
     ],
-    "new-cap": 2,
+    "new-cap": 1,
     "new-parens": 2,
     "newline-before-return": 0,
     "newline-per-chained-call": 0,
@@ -228,7 +222,7 @@
       "except-parens"
     ],
     "no-confusing-arrow": 2,
-    "no-console": 2,
+    "no-console": "off",
     "no-const-assign": 2,
     "no-constant-condition": 2,
     "no-debugger": 2,
@@ -352,7 +346,7 @@
       }
     ],
     "no-undef-init": 2,
-    "no-undefined": 2,
+    "no-undefined": 0,
     "no-underscore-dangle": 2,
     "no-unexpected-multiline": 2,
     "no-unmodified-loop-condition": 2,
@@ -367,7 +361,7 @@
     "no-unsafe-negation": 2,
     "no-unused-expressions": 2,
     "no-unused-vars": [
-      2,
+      1,
       {
         "vars": "all",
         "args": "after-used"
@@ -514,8 +508,6 @@
     {
       "files": ["**/*.tsx", "**/*.ts", "**/*.js"],
       "parser": "@typescript-eslint/parser",
-      "plugins": ["@typescript-eslint"],
-      "extends": "plugin:@typescript-eslint/recommended",
       "rules": {
         "@typescript-eslint/no-var-requires": 0,
         "@typescript-eslint/prefer-interface": 0,

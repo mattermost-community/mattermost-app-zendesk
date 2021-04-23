@@ -1,11 +1,11 @@
 import {Request, Response} from 'express';
+import {AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {AppCall} from 'mattermost-redux/types/apps';
-
+import {ExpandedBotAdminActingUser} from '../types/apps';
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
-import {isUserSystemAdmin} from '../utils';
 import {getManifest} from '../manifest';
 import {CommandTrigger} from '../utils/constants';
+import {isUserSystemAdmin} from '../utils';
 
 export async function fHelp(req: Request, res: Response): Promise<void> {
     let helpText = getHeader();
@@ -19,10 +19,10 @@ function getHeader(): string {
     return h4(`Zendesk [(GitHub Link)](${homepageURL})`);
 }
 
-function getCommands(call: AppCall): string {
-    const context = call.context;
+function getCommands(call: AppCallRequest): string {
+    const context = call.context as ExpandedBotAdminActingUser;
     let text = getUserCommands();
-    if (isUserSystemAdmin(context)) {
+    if (isUserSystemAdmin(context.acting_user)) {
         text += getAdminCommands();
     }
     return text;

@@ -1,17 +1,19 @@
 import {Request, Response} from 'express';
 
+import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
-
 import {newZDClient} from '../clients';
-import {tryPromiseWithMessage, contextFromRequest} from '../utils';
-
-import {newTokenStore} from '../store';
+import {ZDClientOptions} from 'clients/zendesk';
+import {tryPromiseWithMessage} from '../utils';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
-    const context = contextFromRequest(req);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const zdClient = await newZDClient(context);
+    const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;
+    const zdOptions: ZDClientOptions = {
+        oauth2UserAccessToken: context.oauth2.user.access_token,
+        botAccessToken: context.bot_access_token,
+        mattermostSiteUrl: context.mattermost_site_url,
+    };
+    const zdClient = await newZDClient(zdOptions);
 
     // get current token. this request will be recognized as the token coming
     // from the zendesk app
@@ -25,9 +27,5 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const deleteReq = zdClient.oauthtokens.revoke(currentTokenID);
     await tryPromiseWithMessage(deleteReq, 'failed to revoke current user token');
 
-    // delete the token from the store
-    const tokenStore = newTokenStore(context);
-    const deleteTokenReq = tokenStore.deleteToken(context.acting_user_id);
-    await tryPromiseWithMessage(deleteTokenReq, 'failed to delete user token from store');
     res.json(newOKCallResponseWithMarkdown('You have disconnected your Zendesk account'));
 }

@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
-import {AppCallResponse, AppCall} from 'mattermost-redux/types/apps';
+import {AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
-import {newFormCallResponse, newOKCallResponse, newErrorCallResponseWithMessage, newErrorCallResponseWithFieldErrors} from '../utils/call_responses';
+import {newFormCallResponse, newOKCallResponse, newErrorCallResponseWithMessage} from '../utils/call_responses';
 import {newCreateTicketForm} from '../forms';
 import {newApp} from '../app/app';
 
@@ -22,7 +22,7 @@ export async function fSubmitOrUpdateCreateTicketForm(req: Request, res: Respons
 
 // fSubmitOrUpdateCreateTicketSubmit creates a ticket
 export async function fSubmitOrUpdateCreateTicketSubmit(req: Request, res: Response): Promise<void> {
-    const call: AppCall = req.body;
+    const call: AppCallRequest = req.body;
     let callResponse: AppCallResponse = newOKCallResponse();
     try {
         const app = newApp(call);

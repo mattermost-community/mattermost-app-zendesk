@@ -1,24 +1,33 @@
-import {AppCall, AppField, AppForm} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {newMMClient, ZDClient} from '../clients';
-import {getStaticURL, Routes, Oauth2App} from '../utils';
+import {ExpandedBotAdminActingUser, ExpandedOauth2App, Oauth2App} from '../types/apps';
+import {newMMClient} from '../clients';
+import {MMClientOptions} from 'clients/mattermost';
+import {getStaticURL, Routes} from '../utils';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {ZendeskIcon} from '../utils/constants';
 import {newConfigStore, ConfigStore, AppConfigStore} from '../store/config';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
-export async function newZendeskConfigForm(call: AppCall): Promise<AppForm> {
-    const mmClient = newMMClient(call.context).asAdmin();
-    const configStore = newConfigStore(call.context);
-    const formFields = new FormFields(call, configStore, '', mmClient);
+export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
+    const context = call.context as ExpandedBotAdminActingUser;
+    const mmOptions: MMClientOptions = {
+        mattermostSiteURL: context.mattermost_site_url,
+        actingUserAccessToken: context.acting_user_access_token,
+        botAccessToken: context.bot_access_token,
+        adminAccessToken: context.admin_access_token,
+    };
+    const mmClient = newMMClient(mmOptions).asAdmin();
+    const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
+    const formFields = new FormFields(call, configStore, mmClient);
     const fields = await formFields.getConfigFields();
 
     const form: AppForm = {
         title: 'Configure Zendesk',
         header: 'Configure the Zendesk app with the following information.',
-        icon: getStaticURL(call.context, ZendeskIcon),
+        icon: getStaticURL(call.context.mattermost_site_url, ZendeskIcon),
         fields,
         call: {
             path: Routes.App.CallPathConfigSubmitOrUpdateForm,
@@ -33,12 +42,13 @@ class FormFields extends BaseFormFields {
     storeValues: AppConfigStore
     OauthValues: Oauth2App
 
-    constructor(call: AppCall, configStore: ConfigStore, zdClient: ZDClient, mmClient: Client4) {
-        super(call, zdClient, mmClient);
+    constructor(call: AppCallRequest, configStore: ConfigStore, mmClient: Client4) {
+        super(call, mmClient, undefined);
+        const context = call.context as ExpandedOauth2App;
         this.configStore = configStore;
         this.OauthValues = {
-            client_id: call.context.oauth2.client_id,
-            client_secret: call.context.oauth2.client_secret,
+            client_id: context.oauth2.client_id,
+            client_secret: context.oauth2.client_secret,
         };
         this.storeValues = {
             zd_url: '',
