@@ -36,8 +36,7 @@
     "express": "4.17.1",
     "jest": "24.9.0",
     "nodemon": "2.0.6",
-    "typescript": "3.9.7",
-    "uuid": "8.3.2"
+    "typescript": "3.9.7"
   },
   "jest": {
     "testPathIgnorePatterns": [
