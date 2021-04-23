@@ -109,7 +109,7 @@ class AppImpl implements App {
             actionType = 'delete';
             break;
         case Boolean(zdTriggerPayload.trigger.id):
-            request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
+            request = zdClient.triggers.update(zdTriggerPayload.trigger.id, zdTriggerPayload);
             action = 'Updating';
             actionType = 'update';
             break;
