@@ -69,6 +69,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     addTitle(): void {
         let title = SubscriptionFields.PrefixTriggersTitle;
         title += SubscriptionFields.RegexTriggerInstance + this.context.mattermost_site_url;
+        title += SubscriptionFields.RegexTriggerTeamID + this.context.team_id;
         title += SubscriptionFields.RegexTriggerChannelID + this.context.channel_id;
         title += ' ' + this.values[SubscriptionFields.SubTextName];
         this.addField('title', title);

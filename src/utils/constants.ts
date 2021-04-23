@@ -129,7 +129,8 @@ export const SubscriptionFields = {
     PrefixTriggersTitle: '__mm_webhook',
     RegexTriggerInstance: '__instance_',
     RegexTriggerChannelID: '__channelID_',
-    RegexTriggerTitle: '__mm_webhook__instance_(.*)__channelID_(\\w+) (.*)',
+    RegexTriggerTeamID: '__teamID_',
+    RegexTriggerTitle: '__mm_webhook__instance_(.*)__teamID_(\\w+)__channelID_(\\w+) (.*)',
 
     // TODO add ticket is created and ticket is updated options
     ConditionsCheckBoxFields: [

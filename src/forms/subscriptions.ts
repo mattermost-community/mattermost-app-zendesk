@@ -100,6 +100,8 @@ class FormFields extends BaseFormFields {
         let search = SubscriptionFields.PrefixTriggersTitle;
         search += SubscriptionFields.RegexTriggerInstance;
         search += this.call.context.mattermost_site_url;
+        search += SubscriptionFields.RegexTriggerTeamID;
+        search += this.call.context.team_id;
         const client = this.zdClient as ZDClient;
         const searchReq = client.triggers.search(search) || '';
         const triggers = await tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
