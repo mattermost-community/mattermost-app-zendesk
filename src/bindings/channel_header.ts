@@ -38,7 +38,7 @@ const channelHeaderSubscribe = (mmSiteURL: string): AppBinding => {
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
-    };
+    } as AppBinding;
 };
 
 const channelHeaderConfig = (mmSiteURL: string): AppBinding => {
