@@ -52,7 +52,6 @@ export const parseTriggerTitle = (title: string): parsedTriggerTitle => {
         title: match[0],
         instance: match[1],
         channelID: match[2],
-        teamID: match[3],
     };
 };
 

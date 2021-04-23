@@ -1,7 +1,7 @@
 {
     "app_id": "com.mattermost.zendesk",
     "app_type": "aws_lambda",
-    "version": "0_0_1",
+    "version": "0.2.0",
     "display_name": "Zendesk",
     "description": "Zendesk cloud app for Mattermost",
     "homepage_url": "https://github.com/mattermost/mattermost-app-zendesk",
