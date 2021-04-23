@@ -43,7 +43,7 @@ const cmdConnect = (mmSiteUrl: string): AppBinding => {
         label: 'connect',
         description: 'Connect your Zendesk account',
         icon: getStaticURL(mmSiteUrl, ZendeskIcon),
-        form: {},
+        form: {fields: []},
         call: {
             expand: {
                 oauth2_app: AppExpandLevels.EXPAND_ALL,
@@ -60,7 +60,7 @@ const cmdDisconnect = (mmSiteUrl: string): AppBinding => {
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
         icon: getStaticURL(mmSiteUrl, ZendeskIcon),
-        form: {},
+        form: {fields: []},
         call: {
             path: Routes.App.BindingPathDisconnect,
         },
@@ -93,7 +93,7 @@ const cmdConfigure = (mmSiteUrl: string): AppBinding => {
         label: 'configure',
         description: 'Configure the installed Zendesk account',
         icon: getStaticURL(mmSiteUrl, ZendeskIcon),
-        form: {},
+        form: {fields: []},
         call: {
             path: Routes.App.CallPathConfigOpenForm,
             expand: {
@@ -113,7 +113,7 @@ const cmdMe = (mmSiteUrl: string): AppBinding => {
         label: 'me',
         description: 'Show Your Zendesk User Info',
         icon: getStaticURL(mmSiteUrl, ZendeskIcon),
-        form: {},
+        form: {fields: []},
         call: {
             path: Routes.App.BindingPathMe,
             expand: {
@@ -130,7 +130,7 @@ const cmdTarget = (mmSiteUrl: string): AppBinding => {
         label: 'setup-target',
         description: 'Setup Zendesk Target',
         icon: getStaticURL(mmSiteUrl, ZendeskIcon),
-        form: {},
+        form: {fields: []},
         call: {
             path: Routes.App.BindingPathTargetCreate,
             expand: {
@@ -148,7 +148,7 @@ const cmdHelp = (mmSiteUrl: string): AppBinding => {
         label: 'help',
         description: 'Show Zendesk Help',
         icon: getStaticURL(mmSiteUrl, ZendeskIcon),
-        form: {},
+        form: {fields: []},
         call: {
             path: Routes.App.BindingPathHelp,
             expand: {
