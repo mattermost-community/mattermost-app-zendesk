@@ -37,6 +37,7 @@ const getDisplaySubTitleOption = (option: ZDSubscriptionFieldOption): string => 
 export type parsedTriggerTitle = {
     title: string;
     channelID: string;
+    teamID: string;
     instance: string
 }
 
@@ -51,7 +52,8 @@ export const parseTriggerTitle = (title: string): parsedTriggerTitle => {
     return {
         title: match[0],
         instance: match[1],
-        channelID: match[2],
+        teamID: match[2],
+        channelID: match[3],
     };
 };
 
