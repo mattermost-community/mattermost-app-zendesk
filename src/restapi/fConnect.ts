@@ -13,7 +13,7 @@ import {getOAuthConfig} from '../app/oauth';
 export async function fConnect(req: Request, res: Response): Promise<void> {
     const context: ExpandedOauth2App = req.body.context;
     const url = context.oauth2.connect_url;
-    res.json(newOKCallResponseWithMarkdown(`Follow this link to connect Mattermost to your Zendesk Account: [link](${url})`));
+    res.json(newOKCallResponseWithMarkdown(`Follow this [link](${url}) to connect Mattermost to your Zendesk Account.`));
 }
 
 export async function fOauth2Connect(req: Request, res: Response): Promise<void> {
