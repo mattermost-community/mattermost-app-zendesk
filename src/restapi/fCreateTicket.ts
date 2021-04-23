@@ -2,7 +2,6 @@ import {Request, Response} from 'express';
 import {AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {newFormCallResponse, newOKCallResponse, newErrorCallResponseWithMessage} from '../utils/call_responses';
-
 import {newCreateTicketForm} from '../forms';
 import {newApp} from '../app/app';
 

@@ -1,11 +1,9 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
 
 import {CtxExpandedActingUserOauth2AppOauth2User} from 'types/apps';
-
 import {isConfigured, isConnected, isUserSystemAdmin} from '../utils';
 
 import {getCommandBindings} from './slash_commands';
-
 import {getPostMenuBindings} from './post_menu';
 import {getChannelHeaderBindings} from './channel_header';
 

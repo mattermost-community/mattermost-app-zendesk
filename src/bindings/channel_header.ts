@@ -21,7 +21,7 @@ export const getChannelHeaderBindings = (options: BindingOptions): AppBinding =>
     return newChannelHeaderBindings(bindings);
 };
 
-const channelHeaderSubscribe = (mmSiteURL): AppBinding => {
+const channelHeaderSubscribe = (mmSiteURL: string): AppBinding => {
     return {
         app_id: getManifest().app_id,
         location: Locations.Subscribe,
@@ -38,7 +38,7 @@ const channelHeaderSubscribe = (mmSiteURL): AppBinding => {
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
-    } as AppBinding;
+    };
 };
 
 const channelHeaderConfig = (mmSiteURL: string): AppBinding => {
@@ -56,5 +56,5 @@ const channelHeaderConfig = (mmSiteURL: string): AppBinding => {
                 oauth2_app: AppExpandLevels.EXPAND_ALL,
             },
         },
-    } as AppBinding;
+    };
 };

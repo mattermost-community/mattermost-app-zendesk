@@ -1,11 +1,9 @@
 import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
-
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {ExpandedBotAdminActingUser, ExpandedOauth2App, Oauth2App} from '../types/apps';
-
-import {newMMClient, ZDClient} from '../clients';
+import {newMMClient} from '../clients';
 import {MMClientOptions} from 'clients/mattermost';
 import {getStaticURL, Routes} from '../utils';
 import {BaseFormFields} from '../utils/base_form_fields';

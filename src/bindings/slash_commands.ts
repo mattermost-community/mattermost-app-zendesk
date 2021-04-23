@@ -9,7 +9,6 @@ import {getManifest} from '../manifest';
 // getCommandBindings returns the users slash command bindings
 export const getCommandBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
-
     const mmSiteURL = options.mattermostSiteUrl;
 
     // only show configuration option if admin has not configured the plugin
@@ -20,7 +19,6 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
             return newCommandBindings(mmSiteURL, bindings);
         }
     }
-
     if (options.isConnected) {
         if (options.isSystemAdmin) {
             bindings.push(cmdSubscribe(mmSiteURL));
@@ -52,7 +50,7 @@ const cmdConnect = (mmSiteUrl: string): AppBinding => {
             },
             path: Routes.App.BindingPathConnect,
         },
-    } as AppBinding;
+    };
 };
 
 const cmdDisconnect = (mmSiteUrl: string): AppBinding => {
@@ -66,7 +64,7 @@ const cmdDisconnect = (mmSiteUrl: string): AppBinding => {
         call: {
             path: Routes.App.BindingPathDisconnect,
         },
-    } as AppBinding;
+    };
 };
 
 const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
@@ -85,7 +83,7 @@ const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
-    } as AppBinding;
+    };
 };
 
 const cmdConfigure = (mmSiteUrl: string): AppBinding => {
@@ -105,7 +103,7 @@ const cmdConfigure = (mmSiteUrl: string): AppBinding => {
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
-    } as AppBinding;
+    };
 };
 
 const cmdMe = (mmSiteUrl: string): AppBinding => {
@@ -122,7 +120,7 @@ const cmdMe = (mmSiteUrl: string): AppBinding => {
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
-    } as AppBinding;
+    };
 };
 
 const cmdTarget = (mmSiteUrl: string): AppBinding => {
@@ -140,7 +138,7 @@ const cmdTarget = (mmSiteUrl: string): AppBinding => {
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
-    } as AppBinding;
+    };
 };
 
 const cmdHelp = (mmSiteUrl: string): AppBinding => {
@@ -157,6 +155,6 @@ const cmdHelp = (mmSiteUrl: string): AppBinding => {
                 acting_user: AppExpandLevels.EXPAND_ALL,
             },
         },
-    } as AppBinding;
+    };
 };
 

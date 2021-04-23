@@ -5,6 +5,9 @@ import {ZDClient} from 'clients';
 
 import {FieldsBuilder, newFieldsBuilder} from './helper_classes/fields/fields_builder';
 
+const DefaultMinLength = 2;
+const DefaultMaxLength = 1024;
+
 // BaseFormFields call provides base methods for retrieving viewable modal app fields
 export class BaseFormFields {
     call: AppCallRequest;
@@ -15,8 +18,8 @@ export class BaseFormFields {
     constructor(call: AppCallRequest, mmClient: Client4, zdClient?: ZDClient) {
         this.call = call;
         this.builder = newFieldsBuilder(this.call);
-        this.builder.setDefaultMinLength(2);
-        this.builder.setDefaultMaxLength(1024);
+        this.builder.setDefaultMinLength(DefaultMinLength);
+        this.builder.setDefaultMaxLength(DefaultMaxLength);
         this.zdClient = zdClient;
         this.mmClient = mmClient;
     }

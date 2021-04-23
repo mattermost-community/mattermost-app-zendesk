@@ -1,9 +1,7 @@
 import {Request, Response} from 'express';
 
 import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
-
 import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
-
 import {newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {tryPromiseWithMessage} from '../utils';

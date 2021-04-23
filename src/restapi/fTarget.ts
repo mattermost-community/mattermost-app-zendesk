@@ -1,5 +1,3 @@
-// import {Post} from 'mattermost-redux/types/posts';
-
 import {Request, Response} from 'express';
 
 import {getManifest} from '../manifest';

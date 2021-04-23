@@ -1,12 +1,9 @@
 import {Post} from 'mattermost-redux/types/posts';
-
 import {Request, Response} from 'express';
 
 import {ExpandedBotAdminActingUser} from '../types/apps';
-
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
-
 import {newZDClient, newMMClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';

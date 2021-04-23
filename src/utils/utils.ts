@@ -1,10 +1,9 @@
-import {AppSelectOption, AppField, AppContext} from 'mattermost-redux/types/apps';
+import {AppSelectOption, AppField} from 'mattermost-redux/types/apps';
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
 
 import {Oauth2App, ZDOauth2User} from '../types/apps';
-
 import {getManifest} from '../manifest';
 import {AppConfigStore} from '../store/config';
 

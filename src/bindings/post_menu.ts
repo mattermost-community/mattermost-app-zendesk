@@ -58,6 +58,6 @@ export const openSubscriptionsForm = (mmSiteUrl: string): AppBinding => {
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },
-    } as AppBinding;
+    };
 };
 

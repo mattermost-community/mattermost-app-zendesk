@@ -6,7 +6,7 @@
       "strict": true, 
       "noImplicitAny": false,
       "moduleResolution": "node",
-      "baseUrl": "./src",                       
+      "baseUrl": "./src",
       "paths": {
          "src/*": ["./src/*"]
       },

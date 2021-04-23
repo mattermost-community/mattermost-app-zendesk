@@ -1,9 +1,7 @@
 import {Request, Response} from 'express';
-
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {AppCallRequestWithValues, CtxExpandedBotActingUserAccessToken} from '../types/apps';
-
 import {newConfigStore, AppConfigStore} from '../store/config';
 import {newAppsClient} from '../clients';
 import {newZendeskConfigForm} from '../forms';

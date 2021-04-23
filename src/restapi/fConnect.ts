@@ -1,11 +1,9 @@
 import {Request, Response} from 'express';
 import ClientOAuth2 from 'client-oauth2';
-
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
 import {AppCallRequestWithValues, ExpandedOauth2App, CtxExpandedActingUserOauth2AppBot} from '../types/apps';
-
 import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newConfigStore} from '../store';
 import {Routes} from '../utils';

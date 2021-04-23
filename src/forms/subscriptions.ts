@@ -5,7 +5,6 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {CtxExpandedBotAdminActingUserOauth2User, ExpandedChannel} from '../types/apps';
-
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
@@ -163,7 +162,6 @@ class FormFields extends BaseFormFields {
     // addSubNameDependentFields add the conditional fields once the
     // subscription picker is selected
     addSubNameDependentFields(): void {
-        // TODO add other fields besides checkboxes
         // provide a text field to add the name of the new subscription
         this.addSubNameTextField();
         this.addSubCheckBoxes();
