@@ -159,6 +159,7 @@ SubscriptionFields.SubmitButtonsOptions = [
 
 export const TriggerFields = {
     TicketIDKey: 'ticketID',
+    TicketTitleKey: 'ticketTitle',
     ChannelIDKey: 'channelID',
     ActionField: 'notification_target',
     ActionValuePairs: {},
@@ -167,6 +168,7 @@ export const TriggerFields = {
 // ActionValuePairs is an object of static key value pairs that will be added to a
 // trigger when saving in Zendesk
 TriggerFields.ActionValuePairs[TriggerFields.TicketIDKey] = '{{ticket.id}}';
+TriggerFields.ActionValuePairs[TriggerFields.TicketTitleKey] = '{{ticket.title}}';
 
 // ZdFieldValidation is an object of Zendesk fields types that validates a field
 // value against a regex.  The regex values are retreivable from the field

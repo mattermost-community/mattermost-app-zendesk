@@ -15,6 +15,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const context: ExpandedBotAdminActingUser = req.body.context;
 
     const ticketID = values[TriggerFields.TicketIDKey];
+    const ticketTitle = values[TriggerFields.TicketTitleKey];
     const channelID = values[TriggerFields.ChannelIDKey];
 
     const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
@@ -36,7 +37,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
 
-    const message: string = getNotificationMessage(zdHost, ticketID, auditEvent);
+    const message: string = getNotificationMessage(zdHost, ticketID, ticketTitle, auditEvent);
 
     const mmOptions: MMClientOptions = {
         mattermostSiteURL: context.mattermost_site_url,
@@ -58,16 +59,16 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     res.json({});
 }
 
-function getNotificationMessage(zdHost: string, ticketID: string, auditEvent: any): string {
+function getNotificationMessage(zdHost: string, ticketID: string, ticketTitle: string, auditEvent: any): string {
     const ZDTicketPath = Routes.ZD.TicketPathPrefix;
-    const ticketLink = `[${ticketID}](${zdHost}${ZDTicketPath}/${ticketID})`;
-
+    const ticketLink = `[#${ticketID}](${zdHost}${ZDTicketPath}/${ticketID})`;
+    const prefix = `Ticket ${ticketLink} [\`${ticketTitle}\`] -- `;
     switch (auditEvent.type) {
     case 'Comment':
-        return `Ticket (${ticketLink}) -- \`${auditEvent.author_id}\` commented on ticket \`${auditEvent.body}\``;
+        return `${prefix}\`${auditEvent.author_id}\` commented on ticket \`${auditEvent.body}\``;
     case 'Change':
         // auditEvent.author not defined for field name change;
-        return `Ticket (${ticketLink}) -- \`${auditEvent.field_name}\` changed from \`${auditEvent.previous_value}\` to \`${auditEvent.value}\``;
+        return `${prefix}\`${auditEvent.field_name}\` changed from \`${auditEvent.previous_value}\` to \`${auditEvent.value}\``;
 
     default:
         return `type not found. type = ${auditEvent.type})`;
