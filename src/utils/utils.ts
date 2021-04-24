@@ -31,7 +31,7 @@ const getDisplaySubTitleOption = (option: ZDSubscriptionFieldOption): string => 
     if (!newTitle) {
         throw new Error('malformed Mattermost Trigger title ' + newTitle);
     }
-    return newTitle[3];
+    return newTitle[4];
 };
 
 export type parsedTriggerTitle = {
