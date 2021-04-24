@@ -13,7 +13,8 @@ import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {CtxExpandedBotAdminActingUserOauth2UserChannel} from '../types/apps';
 import {SubscriptionFields} from '../utils/constants';
-import {ZDTriggerPayload, ZDTrigger} from '../utils/ZDTypes';
+import {ZDTriggerPayload} from '../utils/ZDTypes';
+import {getCheckBoxesFromTriggerDefinition} from '../utils/utils';
 import {newConfigStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
@@ -81,6 +82,9 @@ class AppImpl implements App {
     createZDSubscription = async (): Promise<AppCallResponse> => {
         // get zendesk client for user
         const zdClient = await newZDClient(this.zdOptions);
+        const req = zdClient.triggers.definitions() || '';
+        const definitions = await tryPromiseWithMessage(req, 'Failed to fetch trigger definitions');
+        const checkboxes = getCheckBoxesFromTriggerDefinition(definitions);
 
         const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
@@ -92,7 +96,7 @@ class AppImpl implements App {
         // create the trigger object from the form response
         let zdTriggerPayload: ZDTriggerPayload;
         try {
-            zdTriggerPayload = newTriggerFromForm(this.call, targetID);
+            zdTriggerPayload = newTriggerFromForm(this.call, checkboxes, targetID);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }

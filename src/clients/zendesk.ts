@@ -22,6 +22,7 @@ interface TicketFields {
 }
 
 interface Triggers {
+    definitions(): any;
     update(id: number, trigger: any): any;
     delete(id: number): any;
     create(trigger: any): any;

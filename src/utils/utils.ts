@@ -7,7 +7,7 @@ import {Oauth2App, ZDOauth2User} from '../types/apps';
 import {getManifest} from '../manifest';
 import {AppConfigStore} from '../store/config';
 
-import {SubscriptionFields} from './constants';
+import {SubscriptionFields, CreateTicketFields} from './constants';
 
 export type ZDFieldOption = {
     name: string;
@@ -121,4 +121,26 @@ export function isConnected(oauth2user: ZDOauth2User): boolean {
 
 export function webhookConfigured(config: AppConfigStore): boolean {
     return Boolean(config.zd_target_id && config.zd_target_id !== '');
+}
+
+export type checkBox = {
+    label: string
+    name: string
+}
+
+export function getCheckBoxesFromTriggerDefinition(definitions: any): checkBox[] {
+    const actions = definitions[0].definitions.actions;
+    const checkboxes: checkBox[] = [];
+    for (const action of actions) {
+        const subject = action.subject;
+        const isCustomField = subject.startsWith(CreateTicketFields.PrefixCustomFields);
+
+        // restrict this until more for simplicity
+        // - custom checkbox has only two possible values, but not supported by 'change'
+        // - group === requuester also not easily determined
+        if (action.values && action.group === 'ticket' && action.subject !== 'follower' && !isCustomField) {
+            checkboxes.push({name: action.subject, label: action.title});
+        }
+    }
+    return checkboxes;
 }

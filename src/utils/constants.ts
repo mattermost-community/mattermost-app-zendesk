@@ -103,6 +103,7 @@ export const CreateTicketFields = {
     NamePostMessage: 'post_message',
     NameFormsSelect: 'ticket_form_id',
     PrefixCustomField: 'custom_field_',
+    PrefixCustomFields: 'custom_fields_',
 };
 
 const selectOptions: AppSelectOption[] = [];
@@ -131,19 +132,6 @@ export const SubscriptionFields = {
     RegexTriggerChannelID: '__channelID_',
     RegexTriggerTeamID: '__teamID_',
     RegexTriggerTitle: '__mm_webhook__instance_(.*)__teamID_(\\w+)__channelID_(\\w+) (.*)',
-
-    // TODO add ticket is created and ticket is updated options
-    ConditionsCheckBoxFields: [
-        'status',
-        'priority',
-        'brand',
-        'form',
-        'type',
-        'group',
-        'assignee',
-        'requester',
-        'organization',
-    ],
 };
 
 // SubscriptionFields.SubmitButtonOptions = {};
