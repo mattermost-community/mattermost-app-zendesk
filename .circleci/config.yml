@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  aws-s3: circleci/aws-s3@2.0.0
-
 executors:
   default:
     docker:
@@ -52,19 +49,7 @@ jobs:
           paths:
             - "bundle.zip"
       - store_artifacts:
-          path: dist
-
-  deploy-release:
-    docker:
-      - image: circleci/python:3.6
-    steps:
-      - attach_workspace:
-          at: dist
-      - run: "mv dist/bundle.zip dist/$CIRCLE_PROJECT_REPONAME-$CIRCLE_TAG.zip"
-      - aws-s3/copy:
-          from: "dist/dist/$CIRCLE_PROJECT_REPONAME-$CIRCLE_TAG.zip"
-          to: "s3://$BUCKET"
-          arguments: "--cache-control no-cache"
+          path: dist/bundle.zip
 
 workflows:
   version: 2
@@ -82,26 +67,6 @@ workflows:
       - build
   ci:
     jobs:
-      - lint:
-          filters:
-            tags:
-              only: /^v.*/
-      - test:
-          filters:
-            tags:
-              only: /^v.*/
-      - build:
-          filters:
-            tags:
-              only: /^v.*/
-      - deploy-release:
-          filters:
-            tags:
-              only: /^v.*/
-            branches:
-              ignore: /.*/
-          context: apps-ci
-          requires:
-            - lint
-            - test
-            - build
+      - lint
+      - test
+      - build
