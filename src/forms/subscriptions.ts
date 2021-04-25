@@ -338,7 +338,7 @@ class FormFields extends BaseFormFields {
         } else {
             f.value = this.getSelectedSubTriggerName();
         }
-
+        f.max_length = this.getMaxTitleNameLength();
         this.builder.addField(f);
     }
 
@@ -432,5 +432,31 @@ class FormFields extends BaseFormFields {
         return (option: AppSelectOption): boolean => {
             return option.value === this.getCurrentChannelID();
         };
+    }
+
+    getMaxTitleNameLength(): number {
+        //    255   - max allowed in the trigger title field in Zendesk
+        //  -  47   - length of all constants
+        //  -  50   = assume max instance name (conservative estimate. The only unknown)
+        //  -  52   = uuid (26 * 2)
+        // ------
+        //    106
+
+        // length of all constants
+        // const lenConstants = (SubscriptionFields.PrefixCustomDefinitionSubject +
+        //   SubscriptionFields.PrefixTriggersTitle +
+        //   SubscriptionFields.RegexTriggerTeamID +
+        //   SubscriptionFields.RegexTriggerChannelID).length;
+
+        // Can be calculated directly
+        // const lenInstanceName = this.call.context.mattermost_site_url.length;
+
+        // total uuids saved in title
+        // const lenUUID = 26; // 26 length of uuid for channel and team ids
+        // const lenTotalUUID = lenUUID * 2; // x2 for channel and team ids
+
+        // call it 75 to add for any other possible error coming from the instance name length
+        const maxLength = 75;
+        return maxLength;
     }
 }

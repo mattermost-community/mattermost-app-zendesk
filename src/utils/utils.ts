@@ -7,7 +7,7 @@ import {Oauth2App, ZDOauth2User} from '../types/apps';
 import {getManifest} from '../manifest';
 import {AppConfigStore} from '../store/config';
 
-import {SubscriptionFields, CreateTicketFields} from './constants';
+import {SubscriptionFields} from './constants';
 
 export type ZDFieldOption = {
     name: string;
@@ -133,7 +133,7 @@ export function getCheckBoxesFromTriggerDefinition(definitions: any): checkBox[]
     const checkboxes: checkBox[] = [];
     for (const action of actions) {
         const subject = action.subject;
-        const isCustomField = subject.startsWith(CreateTicketFields.PrefixCustomFields);
+        const isCustomField = subject.startsWith(SubscriptionFields.PrefixCustomDefinitionSubject);
 
         // restrict this until more for simplicity
         // - custom checkbox has only two possible values, but not supported by 'change'

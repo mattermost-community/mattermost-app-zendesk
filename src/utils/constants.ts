@@ -103,7 +103,6 @@ export const CreateTicketFields = {
     NamePostMessage: 'post_message',
     NameFormsSelect: 'ticket_form_id',
     PrefixCustomField: 'custom_field_',
-    PrefixCustomFields: 'custom_fields_',
 };
 
 const selectOptions: AppSelectOption[] = [];
@@ -127,6 +126,7 @@ export const SubscriptionFields = {
     NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
 
+    PrefixCustomDefinitionSubject: 'custom_fields_',
     PrefixTriggersTitle: '__mm_webhook',
     RegexTriggerInstance: '__instance_',
     RegexTriggerChannelID: '__channelID_',
@@ -134,7 +134,6 @@ export const SubscriptionFields = {
     RegexTriggerTitle: '__mm_webhook__instance_(.*)__teamID_(\\w+)__channelID_(\\w+) (.*)',
 };
 
-// SubscriptionFields.SubmitButtonOptions = {};
 SubscriptionFields.SubmitButtonsOptions = [
     {
         label: SubscriptionFields.DeleteButtonLabel,
