@@ -135,9 +135,9 @@ export function getCheckBoxesFromTriggerDefinition(definitions: any): checkBox[]
         const subject = action.subject;
         const isCustomField = subject.startsWith(SubscriptionFields.PrefixCustomDefinitionSubject);
 
-        // restrict this until more for simplicity
+        // restrict possible checkbox values for simplicity
         // - custom checkbox has only two possible values, but not supported by 'change'
-        // - group === requuester also not easily determined
+        // - group === requester also not easily determined
         if (action.values && action.group === 'ticket' && action.subject !== 'follower' && !isCustomField) {
             checkboxes.push({name: action.subject, label: action.title});
         }

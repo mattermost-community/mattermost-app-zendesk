@@ -11,11 +11,8 @@ import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {getStaticURL, Routes} from '../utils';
-import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions,
-    parseTriggerTitle,
-    checkBox,
-    getCheckBoxesFromTriggerDefinition,
-    tryPromiseWithMessage} from '../utils/utils';
+import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions, parseTriggerTitle,
+    checkBox, getCheckBoxesFromTriggerDefinition, tryPromiseWithMessage} from '../utils/utils';
 import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../utils/ZDTypes';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
@@ -140,12 +137,12 @@ class FormFields extends BaseFormFields {
             channelIDs.push(channelID);
         }
 
-        const Parallelism = 10;
+        const parallelJobs = 10;
         const asyncMethod = async (channelID: string) => {
             const channel = await this.mmClient.getChannel(channelID);
             this.teamChannelsWithSubs.push(channel);
         };
-        await asyncBatch(channelIDs, asyncMethod, Parallelism);
+        await asyncBatch(channelIDs, asyncMethod, parallelJobs);
     }
 
     // addChannelTrigger adds the team triggers
@@ -459,17 +456,11 @@ class FormFields extends BaseFormFields {
 
     getMaxTitleNameLength(): number {
         //    255   - max allowed in the trigger title field in Zendesk
-        //  -  47   - length of all constants
+        //  -  47   - length of all constants (PrefixCustomDefinitionSubject PrefixTriggersTitle RegexTriggerTeamID RegexTriggerChannelID)
         //  -  50   = assume max instance name (conservative estimate. The only unknown)
         //  -  52   = uuid (26 * 2) channelID and teamID uuids
         // ------
         //    106
-
-        // length of all constants from SubscriptionFields
-        // PrefixCustomDefinitionSubject
-        // PrefixTriggersTitle
-        // RegexTriggerTeamID
-        // RegexTriggerChannelID)
 
         // call it 50 to be conservative
         const maxLength = 50;
