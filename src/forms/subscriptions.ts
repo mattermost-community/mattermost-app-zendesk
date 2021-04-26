@@ -1,3 +1,5 @@
+import asyncBatch from 'async-batch';
+
 import {Channel} from 'mattermost-redux/types/channels';
 import {AppSelectOption, AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
 
@@ -105,10 +107,14 @@ class FormFields extends BaseFormFields {
     }
 
     // setState sets state for teamTriggers and teamChannelsWithSubs
-    //   * teamTriggers - object with keys of channel IDs and values of
-    //                  array of triggers for the current team
-    //   * teamChannelsWithSubs - array of channels with subscriptions
     async setState(): Promise<void> {
+        const triggers = await this.getTeamTriggers();
+        await this.buildTeamChannelsWithSubs(triggers);
+        this.addChannelTrigger(triggers);
+    }
+
+    // getTeamTriggers gets all the team triggers saved in Zendesk via the ZD client
+    async getTeamTriggers(): Promise<any> {
         // modified node-zendesk to allow hitting triggers/search api
         // returns all triggers for all channels and teams
         let search = SubscriptionFields.PrefixTriggersTitle;
@@ -118,25 +124,42 @@ class FormFields extends BaseFormFields {
         search += this.call.context.team_id;
         const client = this.zdClient as ZDClient;
         const searchReq = client.triggers.search(search) || '';
-        const triggers = await tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
-        const results: Promise<void>[] = [];
-        for (const trigger of triggers) {
-            results.push(this.addChannelTrigger(trigger));
-        }
-        await Promise.all(results);
+        return tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
     }
 
-    async addChannelTrigger(trigger: ZDTrigger): Promise<void> {
-        const parsedTitle = parseTriggerTitle(trigger.title);
-        const channelID = parsedTitle.channelID;
-        const channel = await this.mmClient.getChannel(channelID);
-        if (channel.team_id === this.getCurrentTeamID()) {
+    // buildTeamChannelsWithSubs builds an array of channels that contain subscription
+    async buildTeamChannelsWithSubs(triggers: ZDTrigger[]): Promise<void> {
+        // prefetch the channels and build unique array of channelIDs
+        const channelIDs: string[] = [];
+        for (const trigger of triggers) {
+            const parsedTitle = parseTriggerTitle(trigger.title);
+            const channelID = parsedTitle.channelID;
+            if (channelIDs.includes(channelID)) {
+                continue;
+            }
+            channelIDs.push(channelID);
+        }
+
+        const Parallelism = 10;
+        const asyncMethod = async (channelID: string) => {
+            const channel = await this.mmClient.getChannel(channelID);
+            this.teamChannelsWithSubs.push(channel);
+        };
+        await asyncBatch(channelIDs, asyncMethod, Parallelism);
+    }
+
+    // addChannelTrigger adds the team triggers
+    // teamTriggers - object with keys of channel IDs and values of
+    //                array of triggers for the current team
+    addChannelTrigger(triggers: ZDTrigger[]): void {
+        for (const trigger of triggers) {
+            const parsedTitle = parseTriggerTitle(trigger.title);
+            const channelID = parsedTitle.channelID;
             if (this.teamTriggers[channelID]) {
                 this.teamTriggers[channelID].push(trigger);
             } else {
                 this.teamTriggers[channelID] = [];
                 this.teamTriggers[channelID].push(trigger);
-                this.teamChannelsWithSubs.push(channel);
             }
         }
     }
