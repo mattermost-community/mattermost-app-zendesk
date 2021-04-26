@@ -152,12 +152,10 @@ class FormFields extends BaseFormFields {
         for (const trigger of triggers) {
             const parsedTitle = parseTriggerTitle(trigger.title);
             const channelID = parsedTitle.channelID;
-            if (this.triggers[channelID]) {
-                this.triggers[channelID].push(trigger);
-            } else {
+            if (!this.triggers[channelID]) {
                 this.triggers[channelID] = [];
-                this.triggers[channelID].push(trigger);
             }
+            this.triggers[channelID].push(trigger);
         }
     }
 
