@@ -358,7 +358,7 @@ class FormFields extends BaseFormFields {
         } else {
             f.value = this.getSelectedSubTriggerName();
         }
-        f.max_length = this.getMaxTitleNameLength();
+        f.max_length = SubscriptionFields.MaxTitleNameLength;
         this.builder.addField(f);
     }
 
@@ -452,18 +452,5 @@ class FormFields extends BaseFormFields {
         return (option: AppSelectOption): boolean => {
             return option.value === this.getCurrentChannelID();
         };
-    }
-
-    getMaxTitleNameLength(): number {
-        //    255   - max allowed in the trigger title field in Zendesk
-        //  -  47   - length of all constants (PrefixCustomDefinitionSubject PrefixTriggersTitle RegexTriggerTeamID RegexTriggerChannelID)
-        //  -  50   = assume max instance name (conservative estimate. The only unknown)
-        //  -  52   = uuid (26 * 2) channelID and teamID uuids
-        // ------
-        //    106
-
-        // call it 50 to be conservative
-        const maxLength = 50;
-        return maxLength;
     }
 }

@@ -107,6 +107,16 @@ export const CreateTicketFields = {
 
 const selectOptions: AppSelectOption[] = [];
 export const SubscriptionFields = {
+
+    //    255   - max allowed in the trigger title field in Zendesk
+    //  -  47   - length of all constants (PrefixCustomDefinitionSubject PrefixTriggersTitle RegexTriggerTeamID RegexTriggerChannelID)
+    //  -  50   = assume max instance name (conservative estimate. The only unknown)
+    //  -  52   = uuid (26 * 2) channelID and teamID uuids
+    // ------
+    //    106
+    // call it 50 to be conservative
+    MaxTitleNameLength: 50,
+
     ChannelPickerSelectLabel: 'Channel Name',
     ChannelPickerSelectName: 'channel_picker_name',
 
