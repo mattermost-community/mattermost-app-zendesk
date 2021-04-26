@@ -30,7 +30,7 @@ interface Triggers {
 }
 
 interface OauthTokens {
-    current(): any;
+    list(): any
     revoke(id: number): any;
 }
 
