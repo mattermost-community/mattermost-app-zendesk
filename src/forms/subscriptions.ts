@@ -53,12 +53,13 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
     return form;
 }
 
-type ZDTeamTriggers = Record<string, ZDTrigger[]>
+type ZDTriggers = Record<string, ZDTrigger[]>
 
-// FormFields retrieves viewable modal app fields
+// FormFields retrieves viewable modal app fields. The fields are scope to one
+// the currently viewed team
 class FormFields extends BaseFormFields {
-    teamTriggers: ZDTeamTriggers
-    teamChannelsWithSubs: Channel[]
+    triggers: ZDTriggers
+    channelsWithSubs: Channel[]
 
     zdHost: string
     conditions: any
@@ -68,8 +69,8 @@ class FormFields extends BaseFormFields {
 
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4, zdHost: string) {
         super(call, mmClient, zdClient);
-        this.teamTriggers = {};
-        this.teamChannelsWithSubs = [];
+        this.triggers = {};
+        this.channelsWithSubs = [];
         this.zdHost = zdHost;
         this.conditions = [];
         this.checkboxes = [];
@@ -103,7 +104,7 @@ class FormFields extends BaseFormFields {
         this.addSubNameDependentFields();
     }
 
-    // setState sets state for teamTriggers and teamChannelsWithSubs
+    // setState sets state for triggers and channelsWithSubs
     async setState(): Promise<void> {
         const triggers = await this.getTeamTriggers();
         await this.buildTeamChannelsWithSubs(triggers);
@@ -140,23 +141,23 @@ class FormFields extends BaseFormFields {
         const parallelJobs = 10;
         const asyncMethod = async (channelID: string) => {
             const channel = await this.mmClient.getChannel(channelID);
-            this.teamChannelsWithSubs.push(channel);
+            this.channelsWithSubs.push(channel);
         };
         await asyncBatch(channelIDs, asyncMethod, parallelJobs);
     }
 
     // addChannelTrigger adds the team triggers
-    // teamTriggers - object with keys of channel IDs and values of
+    // triggers - object with keys of channel IDs and values of
     //                array of triggers for the current team
     addChannelTrigger(triggers: ZDTrigger[]): void {
         for (const trigger of triggers) {
             const parsedTitle = parseTriggerTitle(trigger.title);
             const channelID = parsedTitle.channelID;
-            if (this.teamTriggers[channelID]) {
-                this.teamTriggers[channelID].push(trigger);
+            if (this.triggers[channelID]) {
+                this.triggers[channelID].push(trigger);
             } else {
-                this.teamTriggers[channelID] = [];
-                this.teamTriggers[channelID].push(trigger);
+                this.triggers[channelID] = [];
+                this.triggers[channelID].push(trigger);
             }
         }
     }
@@ -392,7 +393,7 @@ class FormFields extends BaseFormFields {
     // getTeamChannelsWithSubs returns an array of channels that have
     // subscriptions scoped to the currently viewed team
     getTeamChannelsWithSubs(): Channel[] {
-        return this.teamChannelsWithSubs;
+        return this.channelsWithSubs;
     }
 
     // getSubsForSelectedChannel returns an array of channels for the currently
@@ -404,8 +405,8 @@ class FormFields extends BaseFormFields {
             // by default, look for subscriptions in the current channel
             id = this.getCurrentChannelID();
         }
-        if (this.teamTriggers[id]) {
-            return this.teamTriggers[id];
+        if (this.triggers[id]) {
+            return this.triggers[id];
         }
         return [];
     }
@@ -442,8 +443,8 @@ class FormFields extends BaseFormFields {
     }
 
     getChannelTriggers(channelID: string): ZDTrigger[] {
-        if (this.teamTriggers[channelID]) {
-            return this.teamTriggers[channelID];
+        if (this.triggers[channelID]) {
+            return this.triggers[channelID];
         }
         return [];
     }
