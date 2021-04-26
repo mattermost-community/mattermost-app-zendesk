@@ -1,4 +1,4 @@
-import asyncBatch from 'async-batch';
+import asyncBatch from 'async-batch/lib';
 
 import {Channel} from 'mattermost-redux/types/channels';
 import {AppSelectOption, AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
