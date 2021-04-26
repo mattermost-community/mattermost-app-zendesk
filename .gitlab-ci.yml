@@ -1,0 +1,11 @@
+# This will run on the internal gitlab
+# Will run only when have a tag pushed
+
+stages:
+  - build
+  - publish
+
+include:
+  - project: mattermost/ci/mattermost-apps
+    ref: main
+    file: private.yml
