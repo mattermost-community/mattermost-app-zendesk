@@ -55,8 +55,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
 
 type ZDTriggers = Record<string, ZDTrigger[]>
 
-// FormFields retrieves viewable modal app fields. The fields are scope to one
-// the currently viewed team
+// FormFields retrieves viewable modal app fields. The fields are scoped to the currently viewed team
 class FormFields extends BaseFormFields {
     triggers: ZDTriggers
     channelsWithSubs: Channel[]
@@ -106,13 +105,13 @@ class FormFields extends BaseFormFields {
 
     // setState sets state for triggers and channelsWithSubs
     async setState(): Promise<void> {
-        const triggers = await this.getTeamTriggers();
-        await this.buildTeamChannelsWithSubs(triggers);
+        const triggers = await this.getTriggers();
+        await this.buildChannelsWithSubs(triggers);
         this.addChannelTrigger(triggers);
     }
 
-    // getTeamTriggers gets all the team triggers saved in Zendesk via the ZD client
-    async getTeamTriggers(): Promise<any> {
+    // getTriggers gets all the team triggers saved in Zendesk via the ZD client
+    async getTriggers(): Promise<any> {
         // modified node-zendesk to allow hitting triggers/search api
         // returns all triggers for all channels and teams
         let search = SubscriptionFields.PrefixTriggersTitle;
@@ -125,8 +124,8 @@ class FormFields extends BaseFormFields {
         return tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
     }
 
-    // buildTeamChannelsWithSubs builds an array of channels that contain subscription
-    async buildTeamChannelsWithSubs(triggers: ZDTrigger[]): Promise<void> {
+    // buildChannelsWithSubs builds an array of channels that contain subscription
+    async buildChannelsWithSubs(triggers: ZDTrigger[]): Promise<void> {
         // prefetch the channels and build unique array of channelIDs
         const channelIDs: string[] = [];
         for (const trigger of triggers) {
@@ -165,7 +164,7 @@ class FormFields extends BaseFormFields {
     // addChannelPickerField adds a channel picker field when more than one
     // channel in the current team has a subscription
     addChannelPickerField(): void {
-        const options = makeChannelOptions(this.getTeamChannelsWithSubs());
+        const options = makeChannelOptions(this.getChannelsWithSubs());
         const currentChannelOption = options.filter(this.getDefaultChannelOption());
         const context = this.call.context as ExpandedChannel;
 
@@ -390,9 +389,9 @@ class FormFields extends BaseFormFields {
         this.builder.addField(f);
     }
 
-    // getTeamChannelsWithSubs returns an array of channels that have
+    // getChannelsWithSubs returns an array of channels that have
     // subscriptions scoped to the currently viewed team
-    getTeamChannelsWithSubs(): Channel[] {
+    getChannelsWithSubs(): Channel[] {
         return this.channelsWithSubs;
     }
 
