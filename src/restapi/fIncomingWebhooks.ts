@@ -65,7 +65,7 @@ function getNotificationMessage(zdHost: string, ticketID: string, ticketTitle: s
     const prefix = `Ticket ${ticketLink} [\`${ticketTitle}\`] -- `;
     switch (auditEvent.type) {
     case 'Comment':
-        return `${prefix}\`${auditEvent.author_id}\` commented on ticket \`${auditEvent.body}\``;
+        return `${prefix}\`${auditEvent.author_id}\` commented on ticket`;
     case 'Change':
         // auditEvent.author not defined for field name change;
         return `${prefix}\`${auditEvent.field_name}\` changed from \`${auditEvent.previous_value}\` to \`${auditEvent.value}\``;
