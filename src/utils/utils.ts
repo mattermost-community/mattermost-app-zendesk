@@ -31,12 +31,13 @@ const getDisplaySubTitleOption = (option: ZDSubscriptionFieldOption): string => 
     if (!newTitle) {
         throw new Error('malformed Mattermost Trigger title ' + newTitle);
     }
-    return newTitle[3];
+    return newTitle[4];
 };
 
 export type parsedTriggerTitle = {
     title: string;
     channelID: string;
+    teamID: string;
     instance: string
 }
 
@@ -51,7 +52,8 @@ export const parseTriggerTitle = (title: string): parsedTriggerTitle => {
     return {
         title: match[0],
         instance: match[1],
-        channelID: match[2],
+        teamID: match[2],
+        channelID: match[3],
     };
 };
 
@@ -119,4 +121,26 @@ export function isConnected(oauth2user: ZDOauth2User): boolean {
 
 export function webhookConfigured(config: AppConfigStore): boolean {
     return Boolean(config.zd_target_id && config.zd_target_id !== '');
+}
+
+export type checkBox = {
+    label: string
+    name: string
+}
+
+export function getCheckBoxesFromTriggerDefinition(definitions: any): checkBox[] {
+    const actions = definitions[0].definitions.actions;
+    const checkboxes: checkBox[] = [];
+    for (const action of actions) {
+        const subject = action.subject;
+        const isCustomField = subject.startsWith(SubscriptionFields.PrefixCustomDefinitionSubject);
+
+        // restrict possible checkbox values for simplicity
+        // - custom checkbox has only two possible values, but not supported by 'change'
+        // - group === requester also not easily determined
+        if (action.values && action.group === 'ticket' && action.subject !== 'follower' && !isCustomField) {
+            checkboxes.push({name: action.subject, label: action.title});
+        }
+    }
+    return checkboxes;
 }

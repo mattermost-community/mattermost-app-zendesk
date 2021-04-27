@@ -52,7 +52,6 @@ class FormFields extends BaseFormFields {
         };
         this.storeValues = {
             zd_url: '',
-            zd_node_host: '',
             zd_oauth_access_token: '',
             zd_target_id: '',
         };
@@ -71,7 +70,6 @@ class FormFields extends BaseFormFields {
         this.addZDClientIDField();
         this.addZDClientSecretField();
         this.addZDConnectedUserIDField();
-        this.addZDNodeHost();
     }
 
     addZDUrlField(): void {
@@ -119,18 +117,6 @@ class FormFields extends BaseFormFields {
             label: 'Oauth2 Access Token',
             value: this.storeValues.zd_oauth_access_token,
             description: 'Oauth2 Connected Mattermost Account with Zendesk agent access. This field is needed for subscriptions',
-        };
-        this.builder.addField(f);
-    }
-
-    addZDNodeHost(): void {
-        const f: AppField = {
-            type: AppFieldTypes.TEXT,
-            name: 'zd_node_host',
-            hint: 'Ex. https://yourhost.ngrok.io',
-            label: 'Node Host',
-            value: this.storeValues.zd_node_host,
-            description: 'Only needed for development',
         };
         this.builder.addField(f);
     }

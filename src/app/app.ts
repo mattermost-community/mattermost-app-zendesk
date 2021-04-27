@@ -14,6 +14,7 @@ import {MMClientOptions} from 'clients/mattermost';
 import {CtxExpandedBotAdminActingUserOauth2UserChannel} from '../types/apps';
 import {SubscriptionFields} from '../utils/constants';
 import {ZDTriggerPayload} from '../utils/ZDTypes';
+import {getCheckBoxesFromTriggerDefinition} from '../utils/utils';
 import {newConfigStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
@@ -72,7 +73,7 @@ class AppImpl implements App {
 
         const id = zdTicket.id;
         const subject = zdTicket.subject;
-        const message = `${zdUser.name} created ticket [#${id}](${host}/agent/tickets/${id}) [${subject}]`;
+        const message = `${zdUser.name} created ticket [#${id}](${host}/agent/tickets/${id})  **Subject:** \`${subject}\``;
         await this.createActingUserPost(message);
 
         return newOKCallResponse();
@@ -81,6 +82,9 @@ class AppImpl implements App {
     createZDSubscription = async (): Promise<AppCallResponse> => {
         // get zendesk client for user
         const zdClient = await newZDClient(this.zdOptions);
+        const req = zdClient.triggers.definitions() || '';
+        const definitions = await tryPromiseWithMessage(req, 'Failed to fetch trigger definitions');
+        const checkboxes = getCheckBoxesFromTriggerDefinition(definitions);
 
         const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
@@ -92,42 +96,43 @@ class AppImpl implements App {
         // create the trigger object from the form response
         let zdTriggerPayload: ZDTriggerPayload;
         try {
-            zdTriggerPayload = newTriggerFromForm(this.call, targetID);
+            zdTriggerPayload = newTriggerFromForm(this.call, checkboxes, targetID);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }
 
         // create a reply to the original post noting the ticket was created
         let request: any;
-        let msg: string;
         let action: string;
+        let actionType: string;
         const subName = this.values[SubscriptionFields.SubTextName];
-        const link = `[${subName}](` + host + '/agent/admin/triggers/' + zdTriggerPayload.trigger.id + ')';
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
             request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
-            msg = `Deleting subscription ${link}. `;
-            action = 'delete';
+            action = 'Deleting';
+            actionType = 'delete';
             break;
         case Boolean(zdTriggerPayload.trigger.id):
-            request = zdClient.triggers.update(zdTriggerPayload.trigger.id);
-            msg = `Updating subscription ${link}. `;
-            action = 'update';
+            request = zdClient.triggers.update(zdTriggerPayload.trigger.id, zdTriggerPayload);
+            action = 'Updating';
+            actionType = 'update';
             break;
         default:
             request = zdClient.triggers.create(zdTriggerPayload);
-            msg = `Creating subscription ${link}. `;
-            action = 'create';
+            action = 'Creating';
+            actionType = 'create';
+        }
+
+        // Any zendesk error will produce an error in the modal
+        let msg: string;
+        try {
+            const trigger = await request;
+            msg = `${action} subscription [${subName}](` + host + '/agent/admin/triggers/' + trigger.id + '). ';
+        } catch (e) {
+            return newErrorCallResponseWithMessage(`failed to ${actionType} subscription: ` + e.message);
         }
 
         msg += 'This could take a moment before your subscription data is saved in Zendesk';
-
-        // Any zendesk error will produce an error in the modal
-        try {
-            await request;
-        } catch (e) {
-            return newErrorCallResponseWithMessage(`failed to ${action} subscription: ` + e.message);
-        }
 
         // return the call response with successful markdown message
         return newOKCallResponseWithMarkdown(msg);

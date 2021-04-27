@@ -2,6 +2,7 @@ import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/
 
 import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
 
+import {checkBox} from '../utils/utils';
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
 interface TriggerFromFrom {
@@ -12,12 +13,14 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     values: AppCallValues;
     context: AppContext;
     targetID: string;
+    checkBoxes: checkBox[];
     trigger: ZDTrigger
 
-    constructor(call: AppCallRequest, targetID: string) {
+    constructor(call: AppCallRequest, checkboxes: checkBox[], targetID: string) {
         this.values = call.values as AppCallValues;
         this.context = call.context;
         this.targetID = targetID;
+        this.checkBoxes = checkboxes;
         this.trigger = {} as ZDTrigger;
         this.buildTrigger();
     }
@@ -69,6 +72,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     addTitle(): void {
         let title = SubscriptionFields.PrefixTriggersTitle;
         title += SubscriptionFields.RegexTriggerInstance + this.context.mattermost_site_url;
+        title += SubscriptionFields.RegexTriggerTeamID + this.context.team_id;
         title += SubscriptionFields.RegexTriggerChannelID + this.context.channel_id;
         title += ' ' + this.values[SubscriptionFields.SubTextName];
         this.addField('title', title);
@@ -92,10 +96,10 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         const conditions: ZDTriggerConditions = {
             any: [],
         };
-        for (const checkbox of SubscriptionFields.ConditionsCheckBoxFields) {
-            if (this.values[checkbox]) {
+        for (const checkbox of this.checkBoxes) {
+            if (this.values[checkbox.name]) {
                 const entry: ZDTriggerCondition = {
-                    field: checkbox,
+                    field: checkbox.name,
                     operator: 'changed',
                 };
                 conditions.any.push(entry);
@@ -106,13 +110,12 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         if (conditions.any.length === 0) {
             throw new Error('Must select at least one condition');
         }
-
         this.addField('conditions', conditions);
     }
 }
 
-export function newTriggerFromForm(call: AppCallRequest, targetID: string): ZDTriggerPayload {
-    const trigger = new TriggerFromFormImpl(call, targetID).getTrigger();
+export function newTriggerFromForm(call: AppCallRequest, checkboxes: checkBox[], targetID: string): ZDTriggerPayload {
+    const trigger = new TriggerFromFormImpl(call, checkboxes, targetID).getTrigger();
     return trigger;
 }
 

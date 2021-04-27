@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {Users} from 'node-zendesk';
 
 export type ZDTriggerCondition = {
@@ -29,4 +30,28 @@ interface CustomFieldOptions {
 export type ZDUserField = Users.Fields.UserField & {
     required_in_portal: boolean
     system_field_options?: CustomFieldOptions[];
+}
+
+export type ZDToken = {
+    url: string,
+    id: number,
+    user_id: number,
+    client_id: number,
+    token: string,
+    refresh_token: null,
+    created_at: string,
+    expires_at: null,
+    used_at: string,
+    scopes: string[]
+}
+
+export type ZDTokens = [
+    {tokens: ZDToken[]}
+]
+
+export type ZDTokensResponse = {
+    tokens: ZDTokens
+    next_page: string
+    previious_page: string
+    count: number
 }

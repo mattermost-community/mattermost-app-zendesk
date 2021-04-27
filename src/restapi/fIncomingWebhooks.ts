@@ -15,10 +15,11 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const context: ExpandedBotAdminActingUser = req.body.context;
 
     const ticketID = values[TriggerFields.TicketIDKey];
+    const ticketTitle = values[TriggerFields.TicketTitleKey];
     const channelID = values[TriggerFields.ChannelIDKey];
 
     const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
-    const zdHost = config.zd_node_host;
+    const zdUrl = config.zd_url;
 
     const token = config.zd_oauth_access_token;
     if (token === '') {
@@ -36,7 +37,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
 
-    const message: string = getNotificationMessage(zdHost, ticketID, auditEvent);
+    const message: string = getNotificationMessage(zdUrl, ticketID, ticketTitle, auditEvent);
 
     const mmOptions: MMClientOptions = {
         mattermostSiteURL: context.mattermost_site_url,
@@ -58,16 +59,16 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     res.json({});
 }
 
-function getNotificationMessage(zdHost: string, ticketID: string, auditEvent: any): string {
+function getNotificationMessage(zdUrl: string, ticketID: string, ticketTitle: string, auditEvent: any): string {
     const ZDTicketPath = Routes.ZD.TicketPathPrefix;
-    const ticketLink = `[${ticketID}](${zdHost}${ZDTicketPath}/${ticketID})`;
-
+    const ticketLink = `[#${ticketID}](${zdUrl}${ZDTicketPath}/${ticketID})`;
+    const prefix = `Ticket ${ticketLink}  **Subject:** \`${ticketTitle}\` -- `;
     switch (auditEvent.type) {
     case 'Comment':
-        return `Ticket (${ticketLink}) -- \`${auditEvent.author_id}\` commented on ticket \`${auditEvent.body}\``;
+        return `${prefix}\`${auditEvent.author_id}\` commented on ticket`;
     case 'Change':
         // auditEvent.author not defined for field name change;
-        return `Ticket (${ticketLink}) -- \`${auditEvent.field_name}\` changed from \`${auditEvent.previous_value}\` to \`${auditEvent.value}\``;
+        return `${prefix}\`${auditEvent.field_name}\` changed from \`${auditEvent.previous_value}\` to \`${auditEvent.value}\``;
 
     default:
         return `type not found. type = ${auditEvent.type})`;

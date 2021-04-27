@@ -107,6 +107,16 @@ export const CreateTicketFields = {
 
 const selectOptions: AppSelectOption[] = [];
 export const SubscriptionFields = {
+
+    //    255   - max allowed in the trigger title field in Zendesk
+    //  -  47   - length of all constants (PrefixCustomDefinitionSubject PrefixTriggersTitle RegexTriggerTeamID RegexTriggerChannelID)
+    //  -  50   = assume max instance name (conservative estimate. The only unknown)
+    //  -  52   = uuid (26 * 2) channelID and teamID uuids
+    // ------
+    //    106
+    // call it 50 to be conservative
+    MaxTitleNameLength: 50,
+
     ChannelPickerSelectLabel: 'Channel Name',
     ChannelPickerSelectName: 'channel_picker_name',
 
@@ -126,26 +136,14 @@ export const SubscriptionFields = {
     NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
 
+    PrefixCustomDefinitionSubject: 'custom_fields_',
     PrefixTriggersTitle: '__mm_webhook',
     RegexTriggerInstance: '__instance_',
     RegexTriggerChannelID: '__channelID_',
-    RegexTriggerTitle: '__mm_webhook__instance_(.*)__channelID_(\\w+) (.*)',
-
-    // TODO add ticket is created and ticket is updated options
-    ConditionsCheckBoxFields: [
-        'status',
-        'priority',
-        'brand',
-        'form',
-        'type',
-        'group',
-        'assignee',
-        'requester',
-        'organization',
-    ],
+    RegexTriggerTeamID: '__teamID_',
+    RegexTriggerTitle: '__mm_webhook__instance_(.*)__teamID_(\\w+)__channelID_(\\w+) (.*)',
 };
 
-// SubscriptionFields.SubmitButtonOptions = {};
 SubscriptionFields.SubmitButtonsOptions = [
     {
         label: SubscriptionFields.DeleteButtonLabel,
@@ -159,6 +157,7 @@ SubscriptionFields.SubmitButtonsOptions = [
 
 export const TriggerFields = {
     TicketIDKey: 'ticketID',
+    TicketTitleKey: 'ticketTitle',
     ChannelIDKey: 'channelID',
     ActionField: 'notification_target',
     ActionValuePairs: {},
@@ -167,6 +166,7 @@ export const TriggerFields = {
 // ActionValuePairs is an object of static key value pairs that will be added to a
 // trigger when saving in Zendesk
 TriggerFields.ActionValuePairs[TriggerFields.TicketIDKey] = '{{ticket.id}}';
+TriggerFields.ActionValuePairs[TriggerFields.TicketTitleKey] = '{{ticket.title}}';
 
 // ZdFieldValidation is an object of Zendesk fields types that validates a field
 // value against a regex.  The regex values are retreivable from the field

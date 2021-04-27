@@ -62,6 +62,10 @@ const cmdDisconnect = (mmSiteUrl: string): AppBinding => {
         icon: getStaticURL(mmSiteUrl, ZendeskIcon),
         form: {fields: []},
         call: {
+            expand: {
+                acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+                oauth2_user: AppExpandLevels.EXPAND_ALL,
+            },
             path: Routes.App.BindingPathDisconnect,
         },
     };
@@ -79,6 +83,7 @@ const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
                 admin_access_token: AppExpandLevels.EXPAND_ALL,
+                channel: AppExpandLevels.EXPAND_SUMMARY,
                 oauth2_app: AppExpandLevels.EXPAND_ALL,
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },

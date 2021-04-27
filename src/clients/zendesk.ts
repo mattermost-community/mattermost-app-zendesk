@@ -22,14 +22,15 @@ interface TicketFields {
 }
 
 interface Triggers {
-    update(id: number): any;
+    definitions(): any;
+    update(id: number, trigger: any): any;
     delete(id: number): any;
     create(trigger: any): any;
     search(query: string): any;
 }
 
 interface OauthTokens {
-    current(): any;
+    list(): any
     revoke(id: number): any;
 }
 
