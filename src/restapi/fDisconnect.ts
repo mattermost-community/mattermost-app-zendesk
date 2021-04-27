@@ -5,6 +5,7 @@ import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newZDClient, newAppsClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {tryPromiseWithMessage} from '../utils';
+import {ZDTokensResponse} from '../utils/ZDTypes';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;
@@ -15,7 +16,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     };
     const zdClient = await newZDClient(zdOptions);
     const oauthReq = zdClient.oauthtokens.list();
-    const tokens = await tryPromiseWithMessage(oauthReq, 'failed to get oauth tokens');
+    const tokens: ZDTokensResponse = await tryPromiseWithMessage(oauthReq, 'failed to get oauth tokens');
 
     // get the token ID
     const tokenID = getUserTokenID(zdOptions.oauth2UserAccessToken, tokens);
@@ -32,7 +33,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
 }
 
 // getUserTokenID retrieves the Zendesk tokenID for the acting user
-function getUserTokenID(userToken: any, tokens: any): number {
+function getUserTokenID(userToken: string, tokens: ZDTokensResponse): number {
     if (!tokens[0] && !tokens[0].tokens) {
         throw new Error('unable get oauth tokens');
     }
