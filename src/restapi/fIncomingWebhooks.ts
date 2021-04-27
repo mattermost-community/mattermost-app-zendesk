@@ -19,7 +19,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const channelID = values[TriggerFields.ChannelIDKey];
 
     const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
-    const zdHost = config.zd_node_host;
+    const zdUrl = config.zd_url;
 
     const token = config.zd_oauth_access_token;
     if (token === '') {
@@ -37,7 +37,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const ticketAudit = ticketAudits.pop();
     const auditEvent = ticketAudit.events[0];
 
-    const message: string = getNotificationMessage(zdHost, ticketID, ticketTitle, auditEvent);
+    const message: string = getNotificationMessage(zdUrl, ticketID, ticketTitle, auditEvent);
 
     const mmOptions: MMClientOptions = {
         mattermostSiteURL: context.mattermost_site_url,
@@ -59,9 +59,9 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     res.json({});
 }
 
-function getNotificationMessage(zdHost: string, ticketID: string, ticketTitle: string, auditEvent: any): string {
+function getNotificationMessage(zdUrl: string, ticketID: string, ticketTitle: string, auditEvent: any): string {
     const ZDTicketPath = Routes.ZD.TicketPathPrefix;
-    const ticketLink = `[#${ticketID}](${zdHost}${ZDTicketPath}/${ticketID})`;
+    const ticketLink = `[#${ticketID}](${zdUrl}${ZDTicketPath}/${ticketID})`;
     const prefix = `Ticket ${ticketLink} [\`${ticketTitle}\`] -- `;
     switch (auditEvent.type) {
     case 'Comment':

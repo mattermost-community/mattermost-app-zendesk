@@ -6,7 +6,6 @@ import {baseUrlFromContext} from '../utils';
 
 export type AppConfigStore = {
     zd_url: string;
-    zd_node_host: string;
     zd_target_id: string;
     zd_oauth_access_token: string;
 }
@@ -33,7 +32,6 @@ class ConfigStoreImpl implements ConfigStore {
         const config = await this.ppClient.kvGet(StoreKeys.config);
         if (config) {
             this.storeData.zd_url = config.zd_url || '';
-            this.storeData.zd_node_host = config.zd_node_host || '';
             this.storeData.zd_target_id = config.zd_target_id || '';
             this.storeData.zd_oauth_access_token = config.zd_oauth_access_token || '';
         }
