@@ -19,7 +19,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     // get the saved service account config zendesk access_token
     const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
     const configOauthToken = config.zd_oauth_access_token;
-    const text = 'This Oauth2 access_token associated with this connected Mattermost user is needed for subscriptions. Before disconnected this account, please update the Oauth2 Access Token in the configuration to another Zendesk connected agent.';
+    const text = 'This mattermost account is connected via oauth2 to Zendesk for subscription functionality.  The account cannot be disconnected until the access token in the configuration is updated to a new user access token.';
     if (context.oauth2.user.access_token === configOauthToken) {
         res.json(newOKCallResponseWithMarkdown(text));
         return;
