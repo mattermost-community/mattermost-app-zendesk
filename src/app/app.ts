@@ -142,29 +142,38 @@ class AppImpl implements App {
         const actingUserClient = newMMClient(this.mmOptions).asActingUser();
         const userID = this.context.acting_user_id;
 
+        let rootID = this.context.post.root_id;
+        if (this.context.post.root_id === '') {
+            rootID = this.context.post.id;
+        }
         const post = {
             message,
             user_id: userID,
             channel_id: String(this.context.channel_id),
-            root_id: String(this.context.post_id),
+            root_id: String(rootID),
         } as Post;
 
         const createPostReq = actingUserClient.createPost(post);
-        await tryPromiseWithMessage(createPostReq, 'Failed to create post');
+        await tryPromiseWithMessage(createPostReq, 'Failed to create acting user post');
     }
 
     createBotPost = async (message: string): Promise<void> => {
         const botUserID = this.context.bot_user_id;
+
+        let rootID = this.context.post.root_id;
+        if (this.context.post.root_id === '') {
+            rootID = this.context.post.id;
+        }
         const post = {
             message,
             user_id: botUserID,
             channel_id: String(this.context.channel_id),
-            root_id: String(this.context.post_id),
+            root_id: String(rootID),
         } as Post;
 
         const botClient = newMMClient(this.mmOptions).asBot();
         const createPostReq = botClient.createPost(post);
-        await tryPromiseWithMessage(createPostReq, 'Failed to create post');
+        await tryPromiseWithMessage(createPostReq, 'Failed to create bot post');
     }
 
     hasFieldErrors(errors: FieldValidationErrors): boolean {
