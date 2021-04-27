@@ -6,6 +6,7 @@ import {newZDClient, newAppsClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {tryPromiseWithMessage} from '../utils';
 import {ZDTokensResponse} from '../utils/ZDTypes';
+import {newConfigStore} from '../store';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;
@@ -14,6 +15,16 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
+
+    // get the saved service account config zendesk access_token
+    const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
+    const configOauthToken = config.zd_oauth_access_token;
+    const text = 'This Oauth2 access_token associated with this connected Mattermost user is needed for subscriptions. Before disconnected this account, please update the Oauth2 Access Token in the configuration to another Zendesk connected agent.';
+    if (context.oauth2.user.access_token === configOauthToken) {
+        res.json(newOKCallResponseWithMarkdown(text));
+        return;
+    }
+
     const zdClient = await newZDClient(zdOptions);
     const oauthReq = zdClient.oauthtokens.list();
     const tokens: ZDTokensResponse = await tryPromiseWithMessage(oauthReq, 'failed to get oauth tokens');
