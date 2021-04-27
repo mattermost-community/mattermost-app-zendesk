@@ -15,6 +15,7 @@ interface Targets {
 
 interface TicketForms {
     list(): any;
+    show(): any;
 }
 
 interface TicketFields {

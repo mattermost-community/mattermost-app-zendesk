@@ -5,7 +5,7 @@ import {ExpandedBotAdminActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
 import {newZDClient, newMMClient} from '../clients';
-import {ZDClientOptions} from 'clients/zendesk';
+import {ZDClientOptions, ZDClient} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {newConfigStore} from '../store';
@@ -31,13 +31,11 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
-    const zdClient = await newZDClient(zdOptions);
+    const zdClient: ZDClient = await newZDClient(zdOptions);
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);
     const ticketAudit = ticketAudits.pop();
-    const auditEvent = ticketAudit.events[0];
-
-    const message: string = getNotificationMessage(zdUrl, ticketID, ticketTitle, auditEvent);
+    const message = await getNotificationMessage(zdClient, zdUrl, ticketID, ticketTitle, ticketAudit);
 
     const mmOptions: MMClientOptions = {
         mattermostSiteURL: context.mattermost_site_url,
@@ -55,22 +53,69 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
 
     const createPostReq = adminClient.createPost(post as Post);
     await tryPromiseWithMessage(createPostReq, 'Failed to create post');
-
     res.json({});
 }
 
-function getNotificationMessage(zdUrl: string, ticketID: string, ticketTitle: string, auditEvent: any): string {
+async function getNotificationMessage(zdClient: ZDClient, zdUrl: string, ticketID: string, ticketTitle: string, ticketAudit: any): Promise<string> {
+    const auditEvents = ticketAudit.events;
+    const changeEvents = getEventTypes(auditEvents, 'Change');
+    const idMappedEvents = await getIDMappedTypes(zdClient, changeEvents);
+
     const ZDTicketPath = Routes.ZD.TicketPathPrefix;
     const ticketLink = `[#${ticketID}](${zdUrl}${ZDTicketPath}/${ticketID})`;
-    const prefix = `Ticket ${ticketLink}  **Subject:** \`${ticketTitle}\` -- `;
-    switch (auditEvent.type) {
-    case 'Comment':
-        return `${prefix}\`${auditEvent.author_id}\` commented on ticket`;
-    case 'Change':
-        // auditEvent.author not defined for field name change;
-        return `${prefix}\`${auditEvent.field_name}\` changed from \`${auditEvent.previous_value}\` to \`${auditEvent.value}\``;
+    const prefix = `Ticket ${ticketLink}  **Subject:** \`${ticketTitle}\` `;
 
-    default:
-        return `type not found. type = ${auditEvent.type})`;
+    if (idMappedEvents) {
+        return prefix + getChangedEventText(idMappedEvents);
     }
+}
+
+async function getIDMappedTypes(zdClient: ZDClient, events): Promise<any> {
+    const mappedArray = [];
+    for (const event of events) {
+        if (event.field_name === 'ticket_form_id') {
+            event.previous_value = await getFormName(zdClient, event.previous_value);
+            event.value = await getFormName(zdClient, event.value);
+            mappedArray.push(event);
+            continue;
+        }
+        if (event.field_name === 'assignee_id') {
+            console.log('event', event);
+            event.previous_value = await getAssigneeName(zdClient, event.previous_value);
+            event.value = await getAssigneeName(zdClient, event.value);
+            mappedArray.push(event);
+            continue;
+        }
+        mappedArray.push(event);
+    }
+    return mappedArray;
+}
+
+async function getFormName(zdClient: ZDClient, formID: number): any {
+    const formReq = zdClient.ticketforms.show(formID);
+    const form = await tryPromiseWithMessage(formReq, 'Failed to fetch ticket forms');
+    return form.display_name;
+}
+
+async function getAssigneeName(zdClient: ZDClient, assigneeID: number): any {
+    const userReq = zdClient.users.show(assigneeID);
+    const zdUser = await tryPromiseWithMessage(userReq, 'Failed to get Zendesk user');
+    return zdUser.name;
+}
+
+function getEventTypes(auditEvents, eventType: string): any {
+    return auditEvents.filter((event) => {
+        return event.type === eventType;
+    });
+}
+
+function getChangedEventText(events: any[]): any[] {
+    if (events.length === 1) {
+        const event = events[0];
+        return `\`${event.field_name}\` changed from \`${event.previous_value}\` to \`${event.value}\``;
+    }
+    const newArray = events.map((event) => {
+        return `* \`${event.field_name}\` changed from \`${event.previous_value}\` to \`${event.value}\``;
+    });
+    return 'The following field values changed \n' + newArray.join('\n');
 }
