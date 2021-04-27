@@ -142,10 +142,7 @@ class AppImpl implements App {
         const actingUserClient = newMMClient(this.mmOptions).asActingUser();
         const userID = this.context.acting_user_id;
 
-        let rootID = this.context.post.root_id;
-        if (this.context.post.root_id === '') {
-            rootID = this.context.post.id;
-        }
+        const rootID = this.context.post.root_id || this.context.post.id;
         const post = {
             message,
             user_id: userID,
@@ -160,10 +157,7 @@ class AppImpl implements App {
     createBotPost = async (message: string): Promise<void> => {
         const botUserID = this.context.bot_user_id;
 
-        let rootID = this.context.post.root_id;
-        if (this.context.post.root_id === '') {
-            rootID = this.context.post.id;
-        }
+        const rootID = this.context.post.root_id || this.context.post.id;
         const post = {
             message,
             user_id: botUserID,
