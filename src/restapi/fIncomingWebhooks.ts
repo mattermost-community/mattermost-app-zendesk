@@ -62,7 +62,7 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
 function getNotificationMessage(zdUrl: string, ticketID: string, ticketTitle: string, auditEvent: any): string {
     const ZDTicketPath = Routes.ZD.TicketPathPrefix;
     const ticketLink = `[#${ticketID}](${zdUrl}${ZDTicketPath}/${ticketID})`;
-    const prefix = `Ticket ${ticketLink} [\`${ticketTitle}\`] -- `;
+    const prefix = `Ticket ${ticketLink}  **Subject:** \`${ticketTitle}\` -- `;
     switch (auditEvent.type) {
     case 'Comment':
         return `${prefix}\`${auditEvent.author_id}\` commented on ticket`;

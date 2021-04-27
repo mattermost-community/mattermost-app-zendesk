@@ -73,7 +73,7 @@ class AppImpl implements App {
 
         const id = zdTicket.id;
         const subject = zdTicket.subject;
-        const message = `${zdUser.name} created ticket [#${id}](${host}/agent/tickets/${id}) [${subject}]`;
+        const message = `${zdUser.name} created ticket [#${id}](${host}/agent/tickets/${id})  **Subject:** \`${subject}\``;
         await this.createActingUserPost(message);
 
         return newOKCallResponse();
