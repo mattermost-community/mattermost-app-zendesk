@@ -22,7 +22,6 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
     if (options.isConnected) {
         if (options.isSystemAdmin) {
             bindings.push(cmdSubscribe(mmSiteURL));
-            bindings.push(cmdConfigure(mmSiteURL));
             bindings.push(cmdTarget(mmSiteURL));
         }
         bindings.push(cmdDisconnect(mmSiteURL));
@@ -31,6 +30,9 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
         bindings.push(cmdConnect(mmSiteURL));
     }
 
+    if (options.isSystemAdmin) {
+        bindings.push(cmdConfigure(mmSiteURL));
+    }
     bindings.push(cmdHelp(mmSiteURL));
     return newCommandBindings(mmSiteURL, bindings);
 };
