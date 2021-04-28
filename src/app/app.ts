@@ -11,7 +11,7 @@ import {tryPromiseWithMessage} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-import {CtxExpandedBotAdminActingUserOauth2UserChannel} from '../types/apps';
+import {CtxExpandedBotAdminActingUserOauth2UserChannelPost} from '../types/apps';
 import {SubscriptionFields} from '../utils/constants';
 import {ZDTriggerPayload} from '../utils/ZDTypes';
 import {getCheckBoxesFromTriggerDefinition} from '../utils/utils';
@@ -27,14 +27,14 @@ export interface App {
 
 class AppImpl implements App {
     call: AppCallRequest
-    context: CtxExpandedBotAdminActingUserOauth2UserChannel
+    context: CtxExpandedBotAdminActingUserOauth2UserChannelPost
     values: AppCallValues
     zdOptions: ZDClientOptions
     mmOptions: MMClientOptions
 
     constructor(call: AppCallRequest) {
         this.call = call;
-        this.context = call.context as CtxExpandedBotAdminActingUserOauth2UserChannel;
+        this.context = call.context as CtxExpandedBotAdminActingUserOauth2UserChannelPost;
         this.values = call.values as AppCallValues;
         this.zdOptions = {
             oauth2UserAccessToken: this.context.oauth2.user.access_token,

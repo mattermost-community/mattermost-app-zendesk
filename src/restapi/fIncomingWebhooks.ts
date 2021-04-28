@@ -65,13 +65,11 @@ async function getNotificationMessage(zdClient: ZDClient, zdUrl: string, ticketI
     const ticketLink = `[#${ticketID}](${zdUrl}${ZDTicketPath}/${ticketID})`;
     const prefix = `Ticket ${ticketLink}  **Subject:** \`${ticketTitle}\` `;
 
-    if (idMappedEvents) {
-        return prefix + getChangedEventText(idMappedEvents);
-    }
+    return prefix + getChangedEventText(idMappedEvents);
 }
 
-async function getIDMappedTypes(zdClient: ZDClient, events): Promise<any> {
-    const mappedArray = [];
+async function getIDMappedTypes(zdClient: ZDClient, events: any[]): Promise<any> {
+    const mappedArray: any[] = [];
     for (const event of events) {
         if (event.field_name === 'ticket_form_id') {
             event.previous_value = await getFormName(zdClient, event.previous_value);
@@ -91,25 +89,25 @@ async function getIDMappedTypes(zdClient: ZDClient, events): Promise<any> {
     return mappedArray;
 }
 
-async function getFormName(zdClient: ZDClient, formID: number): any {
+async function getFormName(zdClient: ZDClient, formID: number): Promise<string> {
     const formReq = zdClient.ticketforms.show(formID);
     const form = await tryPromiseWithMessage(formReq, 'Failed to fetch ticket forms');
     return form.display_name;
 }
 
-async function getAssigneeName(zdClient: ZDClient, assigneeID: number): any {
+async function getAssigneeName(zdClient: ZDClient, assigneeID: number): Promise<string> {
     const userReq = zdClient.users.show(assigneeID);
     const zdUser = await tryPromiseWithMessage(userReq, 'Failed to get Zendesk user');
     return zdUser.name;
 }
 
-function getEventTypes(auditEvents, eventType: string): any {
+function getEventTypes(auditEvents: any, eventType: string): any {
     return auditEvents.filter((event) => {
         return event.type === eventType;
     });
 }
 
-function getChangedEventText(events: any[]): any[] {
+function getChangedEventText(events: any[]): string {
     if (events.length === 1) {
         const event = events[0];
         return `\`${event.field_name}\` changed from \`${event.previous_value}\` to \`${event.value}\``;
