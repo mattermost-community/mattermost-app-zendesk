@@ -12,7 +12,7 @@ export type AppConfigStore = {
 
 export interface ConfigStore {
     getValues(): Promise<AppConfigStore>;
-    storeConfigInfo(values: AppCallValues): void;
+    storeConfigInfo(values: AppCallValues): Promise<void>;
 }
 
 class ConfigStoreImpl implements ConfigStore {
