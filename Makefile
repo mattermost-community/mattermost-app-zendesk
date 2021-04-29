@@ -29,7 +29,7 @@ lint: node_modules
 .PHONY: dist
 ## dist: creates the bundle file
 dist: build
-	cp -r static dist; cp -r node_modules dist/src/; cd dist/src; zip -qr js-function *; cd ..; cp src/js-function.zip . ; cp src/manifest.json .; zip -r bundle.zip js-function.zip manifest.json static/
+	mkdir temp/; mkdir temp/src/; cp -r dist/* temp/src/; cp -r node_modules temp/src/; cd temp/src; zip -qr js-function *; cd ..; cp src/js-function.zip . ; cp ../src/manifest.json .; cp -r ../static .;  zip -r bundle.zip js-function.zip manifest.json static/
 
 ## build: build the app when changed
 .PHONY: watch
