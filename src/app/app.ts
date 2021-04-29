@@ -123,6 +123,16 @@ class AppImpl implements App {
             actionType = 'create';
         }
 
+        const adminClient = newMMClient(this.mmOptions).asAdmin();
+
+        // add bot to team and channel
+        const botUserID = this.context.bot_user_id;
+        const addToTeamReq = adminClient.addToTeam(this.context.team_id, botUserID);
+        await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
+
+        const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id);
+        await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to channel');
+
         // Any zendesk error will produce an error in the modal
         let msg: string;
         try {
