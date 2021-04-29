@@ -70,35 +70,57 @@ async function getNotificationMessage(zdClient: ZDClient, zdUrl: string, ticketI
 
 async function getIDMappedTypes(zdClient: ZDClient, events: any[]): Promise<any> {
     const mappedArray: any[] = [];
+    const promiseEvents: any[] = [];
+
+    // build the new mapped event with promises for where needed
     for (const event of events) {
         if (event.field_name === 'ticket_form_id') {
-            event.previous_value = await getFormName(zdClient, event.previous_value);
-            event.value = await getFormName(zdClient, event.value);
-            mappedArray.push(event);
+            promiseEvents.push(getFormNames(zdClient, event));
             continue;
         }
         if (event.field_name === 'assignee_id') {
-            console.log('event', event);
-            event.previous_value = await getAssigneeName(zdClient, event.previous_value);
-            event.value = await getAssigneeName(zdClient, event.value);
-            mappedArray.push(event);
+            promiseEvents.push(getAssigneeNames(zdClient, event));
             continue;
         }
         mappedArray.push(event);
     }
+
+    // resolve all the Promises
+    await Promise.all(promiseEvents).then((mappedEvents) => {
+        for (const mappedEvent of mappedEvents) {
+            mappedArray.push(mappedEvent);
+        }
+    });
+
     return mappedArray;
 }
 
-async function getFormName(zdClient: ZDClient, formID: number): Promise<string> {
-    const formReq = zdClient.ticketforms.show(formID);
-    const form = await tryPromiseWithMessage(formReq, 'Failed to fetch ticket forms');
-    return form.display_name;
+async function getFormNames(zdClient: ZDClient, event: any): Promise<any> {
+    const prevReq = zdClient.ticketforms.show(event.previous_value);
+    const prevForm = tryPromiseWithMessage(prevReq, 'Failed to fetch previous ticket form');
+
+    const currReq = zdClient.ticketforms.show(event.value);
+    const currForm = tryPromiseWithMessage(currReq, 'Failed to fetch current ticket form');
+
+    await Promise.all([prevForm, currForm]).then((values) => {
+        event.previous_value = values[0].name;
+        event.value = values[1].name;
+    });
+    return event;
 }
 
-async function getAssigneeName(zdClient: ZDClient, assigneeID: number): Promise<string> {
-    const userReq = zdClient.users.show(assigneeID);
-    const zdUser = await tryPromiseWithMessage(userReq, 'Failed to get Zendesk user');
-    return zdUser.name;
+async function getAssigneeNames(zdClient: ZDClient, event: any): Promise<any> {
+    const prevReq = zdClient.users.show(event.previous_value);
+    const prevUser = tryPromiseWithMessage(prevReq, 'Failed to get previous Zendesk user');
+
+    const currReq = zdClient.users.show(event.value);
+    const currUser = tryPromiseWithMessage(currReq, 'Failed to get current Zendesk user');
+
+    await Promise.all([prevUser, currUser]).then((values) => {
+        event.previous_value = values[0].name;
+        event.value = values[1].name;
+    });
+    return event;
 }
 
 function getEventTypes(auditEvents: any, eventType: string): any {
