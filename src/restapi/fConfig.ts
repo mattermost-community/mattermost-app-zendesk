@@ -39,7 +39,7 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
         const targetID = cValues.zd_target_id;
         const storeValues = call.values as AppConfigStore;
         storeValues.zd_target_id = targetID;
-        configStore.storeConfigInfo(storeValues);
+        await configStore.storeConfigInfo(storeValues);
     } catch (err) {
         callResponse = newErrorCallResponseWithMessage(err.message);
     }
