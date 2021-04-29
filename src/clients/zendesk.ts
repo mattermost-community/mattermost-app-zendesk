@@ -22,6 +22,10 @@ interface TicketFields {
     list(): any;
 }
 
+interface Groups {
+    show(id: number): any;
+}
+
 interface Triggers {
     definitions(): any;
     update(id: number, trigger: any): any;
@@ -48,6 +52,7 @@ export interface ZDClient {
     triggers: Triggers;
     oauthtokens: OauthTokens;
     users: Users;
+    groups: Groups;
 }
 
 export type ZDClientOptions = {

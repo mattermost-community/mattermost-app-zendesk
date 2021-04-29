@@ -82,6 +82,13 @@ async function getIDMappedTypes(zdClient: ZDClient, events: any[]): Promise<any>
             promiseEvents.push(getAssigneeNames(zdClient, event));
             continue;
         }
+        if (event.field_name === 'group_id') {
+            promiseEvents.push(getGroupNames(zdClient, event));
+            continue;
+
+            // promiseEvents.push(getAssigneeNames(zdClient, event));
+            // continue;
+        }
         mappedArray.push(event);
     }
 
@@ -103,6 +110,20 @@ async function getFormNames(zdClient: ZDClient, event: any): Promise<any> {
     const currForm = tryPromiseWithMessage(currReq, 'Failed to fetch current ticket form');
 
     await Promise.all([prevForm, currForm]).then((values) => {
+        event.previous_value = values[0].name;
+        event.value = values[1].name;
+    });
+    return event;
+}
+
+async function getGroupNames(zdClient: ZDClient, event: any): Promise<any> {
+    const prevReq = zdClient.groups.show(event.previous_value);
+    const prevGroup = tryPromiseWithMessage(prevReq, 'Failed to fetch previous group');
+
+    const currReq = zdClient.groups.show(event.value);
+    const currGroup = tryPromiseWithMessage(currReq, 'Failed to fetch current group');
+
+    await Promise.all([prevGroup, currGroup]).then((values) => {
         event.previous_value = values[0].name;
         event.value = values[1].name;
     });
