@@ -138,7 +138,7 @@ export function getCheckBoxesFromTriggerDefinition(definitions: any): checkBox[]
         // restrict possible checkbox values for simplicity
         // - custom checkbox has only two possible values, but not supported by 'change'
         // - group === requester also not easily determined
-        if (action.values && action.group === 'ticket' && action.subject !== 'follower' && !isCustomField) {
+        if (action.values && action.group === 'ticket' && action.subject !== 'follower' && !isCustomField && action.subject !== 'brand_id') {
             checkboxes.push({name: action.subject, label: action.title});
         }
     }
