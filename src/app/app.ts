@@ -8,7 +8,7 @@ import {
     newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
     FieldValidationErrors} from '../utils/call_responses';
-import {tryPromiseWithMessage} from '../utils';
+import {tryPromiseWithMessage, isUserSystemAdmin} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
@@ -82,6 +82,10 @@ class AppImpl implements App {
     }
 
     createZDSubscription = async (): Promise<AppCallResponse> => {
+        if (!isUserSystemAdmin(this.context.acting_user)) {
+            return newErrorCallResponseWithMessage('only system admins are allowed to create subscriptions.');
+        }
+
         // get zendesk client for user
         const zdClient = await newZDClient(this.zdOptions);
         const req = zdClient.triggers.definitions() || '';
@@ -125,14 +129,14 @@ class AppImpl implements App {
             actionType = 'create';
         }
 
-        const adminClient = newMMClient(this.mmOptions).asAdmin();
+        const actingUserClient = newMMClient(this.mmOptions).asActingUser();
 
         // add bot to team and channel
         const botUserID = this.context.bot_user_id;
-        const addToTeamReq = adminClient.addToTeam(this.context.team_id, botUserID);
+        const addToTeamReq = actingUserClient.addToTeam(this.context.team_id, botUserID);
         await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
 
-        const addToChannelReq = adminClient.addToChannel(botUserID, this.context.channel_id);
+        const addToChannelReq = actingUserClient.addToChannel(botUserID, this.context.channel_id);
         await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to channel');
 
         // Any zendesk error will produce an error in the modal
