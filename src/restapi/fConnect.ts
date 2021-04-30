@@ -7,6 +7,7 @@ import {AppCallRequestWithValues, ExpandedOauth2App, CtxExpandedActingUserOauth2
 import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newConfigStore} from '../store';
 import {Routes} from '../utils';
+import {newApp} from '../app/app';
 import {newAppsClient} from '../clients';
 import {getOAuthConfig} from '../app/oauth';
 
@@ -43,6 +44,10 @@ export async function fOauth2Connect(req: Request, res: Response): Promise<void>
 export async function fOauth2Complete(req: Request, res: Response): Promise<void> {
     const call: AppCallRequestWithValues = req.body;
     const context: CtxExpandedActingUserOauth2AppBot = req.body.context;
+    context.oauth2.user = {
+        access_token: '',
+    };
+    const app = newApp(req.body);
     const code = call.values.code;
     if (code === '') {
         throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
@@ -56,5 +61,6 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     const mmURL = context.mattermost_site_url;
     const ppClient = newAppsClient(context.acting_user_access_token, mmURL);
     ppClient.storeOauth2User(token);
+    app.createBotDMPost('You have successfully connected your Zendesk acccount!');
     res.json(newOKCallResponse());
 }

@@ -1,4 +1,5 @@
 import {Post} from 'mattermost-redux/types/posts';
+import {Channel} from 'mattermost-redux/types/channels';
 import {AppCallValues, AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {
@@ -23,6 +24,7 @@ import {newTriggerFromForm} from './triggerFromForm';
 export interface App {
     createTicketFromPost(): Promise<AppCallResponse>;
     createZDSubscription(): Promise<AppCallResponse>;
+    createBotDMPost(message: string): Promise<void>;
 }
 
 class AppImpl implements App {
@@ -178,6 +180,24 @@ class AppImpl implements App {
         const botClient = newMMClient(this.mmOptions).asBot();
         const createPostReq = botClient.createPost(post);
         await tryPromiseWithMessage(createPostReq, 'Failed to create bot post');
+    }
+
+    createBotDMPost = async (message: string): Promise<void> => {
+        const botUserID = this.context.bot_user_id;
+        const actingUserID = this.context.acting_user_id;
+
+        const botClient = newMMClient(this.mmOptions).asBot();
+        const channel: Channel = await botClient.createDirectChannel([botUserID, actingUserID]);
+
+        const post = {
+            message,
+            user_id: botUserID,
+            channel_id: channel.id,
+            root_id: '',
+        } as Post;
+
+        const createPostReq = botClient.createPost(post);
+        await tryPromiseWithMessage(createPostReq, 'Failed to create bot DM post');
     }
 
     hasFieldErrors(errors: FieldValidationErrors): boolean {
