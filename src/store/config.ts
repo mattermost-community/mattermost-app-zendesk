@@ -24,8 +24,8 @@ class ConfigStoreImpl implements ConfigStore {
         this.storeData = {} as AppConfigStore;
     }
 
-    storeConfigInfo(store: AppConfigStore): Promise<void> {
-        return this.ppClient.kvSet(StoreKeys.config, store);
+    async storeConfigInfo(store: AppConfigStore): Promise<void> {
+        await this.ppClient.kvSet(StoreKeys.config, store);
     }
 
     async getValues(): Promise<AppConfigStore> {
