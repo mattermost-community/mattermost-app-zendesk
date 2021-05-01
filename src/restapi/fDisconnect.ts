@@ -34,7 +34,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
 
     // delete the token from the proxy app
     const ppClient = newAppsClient(context.acting_user_access_token, context.mattermost_site_url);
-    ppClient.storeOauth2User({});
+    await ppClient.storeOauth2User({});
 
     // delete the zendesk user oauth token
     const deleteReq = zdClient.oauthtokens.revoke(tokenID);
