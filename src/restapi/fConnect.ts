@@ -61,6 +61,6 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     const mmURL = context.mattermost_site_url;
     const ppClient = newAppsClient(context.acting_user_access_token, mmURL);
     await ppClient.storeOauth2User(token);
-    app.createBotDMPost('You have successfully connected your Zendesk acccount!');
+    await app.createBotDMPost('You have successfully connected your Zendesk acccount!');
     res.json(newOKCallResponse());
 }

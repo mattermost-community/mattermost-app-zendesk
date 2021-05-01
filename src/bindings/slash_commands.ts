@@ -84,6 +84,7 @@ const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
+                acting_user: AppExpandLevels.EXPAND_ALL,
                 admin_access_token: AppExpandLevels.EXPAND_ALL,
                 channel: AppExpandLevels.EXPAND_SUMMARY,
                 oauth2_app: AppExpandLevels.EXPAND_ALL,
