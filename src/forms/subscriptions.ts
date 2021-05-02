@@ -86,7 +86,6 @@ class FormFields extends BaseFormFields {
 
     // buildFields adds fields to list of viewable proxy app fields
     async buildFields(): Promise<void> {
-        this.addChannelPickerField();
         this.addSubSelectField();
 
         // only show subscriptions name field until user selects a value
@@ -119,6 +118,8 @@ class FormFields extends BaseFormFields {
         search += this.call.context.mattermost_site_url;
         search += SubscriptionFields.RegexTriggerTeamID;
         search += this.call.context.team_id;
+        search += SubscriptionFields.RegexTriggerChannelID;
+        search += this.call.context.channel_id;
         const client = this.zdClient as ZDClient;
         const searchReq = client.triggers.search(search) || '';
         return tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
@@ -157,40 +158,6 @@ class FormFields extends BaseFormFields {
             }
             this.triggers[channelID].push(trigger);
         }
-    }
-
-    // addChannelPickerField adds a channel picker field when more than one
-    // channel in the current team has a subscription
-    addChannelPickerField(): void {
-        const options = makeChannelOptions(this.getChannelsWithSubs());
-        const currentChannelOption = options.filter(this.getDefaultChannelOption());
-        const context = this.call.context as ExpandedChannel;
-
-        // channel does not have any subscriptions. add default channel as the
-        // selected option
-        if (currentChannelOption.length === 0) {
-            const option: AppSelectOption = {
-                label: context.channel.display_name,
-                value: context.channel.id,
-            };
-            currentChannelOption.push(option);
-        }
-        const f: AppField = {
-            name: SubscriptionFields.ChannelPickerSelectName,
-            type: AppFieldTypes.STATIC_SELECT,
-            label: SubscriptionFields.ChannelPickerSelectLabel,
-            options,
-            is_required: true,
-            refresh: true,
-        };
-
-        // when initially opening the modal (call.values is undefined)
-        // set default option to current channel if the user is in a
-        // channel with subscriptions
-        if (currentChannelOption.length === 1 && !this.getCallValues()) {
-            f.value = currentChannelOption[0];
-        }
-        this.builder.addField(f);
     }
 
     // addSubNameDependentFields add the conditional fields once the
@@ -430,10 +397,10 @@ class FormFields extends BaseFormFields {
     }
 
     getSubTriggerByID(subID: string): ZDTrigger {
-        const triggers: ZDTrigger[] = this.getChannelTriggers(this.getSelectedChannelID());
+        const triggers: ZDTrigger[] = this.getChannelTriggers(this.call.context.channel_id);
         const trigger = triggers.find((t) => t.id.toString() === subID) as ZDTrigger;
         if (!trigger) {
-            throw new Error('unable to trigger by ID ' + subID);
+            throw new Error('unable to get trigger by ID ' + subID);
         }
 
         return trigger;
