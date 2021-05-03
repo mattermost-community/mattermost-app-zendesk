@@ -3,6 +3,7 @@ import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 export interface FieldsBuilder {
     addField(field: AppField): void;
+    addFieldToArray(field: AppField): void;
     addFields(field: AppField[]): void;
     currentFieldValuesAreDefined(): boolean;
     getFields(): AppField[];
