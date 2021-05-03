@@ -66,7 +66,8 @@ This step requires a Zendesk-connected Mattermost system administrator and uses 
 
 Note, the access token is only used to read ticket information when a subcription is triggered. This token will not post on behalf of the user.
 
-1. `/zendesk setup-target` - This command will set up a Zendesk target pointing to your Mattermost instance (it only needs to be run once). The command also uses saves the access_token for the acting user for subscriptions functionality.
+1. `/zendesk setup-target` - This command will set up a Zendesk target pointing to your Mattermost instance (it only needs to be run once).
+1. The command also saves the access_token of the acting user for subscriptions functionality.
 1. An ephemeral post will confirm that a target was created and that subscriptions functionality has been configured.
 
 ## Notification management
