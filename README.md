@@ -51,7 +51,6 @@ Use the values from the OAuth client set up step:
 1. **URL:** Set to your Zendesk URL.
 1. **Client ID:** Set to the **Unique identifier** OAuth value.
 1. **Client Secret:** Set as the **Secret** OAuth value.
-1. **OAuth2 Access Token:** Leave empty for now - you'll configure this once you're connected.
 
 Select **Submit**.
 
@@ -63,14 +62,11 @@ Select **Submit**.
 
 #### 5. Set up subscriptions
 
-This step requires a Zendesk-connected Mattermost user and uses an access token needed for subscriptions functionality. The token can be any connected Zendesk user with agent permissions in Zendesk. Another option is to create a bot agent user in Zendesk, that will function as a service account, and connect them to Mattermost.
+This step requires a Zendesk-connected Mattermost system administrator and uses an access token needed for subscriptions functionality. The token can be any connected Zendesk user with agent permissions in Zendesk. Another option is to create a bot agent user in Zendesk, that will function as a service account, and connect them to Mattermost.
 
 Note, the access token is only used to read ticket information when a subcription is triggered. This token will not post on behalf of the user.
 
-1. `/zendesk me` - Save this access token value.
-1. `/zendesk configure`:
-    1. `Oauth2 Access Token` - Set this value to the token saved in the step above and select **Submit**.
-1. `/zendesk setup-target` - This command will set up a Zendesk target pointing to your Mattermost instance (it only needs to be run once).
+1. `/zendesk setup-target` - This command will set up a Zendesk target pointing to your Mattermost instance (it only needs to be run once). The command also uses saves the access_token for the acting user for subscriptions functionality.
 1. An ephemeral post will confirm that a target was created and that subscriptions functionality has been configured.
 
 ## Notification management
@@ -100,7 +96,6 @@ This slash command connects your Mattermost and Zendesk accounts via OAuth2 auth
 - `/zendesk connect` - Connect your Zendesk account to Mattermost.
 - `/zendesk disconnect` - Disconnect your Zendesk account from Mattermost.
 - `/zendesk help` - Post ephemeral message with help text.
-- `/zendesk me` - Post ephemeral message with your connection information.
 
  ## Create a ticket
 
