@@ -41,6 +41,7 @@ interface OauthTokens {
 
 interface Users {
     show(id: number): any;
+    me(): any;
 }
 
 // expose on the methods that will be used by the app

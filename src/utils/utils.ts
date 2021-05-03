@@ -8,6 +8,7 @@ import {getManifest} from '../manifest';
 import {AppConfigStore} from '../store/config';
 
 import {SubscriptionFields} from './constants';
+import {StoredOauthUserToken} from './ZDTypes';
 
 export type ZDFieldOption = {
     name: string;
@@ -112,11 +113,15 @@ export function isUserSystemAdmin(actingUser: UserProfile): boolean {
     return Boolean(actingUser.roles && actingUser.roles.includes(GeneralConstants.SYSTEM_ADMIN_ROLE));
 }
 
-export function isConnected(oauth2user: ZDOauth2User): boolean {
-    if (oauth2user && oauth2user.access_token && oauth2user.access_token !== '') {
+export function isConnected(oauth2user: StoredOauthUserToken): boolean {
+    if (oauth2user && oauth2user.token.access_token && oauth2user.token.access_token !== '') {
         return true;
     }
     return false;
+}
+
+export function isZdAgent(oauth2user: StoredOauthUserToken): boolean {
+    return oauth2user && oauth2user.is_agent;
 }
 
 export function webhookConfigured(config: AppConfigStore): boolean {

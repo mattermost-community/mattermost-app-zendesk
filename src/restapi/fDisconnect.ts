@@ -11,7 +11,7 @@ import {newConfigStore} from '../store';
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;
     const zdOptions: ZDClientOptions = {
-        oauth2UserAccessToken: context.oauth2.user.access_token,
+        oauth2UserAccessToken: context.oauth2.user.token.access_token,
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
@@ -20,7 +20,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
     const configOauthToken = config.zd_oauth_access_token;
     const text = 'This mattermost account is connected via oauth2 to Zendesk for subscription functionality. The account cannot be disconnected until the access token in the configuration is updated to a new user access token.';
-    if (context.oauth2.user.access_token === configOauthToken) {
+    if (context.oauth2.user.token.access_token === configOauthToken) {
         res.json(newOKCallResponseWithMarkdown(text));
         return;
     }
@@ -34,7 +34,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
 
     // delete the token from the proxy app
     const ppClient = newAppsClient(context.acting_user_access_token, context.mattermost_site_url);
-    await ppClient.storeOauth2User({});
+    await ppClient.storeOauth2User({token: {}, is_agent: false});
 
     // delete the zendesk user oauth token
     const deleteReq = zdClient.oauthtokens.revoke(tokenID);
