@@ -191,7 +191,7 @@ class FormFields extends BaseFormFields {
     }
 
     // addSubCheckBoxes adds the available check box options for subscription
-    async addSubCheckBoxes(): Promise<void> {
+    addSubCheckBoxes(): void {
         const checkboxes: AppField[] = [];
         for (const box of this.checkboxes) {
             const f: AppField = {
