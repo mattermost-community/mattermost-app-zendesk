@@ -25,7 +25,8 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
             bindings.push(cmdTarget(mmSiteURL));
         }
         bindings.push(cmdDisconnect(mmSiteURL));
-        bindings.push(cmdMe(mmSiteURL));
+
+        // bindings.push(cmdMe(mmSiteURL));
     } else {
         bindings.push(cmdConnect(mmSiteURL));
     }
