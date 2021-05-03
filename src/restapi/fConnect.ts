@@ -8,6 +8,7 @@ import {ZDClientOptions} from 'clients/zendesk';
 import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newConfigStore} from '../store';
 import {Routes} from '../utils';
+import {ZDRoles} from '../utils/constants';
 import {newApp} from '../app/app';
 import {newAppsClient, newZDClient} from '../clients';
 import {getOAuthConfig} from '../app/oauth';
@@ -74,7 +75,7 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     const me = await zdClient.users.me();
     let dmText = 'You have successfully connected your Zendesk acccount!';
     let isAgent = true;
-    if (me.role !== 'admin') {
+    if (me.role !== ZDRoles.admin) {
         isAgent = false;
         dmText += '  This app currently supports Zendesk admin accounts and does not provide any features for end-user accounts.';
     }
