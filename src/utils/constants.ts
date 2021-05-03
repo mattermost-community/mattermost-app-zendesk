@@ -133,6 +133,7 @@ export const SubscriptionFields = {
     SubmitButtonsOptions: selectOptions,
     SaveButtonLabel: 'Save',
 
+    NewSub_Hint: 'Name of your subscription',
     NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
 
