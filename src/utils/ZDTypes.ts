@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import {Users} from 'node-zendesk';
+import ClientOAuth2 from 'client-oauth2';
 
 export type ZDTriggerCondition = {
     field: string;
@@ -54,4 +55,9 @@ export type ZDTokensResponse = {
     next_page: string
     previious_page: string
     count: number
+}
+
+export type StoredOauthUserToken = {
+    token: ClientOAuth2.Data,
+    is_agent: boolean
 }

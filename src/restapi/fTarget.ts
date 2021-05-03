@@ -12,7 +12,7 @@ import {CtxExpandedBotApp} from 'types/apps';
 export async function fCreateTarget(req: Request, res: Response): Promise<void> {
     const context = req.body.context;
     const zdOptions: ZDClientOptions = {
-        oauth2UserAccessToken: context.oauth2.user.access_token,
+        oauth2UserAccessToken: context.oauth2.user.token.access_token,
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
