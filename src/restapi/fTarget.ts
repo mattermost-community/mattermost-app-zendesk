@@ -51,7 +51,7 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotA
     const host = cValues.zd_url;
     const link = '[Zendesk target](' + host + '/agent/admin/extensions)';
 
-    // add the user access_token to to the store
+    // add the user access_token to the store
     if (oauth2User.token && oauth2User.token.access_token) {
         cValues.zd_oauth_access_token = oauth2User.token.access_token;
     } else {
