@@ -322,7 +322,7 @@ class FormFields extends BaseFormFields {
         // previously set value. This way allows adding a field without a value
         // and utilizes the hint
         if (this.isNewSub()) {
-            f.hint = this.getSelectedSubTriggerName();
+            f.hint = SubscriptionFields.NewSub_Hint;
             this.builder.addFieldToArray(f);
             return;
         }
