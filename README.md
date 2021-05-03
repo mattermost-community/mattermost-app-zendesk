@@ -1,4 +1,4 @@
-# ZenDesk App
+# Zendesk App
 
 **Maintainer:** [@jasonfrerich](https://github.com/jfrerich)
 
