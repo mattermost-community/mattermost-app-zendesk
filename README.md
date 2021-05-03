@@ -1,4 +1,4 @@
-# ZenDesk App
+# Zendesk App
 
 **Maintainer:** [@jasonfrerich](https://github.com/jfrerich)
 
@@ -19,7 +19,7 @@ This repository is licensed under the [Apache 2.0 License](https://github.com/ma
 
 ## Admin Guide
 
-This guide is intended for Mattermost System Admins setting up the Zendesk app, Mattermost users who want information about the app's functionality, and Mattermost users who want to connect their Zendesk account to Mattermost. For more information about contributing to this plugin, visit the [Development section](#development).
+This guide is intended for Mattermost System Admins setting up the Zendesk app. For more information about contributing to this plugin, visit the [Development section](#development).
 
 ### Setting up
 
@@ -89,7 +89,7 @@ Zendesk Admins are able to view these subscriptions inside Zendesk via **Setting
 
 ## User's Guide
 
-Connect your Zendesk account to Mattermost using:
+This guide is intended for Mattermost users who want information about the app's functionality, and Mattermost users who want to connect their Zendesk account to Mattermost. Connect your Zendesk account to Mattermost using:
 
 `/zendesk connect`
 
