@@ -17,9 +17,6 @@ export const getPostMenuBindings = (options: BindingOptions): AppBinding => {
     }
     if (options.isConnected) {
         bindings.push(openCreateTicketForm(options.mattermostSiteUrl));
-        if (options.isSystemAdmin) {
-            bindings.push(openSubscriptionsForm(options.mattermostSiteUrl));
-        }
     }
     return newPostMenuBindings(bindings);
 };
@@ -42,22 +39,3 @@ export const openCreateTicketForm = (mmSiteUrl: string): AppBinding => {
         },
     };
 };
-
-export const openSubscriptionsForm = (mmSiteUrl: string): AppBinding => {
-    return {
-        app_id: getManifest().app_id,
-        label: 'Zendesk Subscriptions',
-        description: 'Subscribe channel to Zendesk notifications',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
-        location: Locations.Subscribe,
-        call: {
-            path: Routes.App.CallPathSubsOpenForm,
-            expand: {
-                admin_access_token: AppExpandLevels.EXPAND_ALL,
-                acting_user: AppExpandLevels.EXPAND_ALL,
-                oauth2_user: AppExpandLevels.EXPAND_ALL,
-            },
-        },
-    };
-};
-

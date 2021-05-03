@@ -22,7 +22,6 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
     if (options.isConnected) {
         if (options.isSystemAdmin) {
             bindings.push(cmdSubscribe(mmSiteURL));
-            bindings.push(cmdConfigure(mmSiteURL));
             bindings.push(cmdTarget(mmSiteURL));
         }
         bindings.push(cmdDisconnect(mmSiteURL));
@@ -31,6 +30,9 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
         bindings.push(cmdConnect(mmSiteURL));
     }
 
+    if (options.isSystemAdmin) {
+        bindings.push(cmdConfigure(mmSiteURL));
+    }
     bindings.push(cmdHelp(mmSiteURL));
     return newCommandBindings(mmSiteURL, bindings);
 };
@@ -82,9 +84,10 @@ const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
+                acting_user: AppExpandLevels.EXPAND_ALL,
                 admin_access_token: AppExpandLevels.EXPAND_ALL,
                 channel: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_app: AppExpandLevels.EXPAND_ALL,
+                acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },

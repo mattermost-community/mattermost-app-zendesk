@@ -1,4 +1,5 @@
 import {Post} from 'mattermost-redux/types/posts';
+import {Channel} from 'mattermost-redux/types/channels';
 import {AppCallValues, AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {
@@ -7,11 +8,11 @@ import {
     newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
     FieldValidationErrors} from '../utils/call_responses';
-import {tryPromiseWithMessage} from '../utils';
+import {tryPromiseWithMessage, isUserSystemAdmin} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-import {CtxExpandedBotAdminActingUserOauth2UserChannel} from '../types/apps';
+import {CtxExpandedBotAdminActingUserOauth2UserChannelPost} from '../types/apps';
 import {SubscriptionFields} from '../utils/constants';
 import {ZDTriggerPayload} from '../utils/ZDTypes';
 import {getCheckBoxesFromTriggerDefinition} from '../utils/utils';
@@ -23,18 +24,19 @@ import {newTriggerFromForm} from './triggerFromForm';
 export interface App {
     createTicketFromPost(): Promise<AppCallResponse>;
     createZDSubscription(): Promise<AppCallResponse>;
+    createBotDMPost(message: string): Promise<void>;
 }
 
 class AppImpl implements App {
     call: AppCallRequest
-    context: CtxExpandedBotAdminActingUserOauth2UserChannel
+    context: CtxExpandedBotAdminActingUserOauth2UserChannelPost
     values: AppCallValues
     zdOptions: ZDClientOptions
     mmOptions: MMClientOptions
 
     constructor(call: AppCallRequest) {
         this.call = call;
-        this.context = call.context as CtxExpandedBotAdminActingUserOauth2UserChannel;
+        this.context = call.context as CtxExpandedBotAdminActingUserOauth2UserChannelPost;
         this.values = call.values as AppCallValues;
         this.zdOptions = {
             oauth2UserAccessToken: this.context.oauth2.user.access_token,
@@ -80,6 +82,10 @@ class AppImpl implements App {
     }
 
     createZDSubscription = async (): Promise<AppCallResponse> => {
+        if (!isUserSystemAdmin(this.context.acting_user)) {
+            return newErrorCallResponseWithMessage('only system admins are allowed to create subscriptions.');
+        }
+
         // get zendesk client for user
         const zdClient = await newZDClient(this.zdOptions);
         const req = zdClient.triggers.definitions() || '';
@@ -123,6 +129,16 @@ class AppImpl implements App {
             actionType = 'create';
         }
 
+        const actingUserClient = newMMClient(this.mmOptions).asActingUser();
+
+        // add bot to team and channel
+        const botUserID = this.context.bot_user_id;
+        const addToTeamReq = actingUserClient.addToTeam(this.context.team_id, botUserID);
+        await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
+
+        const addToChannelReq = actingUserClient.addToChannel(botUserID, this.context.channel_id);
+        await tryPromiseWithMessage(addToChannelReq, 'Failed to add bot to channel');
+
         // Any zendesk error will produce an error in the modal
         let msg: string;
         try {
@@ -142,29 +158,50 @@ class AppImpl implements App {
         const actingUserClient = newMMClient(this.mmOptions).asActingUser();
         const userID = this.context.acting_user_id;
 
+        const rootID = this.context.post.root_id || this.context.post.id;
         const post = {
             message,
             user_id: userID,
             channel_id: String(this.context.channel_id),
-            root_id: String(this.context.post_id),
+            root_id: String(rootID),
         } as Post;
 
         const createPostReq = actingUserClient.createPost(post);
-        await tryPromiseWithMessage(createPostReq, 'Failed to create post');
+        await tryPromiseWithMessage(createPostReq, 'Failed to create acting user post');
     }
 
     createBotPost = async (message: string): Promise<void> => {
         const botUserID = this.context.bot_user_id;
+
+        const rootID = this.context.post.root_id || this.context.post.id;
         const post = {
             message,
             user_id: botUserID,
             channel_id: String(this.context.channel_id),
-            root_id: String(this.context.post_id),
+            root_id: String(rootID),
         } as Post;
 
         const botClient = newMMClient(this.mmOptions).asBot();
         const createPostReq = botClient.createPost(post);
-        await tryPromiseWithMessage(createPostReq, 'Failed to create post');
+        await tryPromiseWithMessage(createPostReq, 'Failed to create bot post');
+    }
+
+    createBotDMPost = async (message: string): Promise<void> => {
+        const botUserID = this.context.bot_user_id;
+        const actingUserID = this.context.acting_user_id;
+
+        const botClient = newMMClient(this.mmOptions).asBot();
+        const channel: Channel = await botClient.createDirectChannel([botUserID, actingUserID]);
+
+        const post = {
+            message,
+            user_id: botUserID,
+            channel_id: channel.id,
+            root_id: '',
+        } as Post;
+
+        const createPostReq = botClient.createPost(post);
+        await tryPromiseWithMessage(createPostReq, 'Failed to create bot DM post');
     }
 
     hasFieldErrors(errors: FieldValidationErrors): boolean {

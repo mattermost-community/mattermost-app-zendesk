@@ -30,7 +30,7 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
     const secret = call.values.zd_client_secret || '';
 
     const ppClient = newAppsClient(context.acting_user_access_token, url);
-    ppClient.storeOauth2App(id, secret);
+    await ppClient.storeOauth2App(id, secret);
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {

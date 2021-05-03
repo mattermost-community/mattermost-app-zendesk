@@ -10,7 +10,6 @@
         "act_as_user",
         "act_as_bot",
         "act_as_admin",
-        "post_all_as_bot",
         "remote_webhooks",
         "remote_oauth2"
     ],

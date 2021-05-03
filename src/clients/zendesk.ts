@@ -15,10 +15,15 @@ interface Targets {
 
 interface TicketForms {
     list(): any;
+    show(id: number): any;
 }
 
 interface TicketFields {
     list(): any;
+}
+
+interface Groups {
+    show(id: number): any;
 }
 
 interface Triggers {
@@ -47,6 +52,7 @@ export interface ZDClient {
     triggers: Triggers;
     oauthtokens: OauthTokens;
     users: Users;
+    groups: Groups;
 }
 
 export type ZDClientOptions = {
