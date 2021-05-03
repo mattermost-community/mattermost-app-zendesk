@@ -315,15 +315,18 @@ class FormFields extends BaseFormFields {
             type: AppFieldTypes.TEXT,
             label: SubscriptionFields.SubTextLabel,
             is_required: true,
+            max_length: SubscriptionFields.MaxTitleNameLength,
         };
 
+        // add a new field the array without addField method, which checks the
+        // previously set value. This way allows adding a field without a value
+        // and utilizes the hint
         if (this.isNewSub()) {
             f.hint = this.getSelectedSubTriggerName();
-            f.value = this.getSelectedSubTriggerName();
-        } else {
-            f.value = this.getSelectedSubTriggerName();
+            this.builder.addFieldToArray(f);
+            return;
         }
-        f.max_length = SubscriptionFields.MaxTitleNameLength;
+        f.value = this.getSelectedSubTriggerName();
         this.builder.addField(f);
     }
 
