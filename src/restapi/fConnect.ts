@@ -56,7 +56,7 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
 
     const code = call.values.code;
     if (code === '') {
-        throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
+        throw new Error('Bad Request: code param not provided');
     }
 
     const zdAuth = await getOAuthConfig(context);

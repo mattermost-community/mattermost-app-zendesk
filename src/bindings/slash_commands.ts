@@ -20,7 +20,7 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
         }
     }
     if (options.isConnected) {
-        if (options.isSystemAdmin) {
+        if (options.isSystemAdmin && options.isZdAgent) {
             bindings.push(cmdSubscribe(mmSiteURL));
             bindings.push(cmdTarget(mmSiteURL));
         }

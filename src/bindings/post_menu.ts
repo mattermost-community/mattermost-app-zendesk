@@ -11,6 +11,10 @@ import {BindingOptions} from './index';
 export const getPostMenuBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
 
+    if (!options.isZdAgent) {
+        return newPostMenuBindings(bindings);
+    }
+
     // do not show any post menu options if the app is not configured
     if (!options.isConfigured) {
         return newPostMenuBindings(bindings);
