@@ -73,7 +73,7 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     };
     const zdClient = await newZDClient(zdOptions);
     const me = await zdClient.users.me();
-    let dmText = 'You have successfully connected your Zendesk acccount!';
+    let dmText = 'You have successfully connected your Zendesk account!';
     let isAgent = true;
     if (me.role !== ZDRoles.admin) {
         isAgent = false;
