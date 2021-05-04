@@ -82,10 +82,6 @@ class AppImpl implements App {
     }
 
     createZDSubscription = async (): Promise<AppCallResponse> => {
-        if (!isUserSystemAdmin(this.context.acting_user)) {
-            return newErrorCallResponseWithMessage('only system admins are allowed to create subscriptions.');
-        }
-
         // get zendesk client for user
         const zdClient = await newZDClient(this.zdOptions);
         const req = zdClient.triggers.definitions() || '';

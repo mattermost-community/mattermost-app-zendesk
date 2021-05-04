@@ -87,5 +87,6 @@ export type CtxExpandedActingUserOauth2App = ExpandedActingUser & ExpandedOauth2
 export type CtxExpandedActingUserOauth2AppOauth2User = ExpandedActingUser & ExpandedOauth2App & ExpandedOauth2User
 export type CtxExpandedActingUserOauth2AppBot = ExpandedActingUser & ExpandedOauth2App & ExpandedBot
 export type CtxExpandedBotActingUserOauth2AppOauth2User = ExpandedActingUser & ExpandedOauth2App & ExpandedBot & ExpandedOauth2User
+export type CtxExpandedBotAppActingUserOauth2AppOauth2User = ExpandedApp & ExpandedActingUser & ExpandedOauth2App & ExpandedBot & ExpandedOauth2User
 export type CtxExpandedBotActingUserAccessToken = ExpandedActingUserAccessToken & ExpandedBot
 export type CtxExpandedBotApp = ExpandedBot & ExpandedApp

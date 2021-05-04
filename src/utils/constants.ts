@@ -192,6 +192,7 @@ ZDFieldValidation[ZDFieldTypes.Regex] = {
 
 export const ZDRoles = {
     admin: 'admin',
+    agent: 'agent',
 };
 
 // MappedZDNames are field names that need to be remapped before sending as a
