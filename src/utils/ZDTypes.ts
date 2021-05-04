@@ -3,46 +3,46 @@ import {Users} from 'node-zendesk';
 import ClientOAuth2 from 'client-oauth2';
 
 export type ZDTriggerCondition = {
-    field: string;
-    operator: string;
-    value?: string;
+    field: string
+    operator: string
+    value?: string
 }
 
 export type ZDTriggerConditions = {
-    all?: ZDTriggerCondition[];
-    any: ZDTriggerCondition[];
+    all?: ZDTriggerCondition[]
+    any: ZDTriggerCondition[]
 }
 
 export type ZDTrigger = {
-    url: string;
-    id: number;
-    title: string;
+    url: string
+    id: number
+    title: string
     conditions: ZDTriggerConditions
 }
 
 export type ZDTriggerPayload = {
-    trigger: ZDTrigger;
+    trigger: ZDTrigger
 }
 
 interface CustomFieldOptions {
-    [key: string]: unknown;
+    [key: string]: unknown
 }
 
 export type ZDUserField = Users.Fields.UserField & {
     required_in_portal: boolean
-    system_field_options?: CustomFieldOptions[];
+    system_field_options?: CustomFieldOptions[]
 }
 
 export type ZDToken = {
-    url: string,
-    id: number,
-    user_id: number,
-    client_id: number,
-    token: string,
-    refresh_token: null,
-    created_at: string,
-    expires_at: null,
-    used_at: string,
+    url: string
+    id: number
+    user_id: number
+    client_id: number
+    token: string
+    refresh_token: null
+    created_at: string
+    expires_at: null
+    used_at: string
     scopes: string[]
 }
 
@@ -60,6 +60,6 @@ export type ZDTokensResponse = {
 export type ZDRole = 'admin' | 'agent' | ''
 
 export type StoredOauthUserToken = {
-    token: ClientOAuth2.Data,
+    token: ClientOAuth2.Data
     role: ZDRole
 }
