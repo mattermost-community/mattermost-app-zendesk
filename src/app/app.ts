@@ -39,7 +39,7 @@ class AppImpl implements App {
         this.context = call.context as CtxExpandedBotAdminActingUserOauth2UserChannelPost;
         this.values = call.values as AppCallValues;
         this.zdOptions = {
-            oauth2UserAccessToken: this.context.oauth2.user.access_token,
+            oauth2UserAccessToken: this.context.oauth2.user.token.access_token,
             botAccessToken: this.context.bot_access_token,
             mattermostSiteUrl: this.context.mattermost_site_url,
         };
@@ -82,10 +82,6 @@ class AppImpl implements App {
     }
 
     createZDSubscription = async (): Promise<AppCallResponse> => {
-        if (!isUserSystemAdmin(this.context.acting_user)) {
-            return newErrorCallResponseWithMessage('only system admins are allowed to create subscriptions.');
-        }
-
         // get zendesk client for user
         const zdClient = await newZDClient(this.zdOptions);
         const req = zdClient.triggers.definitions() || '';

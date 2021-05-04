@@ -1,7 +1,7 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {getStaticURL, Routes, newChannelHeaderBindings} from '../utils';
+import {getStaticURL, Routes, newChannelHeaderBindings, isZdAdmin} from '../utils';
 import {Locations, ZendeskIcon} from '../utils/constants';
 import {getManifest} from '../manifest';
 
@@ -10,7 +10,7 @@ import {BindingOptions} from './index';
 // getChannelHeaderBindings returns the users command bindings
 export const getChannelHeaderBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
-    if (options.isSystemAdmin && options.isConnected) {
+    if (options.isConnected && isZdAdmin(options.zdUserRole)) {
         bindings.push(channelHeaderSubscribe(options.mattermostSiteUrl));
     }
     return newChannelHeaderBindings(bindings);

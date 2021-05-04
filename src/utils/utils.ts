@@ -3,11 +3,12 @@ import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
 
-import {Oauth2App, ZDOauth2User} from '../types/apps';
+import {Oauth2App} from '../types/apps';
 import {getManifest} from '../manifest';
 import {AppConfigStore} from '../store/config';
 
-import {SubscriptionFields} from './constants';
+import {SubscriptionFields, ZDRoles} from './constants';
+import {StoredOauthUserToken, ZDRole} from './ZDTypes';
 
 export type ZDFieldOption = {
     name: string;
@@ -112,11 +113,19 @@ export function isUserSystemAdmin(actingUser: UserProfile): boolean {
     return Boolean(actingUser.roles && actingUser.roles.includes(GeneralConstants.SYSTEM_ADMIN_ROLE));
 }
 
-export function isConnected(oauth2user: ZDOauth2User): boolean {
-    if (oauth2user && oauth2user.access_token && oauth2user.access_token !== '') {
+export function isConnected(oauth2user: StoredOauthUserToken): boolean {
+    if (oauth2user && oauth2user.token.access_token && oauth2user.token.access_token !== '') {
         return true;
     }
     return false;
+}
+
+export function isZdAgent(role: ZDRole): boolean {
+    return role === ZDRoles.agent;
+}
+
+export function isZdAdmin(role: ZDRole): boolean {
+    return role === ZDRoles.admin;
 }
 
 export function webhookConfigured(config: AppConfigStore): boolean {
