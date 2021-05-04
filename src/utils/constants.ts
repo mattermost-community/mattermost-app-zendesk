@@ -133,6 +133,7 @@ export const SubscriptionFields = {
     SubmitButtonsOptions: selectOptions,
     SaveButtonLabel: 'Save',
 
+    NewSub_Hint: 'Name of your subscription',
     NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
 
@@ -187,6 +188,11 @@ ZDFieldValidation[ZDFieldTypes.Date] = {
 ZDFieldValidation[ZDFieldTypes.Regex] = {
     Regex: '^(http|https):\\/\\/[a-z0-9]+([-.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(([0-9]{1,5})?\\/.*)?$',
     RegexError: 'Regex field not valid',
+};
+
+export const ZDRoles = {
+    admin: 'admin',
+    agent: 'agent',
 };
 
 // MappedZDNames are field names that need to be remapped before sending as a

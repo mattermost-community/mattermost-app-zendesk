@@ -3,12 +3,16 @@ import ClientOAuth2 from 'client-oauth2';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
-import {AppCallRequestWithValues, ExpandedOauth2App, CtxExpandedActingUserOauth2AppBot} from '../types/apps';
+import {AppCallRequestWithValues, ExpandedOauth2App, CtxExpandedActingUserOauth2AppBot, CtxExpandedBotActingUserOauth2AppOauth2User} from '../types/apps';
+import {ZDClientOptions} from 'clients/zendesk';
 import {newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newConfigStore} from '../store';
 import {Routes} from '../utils';
-import {newAppsClient} from '../clients';
+import {ZDRoles} from '../utils/constants';
+import {newApp} from '../app/app';
+import {newAppsClient, newZDClient} from '../clients';
 import {getOAuthConfig} from '../app/oauth';
+import {StoredOauthUserToken} from 'utils/ZDTypes';
 
 export async function fConnect(req: Request, res: Response): Promise<void> {
     const context: ExpandedOauth2App = req.body.context;
@@ -42,19 +46,47 @@ export async function fOauth2Connect(req: Request, res: Response): Promise<void>
 
 export async function fOauth2Complete(req: Request, res: Response): Promise<void> {
     const call: AppCallRequestWithValues = req.body;
-    const context: CtxExpandedActingUserOauth2AppBot = req.body.context;
+    const context: CtxExpandedBotActingUserOauth2AppOauth2User = req.body.context;
+    context.oauth2.user = {
+        token: {
+            access_token: '',
+        },
+        role: '',
+    };
+
     const code = call.values.code;
     if (code === '') {
-        throw new Error('Bad Request: code param not provided'); // Express will catch this on its own.
+        throw new Error('Bad Request: code param not provided');
     }
 
     const zdAuth = await getOAuthConfig(context);
     const zdURL = context.oauth2.complete_url + '?code=' + code;
     const user = await zdAuth.code.getToken(zdURL);
     const token: ClientOAuth2.Data = user.data;
+    const accessToken: string = token.access_token;
+
+    // determine if the user is an admin
+    const zdOptions: ZDClientOptions = {
+        oauth2UserAccessToken: accessToken,
+        botAccessToken: context.bot_access_token,
+        mattermostSiteUrl: context.mattermost_site_url,
+    };
+    const zdClient = await newZDClient(zdOptions);
+    const me = await zdClient.users.me();
+    let dmText = 'You have successfully connected your Zendesk account!';
+    if (me.role !== ZDRoles.admin && me.role !== ZDRoles.agent) {
+        dmText += '  This app currently supports Zendesk admin and agent accounts and does not provide any features for end-user accounts.';
+    }
 
     const mmURL = context.mattermost_site_url;
     const ppClient = newAppsClient(context.acting_user_access_token, mmURL);
-    ppClient.storeOauth2User(token);
+
+    const storedToken: StoredOauthUserToken = {
+        token,
+        role: me.role,
+    };
+    await ppClient.storeOauth2User(storedToken);
+    const app = newApp(call);
+    await app.createBotDMPost(dmText);
     res.json(newOKCallResponse());
 }

@@ -6,14 +6,25 @@ import {newZDClient, newAppsClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {tryPromiseWithMessage} from '../utils';
 import {ZDTokensResponse} from '../utils/ZDTypes';
+import {newConfigStore} from '../store';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;
     const zdOptions: ZDClientOptions = {
-        oauth2UserAccessToken: context.oauth2.user.access_token,
+        oauth2UserAccessToken: context.oauth2.user.token.access_token,
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
+
+    // get the saved service account config zendesk access_token
+    const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
+    const configOauthToken = config.zd_oauth_access_token;
+    const text = 'This mattermost account is connected via oauth2 to Zendesk for subscription functionality and cannot be disconnected until the access token is updated to a new user access token. Please have another connected Mattermost System Admin user with Zendesk Admin privileges run `/zendesk setup-target` to update the access_token';
+    if (context.oauth2.user.token.access_token === configOauthToken) {
+        res.json(newOKCallResponseWithMarkdown(text));
+        return;
+    }
+
     const zdClient = await newZDClient(zdOptions);
     const oauthReq = zdClient.oauthtokens.list();
     const tokens: ZDTokensResponse = await tryPromiseWithMessage(oauthReq, 'failed to get oauth tokens');
@@ -23,7 +34,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
 
     // delete the token from the proxy app
     const ppClient = newAppsClient(context.acting_user_access_token, context.mattermost_site_url);
-    ppClient.storeOauth2User({});
+    await ppClient.storeOauth2User({token: {}, role: ''});
 
     // delete the zendesk user oauth token
     const deleteReq = zdClient.oauthtokens.revoke(tokenID);

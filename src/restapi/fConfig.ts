@@ -30,16 +30,18 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
     const secret = call.values.zd_client_secret || '';
 
     const ppClient = newAppsClient(context.acting_user_access_token, url);
-    ppClient.storeOauth2App(id, secret);
+    await ppClient.storeOauth2App(id, secret);
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {
         const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
         const cValues = await configStore.getValues();
         const targetID = cValues.zd_target_id;
+        const zdOauth2AccessToken = cValues.zd_oauth_access_token;
         const storeValues = call.values as AppConfigStore;
         storeValues.zd_target_id = targetID;
-        configStore.storeConfigInfo(storeValues);
+        storeValues.zd_oauth_access_token = zdOauth2AccessToken;
+        await configStore.storeConfigInfo(storeValues);
     } catch (err) {
         callResponse = newErrorCallResponseWithMessage(err.message);
     }

@@ -12,7 +12,7 @@ export type AppConfigStore = {
 
 export interface ConfigStore {
     getValues(): Promise<AppConfigStore>;
-    storeConfigInfo(values: AppCallValues): void;
+    storeConfigInfo(values: AppCallValues): Promise<void>;
 }
 
 class ConfigStoreImpl implements ConfigStore {
@@ -24,8 +24,8 @@ class ConfigStoreImpl implements ConfigStore {
         this.storeData = {} as AppConfigStore;
     }
 
-    storeConfigInfo(store: AppConfigStore): void {
-        this.ppClient.kvSet(StoreKeys.config, store);
+    async storeConfigInfo(store: AppConfigStore): Promise<void> {
+        await this.ppClient.kvSet(StoreKeys.config, store);
     }
 
     async getValues(): Promise<AppConfigStore> {

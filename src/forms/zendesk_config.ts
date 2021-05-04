@@ -69,7 +69,6 @@ class FormFields extends BaseFormFields {
         this.addZDUrlField();
         this.addZDClientIDField();
         this.addZDClientSecretField();
-        this.addZDConnectedUserIDField();
     }
 
     addZDUrlField(): void {
@@ -105,18 +104,6 @@ class FormFields extends BaseFormFields {
             value: this.OauthValues.client_secret,
             description: 'Client Secret obtained from Zendesk Oauth client secret',
             is_required: true,
-        };
-        this.builder.addField(f);
-    }
-
-    addZDConnectedUserIDField(): void {
-        const f: AppField = {
-            type: AppFieldTypes.TEXT,
-            subtype: 'password',
-            name: 'zd_oauth_access_token',
-            label: 'Oauth2 Access Token',
-            value: this.storeValues.zd_oauth_access_token,
-            description: 'Oauth2 Connected Mattermost Account with Zendesk agent access. This field is needed for subscriptions',
         };
         this.builder.addField(f);
     }

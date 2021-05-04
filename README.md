@@ -1,100 +1,112 @@
-# ZenDesk App
+# Zendesk App
 
-## Quick Start
+**Maintainer:** [@jasonfrerich](https://github.com/jfrerich)
 
-### Zendesk and Mattermost Users (System Admin privileges required)
+A Zendesk app for Mattermost.
 
-##### 1. Create Zendesk Oauth Client for Mattermost (in Zendesk)
+This repository is licensed under the [Apache 2.0 License](https://github.com/mattermost/mattermost-plugin-github/blob/master/LICENSE).
 
-1. `Zendesk` > `Admin` > `API` > `OAuth Clients`
-1. `Add OAuth Client`
+## Table of Contents
+
+ - [Admin Guide](#admin-guide)
+    - [Setting up](#setting-up)
+    - [Notification management](#notification-management)
+    - [System Admin slash commands](#system-admin-slash-commands)
+ - [User's Guide](#users-guide)
+    - [Slash commands](#slash-commands)
+    - [Create a ticket](#create-a-ticket)
+ - [Development](#development)
+
+## Admin Guide
+
+This guide is intended for Mattermost System Admins setting up the Zendesk app. For more information about contributing to this plugin, visit the [Development section](#development).
+
+### Setting up
+
+To configure and connect Zendesk with Mattermost, follow the steps below.
+
+#### 1. Create a Zendesk OAuth client
+
+Log in to Zendesk as System Admin to create a Zendesk OAuth client for Mattermost.
+
+1. Go to **Zendesk > Admin > API > OAuth Clients**.
+1. Select **Add OAuth Client**
     1. `Client Name`: (Example `Mattermost Zendesk App`)
     1. `Description`: `Connect your Zendesk account to Mattermost`
     1. `Redirect URLs`: `https://<mattermost-site-url>/plugins/com.mattermost.apps/apps/com.mattermost.zendesk/oauth2/remote/complete`
-    1. `Save`
+1. Select **Save**.
 
-##### 2. Install the app (In Mattermost)
+#### 2. Install the app in Mattermost
 
-1. `/apps install --app-id com.mattermost.zendesk`
+Next, log in to Mattermost as System Admin and run:
 
-##### 3. Configure Zendesk Client in Mattermost
+`/apps install --app-id com.mattermost.zendesk`
 
-`/zendesk configure` to open the configuration modal
+#### 3. Configure the Zendesk client in Mattermost
 
-Insert values from Oauth Client setup (step 1) fields in the configuration modal
+In Mattermost, as System Admin, run: `/zendesk configure` to open the configuration modal.
 
-1. `URL` - set to your zendesk URL
-1. `Client ID` - set to the `Unique identifier` Oauth value
-1. `Client Secret` - set as the `Secret` Oauth value
-1. `Oauth2 Access Token` - leave empty for now (You will configure this once you are connected)
-1. click `Submit`
+Use the values from the OAuth client set up step:
 
-##### 4. Connect your Account
+1. **URL:** Set to your Zendesk URL.
+1. **Client ID:** Set to the **Unique identifier** OAuth value.
+1. **Client Secret:** Set as the **Secret** OAuth value.
 
-1. Type `/zendesk connect` to connect your Mattermost user to your Zendesk
-1. Click on the connection link to authenticate your user
-1. Authenticate in Zendesk and close the broweser tab to complete the process
+Select **Submit**.
 
-##### 5. Setup Subscriptions
+#### 4. Connect your Zendesk account to Mattermost
 
-This step requires a Zendesk connected Mattermost user and uses an access token needed for subscriptions functionality.  The token can be any connected Zendesk user with agent permissions in Zendesk.  Another option is to create a "bot" agent user in Zendesk, that will function as a service account, and connect them to mattermost.
+1. Use `/zendesk connect` to connect your Mattermost user to your Zendesk account.
+1. Select the connection link to authenticate your user.
+1. Authenticate in Zendesk and close the broweser tab to complete the process.
 
-Note, the access token is only used to read ticket information when a subcription is triggered.  This token will not post on behalf of the user.
+#### 5. Set up subscriptions
 
-1. `/zendesk me` - save this access token value
-1. `/zendesk configure`
-    1. `Oauth2 Access Token` - set this value to the token saved in the step above and click Submit
-1. `/zendesk setup-target` - this command will setup a zendesk target pointing to your mattermost instance (it only needs to be run one time)
-1. An ephemeral post will confirm that a target was created and that subscriptions functionality has been configured
+This step requires a Zendesk-connected Mattermost system administrator and uses an access token needed for subscriptions functionality. The token can be any connected Zendesk user with agent permissions in Zendesk. Another option is to create a bot agent user in Zendesk, that will function as a service account, and connect them to Mattermost.
 
-## Help
+Note, the access token is only used to read ticket information when a subcription is triggered. This token will not post on behalf of the user.
 
-### Zendesk and Mattermost Users (All users)
+1. `/zendesk setup-target` - This command will set up a Zendesk target pointing to your Mattermost instance (it only needs to be run once).
+1. The command also saves the access_token of the acting user for subscriptions functionality.
+1. An ephemeral post will confirm that a target was created and that subscriptions functionality has been configured.
 
-#### Connect your Zendesk account to Mattermost
+## Notification management
 
-- `/zendesk connect`
+Subscriptions to Zendesk events can be added via the channel header, post menu, or using a slash command. Each subscription creates a [Zendesk Trigger](https://developer.zendesk.com/rest_api/docs/support/triggers). A trigger consists of one or more actions performed when a ticket is created or updated. The actions are performed only if certain conditions are met. For example, a trigger can notify the customer when an agent changes the status of a ticket to Solved.
 
-This slash command will allow a user to connect their Mattermost and Zendesk
-accounts via OAuth2 authorization
+Triggers send a notification based on specified conditions. Subscriptions currently support the `changed` action on a limited number of fields, but will have enhancements in the future.
 
-## Slash Commands
+Zendesk Admins are able to view these subscriptions inside Zendesk via **Settings > Business Rules > Triggers** and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`. After creating a notification from Mattermost, you can access the trigger in Zendesk and modify conditions of the trigger. If an unsupported condition is added, the user will be notified through Mattermost and a link will be provided to the Zendesk trigger where it can be further modified.
 
-### User Commands
+### System Admin slash commands
 
-`/zendesk connect` - connect your Zendesk account to Mattermost  
-`/zendesk disconnect` - disconnect your Zendesk account from Mattermost  
-`/zendesk help` - post ephemeral message with help text
-`/zendesk me` - post ephemeral message with your connection information  
+`/zendesk configure` - Configure the Zendesk app after installation.
+`/zendesk setup-target` - Set up the Zendesk target for your instance.
+`/zendesk subscribe` - Setu p a channel subscription.
 
-### System Admin Commands
+## User's Guide
 
-`/zendesk configure` - configure the Zendesk app after installation  
-`/zendesk setup-target` - setup the Zendesk target for your instance
-`/zendesk subscribe` - setup a channel subscription  
+This guide is intended for Mattermost users who want information about the app's functionality, and Mattermost users who want to connect their Zendesk account to Mattermost. Connect your Zendesk account to Mattermost using:
 
-## Create a ticket
+`/zendesk connect`
+
+This slash command connects your Mattermost and Zendesk accounts via OAuth2 authorization.
+
+### Slash commands
+
+- `/zendesk connect` - Connect your Zendesk account to Mattermost.
+- `/zendesk disconnect` - Disconnect your Zendesk account from Mattermost.
+- `/zendesk help` - Post ephemeral message with help text.
+
+ ## Create a ticket
 
 Creating a ticket from a Mattermost post is done through the `...` post menu button
 
 ![create ticket](./docs/create-ticket.gif)
 
-## Subscribe a Channel to Notifications
+## Development
 
-Subscriptions to Zendesk events can be added via the `channel header`, `post menu`, or `slash command`. Each subscription creates a [Zendesk Trigger](https://developer.zendesk.com/rest_api/docs/support/triggers) which will send a notification based on specified conditions.  Subscriptions currently support the `changed` action on a limited number of fields, but will have enhancements in the future.
-
-The definition of a Trigger is defined below:
-> A trigger consists of one or more actions performed when a ticket is created or updated. The actions are performed only if certain conditions are met. For example, a trigger can notify the customer when an agent changes the status of a ticket to Solved.
-
-Zendesk Admins are able to view these subscriptions inside Zendesk via `Settings` > `Business Rules` > `Triggers` and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`.  After creating a notification from Mattermost, it is possible to access the trigger in Zendesk and modify conditions of the trigger. If a conditions is added that is not currently supported by the Mattermost Zendesk App, the user will be notificed when trying to edit the subscription through Mattemrost and a link will be provided to the Zendesk trigger where it can be further modified.
-
-## Installation
-
-### In Production
-
-`/apps install --app-id com.mattermost.zendesk`
-
-### In Development
+To install Zendesk in a development environment:
 
 `/apps debug-add-manifest --url http://localhost:4000/manifest.json`  
 `/apps install --app-id com.mattermost.zendesk --app-secret thisisthesecret`
@@ -106,17 +118,16 @@ Start the node server
 
 ## Provision
 
-To provision this PR to AWS run `make dist` to generate the App bundle and then follow the steps [here](https://github.com/mattermost/mattermost-plugin-apps#provisioning).
+To provision this app to AWS run `make dist` to generate the App bundle and then follow the steps [here](https://github.com/mattermost/mattermost-plugin-apps#provisioning).
 
-## FAQ
+## Troubleshooting
 
-### 1. Log message received and binding locations do not show
+### Log message received and binding locations do not show
 
-`The system admin has turned off OAuth2 Service Provider.`
-
-Oauth2 service needs to be turned on in `config/config.json`
-Through system console -> enable oauth2 service provider
+The System Admin has turned off OAuth2 Service Provider. The OAuth2 service needs to be turned on in `config/config.json`:
 
 ```json
 "EnableOAuthServiceProvider": true,
 ```
+
+This can also be done in **System Console > Enable OAuth2 Service Provider**.

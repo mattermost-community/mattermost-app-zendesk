@@ -4,6 +4,8 @@ import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
 import {AppContext, AppCall, AppCallValues} from 'mattermost-redux/types/apps';
 
+import {StoredOauthUserToken} from 'utils/ZDTypes';
+
 export type ZDOauth2User = {
     access_token: string
     scope?: string[]
@@ -19,7 +21,7 @@ export type Oauth2App = {
     client_secret: string;
     connect_url?: string;
     complete_url?: string;
-    user?: ZDOauth2User
+    user?: StoredOauthUserToken
 }
 
 export type ExpandedBot = AppContext & {
@@ -55,7 +57,7 @@ export type ExpandedChannel = AppContext & {
 
 export type ExpandedOauth2User = {
     oauth2: {
-        user: ZDOauth2User
+        user: StoredOauthUserToken
     }
 }
 
@@ -80,8 +82,11 @@ export type ExpandedActingUser = AppContext & {
 
 export type CtxExpandedBotAdminActingUserOauth2User = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin
 export type CtxExpandedBotAdminActingUserOauth2UserChannel = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin & ExpandedChannel
+export type CtxExpandedBotAdminActingUserOauth2UserChannelPost = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin & ExpandedChannel & ExpandedPost
 export type CtxExpandedActingUserOauth2App = ExpandedActingUser & ExpandedOauth2App
 export type CtxExpandedActingUserOauth2AppOauth2User = ExpandedActingUser & ExpandedOauth2App & ExpandedOauth2User
 export type CtxExpandedActingUserOauth2AppBot = ExpandedActingUser & ExpandedOauth2App & ExpandedBot
+export type CtxExpandedBotActingUserOauth2AppOauth2User = ExpandedActingUser & ExpandedOauth2App & ExpandedBot & ExpandedOauth2User
+export type CtxExpandedBotAppActingUserOauth2AppOauth2User = ExpandedApp & ExpandedActingUser & ExpandedOauth2App & ExpandedBot & ExpandedOauth2User
 export type CtxExpandedBotActingUserAccessToken = ExpandedActingUserAccessToken & ExpandedBot
 export type CtxExpandedBotApp = ExpandedBot & ExpandedApp

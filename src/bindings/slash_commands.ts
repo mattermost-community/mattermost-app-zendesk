@@ -3,6 +3,7 @@ import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {Routes, Locations, ZendeskIcon} from '../utils/constants';
 import {getStaticURL, newCommandBindings} from '../utils';
+import {isZdAdmin} from '../utils/utils';
 import {BindingOptions} from 'bindings';
 import {getManifest} from '../manifest';
 
@@ -20,17 +21,23 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
         }
     }
     if (options.isConnected) {
-        if (options.isSystemAdmin) {
+        // only admins can create triggers and targets in zendesk
+        if (isZdAdmin(options.zdUserRole)) {
             bindings.push(cmdSubscribe(mmSiteURL));
-            bindings.push(cmdConfigure(mmSiteURL));
-            bindings.push(cmdTarget(mmSiteURL));
+            if (options.isSystemAdmin) {
+                bindings.push(cmdTarget(mmSiteURL));
+            }
         }
         bindings.push(cmdDisconnect(mmSiteURL));
-        bindings.push(cmdMe(mmSiteURL));
+
+        // bindings.push(cmdMe(mmSiteURL));
     } else {
         bindings.push(cmdConnect(mmSiteURL));
     }
 
+    if (options.isSystemAdmin) {
+        bindings.push(cmdConfigure(mmSiteURL));
+    }
     bindings.push(cmdHelp(mmSiteURL));
     return newCommandBindings(mmSiteURL, bindings);
 };
@@ -82,9 +89,10 @@ const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
+                acting_user: AppExpandLevels.EXPAND_ALL,
                 admin_access_token: AppExpandLevels.EXPAND_ALL,
                 channel: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_app: AppExpandLevels.EXPAND_ALL,
+                acting_user_access_token: AppExpandLevels.EXPAND_ALL,
                 oauth2_user: AppExpandLevels.EXPAND_ALL,
             },
         },

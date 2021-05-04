@@ -32,7 +32,6 @@ function getUserCommands(): string {
     let text = h5('User Commands');
     text += addBulletSlashCommand('connect');
     text += addBulletSlashCommand('disconnect');
-    text += addBulletSlashCommand('me');
     text += addBulletSlashCommand('help');
     return text;
 }
