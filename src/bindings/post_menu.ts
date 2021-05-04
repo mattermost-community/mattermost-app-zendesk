@@ -2,6 +2,7 @@ import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {Routes, Locations, ZendeskIcon} from '../utils/constants';
+import {isZdAdmin, isZdAgent} from '../utils/utils';
 import {getStaticURL, newPostMenuBindings} from '../utils';
 import {getManifest} from '../manifest';
 
@@ -11,16 +12,16 @@ import {BindingOptions} from './index';
 export const getPostMenuBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
 
-    if (!options.isZdAgent) {
-        return newPostMenuBindings(bindings);
-    }
-
     // do not show any post menu options if the app is not configured
     if (!options.isConfigured) {
         return newPostMenuBindings(bindings);
     }
+
+    // admins and agents can create tickets in Zendesk
     if (options.isConnected) {
-        bindings.push(openCreateTicketForm(options.mattermostSiteUrl));
+        if (isZdAdmin(options.zdUserRole) || isZdAgent(options.zdUserRole)) {
+            bindings.push(openCreateTicketForm(options.mattermostSiteUrl));
+        }
     }
     return newPostMenuBindings(bindings);
 };

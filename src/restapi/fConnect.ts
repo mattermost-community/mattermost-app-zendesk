@@ -51,7 +51,7 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
         token: {
             access_token: '',
         },
-        is_agent: false,
+        role: '',
     };
 
     const code = call.values.code;
@@ -74,10 +74,8 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     const zdClient = await newZDClient(zdOptions);
     const me = await zdClient.users.me();
     let dmText = 'You have successfully connected your Zendesk account!';
-    let isAgent = true;
-    if (me.role !== ZDRoles.admin) {
-        isAgent = false;
-        dmText += '  This app currently supports Zendesk admin accounts and does not provide any features for end-user accounts.';
+    if (me.role !== ZDRoles.admin && me.role !== ZDRoles.agent) {
+        dmText += '  This app currently supports Zendesk admin and agent accounts and does not provide any features for end-user accounts.';
     }
 
     const mmURL = context.mattermost_site_url;
@@ -85,7 +83,7 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
 
     const storedToken: StoredOauthUserToken = {
         token,
-        is_agent: isAgent,
+        role: me.role,
     };
     await ppClient.storeOauth2User(storedToken);
     const app = newApp(call);

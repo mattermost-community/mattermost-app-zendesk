@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 
 import {getManifest} from '../manifest';
 import {Routes, tryPromiseWithMessage} from '../utils';
-import {webhookConfigured, isZdAgent} from '../utils/utils';
+import {webhookConfigured, isZdAdmin} from '../utils/utils';
 import {newZDClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {newConfigStore} from '../store';
@@ -29,8 +29,8 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotA
     }
 
     const oauth2User = context.oauth2.user;
-    if (!isZdAgent(oauth2User)) {
-        return 'only Zendesk agents can setup the target';
+    if (!isZdAdmin(oauth2User.role)) {
+        return 'only Zendesk admins can create targets in Zendesk';
     }
 
     const config = newConfigStore(context.bot_access_token, context.mattermost_site_url);

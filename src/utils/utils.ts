@@ -3,12 +3,12 @@ import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
 
-import {Oauth2App, ZDOauth2User} from '../types/apps';
+import {Oauth2App} from '../types/apps';
 import {getManifest} from '../manifest';
 import {AppConfigStore} from '../store/config';
 
-import {SubscriptionFields} from './constants';
-import {StoredOauthUserToken} from './ZDTypes';
+import {SubscriptionFields, ZDRoles} from './constants';
+import {StoredOauthUserToken, ZDRole} from './ZDTypes';
 
 export type ZDFieldOption = {
     name: string;
@@ -120,8 +120,12 @@ export function isConnected(oauth2user: StoredOauthUserToken): boolean {
     return false;
 }
 
-export function isZdAgent(oauth2user: StoredOauthUserToken): boolean {
-    return oauth2user && oauth2user.is_agent;
+export function isZdAgent(role: ZDRole): boolean {
+    return role === ZDRoles.agent;
+}
+
+export function isZdAdmin(role: ZDRole): boolean {
+    return role === ZDRoles.admin;
 }
 
 export function webhookConfigured(config: AppConfigStore): boolean {
