@@ -67,7 +67,7 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotA
         payload.target.id = id;
         const createReq = zdClient.targets.update(id, payload);
         await tryPromiseWithMessage(createReq, 'Failed to update Zendesk target');
-        config.storeConfigInfo(cValues);
+        await config.storeConfigInfo(cValues);
         return `Successfully updated ${link}`;
     }
 
