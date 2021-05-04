@@ -57,7 +57,9 @@ export type ZDTokensResponse = {
     count: number
 }
 
+export type ZDRole = 'admin' | 'agent' | ''
+
 export type StoredOauthUserToken = {
     token: ClientOAuth2.Data,
-    is_agent: boolean
+    role: ZDRole
 }
