@@ -509,6 +509,7 @@
       "files": ["**/*.tsx", "**/*.ts", "**/*.js"],
       "parser": "@typescript-eslint/parser",
       "rules": {
+        "@typescript-eslint/no-floating-promises": ["error"],
         "@typescript-eslint/no-var-requires": 0,
         "@typescript-eslint/prefer-interface": 0,
         "@typescript-eslint/indent": [

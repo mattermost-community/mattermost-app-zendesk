@@ -41,7 +41,7 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
         const storeValues = call.values as AppConfigStore;
         storeValues.zd_target_id = targetID;
         storeValues.zd_oauth_access_token = zdOauth2AccessToken;
-        configStore.storeConfigInfo(storeValues);
+        await configStore.storeConfigInfo(storeValues);
     } catch (err) {
         callResponse = newErrorCallResponseWithMessage(err.message);
     }
