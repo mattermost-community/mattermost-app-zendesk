@@ -6,12 +6,12 @@ import {AppSelectOption, AppCallRequest, AppForm, AppField} from 'mattermost-red
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {CtxExpandedBotAdminActingUserOauth2User, ExpandedChannel} from '../types/apps';
+import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {getStaticURL, Routes} from '../utils';
-import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions, parseTriggerTitle,
+import {makeBulletedList, makeSubscriptionOptions, parseTriggerTitle,
     checkBox, getCheckBoxesFromTriggerDefinition, tryPromiseWithMessage} from '../utils/utils';
 import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../utils/ZDTypes';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
