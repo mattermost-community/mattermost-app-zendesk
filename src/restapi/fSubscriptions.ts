@@ -14,6 +14,7 @@ export async function fOpenSubscriptionsForm(req: Request, res: Response): Promi
     if (!webhookConfigured(cValues)) {
         const msg = 'Subscriptions cannot be created before the Zendesk Target is configured.  Please contact your Mattermost admin.';
         res.json(newOKCallResponseWithMarkdown(msg));
+        return;
     }
     try {
         const form = await newSubscriptionsForm(req.body);
