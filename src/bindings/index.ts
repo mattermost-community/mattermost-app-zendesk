@@ -15,7 +15,7 @@ export type BindingOptions = {
     zdUserRole: ZDRole,
     mattermostSiteUrl: string
 }
-export async function getBindings(context: CtxExpandedActingUserOauth2AppOauth2User): Promise<AppBinding[]> {
+export function getBindings(context: CtxExpandedActingUserOauth2AppOauth2User): AppBinding[] {
     const bindingOptions = {
         isSystemAdmin: isUserSystemAdmin(context.acting_user),
         isConfigured: isConfigured(context.oauth2),

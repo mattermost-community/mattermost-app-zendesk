@@ -6,6 +6,6 @@ import {newOKCallResponseWithData} from '../utils/call_responses';
 
 export async function fBindings(req: Request, res: Response): Promise<void> {
     const context: CtxExpandedActingUserOauth2AppOauth2User = req.body.context;
-    const bindings = await getBindings(context);
+    const bindings = getBindings(context);
     res.json(newOKCallResponseWithData(bindings));
 }
