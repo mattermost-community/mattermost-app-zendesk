@@ -40,8 +40,6 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {
-        // test that any of these awaits will pass the correct error in the catch
-        // message
         const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
         const cValues = await configStore.getValues();
         const targetID = cValues.zd_target_id;
