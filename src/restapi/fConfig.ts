@@ -10,15 +10,21 @@ import {baseUrlFromContext} from '../utils/utils';
 
 // fOpenZendeskConfigForm opens a new configuration form
 export async function fOpenZendeskConfigForm(req: Request, res: Response): Promise<void> {
-    const form = await newZendeskConfigForm(req.body);
-    const callResponse = newFormCallResponse(form);
-    res.json(callResponse);
+    try {
+        const form = await newZendeskConfigForm(req.body);
+        res.json(newFormCallResponse(form));
+    } catch (error) {
+        res.json(newErrorCallResponseWithMessage('Unable to open configuration form: ' + error.message));
+    }
 }
 
 export async function fSubmitOrUpdateZendeskConfigForm(req: Request, res: Response): Promise<void> {
-    const form = await newZendeskConfigForm(req.body);
-    const callResponse = newFormCallResponse(form);
-    res.json(callResponse);
+    try {
+        const form = await newZendeskConfigForm(req.body);
+        res.json(newFormCallResponse(form));
+    } catch (error) {
+        res.json(newErrorCallResponseWithMessage('Unable to update configuration form: ' + error.message));
+    }
 }
 
 export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Response): Promise<void> {
@@ -34,6 +40,8 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
 
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {
+        // test that any of these awaits will pass the correct error in the catch
+        // message
         const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
         const cValues = await configStore.getValues();
         const targetID = cValues.zd_target_id;
@@ -43,7 +51,7 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
         storeValues.zd_oauth_access_token = zdOauth2AccessToken;
         await configStore.storeConfigInfo(storeValues);
     } catch (err) {
-        callResponse = newErrorCallResponseWithMessage(err.message);
+        callResponse = newErrorCallResponseWithMessage('Unable to submit configuration form: ' + err.message);
     }
     res.json(callResponse);
 }
