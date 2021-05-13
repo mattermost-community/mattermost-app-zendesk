@@ -6,7 +6,7 @@ import {webhookConfigured, isZdAdmin} from '../utils/utils';
 import {newZDClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {newConfigStore} from '../store';
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage} from '../utils/call_responses';
 import {CtxExpandedBotAppActingUserOauth2AppOauth2User} from 'types/apps';
 
 export async function fCreateTarget(req: Request, res: Response): Promise<void> {
@@ -17,9 +17,12 @@ export async function fCreateTarget(req: Request, res: Response): Promise<void> 
         mattermostSiteUrl: context.mattermost_site_url,
     };
     const zdClient = await newZDClient(zdOptions);
-
-    const text = await updateOrCreateTarget(zdClient, context);
-    res.json(newOKCallResponseWithMarkdown(text));
+    try {
+        const text = await updateOrCreateTarget(zdClient, context);
+        res.json(newOKCallResponseWithMarkdown(text));
+    } catch (error) {
+        res.json(newErrorCallResponseWithMessage('Unable to create target: ' + error.message));
+    }
 }
 
 // updateOrCreateTarget creates a target or updates an the exising target
