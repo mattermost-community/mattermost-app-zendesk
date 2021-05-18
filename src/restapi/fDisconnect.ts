@@ -4,7 +4,6 @@ import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
 import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage} from '../utils/call_responses';
 import {newZDClient, newAppsClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
-import {tryPromiseWithMessage} from '../utils';
 import {ZDTokensResponse} from '../utils/ZDTypes';
 import {newConfigStore, AppConfigStore} from '../store/config';
 

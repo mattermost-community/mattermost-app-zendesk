@@ -8,7 +8,7 @@ import {newZDClient, newMMClient} from '../clients';
 import {ZDClientOptions, ZDClient} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
-import {newConfigStore} from '../store';
+import {newConfigStore, AppConfigStore} from '../store/config';
 
 export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
     const values = req.body.values.data;
@@ -18,7 +18,8 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
     const ticketTitle = values[TriggerFields.TicketTitleKey];
     const channelID = values[TriggerFields.ChannelIDKey];
 
-    const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
+    const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
+    const config = await tryPromiseWithMessage(configStore.getValues(), 'fHandleSubcribeNotification - Failed to get config values');
     const zdUrl = config.zd_url;
 
     const token = config.zd_oauth_access_token;
@@ -31,11 +32,12 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
-    const zdClient: ZDClient = await newZDClient(zdOptions);
+
+    const zdClient: ZDClient = await tryPromiseWithMessage(newZDClient(zdOptions), 'fHandleSubcribeNotification - Failed to get newZDClient');
     const auditReq = zdClient.tickets.exportAudit(ticketID);
     const ticketAudits = await tryPromiseWithMessage(auditReq, `Failed to get ticket audits for ticket ${ticketID}`);
     const ticketAudit = ticketAudits.pop();
-    const message = await getNotificationMessage(zdClient, zdUrl, ticketID, ticketTitle, ticketAudit);
+    const message = await tryPromiseWithMessage(getNotificationMessage(zdClient, zdUrl, ticketID, ticketTitle, ticketAudit), 'fHandleSubcribeNotification - failed to get notification message');
 
     const mmOptions: MMClientOptions = {
         mattermostSiteURL: context.mattermost_site_url,
@@ -105,11 +107,15 @@ async function mapIDsToTextValues(zdClient: ZDClient, events: any[]): Promise<an
     }
 
     // resolve all the Promises
-    await Promise.all(promiseEvents).then((mappedEvents) => {
-        for (const mappedEvent of mappedEvents) {
-            mappedArray.push(mappedEvent);
-        }
-    });
+    try {
+        await Promise.all(promiseEvents).then((mappedEvents) => {
+            for (const mappedEvent of mappedEvents) {
+                mappedArray.push(mappedEvent);
+            }
+        });
+    } catch (error) {
+        throw new Error('Unable to map IDs to text values: ' + error.message);
+    }
     return mappedArray;
 }
 
@@ -123,12 +129,16 @@ async function getFormNames(zdClient: ZDClient, event: any): Promise<any> {
         requests.push(tryPromiseWithMessage(prevReq, 'Failed to fetch previous ticket form'));
     }
 
-    await Promise.all(requests).then((values) => {
-        event.value = values[0].name;
-        if (values.length === 2) {
-            event.previous_value = values[1].name;
-        }
-    });
+    try {
+        await Promise.all(requests).then((values) => {
+            event.value = values[0].name;
+            if (values.length === 2) {
+                event.previous_value = values[1].name;
+            }
+        });
+    } catch (error) {
+        throw new Error('Unable to get Form Names: ' + error.message);
+    }
     return event;
 }
 
@@ -142,12 +152,16 @@ async function getGroupNames(zdClient: ZDClient, event: any): Promise<any> {
         requests.push(tryPromiseWithMessage(prevReq, 'Failed to fetch previous group'));
     }
 
-    await Promise.all(requests).then((values) => {
-        event.value = values[0].name;
-        if (values.length === 2) {
-            event.previous_value = values[1].name;
-        }
-    });
+    try {
+        await Promise.all(requests).then((values) => {
+            event.value = values[0].name;
+            if (values.length === 2) {
+                event.previous_value = values[1].name;
+            }
+        });
+    } catch (error) {
+        throw new Error('Unable to get Group Names: ' + error.message);
+    }
     return event;
 }
 
@@ -161,12 +175,16 @@ async function getAssigneeNames(zdClient: ZDClient, event: any): Promise<any> {
         requests.push(tryPromiseWithMessage(prevReq, 'Failed to get previous Zendesk user'));
     }
 
-    await Promise.all(requests).then((values) => {
-        event.value = values[0].name;
-        if (values.length === 2) {
-            event.previous_value = values[1].name;
-        }
-    });
+    try {
+        await Promise.all(requests).then((values) => {
+            event.value = values[0].name;
+            if (values.length === 2) {
+                event.previous_value = values[1].name;
+            }
+        });
+    } catch (error) {
+        throw new Error('Unable to get Assignee Names: ' + error.message);
+    }
     return event;
 }
 
