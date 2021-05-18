@@ -122,6 +122,7 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
         await app.createBotDMPost(dmText);
     } catch (error) {
         res.json(newErrorCallResponseWithMessage('fOauth2Complete - Unable to create bot DM post: ' + error.message));
+        return;
     }
     res.json(newOKCallResponse());
 }
