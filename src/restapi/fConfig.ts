@@ -18,15 +18,6 @@ export async function fOpenZendeskConfigForm(req: Request, res: Response): Promi
     }
 }
 
-export async function fSubmitOrUpdateZendeskConfigForm(req: Request, res: Response): Promise<void> {
-    try {
-        const form = await newZendeskConfigForm(req.body);
-        res.json(newFormCallResponse(form));
-    } catch (error) {
-        res.json(newErrorCallResponseWithMessage('Unable to update configuration form: ' + error.message));
-    }
-}
-
 export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Response): Promise<void> {
     const call: AppCallRequestWithValues = req.body;
     const context = call.context as CtxExpandedBotActingUserAccessToken;

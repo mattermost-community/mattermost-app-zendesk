@@ -6,7 +6,7 @@ import {fBindings} from './fBindings';
 import {fConnect, fOauth2Connect, fOauth2Complete} from './fConnect';
 import {fOpenCreateTicketForm, fSubmitOrUpdateCreateTicketForm, fSubmitOrUpdateCreateTicketSubmit} from './fCreateTicket';
 import {fOpenSubscriptionsForm, fSubmitOrUpdateSubscriptionsForm, fSubmitOrUpdateSubscriptionsSubmit} from './fSubscriptions';
-import {fOpenZendeskConfigForm, fSubmitOrUpdateZendeskConfigForm, fSubmitOrUpdateZendeskConfigSubmit} from './fConfig';
+import {fOpenZendeskConfigForm, fSubmitOrUpdateZendeskConfigSubmit} from './fConfig';
 import {fHandleSubcribeNotification} from './fIncomingWebhooks';
 import {fDisconnect} from './fDisconnect';
 import {fHelp} from './fHelp';
