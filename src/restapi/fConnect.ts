@@ -78,7 +78,7 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     try {
         user = await zdAuth.code.getToken(zdURL);
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('fOauth2Complete - Unable to get oauth config: ' + error.message));
+        res.json(newErrorCallResponseWithMessage('fOauth2Complete - Unable to get user token: ' + error.message));
         return;
     }
 
@@ -115,6 +115,7 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
         await ppClient.storeOauth2User(storedToken);
     } catch (error) {
         res.json(newErrorCallResponseWithMessage('fOauth2Complete - Unable to store oauth2user: ' + error.message));
+        return;
     }
     const app = newApp(call);
     try {

@@ -53,6 +53,7 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
         await zdClient.oauthtokens.revoke(tokenID);
     } catch (error) {
         res.json(newErrorCallResponseWithMessage('fDisconnect - failed to revoke acting user token'));
+        return;
     }
 
     res.json(newOKCallResponseWithMarkdown('You have disconnected your Zendesk account'));
