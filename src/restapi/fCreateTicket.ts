@@ -31,7 +31,8 @@ export async function fSubmitOrUpdateCreateTicketSubmit(req: Request, res: Respo
     const call: AppCallRequest = req.body;
     try {
         const app = newApp(call);
-        res.json(await app.createTicketFromPost());
+        const callResponse = await app.createTicketFromPost();
+        res.json(callResponse);
     } catch (err) {
         res.json(newErrorCallResponseWithMessage('Unable to create ticket from post: ' + err.message));
     }

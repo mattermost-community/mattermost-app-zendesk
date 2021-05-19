@@ -38,7 +38,8 @@ export async function fSubmitOrUpdateSubscriptionsForm(req: Request, res: Respon
 export async function fSubmitOrUpdateSubscriptionsSubmit(req: Request, res: Response): Promise<void> {
     try {
         const app = newApp(req.body);
-        res.json(await app.createZDSubscription());
+        const callResponse = await app.createZDSubscription();
+        res.json(callResponse);
     } catch (error) {
         res.json(newErrorCallResponseWithMessage('Unable to create subscription: ' + error.message));
     }

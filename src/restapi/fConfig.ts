@@ -22,15 +22,14 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
     const call: AppCallRequestWithValues = req.body;
     const context = call.context as CtxExpandedBotActingUserAccessToken;
     const url = baseUrlFromContext(call.context.mattermost_site_url);
-
     const id = call.values.zd_client_id || '';
     const secret = call.values.zd_client_secret || '';
 
-    const ppClient = newAppsClient(context.acting_user_access_token, url);
-    await ppClient.storeOauth2App(id, secret);
-
     let callResponse: AppCallResponse = newOKCallResponseWithMarkdown('Successfully updated Zendesk configuration');
     try {
+        const ppClient = newAppsClient(context.acting_user_access_token, url);
+        await ppClient.storeOauth2App(id, secret);
+
         const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
         const cValues = await configStore.getValues();
         const targetID = cValues.zd_target_id;
