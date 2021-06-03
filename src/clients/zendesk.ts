@@ -65,7 +65,7 @@ export type ZDClientOptions = {
 export const newZDClient = async (zdOptions: ZDClientOptions): Promise<ZDClient> => {
     const token = zdOptions.oauth2UserAccessToken;
     if (!token) {
-        throw new Error('Failed to get user access_token');
+        throw new Error('Failed to get oauth2 user access_token');
     }
     const config = await newConfigStore(zdOptions.botAccessToken, zdOptions.mattermostSiteUrl).getValues();
     const remoteUri = config.zd_url + Routes.ZD.APIVersion;

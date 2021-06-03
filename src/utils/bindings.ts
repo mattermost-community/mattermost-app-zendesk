@@ -13,7 +13,7 @@ export const newPostMenuBindings = (bindings: AppBinding[]): AppBinding => {
     };
 };
 
-export const newCommandBindings = (mmSiteUrl: string, bindings: AppBinding[]): AppBinding => {
+export const newCommandBindings = (bindings: AppBinding[]): AppBinding => {
     return {
         app_id: getManifest().app_id,
         label: CommandTrigger,

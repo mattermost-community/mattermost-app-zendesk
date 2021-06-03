@@ -1,10 +1,9 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, Locations, ZendeskIcon} from '../utils/constants';
 import {isZdAdmin, isZdAgent} from '../utils/utils';
 import {newPostMenuBindings} from '../utils';
-import {getManifest} from '../manifest';
+
+import {getCreateTicketBinding} from './bindings';
 
 import {BindingOptions} from './index';
 
@@ -20,27 +19,9 @@ export const getPostMenuBindings = (options: BindingOptions): AppBinding => {
     // admins and agents can create tickets in Zendesk
     if (options.isConnected) {
         if (isZdAdmin(options.zdUserRole) || isZdAgent(options.zdUserRole)) {
-            bindings.push(openCreateTicketForm(options.mattermostSiteUrl));
+            bindings.push(getCreateTicketBinding());
         }
     }
     return newPostMenuBindings(bindings);
 };
 
-export const openCreateTicketForm = (mmSiteUrl: string): AppBinding => {
-    return {
-        app_id: getManifest().app_id,
-        label: 'Create Zendesk Ticket',
-        description: 'Create ticket in Zendesk',
-        icon: ZendeskIcon,
-        location: Locations.Ticket,
-        call: {
-            path: Routes.App.CallPathTicketOpenForm,
-            expand: {
-                post: AppExpandLevels.EXPAND_ALL,
-                acting_user: AppExpandLevels.EXPAND_ALL,
-                acting_user_access_token: AppExpandLevels.EXPAND_ALL,
-                oauth2_user: AppExpandLevels.EXPAND_ALL,
-            },
-        },
-    };
-};

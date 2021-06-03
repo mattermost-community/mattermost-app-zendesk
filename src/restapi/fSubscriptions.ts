@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import {newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newFormCallResponse, newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage} from '../utils/call_responses';
 import {newSubscriptionsForm} from '../forms';
 import {newApp} from '../app/app';
 import {webhookConfigured} from '../utils/utils';
@@ -16,22 +16,31 @@ export async function fOpenSubscriptionsForm(req: Request, res: Response): Promi
         res.json(newOKCallResponseWithMarkdown(msg));
         return;
     }
-
-    const form = await newSubscriptionsForm(req.body);
-    const callResponse = newFormCallResponse(form);
-    res.json(callResponse);
+    try {
+        const form = await newSubscriptionsForm(req.body);
+        res.json(newFormCallResponse(form));
+    } catch (error) {
+        res.json(newErrorCallResponseWithMessage('Unable to open subscriptions form: ' + error.message));
+    }
 }
 
 // SubmitOrUpdateSubscriptionsForm updates the subscriptions form with new values or
 // submits the form if submit button is clicked
 export async function fSubmitOrUpdateSubscriptionsForm(req: Request, res: Response): Promise<void> {
-    const form = await newSubscriptionsForm(req.body);
-    const callResponse = newFormCallResponse(form);
-    res.json(callResponse);
+    try {
+        const form = await newSubscriptionsForm(req.body);
+        res.json(newFormCallResponse(form));
+    } catch (error) {
+        res.json(newErrorCallResponseWithMessage('Unable to update subscriptions form: ' + error.message));
+    }
 }
 
 export async function fSubmitOrUpdateSubscriptionsSubmit(req: Request, res: Response): Promise<void> {
-    const app = newApp(req.body);
-    const callResponse = await app.createZDSubscription();
-    res.json(callResponse);
+    try {
+        const app = newApp(req.body);
+        const callResponse = await app.createZDSubscription();
+        res.json(callResponse);
+    } catch (error) {
+        res.json(newErrorCallResponseWithMessage('Unable to create subscription: ' + error.message));
+    }
 }
