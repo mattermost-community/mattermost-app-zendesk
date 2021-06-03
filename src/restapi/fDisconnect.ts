@@ -1,12 +1,11 @@
 import {Request, Response} from 'express';
 
 import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage} from '../utils/call_responses';
 import {newZDClient, newAppsClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
-import {tryPromiseWithMessage} from '../utils';
 import {ZDTokensResponse} from '../utils/ZDTypes';
-import {newConfigStore} from '../store';
+import {newConfigStore, AppConfigStore} from '../store/config';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;
@@ -17,7 +16,15 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     };
 
     // get the saved service account config zendesk access_token
-    const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
+    const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
+    let config: AppConfigStore;
+    try {
+        config = await configStore.getValues();
+    } catch (error) {
+        res.json(newErrorCallResponseWithMessage('fDisconnect - Unable to get config store values: ' + error.message));
+        return;
+    }
+
     const configOauthToken = config.zd_oauth_access_token;
     const text = 'This mattermost account is connected via oauth2 to Zendesk for subscription functionality and cannot be disconnected until the access token is updated to a new user access token. Please have another connected Mattermost System Admin user with Zendesk Admin privileges run `/zendesk setup-target` to update the access_token';
     if (context.oauth2.user.token.access_token === configOauthToken) {
@@ -26,8 +33,13 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     }
 
     const zdClient = await newZDClient(zdOptions);
-    const oauthReq = zdClient.oauthtokens.list();
-    const tokens: ZDTokensResponse = await tryPromiseWithMessage(oauthReq, 'failed to get oauth tokens');
+    let tokens: ZDTokensResponse;
+    try {
+        tokens = await zdClient.oauthtokens.list();
+    } catch (error) {
+        res.json(newErrorCallResponseWithMessage('fDisconnect - Unable to list zendesk oauth tokens: ' + error.message));
+        return;
+    }
 
     // get the token ID
     const tokenID = getUserTokenID(zdOptions.oauth2UserAccessToken, tokens);
@@ -37,8 +49,12 @@ export async function fDisconnect(req: Request, res: Response): Promise<void> {
     await ppClient.storeOauth2User({token: {}, role: ''});
 
     // delete the zendesk user oauth token
-    const deleteReq = zdClient.oauthtokens.revoke(tokenID);
-    await tryPromiseWithMessage(deleteReq, 'failed to revoke acting user token');
+    try {
+        await zdClient.oauthtokens.revoke(tokenID);
+    } catch (error) {
+        res.json(newErrorCallResponseWithMessage('fDisconnect - failed to revoke acting user token'));
+        return;
+    }
 
     res.json(newOKCallResponseWithMarkdown('You have disconnected your Zendesk account'));
 }
