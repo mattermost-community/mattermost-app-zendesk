@@ -5,7 +5,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 import {ExpandedBotAdminActingUser, ExpandedOauth2App, Oauth2App} from '../types/apps';
 import {newMMClient} from '../clients';
 import {MMClientOptions} from 'clients/mattermost';
-import {getStaticURL, Routes} from '../utils';
+import {Routes} from '../utils';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {ZendeskIcon} from '../utils/constants';
 import {newConfigStore, ConfigStore, AppConfigStore} from '../store/config';
@@ -27,7 +27,7 @@ export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppFor
     const form: AppForm = {
         title: 'Configure Zendesk',
         header: 'Configure the Zendesk app with the following information.',
-        icon: getStaticURL(call.context.mattermost_site_url, ZendeskIcon),
+        icon: ZendeskIcon,
         fields,
         call: {
             path: Routes.App.CallPathConfigSubmitOrUpdateForm,

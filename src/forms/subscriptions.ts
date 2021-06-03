@@ -10,7 +10,7 @@ import {CtxExpandedBotAdminActingUserOauth2User, ExpandedChannel} from '../types
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-import {getStaticURL, Routes} from '../utils';
+import {Routes} from '../utils';
 import {makeBulletedList, makeSubscriptionOptions, makeChannelOptions, parseTriggerTitle,
     checkBox, getCheckBoxesFromTriggerDefinition, tryPromiseWithMessage} from '../utils/utils';
 import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../utils/ZDTypes';
@@ -43,7 +43,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
     const form: AppForm = {
         title: 'Create or Edit Zendesk Subscriptions',
         header: 'Create or edit channel subscriptions to Zendesk notifications',
-        icon: getStaticURL(call.context.mattermost_site_url, ZendeskIcon),
+        icon: ZendeskIcon,
         submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
         call: {

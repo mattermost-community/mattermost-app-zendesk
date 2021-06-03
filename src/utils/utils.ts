@@ -101,10 +101,6 @@ export function makeBulletedList(pretext: string, items: string[]): string {
     return text;
 }
 
-export function getStaticURL(mattermostSiteUrl: string, name:string): string {
-    return mattermostSiteUrl + '/plugins/com.mattermost.apps/apps/' + getManifest().app_id + '/static/' + name;
-}
-
 export function isConfigured(oauth2: Oauth2App): boolean {
     return Boolean(oauth2.client_id && oauth2.client_secret);
 }

@@ -3,7 +3,7 @@ import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {Routes, Locations, ZendeskIcon} from '../utils/constants';
 import {isZdAdmin, isZdAgent} from '../utils/utils';
-import {getStaticURL, newPostMenuBindings} from '../utils';
+import {newPostMenuBindings} from '../utils';
 import {getManifest} from '../manifest';
 
 import {BindingOptions} from './index';
@@ -31,7 +31,7 @@ export const openCreateTicketForm = (mmSiteUrl: string): AppBinding => {
         app_id: getManifest().app_id,
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         location: Locations.Ticket,
         call: {
             path: Routes.App.CallPathTicketOpenForm,

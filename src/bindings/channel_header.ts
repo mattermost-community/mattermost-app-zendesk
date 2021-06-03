@@ -1,7 +1,7 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {getStaticURL, Routes, newChannelHeaderBindings, isZdAdmin} from '../utils';
+import {Routes, newChannelHeaderBindings, isZdAdmin} from '../utils';
 import {Locations, ZendeskIcon} from '../utils/constants';
 import {getManifest} from '../manifest';
 
@@ -22,7 +22,7 @@ const channelHeaderSubscribe = (mmSiteURL: string): AppBinding => {
         location: Locations.Subscribe,
         label: 'Create Zendesk Subscription',
         description: 'Open Create Zendesk Subscription Modal',
-        icon: getStaticURL(mmSiteURL, ZendeskIcon),
+        icon: ZendeskIcon,
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {

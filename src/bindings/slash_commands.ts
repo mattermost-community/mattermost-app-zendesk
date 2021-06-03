@@ -2,7 +2,7 @@ import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {Routes, Locations, ZendeskIcon} from '../utils/constants';
-import {getStaticURL, newCommandBindings} from '../utils';
+import {newCommandBindings} from '../utils';
 import {isZdAdmin} from '../utils/utils';
 import {BindingOptions} from 'bindings';
 import {getManifest} from '../manifest';
@@ -49,7 +49,7 @@ const cmdConnect = (mmSiteUrl: string): AppBinding => {
         location: Locations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             expand: {
@@ -66,7 +66,7 @@ const cmdDisconnect = (mmSiteUrl: string): AppBinding => {
         location: Locations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             expand: {
@@ -84,7 +84,7 @@ const cmdSubscribe = (mmSiteUrl: string): AppBinding => {
         location: Locations.Subscribe,
         label: 'subscribe',
         description: 'Subscribe notifications to a channel',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.CallPathSubsOpenForm,
@@ -105,7 +105,7 @@ const cmdConfigure = (mmSiteUrl: string): AppBinding => {
         location: Locations.Configure,
         label: 'configure',
         description: 'Configure the installed Zendesk account',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.CallPathConfigOpenForm,
@@ -125,7 +125,7 @@ const cmdMe = (mmSiteUrl: string): AppBinding => {
         location: Locations.Me,
         label: 'me',
         description: 'Show Your Zendesk User Info',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.BindingPathMe,
@@ -142,7 +142,7 @@ const cmdTarget = (mmSiteUrl: string): AppBinding => {
         location: Locations.Target,
         label: 'setup-target',
         description: 'Setup Zendesk Target',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.BindingPathTargetCreate,
@@ -160,7 +160,7 @@ const cmdHelp = (mmSiteUrl: string): AppBinding => {
         location: Locations.Help,
         label: 'help',
         description: 'Show Zendesk Help',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.BindingPathHelp,
