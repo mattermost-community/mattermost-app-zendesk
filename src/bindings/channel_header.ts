@@ -10,7 +10,7 @@ import {BindingOptions} from './index';
 export const getChannelHeaderBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
     if (options.isConnected && isZdAdmin(options.zdUserRole)) {
-        bindings.push(getSubscribeBinding(options.mattermostSiteUrl, 'Create Subscription'));
+        bindings.push(getSubscribeBinding('Create Subscription'));
     }
     return newChannelHeaderBindings(bindings);
 };

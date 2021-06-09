@@ -2,16 +2,15 @@ import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {Routes, Locations, ZendeskIcon} from '../utils/constants';
-import {getStaticURL} from '../utils';
 import {getManifest} from '../manifest';
 
-export const getSubscribeBinding = (mmSiteUrl: string, label?: string): AppBinding => {
+export const getSubscribeBinding = (label?: string): AppBinding => {
     return {
         app_id: getManifest().app_id,
         location: Locations.Subscribe,
         label: label || 'subscribe',
         description: 'Subscribe notifications to a channel',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.CallPathSubsOpenForm,
@@ -25,13 +24,13 @@ export const getSubscribeBinding = (mmSiteUrl: string, label?: string): AppBindi
     };
 };
 
-export const getConnectBinding = (mmSiteUrl: string): AppBinding => {
+export const getConnectBinding = (): AppBinding => {
     return {
         app_id: getManifest().app_id,
         location: Locations.Connect,
         label: 'connect',
         description: 'Connect your Zendesk account',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             expand: {
@@ -42,13 +41,13 @@ export const getConnectBinding = (mmSiteUrl: string): AppBinding => {
     };
 };
 
-export const getDisconnectBinding = (mmSiteUrl: string): AppBinding => {
+export const getDisconnectBinding = (): AppBinding => {
     return {
         app_id: getManifest().app_id,
         location: Locations.Disconnect,
         label: 'disconnect',
         description: 'Disconnect your Zendesk account',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             expand: {
@@ -60,13 +59,13 @@ export const getDisconnectBinding = (mmSiteUrl: string): AppBinding => {
     };
 };
 
-export const getConfigureBinding = (mmSiteUrl: string): AppBinding => {
+export const getConfigureBinding = (): AppBinding => {
     return {
         app_id: getManifest().app_id,
         location: Locations.Configure,
         label: 'configure',
         description: 'Configure the installed Zendesk account',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.CallPathConfigOpenForm,
@@ -80,13 +79,13 @@ export const getConfigureBinding = (mmSiteUrl: string): AppBinding => {
     };
 };
 
-export const getMeBinding = (mmSiteUrl: string): AppBinding => {
+export const getMeBinding = (): AppBinding => {
     return {
         app_id: getManifest().app_id,
         location: Locations.Me,
         label: 'me',
         description: 'Show Your Zendesk User Info',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.BindingPathMe,
@@ -97,13 +96,13 @@ export const getMeBinding = (mmSiteUrl: string): AppBinding => {
     };
 };
 
-export const getTargetBinding = (mmSiteUrl: string): AppBinding => {
+export const getTargetBinding = (): AppBinding => {
     return {
         app_id: getManifest().app_id,
         location: Locations.Target,
         label: 'setup-target',
         description: 'Setup Zendesk Target',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.BindingPathTargetCreate,
@@ -115,13 +114,13 @@ export const getTargetBinding = (mmSiteUrl: string): AppBinding => {
     };
 };
 
-export const getHelpBinding = (mmSiteUrl: string): AppBinding => {
+export const getHelpBinding = (): AppBinding => {
     return {
         app_id: getManifest().app_id,
         location: Locations.Help,
         label: 'help',
         description: 'Show Zendesk Help',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         form: {fields: []},
         call: {
             path: Routes.App.BindingPathHelp,
@@ -132,12 +131,12 @@ export const getHelpBinding = (mmSiteUrl: string): AppBinding => {
     };
 };
 
-export const getCreateTicketBinding = (mmSiteUrl: string): AppBinding => {
+export const getCreateTicketBinding = (): AppBinding => {
     return {
         app_id: getManifest().app_id,
         label: 'Create Zendesk Ticket',
         description: 'Create ticket in Zendesk',
-        icon: getStaticURL(mmSiteUrl, ZendeskIcon),
+        icon: ZendeskIcon,
         location: Locations.Ticket,
         call: {
             path: Routes.App.CallPathTicketOpenForm,

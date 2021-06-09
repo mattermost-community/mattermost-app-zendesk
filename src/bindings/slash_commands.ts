@@ -9,35 +9,34 @@ import {getConnectBinding, getDisconnectBinding, getConfigureBinding, getSubscri
 // getCommandBindings returns the users slash command bindings
 export const getCommandBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
-    const mmSiteURL = options.mattermostSiteUrl;
 
     // only show configuration option if admin has not configured the plugin
     if (!options.isConfigured) {
         if (options.isSystemAdmin) {
-            bindings.push(getConfigureBinding(mmSiteURL));
-            bindings.push(getHelpBinding(mmSiteURL));
-            return newCommandBindings(mmSiteURL, bindings);
+            bindings.push(getConfigureBinding());
+            bindings.push(getHelpBinding());
+            return newCommandBindings(bindings);
         }
     }
     if (options.isConnected) {
         // only admins can create triggers and targets in zendesk
         if (isZdAdmin(options.zdUserRole)) {
-            bindings.push(getSubscribeBinding(mmSiteURL));
+            bindings.push(getSubscribeBinding());
             if (options.isSystemAdmin) {
-                bindings.push(getTargetBinding(mmSiteURL));
+                bindings.push(getTargetBinding());
             }
         }
-        bindings.push(getDisconnectBinding(mmSiteURL));
+        bindings.push(getDisconnectBinding());
 
         // bindings.push(getMeBinding(mmSiteURL));
     } else {
-        bindings.push(getConnectBinding(mmSiteURL));
+        bindings.push(getConnectBinding());
     }
 
     if (options.isSystemAdmin) {
-        bindings.push(getConfigureBinding(mmSiteURL));
+        bindings.push(getConfigureBinding());
     }
-    bindings.push(getHelpBinding(mmSiteURL));
-    return newCommandBindings(mmSiteURL, bindings);
+    bindings.push(getHelpBinding());
+    return newCommandBindings(bindings);
 };
 

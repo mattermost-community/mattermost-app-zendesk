@@ -19,7 +19,7 @@ export const getPostMenuBindings = (options: BindingOptions): AppBinding => {
     // admins and agents can create tickets in Zendesk
     if (options.isConnected) {
         if (isZdAdmin(options.zdUserRole) || isZdAgent(options.zdUserRole)) {
-            bindings.push(getCreateTicketBinding(options.mattermostSiteUrl));
+            bindings.push(getCreateTicketBinding());
         }
     }
     return newPostMenuBindings(bindings);

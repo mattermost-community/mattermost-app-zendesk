@@ -10,7 +10,7 @@ import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields, ZendeskIc
 import {BaseFormFields} from '../utils/base_form_fields';
 import {ZDUserField} from '../utils/ZDTypes';
 
-import {getStaticURL, Routes} from '../utils';
+import {Routes} from '../utils';
 import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
@@ -41,7 +41,7 @@ export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm
     const form: AppForm = {
         title: 'Create Zendesk Ticket',
         header: 'Create a Zendesk ticket from Mattermost by filling out and submitting this form. Additional text can be added in the `Optional Message` field.',
-        icon: getStaticURL(call.context.mattermost_site_url, ZendeskIcon),
+        icon: ZendeskIcon,
         fields,
         call: {
             path: Routes.App.CallPathTicketSubmitOrUpdateForm,
