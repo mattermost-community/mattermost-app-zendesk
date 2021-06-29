@@ -8,14 +8,14 @@ This repository is licensed under the [Apache 2.0 License](https://github.com/ma
 
 ## Table of Contents
 
- - [Admin Guide](#admin-guide)
-    - [Setting up](#setting-up)
-    - [Notification management](#notification-management)
-    - [System Admin slash commands](#system-admin-slash-commands)
- - [User's Guide](#users-guide)
-    - [Slash commands](#slash-commands)
-    - [Create a ticket](#create-a-ticket)
- - [Development](#development)
+- [Admin Guide](#admin-guide)
+  - [Setting up](#setting-up)
+  - [Notification management](#notification-management)
+  - [System Admin slash commands](#system-admin-slash-commands)
+- [User's Guide](#users-guide)
+  - [Slash commands](#slash-commands)
+  - [Create a ticket](#create-a-ticket)
+- [Development](#development)
 
 ## Admin Guide
 
@@ -80,9 +80,9 @@ Zendesk Admins are able to view these subscriptions inside Zendesk via **Setting
 
 ### System Admin slash commands
 
-`/zendesk configure` - Configure the Zendesk app after installation.
-`/zendesk setup-target` - Set up the Zendesk target for your instance.
-`/zendesk subscribe` - Setu p a channel subscription.
+`/zendesk configure` - Configure the Zendesk app after installation.  
+`/zendesk setup-target` - Set up the Zendesk target for your instance. (Requires Zendesk admin permissions)  
+`/zendesk subscribe` - Setup a channel subscription. (Requires Zendesk admin permissions)  
 
 ## User's Guide
 
@@ -94,11 +94,11 @@ This slash command connects your Mattermost and Zendesk accounts via OAuth2 auth
 
 ### Slash commands
 
-- `/zendesk connect` - Connect your Zendesk account to Mattermost.
-- `/zendesk disconnect` - Disconnect your Zendesk account from Mattermost.
-- `/zendesk help` - Post ephemeral message with help text.
+`/zendesk connect` - Connect your Zendesk account to Mattermost.  
+`/zendesk disconnect` - Disconnect your Zendesk account from Mattermost.  
+`/zendesk help` - Post ephemeral message with help text.  
 
- ## Create a ticket
+## Create a ticket
 
 Creating a ticket from a Mattermost post is done through the `...` post menu button
 
