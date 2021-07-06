@@ -1,4 +1,5 @@
 export const CommandTrigger = 'zendesk';
+
 export const ZendeskIcon = 'zendesk.png';
 export const FormTextAreaMinLength = 2;
 export const FormTextAreaMaxLength = 1024;

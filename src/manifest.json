@@ -6,7 +6,7 @@
     "description": "Zendesk cloud app for Mattermost",
     "homepage_url": "https://github.com/mattermost/mattermost-app-zendesk",
     "root_url": "",
-    "icon": "zendesk.png",
+    "icon": "zendesk-profile-icon.png",
     "requested_permissions": [
         "act_as_user",
         "act_as_bot",
