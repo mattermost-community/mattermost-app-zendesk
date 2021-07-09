@@ -241,7 +241,7 @@ class FormFields extends BaseFormFields {
         if (this.unsupportedFields.length !== 0 || this.unsupportedOperators.length !== 0) {
             const host = this.zdHost;
             const trigger = this.getSelectedSubTrigger();
-            const url = `${host}/agent/admin/triggers/${trigger.id}`;
+            const url = `${host}agent/admin/triggers/${trigger.id}`;
             this.addErrorMessageField(url);
             return false;
         }
@@ -274,20 +274,15 @@ class FormFields extends BaseFormFields {
     // addErrorMessageField adds a text field with a message when a trigger has
     // conditions not supported by the app
     addErrorMessageField(link: string): void {
-        let text = 'The following condition fields are not currently supported by the app. Please visit the trigger link to modify the conditions for this subscription';
-        text += '\n\n';
-        text += makeBulletedList('Unsupported Fields', this.unsupportedFields);
-        text += '\n\n';
-        text += makeBulletedList('Unsupported Field Operators', this.unsupportedOperators);
-        text += '\n\n' + link;
+        let md = 'The following condition fields are not currently supported by the app. Please visit the trigger link to modify the conditions for this subscription\n';
+        md += makeBulletedList('Unsupported Fields', this.unsupportedFields) + '\n';
+        md += makeBulletedList('Unsupported Field Operators', this.unsupportedOperators) + '\n';
+        md += '##### Trigger Link\n' + link;
 
         const f: AppField = {
             name: SubscriptionFields.UnsupportedFieldsTextName,
-            type: AppFieldTypes.TEXT,
-            subtype: 'textarea',
-            label: 'Optional message',
-            value: text,
-            readonly: true,
+            type: 'markdown',
+            description: md,
         };
 
         this.builder.addField(f);
