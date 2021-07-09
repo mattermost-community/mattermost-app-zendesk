@@ -241,7 +241,7 @@ class FormFields extends BaseFormFields {
         if (this.unsupportedFields.length !== 0 || this.unsupportedOperators.length !== 0) {
             const host = this.zdHost;
             const trigger = this.getSelectedSubTrigger();
-            const url = `${host}agent/admin/triggers/${trigger.id}`;
+            const url = `${host}/agent/admin/triggers/${trigger.id}`;
             this.addErrorMessageField(url);
             return false;
         }
