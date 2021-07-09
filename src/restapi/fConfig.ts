@@ -35,6 +35,7 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
         const targetID = cValues.zd_target_id;
         const zdOauth2AccessToken = cValues.zd_oauth_access_token;
         const storeValues = call.values as AppConfigStore;
+        storeValues.zd_url = storeValues.zd_url.replace(/\/$/, '');
         storeValues.zd_target_id = targetID;
         storeValues.zd_oauth_access_token = zdOauth2AccessToken;
         await configStore.storeConfigInfo(storeValues);
