@@ -113,13 +113,16 @@ class FormFields extends BaseFormFields {
     async getTriggers(): Promise<any> {
         // modified node-zendesk to allow hitting triggers/search api
         // returns all triggers for all channels and teams
-        let search = SubscriptionFields.PrefixTriggersTitle;
-        search += SubscriptionFields.RegexTriggerInstance;
-        search += this.call.context.mattermost_site_url;
-        search += SubscriptionFields.RegexTriggerTeamID;
-        search += this.call.context.team_id;
-        search += SubscriptionFields.RegexTriggerChannelID;
-        search += this.call.context.channel_id;
+        const search = [
+            SubscriptionFields.PrefixTriggersTitle,
+            SubscriptionFields.RegexTriggerInstance,
+            this.call.context.mattermost_site_url,
+            SubscriptionFields.RegexTriggerTeamID,
+            this.call.context.team_id,
+            SubscriptionFields.RegexTriggerChannelID,
+            this.call.context.channel_id,
+        ].join('');
+
         const client = this.zdClient as ZDClient;
         const searchReq = client.triggers.search(search) || '';
         return tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
@@ -274,10 +277,13 @@ class FormFields extends BaseFormFields {
     // addErrorMessageField adds a text field with a message when a trigger has
     // conditions not supported by the app
     addErrorMessageField(link: string): void {
-        let md = 'The following condition fields are not currently supported by the app. Please visit the trigger link to modify the conditions for this subscription\n';
-        md += makeBulletedList('Unsupported Fields', this.unsupportedFields) + '\n';
-        md += makeBulletedList('Unsupported Field Operators', this.unsupportedOperators) + '\n';
-        md += '##### Trigger Link\n' + link;
+        const md = [
+            'The following condition fields are not currently supported by the app. Please visit the trigger link to modify the conditions for this subscription',
+            makeBulletedList('Unsupported Fields', this.unsupportedFields),
+            makeBulletedList('Unsupported Field Operators', this.unsupportedOperators),
+            '##### Trigger Link',
+            link,
+        ].join('\n');
 
         const f: AppField = {
             name: SubscriptionFields.UnsupportedFieldsTextName,
