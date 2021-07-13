@@ -12,7 +12,7 @@ export async function fHelp(req: Request, res: Response): Promise<void> {
         getHeader(),
         getCommands(req.body),
         getPostText(),
-    ].join('\n');
+    ].join('');
     res.json(newOKCallResponseWithMarkdown(helpText));
 }
 
