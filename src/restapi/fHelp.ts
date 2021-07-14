@@ -31,30 +31,30 @@ function getCommands(call: AppCallRequest): string {
 }
 
 function getUserCommands(): string {
-    return [
+    return joinLines(
         h5('User Commands'),
         addBulletSlashCommand('connect'),
         addBulletSlashCommand('disconnect'),
         addBulletSlashCommand('help'),
-    ].join('\n') + '\n';
+    ) + '\n';
 }
 
 function getAdminCommands(): string {
-    return [
+    return joinLines(
         h5('System Admin Commands'),
         addBulletSlashCommand('configure'),
         addBulletSlashCommand('setup-target'),
         addBulletSlashCommand('subscribe'),
-    ].join('\n') + '\n';
+    ) + '\n';
 }
 
 function getPostText(): string {
-    return [
+    return joinLines(
         h5('Post Menu Options'),
-        'click the (...) on a post\n',
+        textLine('click the (...) on a post'),
         addBullet('Create Zendesk Ticket'),
         addBullet('Zendesk Subscriptions'),
-    ].join('\n') + '\n';
+    ) + '\n';
 }
 
 function addBullet(text: string): string {
@@ -71,4 +71,12 @@ function h5(text: string): string {
 
 function h4(text: string): string {
     return `#### ${text}\n`;
+}
+
+function textLine(text: string): string {
+    return `${text}\n`;
+}
+
+function joinLines(...lines: string[]): string {
+    return lines.join('\n');
 }
