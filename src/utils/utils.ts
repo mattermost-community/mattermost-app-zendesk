@@ -96,7 +96,7 @@ export function baseUrlFromContext(mattermostSiteUrl: string): string {
 export function makeBulletedList(pretext: string, items: string[]): string {
     let text = '* ' + items.join('\n* ');
     if (pretext) {
-        text = `###  ${pretext}\n` + text;
+        text = `####  ${pretext}\n${text}`;
     }
     return text;
 }
