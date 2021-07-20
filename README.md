@@ -72,11 +72,23 @@ Note, the access token is only used to read ticket information when a subcriptio
 
 ## Notification management
 
-Subscriptions to Zendesk events can be added via the channel header, post menu, or using a slash command. Each subscription creates a [Zendesk Trigger](https://developer.zendesk.com/rest_api/docs/support/triggers). A trigger consists of one or more actions performed when a ticket is created or updated. The actions are performed only if certain conditions are met. For example, a trigger can notify the customer when an agent changes the status of a ticket to Solved.
+Subscriptions to Zendesk events can be added via the channel header or using a slash command. Each subscription creates a [Zendesk Trigger](https://developer.zendesk.com/rest_api/docs/support/triggers). A trigger consists of one or more actions performed when a ticket is created or updated. The actions are performed only if certain conditions are met. For example, a trigger can notify the customer when an agent changes the status of a ticket to Solved.
 
 Triggers send a notification based on specified conditions. Subscriptions currently support the `changed` action on a limited number of fields, but will have enhancements in the future.
 
 Zendesk Admins are able to view these subscriptions inside Zendesk via **Settings > Business Rules > Triggers** and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`. After creating a notification from Mattermost, you can access the trigger in Zendesk and modify conditions of the trigger. If an unsupported condition is added, the user will be notified through Mattermost and a link will be provided to the Zendesk trigger where it can be further modified.
+
+After saving a subscription, an ephemeral confirmation message is posted in Mattermost, with a link that takes you to the trigger in Zendesk. Note that only you will see this ephemeral message.
+
+![subscription post](./docs/subscription-post.png)
+
+When you create a subscription for a Mattermost channel, the following message will be posted that shows information about the new ticket.
+
+![subscription new ticket](./docs/subscription-notification-new-ticket.png)
+
+When a notification for a subscription is received, the Zendesk app posts a message in the channel. The message contains a link to the ticket, the field that changed, and its previous and changed values.
+
+![subscription change](./docs/subscription-notification-change.png)
 
 ### System Admin slash commands
 
