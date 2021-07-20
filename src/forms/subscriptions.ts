@@ -40,6 +40,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
     const formFields = new FormFields(call, zdClient, mmClient, zdHost);
     const fields = await formFields.getSubscriptionFields();
 
+    const subOptions = fields.find((field) => field.name === SubscriptionFields.SubSelectName);
     const form: AppForm = {
         title: 'Create or Edit Zendesk Subscriptions',
         header: 'Create or edit channel subscriptions to Zendesk notifications',
@@ -48,6 +49,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
         fields,
         call: {
             path: Routes.App.CallPathSubsSubmitOrUpdateForm,
+            state: subOptions.options,
         },
     };
     return form;
@@ -110,7 +112,7 @@ class FormFields extends BaseFormFields {
     }
 
     // getTriggers gets all the team triggers saved in Zendesk via the ZD client
-    async getTriggers(): Promise<any> {
+    async getTriggers(): Promise<ZDTrigger[]> {
         // modified node-zendesk to allow hitting triggers/search api
         // returns all triggers for all channels and teams
         const search = [

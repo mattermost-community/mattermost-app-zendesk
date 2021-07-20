@@ -1,6 +1,6 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppCallValues, AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallValues, AppCallResponse, AppCallRequest, AppSelectOption} from 'mattermost-redux/types/apps';
 
 import {
     newErrorCallResponseWithFieldErrors,
@@ -8,7 +8,7 @@ import {
     newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
     FieldValidationErrors} from '../utils/call_responses';
-import {tryPromiseWithMessage, isUserSystemAdmin} from '../utils';
+import {tryPromiseWithMessage} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
@@ -107,6 +107,11 @@ class AppImpl implements App {
         let request: any;
         let action: string;
         let actionType: string;
+
+        const uniqueSubnameError = {
+            [SubscriptionFields.SubTextName]: 'Channel subscription names must be unique. Please choose another name.',
+        };
+
         const subName = this.values[SubscriptionFields.SubTextName];
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
@@ -115,11 +120,17 @@ class AppImpl implements App {
             actionType = 'delete';
             break;
         case Boolean(zdTriggerPayload.trigger.id):
+            if (!this.validateSubNameIsUnique(subName)) {
+                return newErrorCallResponseWithFieldErrors(uniqueSubnameError);
+            }
             request = zdClient.triggers.update(zdTriggerPayload.trigger.id, zdTriggerPayload);
             action = 'Updating';
             actionType = 'update';
             break;
         default:
+            if (!this.validateSubNameIsUnique(subName)) {
+                return newErrorCallResponseWithFieldErrors(uniqueSubnameError);
+            }
             request = zdClient.triggers.create(zdTriggerPayload);
             action = 'Creating';
             actionType = 'create';
@@ -148,6 +159,27 @@ class AppImpl implements App {
 
         // return the call response with successful markdown message
         return newOKCallResponseWithMarkdown(msg);
+    }
+
+    validateSubNameIsUnique = (subName: string): boolean => {
+        const state = this.call.state;
+        const values = this.call.values;
+
+        // if matching subname does not exist in state, subname is unique
+        const subFound = state.find((option: AppSelectOption) => option.label === subName);
+        if (!subFound) {
+            return true;
+        }
+
+        const subOptions = state.filter((option: AppSelectOption) => option.label === subName);
+        const subSelectLabel = values?.[SubscriptionFields.SubSelectName].label;
+
+        // if changing the subName of an existing subscription, ensure new name does not exist
+        if (subSelectLabel !== subName) {
+            return subOptions.length === 0;
+        }
+
+        return subOptions.length <= 1;
     }
 
     createActingUserPost = async (message: string): Promise<void> => {
