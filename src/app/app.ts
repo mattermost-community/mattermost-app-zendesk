@@ -1,6 +1,6 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppCallValues, AppCallResponse, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallValues, AppCallResponse, AppCallRequest, AppSelectOption} from 'mattermost-redux/types/apps';
 
 import {
     newErrorCallResponseWithFieldErrors,
@@ -8,14 +8,13 @@ import {
     newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
     FieldValidationErrors} from '../utils/call_responses';
-import {tryPromiseWithMessage, isUserSystemAdmin} from '../utils';
+import {tryPromiseWithMessage} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {CtxExpandedBotAdminActingUserOauth2UserChannelPost} from '../types/apps';
 import {SubscriptionFields} from '../utils/constants';
 import {ZDTriggerPayload} from '../utils/ZDTypes';
-import {getCheckBoxesFromTriggerDefinition} from '../utils/utils';
 import {newConfigStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
@@ -84,9 +83,6 @@ class AppImpl implements App {
     createZDSubscription = async (): Promise<AppCallResponse> => {
         // get zendesk client for user
         const zdClient = await newZDClient(this.zdOptions);
-        const req = zdClient.triggers.definitions() || '';
-        const definitions = await tryPromiseWithMessage(req, 'Failed to fetch trigger definitions');
-        const checkboxes = getCheckBoxesFromTriggerDefinition(definitions);
 
         const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
@@ -98,7 +94,7 @@ class AppImpl implements App {
         // create the trigger object from the form response
         let zdTriggerPayload: ZDTriggerPayload;
         try {
-            zdTriggerPayload = newTriggerFromForm(this.call, checkboxes, targetID);
+            zdTriggerPayload = newTriggerFromForm(this.call, targetID);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }
@@ -107,6 +103,11 @@ class AppImpl implements App {
         let request: any;
         let action: string;
         let actionType: string;
+
+        const uniqueSubnameError = {
+            [SubscriptionFields.SubTextName]: 'Channel subscription names must be unique. Please choose another name.',
+        };
+
         const subName = this.values[SubscriptionFields.SubTextName];
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
@@ -115,11 +116,17 @@ class AppImpl implements App {
             actionType = 'delete';
             break;
         case Boolean(zdTriggerPayload.trigger.id):
+            if (!this.validateSubNameIsUnique(subName)) {
+                return newErrorCallResponseWithFieldErrors(uniqueSubnameError);
+            }
             request = zdClient.triggers.update(zdTriggerPayload.trigger.id, zdTriggerPayload);
             action = 'Updating';
             actionType = 'update';
             break;
         default:
+            if (!this.validateSubNameIsUnique(subName)) {
+                return newErrorCallResponseWithFieldErrors(uniqueSubnameError);
+            }
             request = zdClient.triggers.create(zdTriggerPayload);
             action = 'Creating';
             actionType = 'create';
@@ -148,6 +155,32 @@ class AppImpl implements App {
 
         // return the call response with successful markdown message
         return newOKCallResponseWithMarkdown(msg);
+    }
+
+    validateSubNameIsUnique = (proposedSubName: string): boolean => {
+        // state contains the list of saved subscriptions in Zendesk
+        const zdSubs = this.call.state.conditions;
+        const values = this.call.values;
+
+        // label value of the selected dropdown subscription
+        const selectedSubName = values?.[SubscriptionFields.SubSelectName].label;
+
+        // if proposed subname does not exist in existing ZD subs, subname is unique
+        const subFound = zdSubs.find((option: AppSelectOption) => option.label === proposedSubName);
+        if (!subFound) {
+            return true;
+        }
+
+        // matchingSubs is an array of existing ZD subs that match the proposed new subName
+        const matchingSubs = zdSubs.filter((option: AppSelectOption) => option.label === proposedSubName);
+        const numMatchingSubs = matchingSubs.length;
+
+        // if changing the subName of an existing subscription, ensure new name does not exist
+        if (selectedSubName !== proposedSubName) {
+            return numMatchingSubs === 0;
+        }
+
+        return numMatchingSubs <= 1;
     }
 
     createActingUserPost = async (message: string): Promise<void> => {

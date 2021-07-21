@@ -1,4 +1,5 @@
 export const CommandTrigger = 'zendesk';
+
 export const ZendeskIcon = 'zendesk.png';
 export const FormTextAreaMinLength = 2;
 export const FormTextAreaMaxLength = 1024;
@@ -21,6 +22,7 @@ const ZDPaths = {
     OAuthAuthorizationURI: '/oauth/authorizations/new',
     OAuthAccessTokenURI: '/oauth/tokens',
     TicketPathPrefix: '/agent/tickets',
+    AccessURI: '/access/unauthenticated',
     APIVersion: '/api/v2',
 };
 
@@ -136,6 +138,11 @@ export const SubscriptionFields = {
     NewSub_Hint: 'Name of your subscription',
     NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
+
+    ConditionTypes: ['all', 'any'],
+    ConditionFieldSuffix: 'field',
+    ConditionOperatorSuffix: 'operator',
+    ConditionValueSuffix: 'value',
 
     PrefixCustomDefinitionSubject: 'custom_fields_',
     PrefixTriggersTitle: '__mm_webhook',

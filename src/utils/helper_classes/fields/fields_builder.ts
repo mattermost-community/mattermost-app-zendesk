@@ -53,6 +53,7 @@ class FieldsBuilderImpl implements FieldsBuilder {
         const field: AppField = {
             name: f.name,
             label: f.label,
+            modal_label: f.modal_label,
             type: f.type,
             hint: f.hint,
             subtype: f.subtype,
@@ -63,6 +64,7 @@ class FieldsBuilderImpl implements FieldsBuilder {
             max_length: f.max_length || this.defaultMaxLength,
             refresh: f.refresh,
             is_required: f.is_required,
+            readonly: f.readonly,
 
             // if field is provided by caller, use that value
             value,
