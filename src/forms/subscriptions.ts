@@ -49,7 +49,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
         fields,
         call: {
             path: Routes.App.CallPathSubsSubmitOrUpdateForm,
-            state: subOptions.options,
+            state: subOptions?.options,
         },
     };
     return form;
