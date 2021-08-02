@@ -53,12 +53,6 @@ export async function fOauth2Connect(req: Request, res: Response): Promise<void>
 export async function fOauth2Complete(req: Request, res: Response): Promise<void> {
     const call: AppCallRequestWithValues = req.body;
     const context: CtxExpandedBotActingUserOauth2AppOauth2User = req.body.context;
-    context.oauth2.user = {
-        token: {
-            access_token: '',
-        },
-        role: '',
-    };
 
     const code = call.values.code;
     if (code === '') {
