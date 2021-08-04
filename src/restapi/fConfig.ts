@@ -5,8 +5,9 @@ import {AppCallRequestWithValues, CtxExpandedBotActingUserAccessToken} from '../
 import {newConfigStore, AppConfigStore} from '../store/config';
 import {newAppsClient} from '../clients';
 import {newZendeskConfigForm} from '../forms';
-import {newOKCallResponseWithMarkdown, newFormCallResponse, newErrorCallResponseWithMessage} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown, newFormCallResponse, newErrorCallResponseWithMessage, newErrorCallResponseWithFieldErrors} from '../utils/call_responses';
 import {baseUrlFromContext} from '../utils/utils';
+import {Routes} from '../utils/constants';
 
 // fOpenZendeskConfigForm opens a new configuration form
 export async function fOpenZendeskConfigForm(req: Request, res: Response): Promise<void> {
@@ -36,6 +37,15 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
         const zdOauth2AccessToken = cValues.zd_oauth_access_token;
         const storeValues = call.values as AppConfigStore;
         storeValues.zd_url = storeValues.zd_url.replace(/\/+$/, '');
+
+        try {
+            await verifyUrl(storeValues.zd_url);
+        } catch (error) {
+            callResponse = newErrorCallResponseWithFieldErrors({zd_url: error.message});
+            res.json(callResponse);
+            return;
+        }
+
         storeValues.zd_target_id = targetID;
         storeValues.zd_oauth_access_token = zdOauth2AccessToken;
         await configStore.storeConfigInfo(storeValues);
@@ -44,3 +54,15 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
     }
     res.json(callResponse);
 }
+
+const verifyUrl = async (url: string) => {
+    const verifyURL = url + Routes.ZD.AccessURI;
+    try {
+        const resp = await fetch(verifyURL, {method: 'post'});
+        if (!resp.ok) {
+            throw new Error(`failed to verify url: ${verifyURL}`);
+        }
+    } catch (err) {
+        throw new Error(`failed to fetch url: ${verifyURL}`);
+    }
+};
