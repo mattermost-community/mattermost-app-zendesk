@@ -9,6 +9,7 @@ This repository is licensed under the [Apache 2.0 License](https://github.com/ma
 ## Table of Contents
 
 - [Admin Guide](#admin-guide)
+  - [Prerequisites](#prerequisites)
   - [Setting up](#setting-up)
   - [Notification management](#notification-management)
   - [System Admin slash commands](#system-admin-slash-commands)
@@ -16,10 +17,15 @@ This repository is licensed under the [Apache 2.0 License](https://github.com/ma
   - [Slash commands](#slash-commands)
   - [Create a ticket](#create-a-ticket)
 - [Development](#development)
+- [Provision](#provision)
 
 ## Admin Guide
 
 This guide is intended for Mattermost System Admins setting up the Zendesk app. For more information about contributing to this plugin, visit the [Development section](#development).
+
+### Prerequisites
+
+The Zendesk App is designed using the [Apps Framework](https://developers.mattermost.com/integrate/apps) which differs from the Plugin Framework. The Apps framework is written as a [Mattermost plugin](https://github.com/mattermost/mattermost-plugin-apps) and needs to be installed and enabled before Mattermost Apps like the Zendesk App can be installed. You can install the Apps plugin via the Mattermost Marketplace.
 
 ### Setting up
 
@@ -130,7 +136,7 @@ Start the node server
 
 ## Provision
 
-To provision this app to AWS run `make dist` to generate the App bundle and then follow the steps [here](https://github.com/mattermost/mattermost-plugin-apps#provisioning).
+To provision this app to AWS run `make dist` to generate the App bundle and then follow the steps in the [Deployment (AWS)](https://developers.mattermost.com/integrate/apps/deployment-aws) section of the App Developers Preview online documentation.
 
 ## Troubleshooting
 
