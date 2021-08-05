@@ -161,25 +161,30 @@ class AppImpl implements App {
         return newOKCallResponseWithMarkdown(msg);
     }
 
-    validateSubNameIsUnique = (subName: string): boolean => {
-        const state = this.call.state;
+    validateSubNameIsUnique = (proposedSubName: string): boolean => {
+        // state contains the list of saved subscriptions in Zendesk
+        const zdSubs = this.call.state;
         const values = this.call.values;
 
-        // if matching subname does not exist in state, subname is unique
-        const subFound = state.find((option: AppSelectOption) => option.label === subName);
+        // label value of the selected dropdown subscription
+        const selectedSubName = values?.[SubscriptionFields.SubSelectName].label;
+
+        // if proposed subname does not exist in existing ZD subs, subname is unique
+        const subFound = zdSubs.find((option: AppSelectOption) => option.label === proposedSubName);
         if (!subFound) {
             return true;
         }
 
-        const subOptions = state.filter((option: AppSelectOption) => option.label === subName);
-        const subSelectLabel = values?.[SubscriptionFields.SubSelectName].label;
+        // matchingSubs is an array of existing ZD subs that match the proposed new subName
+        const matchingSubs = zdSubs.filter((option: AppSelectOption) => option.label === proposedSubName);
+        const numMatchingSubs = matchingSubs.length;
 
         // if changing the subName of an existing subscription, ensure new name does not exist
-        if (subSelectLabel !== subName) {
-            return subOptions.length === 0;
+        if (selectedSubName !== proposedSubName) {
+            return numMatchingSubs === 0;
         }
 
-        return subOptions.length <= 1;
+        return numMatchingSubs <= 1;
     }
 
     createActingUserPost = async (message: string): Promise<void> => {
