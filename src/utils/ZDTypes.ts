@@ -17,6 +17,7 @@ export type ZDTrigger = {
     url: string
     id: number
     title: string
+    active: boolean
     conditions: ZDTriggerConditions
 }
 

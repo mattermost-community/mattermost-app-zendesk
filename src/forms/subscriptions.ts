@@ -154,6 +154,10 @@ class FormFields extends BaseFormFields {
     //                array of triggers for the current team
     addChannelTrigger(triggers: ZDTrigger[]): void {
         for (const trigger of triggers) {
+            // do not include inactive triggers
+            if (!trigger.active) {
+                continue;
+            }
             const parsedTitle = parseTriggerTitle(trigger.title);
             const channelID = parsedTitle.channelID;
             if (!this.triggers[channelID]) {
