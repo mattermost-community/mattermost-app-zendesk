@@ -22,6 +22,7 @@ const ZDPaths = {
     OAuthAuthorizationURI: '/oauth/authorizations/new',
     OAuthAccessTokenURI: '/oauth/tokens',
     TicketPathPrefix: '/agent/tickets',
+    AccessURI: '/access/unauthenticated',
     APIVersion: '/api/v2',
 };
 
