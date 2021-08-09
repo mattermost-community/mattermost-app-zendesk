@@ -1,3 +1,8 @@
+// subscriptions_options.json comes from definitions api call
+// any and all use the same exact conditions 
+//
+//
+//
 // ### Conditions
 //
 // The `conditions` object contains the conditions to check the value of ticket fields and
@@ -66,61 +71,70 @@
 //
 // The following conditions are shared by triggers, automations, views and SLA policies.
 //
-// | field                     | operator                                                   | value                                                                                   |
-// | ------------------------- | ---------------------------------------------------------- |---------------------------------------------------------------------------------------- |
-// | `group_id`                | `is`, `is_not`                                             | "" (no group assigned to the ticket) or the numeric ID of the group assigned to the ticket. |
-// | `assignee_id`             | `is`, `is_not`                                             | "" (nobody assigned to the ticket), `current_user`, or the numeric ID of the agent assigned to the ticket. |
-// | `requester_id`            | `is`, `is_not`                                             | "" (no requester specified), `current_user` or the numeric ID of the requester or assignee. |
-// | `organization_id`         | `is`, `is_not`                                             | "" (no organization added to the ticket) or the numeric ID of the organization added to the ticket. |
-// | `current_tags`            | `includes`, `not_includes`                                 | A space-delimited list of tags to compare against the ticket's tags.                    |
-// | `via_id`                  | `is`, `is_not`                                             | The numeric ID of the channel used to create the ticket. See the [Via Types](#via-types) table.  |
-// | `recipient`               | Omit the operator property                                 | For views and automations, the account name in the email address from which the ticket was received. For triggers and SLA policies, the full email address, which can include external addresses. |
-// | `custom_fields_{id}`      | `is`, `is_not`                                             | Specify the id of the custom ticket field. See [Ticket fields](./ticket_fields). Possible values vary depending on the field. See [Setting custom field values](./tickets#setting-custom-field-values).
+// | field                     | operator                     | value                                                                                   |
+// | ------------------------- | ---------------------------- |---------------------------------------------------------------------------------------- |
+// | `group_id`                | `is`, `is_not`               | "" (no group assigned to the ticket) or the numeric ID of the group assigned to the ticket. |
+// | `assignee_id`             | `is`, `is_not`               | "" (nobody assigned to the ticket), `current_user`, or the numeric ID of the agent assigned to the ticket. |
+// | `requester_id`            | `is`, `is_not`               | "" (no requester specified), `current_user` or the numeric ID of the requester or assignee. |
+// | `organization_id`         | `is`, `is_not`               | "" (no organization added to the ticket) or the numeric ID of the organization added to the ticket. |
+// | `current_tags`            | `includes`, `not_includes`   | A space-delimited list of tags to compare against the ticket's tags.                    |
+// | `via_id`                  | `is`, `is_not`               | The numeric ID of the channel used to create the ticket. See the [Via Types](#via-types) table.  |
+// | `recipient`               | Omit the operator property   | For views and automations, the account name in the email address from which the ticket was received. For triggers and SLA policies, the full email address, which can include external addresses. |
+// | `custom_fields_{id}`      | `is`, `is_not`               | Specify the id of the custom ticket field. See [Ticket fields](./ticket_fields). Possible values vary depending on the field. See [Setting custom field values](./tickets#setting-custom-field-values).
 //
 // The following conditions are shared by triggers, automations, and views.
 //
-// | field                     | operator                                                   | value                                                                                   |
-// | ------------------------- | ---------------------------------------------------------- |---------------------------------------------------------------------------------------- |
-// | `type`                    | `is`, `is_not`                                             | `question`, `incident`, `problem`, or `task` |
-// | `status`                  | `is`,<br />`is_not`,<br />`less_than`,<br />`greater_than` | `new`, `open`, `pending`, `hold`, `solved`, or `closed` |
-// | `priority`                | `is`,<br />`is_not`,<br />`less_than`,<br />`greater_than` | "" (no priority assigned to the ticket), `low`, `normal`, `high`, or `urgent` |
-// | `description_includes_word` | `includes` (contains one word),<br />`not_includes` (contains none of the words),<br />`is` (contains string),<br />`is_not` (does not contain string) | Single words or strings in the ticket subject. Not available in triggers. |
-// | `locale_id`               | `is`, `is_not`                                             | The numeric ID of the locale of the person who submitted the ticket. See [List locales](./locales) to list the available locale IDs for the account. |
-// | `satisfaction_score`      | `is`,<br />`is_not`,<br />`less_than`,<br />`greater_than` | `good_with_comment`, `good`, `bad_with_comment`, `bad`, `false` (offered), or `true` (unoffered) |
+// | field                       | operator                                                                    | value                                                                                   |
+// | --------------------------- | --------------------------------------------------------------------------- |---------------------------------------------------------------------------------------- |
+// | `type`                      | `is`, `is_not`                                                              | `question`, `incident`, `problem`, or `task` |
+// | `status`                    | `is`, `is_not`, `less_than`, `greater_than`                                 | `new`, `open`, `pending`, `hold`, `solved`, or `closed` |
+// | `priority`                  | `is`, `is_not`, `less_than`, `greater_than`                                 | "" (no priority assigned to the ticket), `low`, `normal`, `high`, or `urgent` |
+// | `description_includes_word` | `includes` (contains one word), `not_includes` (contains none of the words) | Single words or strings in the ticket subject. Not available in triggers. |
+// |   ""                        | `is` (contains string), `is_not` (does not contain string)                  | Single words or strings in the ticket subject. Not available in triggers. |
+// | `locale_id`                 | `is`, `is_not`                                                              | The numeric ID of the locale of the person who submitted the ticket. See [List locales](./locales) to list the available locale IDs for the account. |
+// | `satisfaction_score`        | `is`, `is_not`, `less_than`, `greater_than`                                 | `good_with_comment`, `good`, `bad_with_comment`, `bad`, `false` (offered), or `true` (unoffered) |
 //
 // The following conditions are shared by triggers and automations.
 //
-// | field                              | operator        | value                                                                      |
-// | ---------------------------------- | --------------- |--------------------------------------------------------------------------- |
-// | `user.custom_fields_{key}`         | `is`,<br />`is_not`,<br />`present` (omit value),<br />`not_present` (omit value),<br />`includes` (contains one word),<br />`not_includes` (contains none of the words),<br />`includes_string` (contains string),<br />`not_includes_string` (does not contain string) | Specify the key of the custom user field. See [User fields](./user_fields). Possible values vary depending on the field. See [user_fields](./users#user-fields) in the Users API. |
-// | `organization.custom_fields_{key}` | `is`,<br />`is_not`,<br />`present` (omit value),<br />`not_present` (omit value),<br />`includes` (contains one word),<br />`not_includes` (contains none of the words),<br />`includes_string` (contains string),<br />`not_includes_string` (does not contain string) | Specify the key of the custom organization field. See [Organization fields](./organization_fields). Possible values vary depending on the field. See [organization_fields](./organizations) in the Organizations API. |
+// | field                              | operator                                                                             | value                                                                      |
+// | ---------------------------------- | ------------------------------------------------------------------------------------ |--------------------------------------------------------------------------- |
+// | `user.custom_fields_{key}`         | `is`, `is_not`                                                                       | Specify the key of the custom user field. See [User fields](./user_fields). Possible values vary depending on the field. See [user_fields](./users#user-fields) in the Users API. |
+// |   ""                               | `present` (omit value), `not_present` (omit value)                                   |  |
+// |   ""                               | `includes` (contains one word), `not_includes` (contains none of the words)          |  |
+// |   ""                               | `includes_string` (contains string), `not_includes_string` (does not contain string) |  |
+// | `organization.custom_fields_{key}` | `is`, `is_not`                                                                       | Specify the key of the custom organization field. See [Organization fields](./organization_fields). Possible values vary depending on the field. See [organization_fields](./organizations) in the Organizations API. |
+// |   ""                               | `present` (omit value), `not_present` (omit value)                                   |  |
+// |   ""                               | `includes` (contains one word), `not_includes` (contains none of the words)          |  |
+// |   ""                               | `includes_string` (contains string), `not_includes_string` (does not contain string) |  |
 //
 // Triggers have the following additional operators for some shared fields.
 //
-// | Fields              | Additional trigger operators |
-// | ------------------- | ---------------------------- |
-// | `status`,<br />`type`,<br />`priority`,<br />`group_id`,<br />`assignee_id`,<br />`requester_id`,<br />`organization_id`,<br />`satisfaction_ score` | `changed` (omit value property),<br />`value` (changed to),<br />`value_previous` (changed from),<br />`not_changed`,<br />`not_value` (not changed to),<br />`not_value_previous` (not changed from) |
+// | Fields                                                                                                     | Additional trigger operators |
+// | ---------------------------------------------------------------------------------------------------------- | ---------------------------- |
+// | `status`,`type`,`priority`,`group_id`,`assignee_id`,`requester_id`,`organization_id`,`satisfaction_ score` | `changed` (omit value property),`value` (changed to),`value_previous` (changed from),`not_changed`,`not_value` (not changed to),`not_value_previous` (not changed from) |
 //
 // ##### Additional trigger conditions
 //
 // Triggers have the following additional conditions.
 //
-// | field                     | operator                                           | value                                                                                   |
-// | ------------------------- | -------------------------------------------------- |---------------------------------------------------------------------------------------- |
-// | `subject_includes_word`   | `includes` (contains one word),<br />`not_includes` (contains none of the words),<br />`is` (contains string),<br />`is_not` (does not contain string) | Single words or strings in the subject. |
-// | `comment_includes_word`   | `includes` (contains one word),<br />`not_includes` (contains none of the words),<br />`is` (contains string),<br />`is_not` (does not contain string) | Single words or strings in either the subject or body of the comment. |
-// | `current_via_id`          | `is` or `is_not`                                   | The numeric ID of the channel used to update the ticket. See the [Via Types](#via-types) table. |
-// | `update_type`             | Omit the operator property.                        | `Create` or `Change`                                                                    |
-// | `comment_is_public`       | Omit the operator property.                        | `true`, `false`, `not_relevant` (present), or `requester_can_see_comment` (present and requester can see comment) |
-// | `ticket_is_public`        | Omit the operator property.                        | `public`, `private`
-// | `reopens`                 | `less_than`, `greater_than`, or `is`               | The number of times a ticket has moved from Solved to Open or Pending.                  |
-// | `replies`                 | `less_than`, `greater_than`, or `is`               | The number of public agent comments.                                                    |
-// | `agent_stations`          | `less_than`, `greater_than`, or `is`               | The number of different agents to which a ticket has been assigned.                     |
-// | `group_stations`          | `less_than`, `greater_than`, or `is`               | The number of different groups to which a ticket has been assigned.                     |
-// | `in_business_hours`       | Omit the operator property.                        | `true` or `false`. Available only if an administrator enabled business hours.           |
-// | `requester_twitter_followers_count` | `less_than`, `greater_than`, or `is`     | The number of the requester's Twitter followers.                                        |
-// | `requester_twitter_statuses_count`  | `less_than`, `greater_than`, or `is`     | The total number of the requester's tweets.                                             |
-// | `requester_twitter_verified`        | Omit the operator property               | Omit the value property. The condition is true if the requester has a verified Twitter account. |
+// | field                     | operator                                                                    | value                                                                                   |
+// | ------------------------- | -------------------------------------------=------------------------------- |---------------------------------------------------------------------------------------- |
+// | `subject_includes_word`   | `includes` (contains one word), `not_includes` (contains none of the words) | Single words or strings in the subject. |
+// |   ""                      | `is` (contains string), `is_not` (does not contain string)                  | Single words or strings in the subject. |
+// | `comment_includes_word`   | `includes` (contains one word), `not_includes` (contains none of the words) | Single words or strings in either the subject or body of the comment. |
+// |   ""                      | `is` (contains string), `is_not` (does not contain string)                  | Single words or strings in either the subject or body of the comment. |
+// | `current_via_id`          | `is` or `is_not`                                                            | The numeric ID of the channel used to update the ticket. See the [Via Types](#via-types) table. |
+// | `update_type`             | Omit the operator property.                                                 | `Create` or `Change`                                                                    |
+// | `comment_is_public`       | Omit the operator property.                                                 | `true`, `false`, `not_relevant` (present), or `requester_can_see_comment` (present and requester can see comment) |
+// | `ticket_is_public`        | Omit the operator property.                                                 | `public`, `private`
+// | `reopens`                 | `less_than`, `greater_than`, or `is`                                        | The number of times a ticket has moved from Solved to Open or Pending.                  |
+// | `replies`                 | `less_than`, `greater_than`, or `is`                                        | The number of public agent comments.                                                    |
+// | `agent_stations`          | `less_than`, `greater_than`, or `is`                                        | The number of different agents to which a ticket has been assigned.                     |
+// | `group_stations`          | `less_than`, `greater_than`, or `is`                                        | The number of different groups to which a ticket has been assigned.                     |
+// | `in_business_hours`       | Omit the operator property.                                                 | `true` or `false`. Available only if an administrator enabled business hours.           |
+// | `requester_twitter_followers_count` | `less_than`, `greater_than`, or `is`                              | The number of the requester's Twitter followers.                                        |
+// | `requester_twitter_statuses_count`  | `less_than`, `greater_than`, or `is`                              | The total number of the requester's tweets.                                             |
+// | `requester_twitter_verified`        | Omit the operator property                                        | Omit the value property. The condition is true if the requester has a verified Twitter account. |
 //
 // ##### Additional SLA Policies conditions
 //

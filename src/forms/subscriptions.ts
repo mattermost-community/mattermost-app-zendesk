@@ -1,7 +1,6 @@
 import asyncBatch from 'async-batch/lib';
 
-import {Channel} from 'mattermost-redux/types/channels';
-import {AppSelectOption, AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
 
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
@@ -11,12 +10,13 @@ import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {Routes} from '../utils';
-import {makeBulletedList, makeSubscriptionOptions, parseTriggerTitle,
-    checkBox, getCheckBoxesFromTriggerDefinition, tryPromiseWithMessage} from '../utils/utils';
-import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../utils/ZDTypes';
+import {makeSubscriptionOptions, tryPromiseWithMessage} from '../utils/utils';
+import {ZDTrigger, ZDTriggerConditions} from '../utils/ZDTypes';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {newConfigStore} from '../store';
+
+import subscriptionOptions from './subscription_options.json';
 
 // newSubscriptionsForm returns a form response to create subscriptions
 export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {
@@ -38,7 +38,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
     const zdHost = config.zd_url;
     const mmClient = newMMClient(mmOptions).asAdmin();
     const formFields = new FormFields(call, zdClient, mmClient, zdHost);
-    const fields = await formFields.getSubscriptionFields();
+    const fields = await formFields.addSubscriptionFields();
 
     const form: AppForm = {
         title: 'Create or Edit Zendesk Subscriptions',
@@ -55,262 +55,134 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
 
 type ZDTriggers = Record<string, ZDTrigger[]>
 
-// FormFields retrieves viewable modal app fields. The fields are scoped to the currently viewed team
+// FormFields retrieves viewable modal app fields. The fields are scoped to the currently viewed channel
 class FormFields extends BaseFormFields {
     triggers: ZDTriggers
-    channelsWithSubs: Channel[]
-
     zdHost: string
-    conditions: any
-    checkboxes: checkBox[]
-    unsupportedFields: string[]
-    unsupportedOperators: string[]
+    conditionsOptionsAll: ZDTriggerConditions
+    conditionsOptionsAny: ZDTriggerConditions
 
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4, zdHost: string) {
         super(call, mmClient, zdClient);
+        console.log('call.values', call.values);
         this.triggers = {};
-        this.channelsWithSubs = [];
         this.zdHost = zdHost;
-        this.conditions = [];
-        this.checkboxes = [];
-        this.unsupportedFields = [];
-        this.unsupportedOperators = [];
+        this.conditionsOptionsAll = {};
+        this.conditionsOptionsAny = {};
     }
 
-    async getSubscriptionFields(): Promise<AppField[]> {
-        await this.buildConditions();
-        await this.setState();
-        await this.buildFields();
-        return this.builder.getFields();
-    }
-
-    // buildFields adds fields to list of viewable proxy app fields
-    async buildFields(): Promise<void> {
+    async addSubscriptionFields(): Promise<AppField[]> {
+        await this.fetchZDConditions();
+        this.triggers = await this.fetchChannelTriggers();
         this.addSubSelectField();
 
         // only show subscriptions name field until user selects a value
         if (!this.builder.currentFieldValuesAreDefined()) {
-            return;
-        }
-
-        // if fields aren't valid return before adding fields
-        if (!this.validateConditions()) {
-            return;
+            return this.builder.getFields();
         }
 
         // add fields that are dependant on the subscription name
-        this.addSubNameDependentFields();
-    }
-
-    // setState sets state for triggers and channelsWithSubs
-    async setState(): Promise<void> {
-        const triggers = await this.getTriggers();
-        await this.buildChannelsWithSubs(triggers);
-        this.addChannelTrigger(triggers);
-    }
-
-    // getTriggers gets all the team triggers saved in Zendesk via the ZD client
-    async getTriggers(): Promise<any> {
-        // modified node-zendesk to allow hitting triggers/search api
-        // returns all triggers for all channels and teams
-        const search = [
-            SubscriptionFields.PrefixTriggersTitle,
-            SubscriptionFields.RegexTriggerInstance,
-            this.call.context.mattermost_site_url,
-            SubscriptionFields.RegexTriggerTeamID,
-            this.call.context.team_id,
-            SubscriptionFields.RegexTriggerChannelID,
-            this.call.context.channel_id,
-        ].join('');
-
-        const client = this.zdClient as ZDClient;
-        const searchReq = client.triggers.search(search) || '';
-        return tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
-    }
-
-    // buildChannelsWithSubs builds an array of channels that contain subscription
-    async buildChannelsWithSubs(triggers: ZDTrigger[]): Promise<void> {
-        // prefetch the channels and build unique array of channelIDs
-        const channelIDs: string[] = [];
-        for (const trigger of triggers) {
-            const parsedTitle = parseTriggerTitle(trigger.title);
-            const channelID = parsedTitle.channelID;
-            if (channelIDs.includes(channelID)) {
-                continue;
-            }
-            channelIDs.push(channelID);
-        }
-
-        const parallelJobs = 10;
-        const asyncMethod = async (channelID: string) => {
-            const channel = await this.mmClient.getChannel(channelID);
-            this.channelsWithSubs.push(channel);
-        };
-        await asyncBatch(channelIDs, asyncMethod, parallelJobs);
-    }
-
-    // addChannelTrigger adds the team triggers
-    // triggers - object with keys of channel IDs and values of
-    //                array of triggers for the current team
-    addChannelTrigger(triggers: ZDTrigger[]): void {
-        for (const trigger of triggers) {
-            // do not include inactive triggers
-            if (!trigger.active) {
-                continue;
-            }
-            const parsedTitle = parseTriggerTitle(trigger.title);
-            const channelID = parsedTitle.channelID;
-            if (!this.triggers[channelID]) {
-                this.triggers[channelID] = [];
-            }
-            this.triggers[channelID].push(trigger);
-        }
-    }
-
-    // addSubNameDependentFields add the conditional fields once the
-    // subscription picker is selected
-    addSubNameDependentFields(): void {
         // provide a text field to add the name of the new subscription
         this.addSubNameTextField();
-        this.addSubCheckBoxes();
+        this.addConditionsFields();
         this.addSubmitButtons();
+        return this.builder.getFields();
     }
 
-    // addSubmitButtons adds a delete button in addition to the save button
-    addSubmitButtons(): void {
-        const options = SubscriptionFields.SubmitButtonsOptions;
-
-        const f: AppField = {
-            name: SubscriptionFields.SubmitButtonsName,
-            type: AppFieldTypes.STATIC_SELECT,
-            options,
-        };
-
-        this.builder.addField(f);
-    }
-
-    async buildConditions(): Promise<void> {
+    // fetchZDConditions fetches the conditions as defined by the zendesk instance
+    async fetchZDConditions(): Promise<void> {
         const client = this.zdClient as ZDClient;
         const req = client.triggers.definitions() || '';
         const definitions = await tryPromiseWithMessage(req, 'Failed to fetch trigger definitions');
-        const checkboxes = getCheckBoxesFromTriggerDefinition(definitions);
-        this.checkboxes = checkboxes;
+        this.conditionsOptionsAll = definitions[0].definitions.conditions_all;
+        this.conditionsOptionsAny = definitions[0].definitions.conditions_any;
     }
 
-    // addSubCheckBoxes adds the available check box options for subscription
-    addSubCheckBoxes(): void {
-        const checkboxes: AppField[] = [];
-        for (const box of this.checkboxes) {
-            const f: AppField = {
-                name: box.name,
-                type: AppFieldTypes.BOOL,
-                label: box.label,
-                value: false,
-            };
+    // addConditionFields adds condition fields for a subscription
+    addConditionsFields(): void {
+        const types: string[] = ['any', 'all'];
+        for (const type of types) {
+            this.addConditionsFieldsHeader(type);
+            const conditions = this.getConditions(type);
+            console.log('conditions', conditions);
+            conditions.forEach((condition, i) => {
+                this.addCondition(type, i, condition);
+            });
 
-            if (this.isNewSub()) {
-                checkboxes.push(f);
-                continue;
-            }
-
-            // add checkbox field and set the value
-            if (this.getConditions()) {
-                const anyConditions = this.getConditions()?.any;
-                if (anyConditions && this.isZdFieldChecked(anyConditions, box.name)) {
-                    f.value = true;
-                }
-            }
-            checkboxes.push(f);
-        }
-        this.builder.addFields(checkboxes);
-    }
-
-    // validateFields validates fields bases on conditions supported by the app
-    validateConditions(): boolean {
-        // fields are valid for new subscriptions because
-        if (this.isNewSub()) {
-            return true;
-        }
-
-        const conditions = this.getConditions();
-        if (!conditions) {
-            return true;
-        }
-
-        for (const cType of ['any', 'all']) {
-            for (const condition of conditions[cType]) {
-                this.validateFieldName(condition);
-                this.validateFieldOperator(condition);
-            }
-        }
-
-        // add validation error message field to the modal
-        if (this.unsupportedFields.length !== 0 || this.unsupportedOperators.length !== 0) {
-            const host = this.zdHost;
-            const trigger = this.getSelectedSubTrigger();
-            const url = `${host}/agent/admin/triggers/${trigger.id}`;
-            this.addErrorMessageField(url);
-            return false;
-        }
-        return true;
-    }
-
-    // validateFieldName validates the trigger name is supported by the app
-    validateFieldName(condition: ZDTriggerCondition): void {
-        const found = this.checkboxes.find((box) => box.name === condition.field);
-        if (!found) {
-            this.unsupportedFields.push(condition.field);
+            // add an empty field so user can add a new field
+            this.addCondition(type, conditions.length, null);
         }
     }
 
-    // validateFieldOperator validates the trigger operator is supported by the app
-    validateFieldOperator(condition: ZDTriggerCondition): void {
-        if (condition.operator !== 'changed') {
-            this.unsupportedOperators.push(`${condition.field} - ${condition.operator}`);
+    addCondition(type: string, index: number, condition: any): void {
+        const fieldOptions = this.makeConditionFieldOptions();
+        const field: AppField = {
+            hint: 'field',
+            name: type + '_' + index + '_' + SubscriptionFields.NewConditionFieldOptionValue,
+            type: AppFieldTypes.STATIC_SELECT,
+            options: fieldOptions,
+            label: `${type} Condition ${index}`,
+            refresh: true,
+        };
+
+        if (condition) {
+            field.value = this.getOptionValue(fieldOptions, condition);
+        }
+        console.log('field', field);
+        this.builder.addField(field);
+
+        if (condition) {
+            this.addConditionOperatorField(type, condition.field, index);
+            this.addConditionValueField(condition.field);
         }
     }
 
-    // getAnyConditions returns an array of Zendesk ANY trigger conditions
-    getConditions(): ZDTriggerConditions | undefined {
+    // getConditions returns an array of Zendesk ANY trigger conditions for
+    // the selected subscription
+    getConditions(type: string): ZDTriggerConditions | undefined {
         if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
-            return this.getSelectedSubTrigger().conditions;
+            const cond = this.getSelectedSubTrigger().conditions;
+            return cond[type];
         }
         return undefined;
     }
 
-    // addErrorMessageField adds a text field with a message when a trigger has
-    // conditions not supported by the app
-    addErrorMessageField(link: string): void {
-        const md = [
-            'The following condition fields are not currently supported by the app. Please visit the trigger link to modify the conditions for this subscription',
-            makeBulletedList('Unsupported Fields', this.unsupportedFields),
-            makeBulletedList('Unsupported Field Operators', this.unsupportedOperators),
-            '##### Trigger Link',
-            link,
-        ].join('\n');
-
+    addConditionOperatorField(type: string, field: string, index: number) {
+        const options = this.makeConditionOperationOptions(field);
+        console.log('options', options);
         const f: AppField = {
-            name: SubscriptionFields.UnsupportedFieldsTextName,
-            type: 'markdown',
-            description: md,
+            hint: 'operator',
+            name: type + '_' + index + '_' + SubscriptionFields.NewConditionOperatorOptionValue,
+            type: AppFieldTypes.STATIC_SELECT,
+            options,
+            refresh: true,
         };
-
         this.builder.addField(f);
     }
 
-    // isZdFieldChecked returns a boolean representing if a value in the saved
-    // Zendesk trigger is true or false
-    isZdFieldChecked(conditions: ZDTriggerCondition[], name: string): boolean {
-        const condition = conditions.filter(this.byName(name));
-        return condition.length === 1;
+    addConditionValueField(field: string) {
+        const options = this.makeConditionValueOptions(field);
+        const f: AppField = {
+            hint: 'value',
+            name: SubscriptionFields.NewConditionValueOptionValue,
+            type: AppFieldTypes.STATIC_SELECT,
+            options,
+        };
+        this.builder.addField(f);
     }
 
-    // byName is a map filter function to retrieve a given fieldName from an
-    // array of conditions
-    byName(name: string): (option: ZDTriggerCondition) => boolean {
-        return (option: ZDTriggerCondition): boolean => {
-            return option.field === name;
+    addConditionsFieldsHeader(type: string): void {
+        const md = [
+            `#### Meet ${type} of the following conditions`,
+            '---',
+        ].join('\n');
+
+        const f: AppField = {
+            name: 'anyFields',
+            type: 'markdown',
+            description: md,
         };
+        this.builder.addField(f);
     }
 
     // addNewSubTextField adds a field for adding or editing a subscription name
@@ -337,14 +209,12 @@ class FormFields extends BaseFormFields {
 
     // add addSubSelectField adds the subscription selector modal field
     addSubSelectField(): void {
-        const channelSubs = this.getSubsForSelectedChannel();
-
         // first option is to create new subscription
         const newSubOption = {
             label: SubscriptionFields.NewSub_OptionLabel,
             value: SubscriptionFields.NewSub_OptionValue,
         };
-        const subsOptions = makeSubscriptionOptions(channelSubs);
+        const subsOptions = makeSubscriptionOptions(this.triggers);
         const options = [
             newSubOption,
             ...subsOptions,
@@ -362,33 +232,8 @@ class FormFields extends BaseFormFields {
         this.builder.addField(f);
     }
 
-    // getChannelsWithSubs returns an array of channels that have
-    // subscriptions scoped to the currently viewed team
-    getChannelsWithSubs(): Channel[] {
-        return this.channelsWithSubs;
-    }
-
-    // getSubsForSelectedChannel returns an array of channels for the currently
-    // selected channel
-    getSubsForSelectedChannel(): ZDTrigger[] {
-        // if value is not null, the user selected a value in the channel picker
-        let id = this.getSelectedChannelID();
-        if (id === '') {
-            // by default, look for subscriptions in the current channel
-            id = this.getCurrentChannelID();
-        }
-        if (this.triggers[id]) {
-            return this.triggers[id];
-        }
-        return [];
-    }
-
     isNewSub(): boolean {
         return this.getSelectedSubTriggerID() === SubscriptionFields.NewSub_OptionValue;
-    }
-
-    getSelectedChannelID(): string {
-        return this.builder.getFieldValueByName(SubscriptionFields.ChannelPickerSelectName) as string;
     }
 
     getSelectedSubTrigger(): ZDTrigger {
@@ -405,8 +250,7 @@ class FormFields extends BaseFormFields {
     }
 
     getSubTriggerByID(subID: string): ZDTrigger {
-        const triggers: ZDTrigger[] = this.getChannelTriggers(this.call.context.channel_id);
-        const trigger = triggers.find((t) => t.id.toString() === subID) as ZDTrigger;
+        const trigger = this.triggers.find((t) => t.id.toString() === subID) as ZDTrigger;
         if (!trigger) {
             throw new Error('unable to get trigger by ID ' + subID);
         }
@@ -414,16 +258,76 @@ class FormFields extends BaseFormFields {
         return trigger;
     }
 
-    getChannelTriggers(channelID: string): ZDTrigger[] {
-        if (this.triggers[channelID]) {
-            return this.triggers[channelID];
-        }
-        return [];
+    getOptionValue(fieldOptions, option): any {
+        const field = option.field;
+        const value = fieldOptions.find((f: any) => {
+            return f.value.toString() === field;
+        });
+        return value;
     }
 
-    getDefaultChannelOption() {
-        return (option: AppSelectOption): boolean => {
-            return option.value === this.getCurrentChannelID();
+    makeConditionFieldOptions(): any {
+        const makeOption = (option: any): any => ({label: option.title, value: option.subject});
+        const makeOptions = (options: any[]): any[] => options.map(makeOption);
+
+        const c = subscriptionOptions.conditions;
+        const fields = makeOptions(c);
+        return fields;
+    }
+
+    makeConditionOperationOptions(field: string): any {
+        const condition = subscriptionOptions.conditions.find((c: any) => {
+            return c.subject.toString() === field;
+        });
+        const makeOption = (option: any): any => ({label: option.title, value: option.value});
+        const makeOptions = (options: any[]): any[] => options.map(makeOption);
+
+        const operators = condition.operators;
+        const fields = makeOptions(operators);
+        return fields;
+    }
+
+    makeConditionValueOptions(field: string): any {
+        const condition = subscriptionOptions.conditions.find((c: any) => {
+            return c.subject.toString() === field;
+        });
+        const makeOption = (option: any): any => ({label: option.title, value: option.subject});
+        const makeOptions = (options: any[]): any[] => options.map(makeOption);
+
+        const values = condition.values;
+        const fields = makeOptions(values);
+        return fields;
+    }
+
+    // fetchChannelTriggers gets all the channel triggers saved in Zendesk via the ZD client
+    async fetchChannelTriggers(): Promise<any> {
+        // modified node-zendesk to allow hitting triggers/search api
+        // returns all triggers for all current channel
+        const search = [
+            SubscriptionFields.PrefixTriggersTitle,
+            SubscriptionFields.RegexTriggerInstance,
+            this.call.context.mattermost_site_url,
+            SubscriptionFields.RegexTriggerTeamID,
+            this.call.context.team_id,
+            SubscriptionFields.RegexTriggerChannelID,
+            this.call.context.channel_id,
+        ].join('');
+
+        const client = this.zdClient as ZDClient;
+        const searchReq = client.triggers.search(search) || '';
+        return tryPromiseWithMessage(searchReq, 'Failed to fetch triggers');
+    }
+
+    // addSubmitButtons adds a delete button in addition to the save button
+    addSubmitButtons(): void {
+        const options = SubscriptionFields.SubmitButtonsOptions;
+
+        const f: AppField = {
+            name: SubscriptionFields.SubmitButtonsName,
+            type: AppFieldTypes.STATIC_SELECT,
+            options,
         };
+
+        this.builder.addField(f);
     }
 }

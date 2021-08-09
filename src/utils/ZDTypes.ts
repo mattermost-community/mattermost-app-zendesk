@@ -10,7 +10,7 @@ export type ZDTriggerCondition = {
 
 export type ZDTriggerConditions = {
     all?: ZDTriggerCondition[]
-    any: ZDTriggerCondition[]
+    any?: ZDTriggerCondition[]
 }
 
 export type ZDTrigger = {

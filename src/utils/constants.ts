@@ -139,6 +139,11 @@ export const SubscriptionFields = {
     NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
 
+    NewSubFieldOptionLabel: 'Select Field',
+    NewConditionFieldOptionValue: 'field',
+    NewConditionOperatorOptionValue: 'operator',
+    NewConditionValueOptionValue: 'value',
+
     PrefixCustomDefinitionSubject: 'custom_fields_',
     PrefixTriggersTitle: '__mm_webhook',
     RegexTriggerInstance: '__instance_',
