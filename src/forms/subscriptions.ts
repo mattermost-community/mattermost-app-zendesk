@@ -103,41 +103,51 @@ class FormFields extends BaseFormFields {
         const types: string[] = ['any', 'all'];
         for (const type of types) {
             this.addConditionsFieldsHeader(type);
-            const conditions = this.getConditions(type);
-            console.log('conditions', conditions);
-            conditions.forEach((condition, i) => {
+            const savedZdConditions = this.getConditions(type);
+
+            // iterate through the conditions saved in Zendesk
+            savedZdConditions.forEach((condition, i) => {
                 this.addCondition(type, i, condition);
             });
 
             // add an empty field so user can add a new field
-            this.addCondition(type, conditions.length, null);
+            this.addCondition(type, savedZdConditions.length, null);
         }
     }
 
-    addCondition(type: string, index: number, condition: any): void {
+    // addCondition adds a new condition which consists of
+    // - field name
+    // - condition operator
+    // - value (optional if operator is terminal)
+    addCondition(type: string, index: number, savedZdCondition: any): void {
         const fieldOptions = this.makeConditionFieldOptions();
+
+        const upperType = type.toUpperCase();
+        const label = `${index}. ${upperType} Condition`;
         const field: AppField = {
             hint: 'field',
             name: type + '_' + index + '_' + SubscriptionFields.NewConditionFieldOptionValue,
             type: AppFieldTypes.STATIC_SELECT,
             options: fieldOptions,
-            label: `${type} Condition ${index}`,
+            label,
             refresh: true,
         };
 
-        if (condition) {
-            field.value = this.getOptionValue(fieldOptions, condition);
+        if (savedZdCondition) {
+            field.value = this.getOptionValue(fieldOptions, savedZdCondition);
         }
-        console.log('field', field);
+
         this.builder.addField(field);
 
-        if (condition) {
-            this.addConditionOperatorField(type, condition.field, index);
-            this.addConditionValueField(condition.field);
+        if (savedZdCondition) {
+            const isTerminal = this.addConditionOperatorField(type, savedZdCondition, index);
+            if (!isTerminal) {
+                this.addConditionValueField(savedZdCondition.field);
+            }
         }
     }
 
-    // getConditions returns an array of Zendesk ANY trigger conditions for
+    // getConditions returns an array of Zendesk ANY or ALL trigger conditions for
     // the selected subscription
     getConditions(type: string): ZDTriggerConditions | undefined {
         if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
@@ -147,17 +157,34 @@ class FormFields extends BaseFormFields {
         return undefined;
     }
 
-    addConditionOperatorField(type: string, field: string, index: number) {
-        const options = this.makeConditionOperationOptions(field);
-        console.log('options', options);
+    addConditionOperatorField(type: string, savedZdCondition: any, index: number): boolean {
+        const savedOperValue = savedZdCondition.operator;
+        const options = this.makeConditionOperationOptions(savedZdCondition.field);
+        const savedFieldOption = options.find((option: any) => {
+            return option.value.toString() === savedOperValue;
+        });
+
+        const fieldName = type + '_' + index + '_' + SubscriptionFields.NewConditionOperatorOptionValue;
         const f: AppField = {
             hint: 'operator',
-            name: type + '_' + index + '_' + SubscriptionFields.NewConditionOperatorOptionValue,
+            name: fieldName,
             type: AppFieldTypes.STATIC_SELECT,
             options,
             refresh: true,
         };
+
+        // if call value is set by the user, use it, else used saved Zd value
+        f.value = this.call.values[fieldName] || savedFieldOption;
+
         this.builder.addField(f);
+
+        // determine if operator is terminal
+        const condOption = this.getConditionFromConditionsOptions(savedZdCondition.field);
+        const condOptionOperators = condOption.operators;
+        const operator = condOptionOperators.find((option: any) => {
+            return option.value.toString() === f.value.value;
+        });
+        return operator.terminal;
     }
 
     addConditionValueField(field: string) {
@@ -172,8 +199,9 @@ class FormFields extends BaseFormFields {
     }
 
     addConditionsFieldsHeader(type: string): void {
+        const upperType = type.toUpperCase();
         const md = [
-            `#### Meet ${type} of the following conditions`,
+            `#### Meet \`${upperType}\` of the following conditions`,
             '---',
         ].join('\n');
 
@@ -276,15 +304,20 @@ class FormFields extends BaseFormFields {
     }
 
     makeConditionOperationOptions(field: string): any {
-        const condition = subscriptionOptions.conditions.find((c: any) => {
-            return c.subject.toString() === field;
-        });
+        const condition = this.getConditionFromConditionsOptions(field);
         const makeOption = (option: any): any => ({label: option.title, value: option.value});
         const makeOptions = (options: any[]): any[] => options.map(makeOption);
 
         const operators = condition.operators;
         const fields = makeOptions(operators);
         return fields;
+    }
+
+    getConditionFromConditionsOptions(subject: string): any {
+        const condition = subscriptionOptions.conditions.find((c: any) => {
+            return c.subject.toString() === subject;
+        });
+        return condition;
     }
 
     makeConditionValueOptions(field: string): any {

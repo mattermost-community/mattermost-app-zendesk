@@ -1,0 +1,1049 @@
+{"conditions": [
+  {
+    "title": "Status",
+    "subject": "status",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false },
+      { "value": "less_than", "title": "Less than", "terminal": false },
+      { "value": "greater_than", "title": "Greater than", "terminal": false },
+      { "value": "changed", "title": "Changed", "terminal": true },
+      { "value": "value", "title": "Changed to", "terminal": false },
+      { "value": "value_previous", "title": "Changed from", "terminal": false },
+      { "value": "not_changed", "title": "Not changed", "terminal": true },
+      { "value": "not_value", "title": "Not changed to", "terminal": false },
+      {
+        "value": "not_value_previous",
+        "title": "Not changed from",
+        "terminal": false
+      }
+    ],
+    "values": [
+      { "value": "new", "title": "New", "enabled": true },
+      { "value": "open", "title": "Open", "enabled": true },
+      { "value": "pending", "title": "Pending", "enabled": true },
+      { "value": "solved", "title": "Solved", "enabled": true },
+      { "value": "closed", "title": "Closed", "enabled": true }
+    ]
+  },
+  {
+    "title": "Number of incidents",
+    "subject": "number_of_incidents",
+    "type": "text",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "less_than", "title": "Less than", "terminal": false },
+      { "value": "greater_than", "title": "Greater than", "terminal": false },
+      { "value": "is", "title": "Is", "terminal": false },
+      {
+        "value": "less_than_equal",
+        "title": "Less than or equal to",
+        "terminal": false
+      },
+      {
+        "value": "greater_than_equal",
+        "title": "Greater than or equal to",
+        "terminal": false
+      }
+    ]
+  },
+  {
+    "title": "Brand",
+    "subject": "brand_id",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false },
+      { "value": "changed", "title": "Changed", "terminal": true },
+      { "value": "value", "title": "Changed to", "terminal": false },
+      { "value": "value_previous", "title": "Changed from", "terminal": false },
+      { "value": "not_changed", "title": "Not changed", "terminal": true },
+      { "value": "not_value", "title": "Not changed to", "terminal": false },
+      {
+        "value": "not_value_previous",
+        "title": "Not changed from",
+        "terminal": false
+      }
+    ],
+    "values": [ { "value": "360005405471", "title": "Sandbox", "enabled": true } ]
+  },
+  {
+    "title": "Form",
+    "subject": "ticket_form_id",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false },
+      { "value": "changed", "title": "Changed", "terminal": true },
+      { "value": "value", "title": "Changed to", "terminal": false },
+      { "value": "value_previous", "title": "Changed from", "terminal": false },
+      { "value": "not_changed", "title": "Not changed", "terminal": true },
+      { "value": "not_value", "title": "Not changed to", "terminal": false },
+      {
+        "value": "not_value_previous",
+        "title": "Not changed from",
+        "terminal": false
+      }
+    ],
+    "values": [
+      {
+        "value": "360001537011",
+        "title": "Default Ticket Form",
+        "enabled": true
+      },
+      { "value": "360001554492", "title": "JAF Test Form", "enabled": true },
+      {
+        "value": "360001669591",
+        "title": "DKH - System fileds",
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "title": "Type",
+    "subject": "type",
+    "type": "list",
+    "group": "ticket",
+    "nullable": true,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false },
+      { "value": "changed", "title": "Changed", "terminal": true },
+      { "value": "value", "title": "Changed to", "terminal": false },
+      { "value": "value_previous", "title": "Changed from", "terminal": false },
+      { "value": "not_changed", "title": "Not changed", "terminal": true },
+      { "value": "not_value", "title": "Not changed to", "terminal": false },
+      {
+        "value": "not_value_previous",
+        "title": "Not changed from",
+        "terminal": false
+      }
+    ],
+    "values": [
+      { "value": "__NULL__", "title": "-", "enabled": true },
+      { "value": "question", "title": "Question", "enabled": true },
+      { "value": "incident", "title": "Incident", "enabled": true },
+      { "value": "problem", "title": "Problem", "enabled": true },
+      { "value": "task", "title": "Task", "enabled": true }
+    ]
+  },
+  {
+    "title": "Priority",
+    "subject": "priority",
+    "type": "list",
+    "group": "ticket",
+    "nullable": true,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false },
+      { "value": "less_than", "title": "Less than", "terminal": false },
+      { "value": "greater_than", "title": "Greater than", "terminal": false },
+      { "value": "changed", "title": "Changed", "terminal": true },
+      { "value": "value", "title": "Changed to", "terminal": false },
+      { "value": "value_previous", "title": "Changed from", "terminal": false },
+      { "value": "not_changed", "title": "Not changed", "terminal": true },
+      { "value": "not_value", "title": "Not changed to", "terminal": false },
+      {
+        "value": "not_value_previous",
+        "title": "Not changed from",
+        "terminal": false
+      }
+    ],
+    "values": [
+      { "value": "__NULL__", "title": "-", "enabled": true },
+      { "value": "low", "title": "Low", "enabled": true },
+      { "value": "normal", "title": "Normal", "enabled": true },
+      { "value": "high", "title": "High", "enabled": true },
+      { "value": "urgent", "title": "Urgent", "enabled": true }
+    ]
+  },
+  {
+    "title": "Group",
+    "subject": "group_id",
+    "type": "list",
+    "group": "ticket",
+    "nullable": true,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false },
+      { "value": "changed", "title": "Changed", "terminal": true },
+      { "value": "value", "title": "Changed to", "terminal": false },
+      { "value": "value_previous", "title": "Changed from", "terminal": false },
+      { "value": "not_changed", "title": "Not changed", "terminal": true },
+      { "value": "not_value", "title": "Not changed to", "terminal": false },
+      {
+        "value": "not_value_previous",
+        "title": "Not changed from",
+        "terminal": false
+      }
+    ],
+    "values": [
+      { "value": "__NULL__", "title": "-", "enabled": true },
+      { "value": "360016865611", "title": "Support", "enabled": true },
+      { "value": "360017676772", "title": "Testers", "enabled": true }
+    ]
+  },
+  {
+    "title": "Assignee",
+    "subject": "assignee_id",
+    "type": "list",
+    "group": "ticket",
+    "nullable": true,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false },
+      { "value": "changed", "title": "Changed", "terminal": true },
+      { "value": "value", "title": "Changed to", "terminal": false },
+      { "value": "value_previous", "title": "Changed from", "terminal": false },
+      { "value": "not_changed", "title": "Not changed", "terminal": true },
+      { "value": "not_value", "title": "Not changed to", "terminal": false },
+      {
+        "value": "not_value_previous",
+        "title": "Not changed from",
+        "terminal": false
+      }
+    ],
+    "values": [
+      { "value": "__NULL__", "title": "-", "enabled": true },
+      { "value": "requester_id", "title": "(requester)", "enabled": true },
+      { "value": "current_user", "title": "(current user)", "enabled": true },
+      { "value": "415748266372", "title": "Aaron Rothschild", "enabled": true },
+      { "value": "413420039231", "title": "Andrew Brown", "enabled": true },
+      { "value": "413404442331", "title": "Barry Duplantis", "enabled": true },
+      { "value": "413404442491", "title": "Daniel Schalla", "enabled": true },
+      { "value": "413404441091", "title": "Daniel Sischy", "enabled": true },
+      { "value": "415722503671", "title": "dkh-member", "enabled": true },
+      {
+        "value": "413420028071",
+        "title": "Dylan Haussermann",
+        "enabled": true
+      },
+      { "value": "415749953432", "title": "jaf-member", "enabled": true },
+      { "value": "413420008171", "title": "Jason Frerich", "enabled": true },
+      { "value": "1900584963247", "title": "John Jaquette", "enabled": true },
+      { "value": "413404442551", "title": "Sven Hüster", "enabled": true }
+    ]
+  },
+  {
+    "title": "Requester",
+    "subject": "requester_id",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false },
+      { "value": "changed", "title": "Changed", "terminal": true },
+      { "value": "value", "title": "Changed to", "terminal": false },
+      { "value": "value_previous", "title": "Changed from", "terminal": false },
+      { "value": "not_changed", "title": "Not changed", "terminal": true },
+      { "value": "not_value", "title": "Not changed to", "terminal": false },
+      {
+        "value": "not_value_previous",
+        "title": "Not changed from",
+        "terminal": false
+      }
+    ],
+    "values": [
+      { "value": "assignee_id", "title": "(assignee)", "enabled": true },
+      { "value": "current_user", "title": "(current user)", "enabled": true },
+      { "value": "415748266372", "title": "Aaron Rothschild", "enabled": true },
+      { "value": "413420039231", "title": "Andrew Brown", "enabled": true },
+      { "value": "413404442331", "title": "Barry Duplantis", "enabled": true },
+      { "value": "413404442491", "title": "Daniel Schalla", "enabled": true },
+      { "value": "413404441091", "title": "Daniel Sischy", "enabled": true },
+      { "value": "415722503671", "title": "dkh-member", "enabled": true },
+      {
+        "value": "413420028071",
+        "title": "Dylan Haussermann",
+        "enabled": true
+      },
+      { "value": "415749953432", "title": "jaf-member", "enabled": true },
+      { "value": "413420008171", "title": "Jason Frerich", "enabled": true },
+      { "value": "1900584963247", "title": "John Jaquette", "enabled": true },
+      { "value": "413404442551", "title": "Sven Hüster", "enabled": true },
+      { "value": "413217474372", "title": "Todd Jordan", "enabled": true }
+    ]
+  },
+  {
+    "title": "Organization",
+    "subject": "organization_id",
+    "type": "list",
+    "group": "ticket",
+    "nullable": true,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false },
+      { "value": "changed", "title": "Changed", "terminal": true },
+      { "value": "value", "title": "Changed to", "terminal": false },
+      { "value": "value_previous", "title": "Changed from", "terminal": false },
+      { "value": "not_changed", "title": "Not changed", "terminal": true },
+      { "value": "not_value", "title": "Not changed to", "terminal": false },
+      {
+        "value": "not_value_previous",
+        "title": "Not changed from",
+        "terminal": false
+      }
+    ],
+    "values": [
+      { "value": "__NULL__", "title": "-", "enabled": true },
+      { "value": "361373167411", "title": "Sandbox", "enabled": true }
+    ]
+  },
+  {
+    "title": "Tags",
+    "subject": "current_tags",
+    "type": "tags",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      {
+        "value": "includes",
+        "title": "Contains at least one of the following",
+        "terminal": false
+      },
+      {
+        "value": "not_includes",
+        "title": "Contains none of the following",
+        "terminal": false
+      }
+    ]
+  },
+  {
+    "title": "Channel",
+    "subject": "via_id",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false }
+    ],
+    "values": [
+      { "value": "0", "title": "Web form", "enabled": true },
+      { "value": "4", "title": "Email", "enabled": true },
+      { "value": "29", "title": "Chat", "enabled": true },
+      { "value": "30", "title": "Twitter", "enabled": true },
+      { "value": "26", "title": "Twitter DM", "enabled": true },
+      { "value": "23", "title": "Twitter Like", "enabled": true },
+      { "value": "33", "title": "Voicemail", "enabled": true },
+      { "value": "34", "title": "Phone call (incoming)", "enabled": true },
+      { "value": "35", "title": "Phone call (outgoing)", "enabled": true },
+      { "value": "44", "title": "CTI voicemail", "enabled": true },
+      { "value": "45", "title": "CTI phone call (incoming)", "enabled": true },
+      { "value": "46", "title": "CTI phone call (outgoing)", "enabled": true },
+      { "value": "57", "title": "Text", "enabled": true },
+      { "value": "16", "title": "Get Satisfaction", "enabled": true },
+      { "value": "48", "title": "Web Widget", "enabled": true },
+      { "value": "49", "title": "Mobile SDK", "enabled": true },
+      { "value": "56", "title": "Mobile", "enabled": true },
+      { "value": "50", "title": "Help Center post", "enabled": true },
+      { "value": "5", "title": "Web service (API)", "enabled": true },
+      { "value": "8", "title": "Automation", "enabled": true },
+      { "value": "24", "title": "Forum topic", "enabled": true },
+      { "value": "27", "title": "Closed ticket", "enabled": true },
+      { "value": "31", "title": "Ticket sharing", "enabled": true },
+      { "value": "38", "title": "Facebook Post", "enabled": true },
+      { "value": "41", "title": "Facebook Private Message", "enabled": true },
+      { "value": "54", "title": "Satisfaction Prediction", "enabled": true },
+      { "value": "67", "title": "Answer Bot for Web Widget", "enabled": true },
+      { "value": "55", "title": "Channel Integrations", "enabled": true }
+    ]
+  },
+  {
+    "title": "Update via",
+    "subject": "current_via_id",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false }
+    ],
+    "values": [
+      { "value": "0", "title": "Web form", "enabled": true },
+      { "value": "4", "title": "Email", "enabled": true },
+      { "value": "29", "title": "Chat", "enabled": true },
+      { "value": "30", "title": "Twitter", "enabled": true },
+      { "value": "26", "title": "Twitter DM", "enabled": true },
+      { "value": "23", "title": "Twitter Like", "enabled": true },
+      { "value": "33", "title": "Voicemail", "enabled": true },
+      { "value": "34", "title": "Phone call (incoming)", "enabled": true },
+      { "value": "35", "title": "Phone call (outgoing)", "enabled": true },
+      { "value": "44", "title": "CTI voicemail", "enabled": true },
+      { "value": "45", "title": "CTI phone call (incoming)", "enabled": true },
+      { "value": "46", "title": "CTI phone call (outgoing)", "enabled": true },
+      { "value": "57", "title": "Text", "enabled": true },
+      { "value": "16", "title": "Get Satisfaction", "enabled": true },
+      { "value": "48", "title": "Web Widget", "enabled": true },
+      { "value": "49", "title": "Mobile SDK", "enabled": true },
+      { "value": "56", "title": "Mobile", "enabled": true },
+      { "value": "50", "title": "Help Center post", "enabled": true },
+      { "value": "5", "title": "Web service (API)", "enabled": true },
+      { "value": "8", "title": "Automation", "enabled": true },
+      { "value": "24", "title": "Forum topic", "enabled": true },
+      { "value": "27", "title": "Closed ticket", "enabled": true },
+      { "value": "31", "title": "Ticket sharing", "enabled": true },
+      { "value": "38", "title": "Facebook Post", "enabled": true },
+      { "value": "41", "title": "Facebook Private Message", "enabled": true },
+      { "value": "54", "title": "Satisfaction Prediction", "enabled": true },
+      { "value": "67", "title": "Answer Bot for Web Widget", "enabled": true },
+      { "value": "55", "title": "Channel Integrations", "enabled": true }
+    ]
+  },
+  {
+    "title": "Received at",
+    "subject": "recipient",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [ { "value": "is", "title": "Is", "terminal": false } ],
+    "values": [
+      {
+        "value": "support@mattermost1616716488.zendesk.com",
+        "title": "support@mattermost1616716488.zendesk.com",
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "title": "Ticket",
+    "subject": "update_type",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [ { "value": "is", "title": "Is", "terminal": false } ],
+    "values": [
+      { "value": "Create", "title": "Created", "enabled": true },
+      { "value": "Change", "title": "Updated", "enabled": true }
+    ]
+  },
+  {
+    "title": "Subject text",
+    "subject": "subject_includes_word",
+    "type": "text",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      {
+        "value": "includes",
+        "title": "Contains at least one of the following words",
+        "terminal": false
+      },
+      {
+        "value": "not_includes",
+        "title": "Contains none of the following words",
+        "terminal": false
+      },
+      {
+        "value": "is",
+        "title": "Contains the following string",
+        "terminal": false
+      },
+      {
+        "value": "is_not",
+        "title": "Does not contain the following string",
+        "terminal": false
+      }
+    ]
+  },
+  {
+    "title": "Privacy",
+    "subject": "ticket_is_public",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [ { "value": "is", "title": "Is", "terminal": false } ],
+    "values": [
+      {
+        "value": "public",
+        "title": "Ticket has public comments",
+        "enabled": true
+      },
+      {
+        "value": "private",
+        "title": "Ticket has no public comments",
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "title": "Comment",
+    "subject": "comment_is_public",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [ { "value": "is", "title": "Is", "terminal": false } ],
+    "values": [
+      { "value": "true", "title": "Public", "enabled": true },
+      { "value": "false", "title": "Private", "enabled": true },
+      {
+        "value": "not_relevant",
+        "title": "Present (public or private)",
+        "enabled": true
+      },
+      {
+        "value": "requester_can_see_comment",
+        "title": "Present, and requester can see the comment",
+        "enabled": true
+      }
+    ]
+  },
+  {
+    "title": "Comment text",
+    "subject": "comment_includes_word",
+    "type": "text",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      {
+        "value": "includes",
+        "title": "Contains at least one of the following words",
+        "terminal": false
+      },
+      {
+        "value": "not_includes",
+        "title": "Contains none of the following words",
+        "terminal": false
+      },
+      {
+        "value": "is",
+        "title": "Contains the following string",
+        "terminal": false
+      },
+      {
+        "value": "is_not",
+        "title": "Does not contain the following string",
+        "terminal": false
+      }
+    ]
+  },
+  {
+    "title": "Reopens",
+    "subject": "reopens",
+    "type": "text",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "less_than", "title": "Less than", "terminal": false },
+      { "value": "greater_than", "title": "Greater than", "terminal": false },
+      { "value": "is", "title": "Is", "terminal": false }
+    ]
+  },
+  {
+    "title": "Agent replies",
+    "subject": "replies",
+    "type": "text",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "less_than", "title": "Less than", "terminal": false },
+      { "value": "greater_than", "title": "Greater than", "terminal": false },
+      { "value": "is", "title": "Is", "terminal": false }
+    ]
+  },
+  {
+    "title": "Assignee stations",
+    "subject": "agent_stations",
+    "type": "text",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "less_than", "title": "Less than", "terminal": false },
+      { "value": "greater_than", "title": "Greater than", "terminal": false },
+      { "value": "is", "title": "Is", "terminal": false }
+    ]
+  },
+  {
+    "title": "Group stations",
+    "subject": "group_stations",
+    "type": "text",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "less_than", "title": "Less than", "terminal": false },
+      { "value": "greater_than", "title": "Greater than", "terminal": false },
+      { "value": "is", "title": "Is", "terminal": false }
+    ]
+  },
+  {
+    "title": "Schedule",
+    "subject": "schedule_id",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false }
+    ]
+  },
+  {
+    "title": "Within (schedule)",
+    "subject": "within_schedule",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [ { "value": "is", "title": "Is", "terminal": false } ]
+  },
+  {
+    "title": "Due date",
+    "subject": "ticket_due_date",
+    "type": "list",
+    "group": "ticket",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [ { "value": "is", "title": "Is", "terminal": false } ],
+    "values": [
+      { "value": "true", "title": "Present", "enabled": true },
+      { "value": "false", "title": "Not present", "enabled": true }
+    ]
+  },
+  {
+    "title": "Role",
+    "subject": "requester_role",
+    "type": "list",
+    "group": "requester",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false }
+    ],
+    "values": [
+      { "value": "4", "title": "(agent)", "enabled": true },
+      { "value": "0", "title": "(end-user)", "enabled": true },
+      { "value": "2", "title": "(admin)", "enabled": true }
+    ]
+  },
+  {
+    "title": "Number of Twitter followers",
+    "subject": "requester_twitter_followers_count",
+    "type": "text",
+    "group": "requester",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "less_than", "title": "Less than", "terminal": false },
+      { "value": "greater_than", "title": "Greater than", "terminal": false },
+      { "value": "is", "title": "Is", "terminal": false }
+    ]
+  },
+  {
+    "title": "Number of tweets",
+    "subject": "requester_twitter_statuses_count",
+    "type": "text",
+    "group": "requester",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "less_than", "title": "Less than", "terminal": false },
+      { "value": "greater_than", "title": "Greater than", "terminal": false },
+      { "value": "is", "title": "Is", "terminal": false }
+    ]
+  },
+  {
+    "title": "Is verified by Twitter",
+    "subject": "requester_twitter_verified",
+    "type": "list",
+    "group": "requester",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [ { "value": "is", "title": "Is", "terminal": false } ],
+    "values": [ { "value": "true", "title": "true", "enabled": true } ]
+  },
+  {
+    "title": "Time zone",
+    "subject": "requester_time_zone",
+    "type": "list",
+    "group": "requester",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false }
+    ],
+    "values": [
+      {
+        "value": "American Samoa",
+        "title": "(GMT-11:00) American Samoa",
+        "enabled": true
+      },
+      {
+        "value": "International Date Line West",
+        "title": "(GMT-11:00) International Date Line West",
+        "enabled": true
+      },
+      {
+        "value": "Midway Island",
+        "title": "(GMT-11:00) Midway Island",
+        "enabled": true
+      },
+      { "value": "Hawaii", "title": "(GMT-10:00) Hawaii", "enabled": true },
+      { "value": "Alaska", "title": "(GMT-08:00) Alaska", "enabled": true },
+      { "value": "Arizona", "title": "(GMT-07:00) Arizona", "enabled": true },
+      {
+        "value": "Pacific Time (US & Canada)",
+        "title": "(GMT-07:00) Pacific Time (US & Canada)",
+        "enabled": true
+      },
+      { "value": "Tijuana", "title": "(GMT-07:00) Tijuana", "enabled": true },
+      {
+        "value": "Central America",
+        "title": "(GMT-06:00) Central America",
+        "enabled": true
+      },
+      {
+        "value": "Chihuahua",
+        "title": "(GMT-06:00) Chihuahua",
+        "enabled": true
+      },
+      { "value": "Mazatlan", "title": "(GMT-06:00) Mazatlan", "enabled": true },
+      {
+        "value": "Mountain Time (US & Canada)",
+        "title": "(GMT-06:00) Mountain Time (US & Canada)",
+        "enabled": true
+      },
+      {
+        "value": "Saskatchewan",
+        "title": "(GMT-06:00) Saskatchewan",
+        "enabled": true
+      },
+      { "value": "Bogota", "title": "(GMT-05:00) Bogota", "enabled": true },
+      {
+        "value": "Central Time (US & Canada)",
+        "title": "(GMT-05:00) Central Time (US & Canada)",
+        "enabled": true
+      },
+      {
+        "value": "Guadalajara",
+        "title": "(GMT-05:00) Guadalajara",
+        "enabled": true
+      },
+      { "value": "Lima", "title": "(GMT-05:00) Lima", "enabled": true },
+      {
+        "value": "Mexico City",
+        "title": "(GMT-05:00) Mexico City",
+        "enabled": true
+      },
+      {
+        "value": "Monterrey",
+        "title": "(GMT-05:00) Monterrey",
+        "enabled": true
+      },
+      { "value": "Quito", "title": "(GMT-05:00) Quito", "enabled": true },
+      { "value": "Caracas", "title": "(GMT-04:00) Caracas", "enabled": true },
+      {
+        "value": "Eastern Time (US & Canada)",
+        "title": "(GMT-04:00) Eastern Time (US & Canada)",
+        "enabled": true
+      },
+      {
+        "value": "Georgetown",
+        "title": "(GMT-04:00) Georgetown",
+        "enabled": true
+      },
+      {
+        "value": "Indiana (East)",
+        "title": "(GMT-04:00) Indiana (East)",
+        "enabled": true
+      },
+      { "value": "La Paz", "title": "(GMT-04:00) La Paz", "enabled": true },
+      {
+        "value": "Puerto Rico",
+        "title": "(GMT-04:00) Puerto Rico",
+        "enabled": true
+      },
+      { "value": "Santiago", "title": "(GMT-04:00) Santiago", "enabled": true },
+      {
+        "value": "Atlantic Time (Canada)",
+        "title": "(GMT-03:00) Atlantic Time (Canada)",
+        "enabled": true
+      },
+      { "value": "Brasilia", "title": "(GMT-03:00) Brasilia", "enabled": true },
+      {
+        "value": "Buenos Aires",
+        "title": "(GMT-03:00) Buenos Aires",
+        "enabled": true
+      },
+      {
+        "value": "Montevideo",
+        "title": "(GMT-03:00) Montevideo",
+        "enabled": true
+      },
+      {
+        "value": "Newfoundland",
+        "title": "(GMT-02:30) Newfoundland",
+        "enabled": true
+      },
+      {
+        "value": "Greenland",
+        "title": "(GMT-02:00) Greenland",
+        "enabled": true
+      },
+      {
+        "value": "Mid-Atlantic",
+        "title": "(GMT-02:00) Mid-Atlantic",
+        "enabled": true
+      },
+      {
+        "value": "Cape Verde Is.",
+        "title": "(GMT-01:00) Cape Verde Is.",
+        "enabled": true
+      },
+      { "value": "Azores", "title": "(GMT+00:00) Azores", "enabled": true },
+      { "value": "Monrovia", "title": "(GMT+00:00) Monrovia", "enabled": true },
+      { "value": "UTC", "title": "(GMT+00:00) UTC", "enabled": true },
+      {
+        "value": "Casablanca",
+        "title": "(GMT+01:00) Casablanca",
+        "enabled": true
+      },
+      { "value": "Dublin", "title": "(GMT+01:00) Dublin", "enabled": true },
+      {
+        "value": "Edinburgh",
+        "title": "(GMT+01:00) Edinburgh",
+        "enabled": true
+      },
+      { "value": "Lisbon", "title": "(GMT+01:00) Lisbon", "enabled": true },
+      { "value": "London", "title": "(GMT+01:00) London", "enabled": true },
+      {
+        "value": "West Central Africa",
+        "title": "(GMT+01:00) West Central Africa",
+        "enabled": true
+      },
+      {
+        "value": "Amsterdam",
+        "title": "(GMT+02:00) Amsterdam",
+        "enabled": true
+      },
+      { "value": "Belgrade", "title": "(GMT+02:00) Belgrade", "enabled": true },
+      { "value": "Berlin", "title": "(GMT+02:00) Berlin", "enabled": true },
+      { "value": "Bern", "title": "(GMT+02:00) Bern", "enabled": true },
+      {
+        "value": "Bratislava",
+        "title": "(GMT+02:00) Bratislava",
+        "enabled": true
+      },
+      { "value": "Brussels", "title": "(GMT+02:00) Brussels", "enabled": true },
+      { "value": "Budapest", "title": "(GMT+02:00) Budapest", "enabled": true },
+      { "value": "Cairo", "title": "(GMT+02:00) Cairo", "enabled": true },
+      {
+        "value": "Copenhagen",
+        "title": "(GMT+02:00) Copenhagen",
+        "enabled": true
+      },
+      { "value": "Harare", "title": "(GMT+02:00) Harare", "enabled": true },
+      {
+        "value": "Kaliningrad",
+        "title": "(GMT+02:00) Kaliningrad",
+        "enabled": true
+      },
+      {
+        "value": "Ljubljana",
+        "title": "(GMT+02:00) Ljubljana",
+        "enabled": true
+      },
+      { "value": "Madrid", "title": "(GMT+02:00) Madrid", "enabled": true },
+      { "value": "Oslo", "title": "(GMT+02:00) Oslo", "enabled": true },
+      { "value": "Paris", "title": "(GMT+02:00) Paris", "enabled": true },
+      { "value": "Prague", "title": "(GMT+02:00) Prague", "enabled": true },
+      { "value": "Pretoria", "title": "(GMT+02:00) Pretoria", "enabled": true },
+      { "value": "Rome", "title": "(GMT+02:00) Rome", "enabled": true },
+      { "value": "Sarajevo", "title": "(GMT+02:00) Sarajevo", "enabled": true },
+      { "value": "Skopje", "title": "(GMT+02:00) Skopje", "enabled": true },
+      {
+        "value": "Stockholm",
+        "title": "(GMT+02:00) Stockholm",
+        "enabled": true
+      },
+      { "value": "Vienna", "title": "(GMT+02:00) Vienna", "enabled": true },
+      { "value": "Warsaw", "title": "(GMT+02:00) Warsaw", "enabled": true },
+      { "value": "Zagreb", "title": "(GMT+02:00) Zagreb", "enabled": true },
+      { "value": "Athens", "title": "(GMT+03:00) Athens", "enabled": true },
+      { "value": "Baghdad", "title": "(GMT+03:00) Baghdad", "enabled": true },
+      {
+        "value": "Bucharest",
+        "title": "(GMT+03:00) Bucharest",
+        "enabled": true
+      },
+      { "value": "Helsinki", "title": "(GMT+03:00) Helsinki", "enabled": true },
+      { "value": "Istanbul", "title": "(GMT+03:00) Istanbul", "enabled": true },
+      {
+        "value": "Jerusalem",
+        "title": "(GMT+03:00) Jerusalem",
+        "enabled": true
+      },
+      { "value": "Kuwait", "title": "(GMT+03:00) Kuwait", "enabled": true },
+      { "value": "Kyev", "title": "(GMT+03:00) Kyev", "enabled": true },
+      { "value": "Kyiv", "title": "(GMT+03:00) Kyiv", "enabled": true },
+      { "value": "Minsk", "title": "(GMT+03:00) Minsk", "enabled": true },
+      { "value": "Moscow", "title": "(GMT+03:00) Moscow", "enabled": true },
+      { "value": "Nairobi", "title": "(GMT+03:00) Nairobi", "enabled": true },
+      { "value": "Riga", "title": "(GMT+03:00) Riga", "enabled": true },
+      { "value": "Riyadh", "title": "(GMT+03:00) Riyadh", "enabled": true },
+      { "value": "Sofia", "title": "(GMT+03:00) Sofia", "enabled": true },
+      {
+        "value": "St. Petersburg",
+        "title": "(GMT+03:00) St. Petersburg",
+        "enabled": true
+      },
+      { "value": "Tallinn", "title": "(GMT+03:00) Tallinn", "enabled": true },
+      { "value": "Vilnius", "title": "(GMT+03:00) Vilnius", "enabled": true },
+      {
+        "value": "Abu Dhabi",
+        "title": "(GMT+04:00) Abu Dhabi",
+        "enabled": true
+      },
+      { "value": "Baku", "title": "(GMT+04:00) Baku", "enabled": true },
+      { "value": "Muscat", "title": "(GMT+04:00) Muscat", "enabled": true },
+      { "value": "Samara", "title": "(GMT+04:00) Samara", "enabled": true },
+      { "value": "Tbilisi", "title": "(GMT+04:00) Tbilisi", "enabled": true },
+      {
+        "value": "Volgograd",
+        "title": "(GMT+04:00) Volgograd",
+        "enabled": true
+      },
+      { "value": "Yerevan", "title": "(GMT+04:00) Yerevan", "enabled": true },
+      { "value": "Kabul", "title": "(GMT+04:30) Kabul", "enabled": true },
+      { "value": "Tehran", "title": "(GMT+04:30) Tehran", "enabled": true },
+      {
+        "value": "Ekaterinburg",
+        "title": "(GMT+05:00) Ekaterinburg",
+        "enabled": true
+      },
+      {
+        "value": "Islamabad",
+        "title": "(GMT+05:00) Islamabad",
+        "enabled": true
+      },
+      { "value": "Karachi", "title": "(GMT+05:00) Karachi", "enabled": true },
+      { "value": "Tashkent", "title": "(GMT+05:00) Tashkent", "enabled": true },
+      { "value": "Chennai", "title": "(GMT+05:30) Chennai", "enabled": true }
+    ]
+  },
+  {
+    "title": "Current user",
+    "subject": "role",
+    "type": "list",
+    "group": "other",
+    "nullable": false,
+    "repeatable": false,
+    "operators": [
+      { "value": "is", "title": "Is", "terminal": false },
+      { "value": "is_not", "title": "Is not", "terminal": false }
+    ],
+    "values": [
+      { "value": "agent", "title": "(agent)", "enabled": true },
+      { "value": "end_user", "title": "(end-user)", "enabled": true },
+      { "value": "415748266372", "title": "Aaron Rothschild", "enabled": true },
+      { "value": "413420039231", "title": "Andrew Brown", "enabled": true },
+      { "value": "413404442331", "title": "Barry Duplantis", "enabled": true },
+      { "value": "413404442491", "title": "Daniel Schalla", "enabled": true },
+      { "value": "413404441091", "title": "Daniel Sischy", "enabled": true },
+      { "value": "415722503671", "title": "dkh-member", "enabled": true },
+      {
+        "value": "413420028071",
+        "title": "Dylan Haussermann",
+        "enabled": true
+      },
+      { "value": "415749953432", "title": "jaf-member", "enabled": true },
+      { "value": "413420008171", "title": "Jason Frerich", "enabled": true },
+      { "value": "1900584963247", "title": "John Jaquette", "enabled": true },
+      { "value": "413404442551", "title": "Sven Hüster", "enabled": true }
+    ]
+  },
+  {
+    "title": "Numeric Field",
+    "subject": "custom_fields_360045510172",
+    "type": "list",
+    "group": "ticket",
+    "nullable": true,
+    "repeatable": false,
+    "operators": [
+      { "value": "present", "title": "Present", "terminal": true },
+      { "value": "not_present", "title": "Not present", "terminal": true }
+    ]
+  },
+  {
+    "title": "Multi-line Test Field",
+    "subject": "custom_fields_360042703192",
+    "type": "list",
+    "group": "ticket",
+    "nullable": true,
+    "repeatable": false,
+    "operators": [
+      { "value": "present", "title": "Present", "terminal": true },
+      { "value": "not_present", "title": "Not present", "terminal": true }
+    ]
+  },
+  {
+    "title": "Checkbox Test Field",
+    "subject": "custom_fields_360042702992",
+    "type": "list",
+    "group": "ticket",
+    "nullable": true,
+    "repeatable": false,
+    "operators": [ { "value": "is", "title": "Is", "terminal": false } ],
+    "values": [
+      { "value": "true", "title": "Checked", "enabled": true },
+      { "value": "false", "title": "Unchecked", "enabled": true }
+    ]
+  },
+  {
+    "title": "Multi-select Test Field",
+    "subject": "custom_fields_360043191231",
+    "type": "list",
+    "group": "ticket",
+    "nullable": true,
+    "repeatable": false,
+    "operators": [
+      { "value": "includes", "title": "Includes", "terminal": false },
+      {
+        "value": "not_includes",
+        "title": "Does not include",
+        "terminal": false
+      },
+      { "value": "present", "title": "Present", "terminal": true },
+      { "value": "not_present", "title": "Not present", "terminal": true }
+    ],
+    "values": [
+      { "value": "__NULL__", "title": "-", "enabled": true },
+      { "value": "testvalue1", "title": "testvalue1", "enabled": true },
+      { "value": "testvalue2", "title": "testvalue2", "enabled": true },
+      { "value": "testvalue3", "title": "testvalue3", "enabled": true }
+    ]
+  }]
+}
