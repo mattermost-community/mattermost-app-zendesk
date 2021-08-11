@@ -2,6 +2,22 @@
 import {Users} from 'node-zendesk';
 import ClientOAuth2 from 'client-oauth2';
 
+export type ZDConditionOptionOperator = {
+    value: string
+    title: string
+    terminal?: boolean
+}
+
+export type ZDConditionOption = {
+    title: string
+    subject: string
+    text: string
+    group: string
+    nullable: boolean
+    repeatable: boolean
+    operators: ZDConditionOptionOperator[]
+}
+
 export type ZDTriggerCondition = {
     field: string
     operator: string
