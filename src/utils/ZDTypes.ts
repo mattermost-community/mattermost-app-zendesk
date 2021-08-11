@@ -5,7 +5,13 @@ import ClientOAuth2 from 'client-oauth2';
 export type ZDConditionOptionOperator = {
     value: string
     title: string
-    terminal?: boolean
+    terminal: boolean
+}
+
+export type ZDConditionOptionValue = {
+    value: string
+    title: string
+    enabled: boolean
 }
 
 export type ZDConditionOption = {
@@ -16,6 +22,7 @@ export type ZDConditionOption = {
     nullable: boolean
     repeatable: boolean
     operators: ZDConditionOptionOperator[]
+    values?: ZDConditionOptionValue[]
 }
 
 export type ZDTriggerCondition = {
