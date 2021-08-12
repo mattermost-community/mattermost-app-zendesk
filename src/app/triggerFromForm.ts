@@ -1,3 +1,5 @@
+import {inspect} from 'util';
+
 import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
@@ -105,26 +107,22 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
             sort().
             forEach((index, i) => {
                 if (callValueConditions[index].field) {
-                    // console.log('-> ', callValueConditions[index].field);
                     const entry: ZDTriggerCondition = {
                         field: callValueConditions[index].field.value,
                         operator: callValueConditions[index].operator.value,
                     };
                     if (callValueConditions[index].value) {
-                        entry.value = callValueConditions[index].value;
+                        if (callValueConditions[index].value.value) {
+                            entry.value = callValueConditions[index].value.value;
+                        } else {
+                            entry.value = callValueConditions[index].value;
+                        }
+                    } else {
+                        entry.value = null;
                     }
                     conditions.any.push(entry);
                 }
             });
-
-        // console.log('conditions', conditions);
-        // for (const condition of callValueConditions) {
-        //     console.log('condition', condition);
-        //     const entry: ZDTriggerCondition = {
-        //         field: checkbox.name,
-        //         operator: 'changed',
-        //     };
-        // }
 
         // do not let subscriptions without a condition be created...
         if (conditions.any.length === 0) {
