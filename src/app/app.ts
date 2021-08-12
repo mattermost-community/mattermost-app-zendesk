@@ -99,6 +99,7 @@ class AppImpl implements App {
         let zdTriggerPayload: ZDTriggerPayload;
         try {
             zdTriggerPayload = newTriggerFromForm(this.call, checkboxes, targetID);
+            console.log('zdTriggerPayload', zdTriggerPayload.trigger.conditions);
         } catch (e) {
             return newErrorCallResponseWithMessage(e.message);
         }

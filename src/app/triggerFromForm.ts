@@ -2,7 +2,7 @@ import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/
 
 import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
 
-import {checkBox} from '../utils/utils';
+import {checkBox, getConditionFieldsFromCallValues} from '../utils/utils';
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
 interface TriggerFromFrom {
@@ -98,15 +98,33 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         const conditions: ZDTriggerConditions = {
             any: [],
         };
-        for (const checkbox of this.checkBoxes) {
-            if (this.values[checkbox.name]) {
-                const entry: ZDTriggerCondition = {
-                    field: checkbox.name,
-                    operator: 'changed',
-                };
-                conditions.any.push(entry);
-            }
-        }
+
+        const callValueConditions = getConditionFieldsFromCallValues(this.values, 'any');
+
+        Object.keys(callValueConditions).
+            sort().
+            forEach((index, i) => {
+                if (callValueConditions[index].field) {
+                    // console.log('-> ', callValueConditions[index].field);
+                    const entry: ZDTriggerCondition = {
+                        field: callValueConditions[index].field.value,
+                        operator: callValueConditions[index].operator.value,
+                    };
+                    if (callValueConditions[index].value) {
+                        entry.value = callValueConditions[index].value;
+                    }
+                    conditions.any.push(entry);
+                }
+            });
+
+        // console.log('conditions', conditions);
+        // for (const condition of callValueConditions) {
+        //     console.log('condition', condition);
+        //     const entry: ZDTriggerCondition = {
+        //         field: checkbox.name,
+        //         operator: 'changed',
+        //     };
+        // }
 
         // do not let subscriptions without a condition be created...
         if (conditions.any.length === 0) {

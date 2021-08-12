@@ -66,9 +66,14 @@ class FieldsBuilderImpl implements FieldsBuilder {
             readonly: f.readonly,
 
             // if field is provided by caller, use that value
-            value,
         };
+        if (value) {
+            field.value = value;
+        }
 
+        // console.log('value', value);
+
+        // console.log('field.value', field.value);
         this.addFieldToArray(field);
     }
 

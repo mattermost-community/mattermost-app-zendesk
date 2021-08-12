@@ -1,4 +1,4 @@
-import {AppSelectOption, AppField} from 'mattermost-redux/types/apps';
+import {AppSelectOption, AppField, AppCallValues} from 'mattermost-redux/types/apps';
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
@@ -56,6 +56,25 @@ export const parseTriggerTitle = (title: string): parsedTriggerTitle => {
         teamID: match[2],
         channelID: match[3],
     };
+};
+
+// getConditionFieldsFromCallValues returns an array of key/value pairs for
+// call values for the give type "any / all"
+export const getConditionFieldsFromCallValues = (callValues: AppCallValues, type: string): any => {
+    const callValueConditions = Object.entries(callValues).
+        filter((entry) => {
+            return entry[0].startsWith(`${type}_`);
+        });
+
+    const myNewObject = {};
+    for (const callVal of callValueConditions) {
+        const [_, index, name] = callVal[0].split('_');
+        if (!myNewObject[index]) {
+            myNewObject[index] = {};
+        }
+        myNewObject[index][name] = callVal[1];
+    }
+    return myNewObject;
 };
 
 export const makeOption = (option: ZDFieldOption): AppSelectOption => ({label: option.name, value: option.value});
