@@ -284,16 +284,19 @@ class FormFields extends BaseFormFields {
             max_length: SubscriptionFields.MaxTitleNameLength,
         };
 
-        // add a new field the array without addField method, which checks the
-        // previously set value. This way allows adding a field without a value
-        // and utilizes the hint
         if (this.isNewSub()) {
-            f.hint = SubscriptionFields.NewSub_Hint;
-            this.builder.addFieldToArray(f);
+            // emtpy the sub name field if the select subscription dropdown was changed
+            if (this.call.selected_field === SubscriptionFields.SubSelectName) {
+                f.hint = SubscriptionFields.NewSub_Hint;
+                this.builder.addFieldToArray(f);
+            } else {
+                // keep the text value for any other field modal changes
+                this.builder.addField(f);
+            }
             return;
         }
         f.value = this.getSelectedSubTriggerName();
-        this.builder.addField(f);
+        this.builder.addFieldToArray(f);
     }
 
     // add addSubSelectField adds the subscription selector modal field
