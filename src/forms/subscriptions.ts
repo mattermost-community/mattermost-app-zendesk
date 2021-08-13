@@ -87,11 +87,6 @@ class FormFields extends BaseFormFields {
         this.zdHost = zdHost;
         this.fetchedConditionOptions = call.state?.conditions;
         this.selectedSavedTriggerConditions = {any: [], all: []};
-
-        console.log('\n\n\n<><><><><>. IN HERE!');
-        console.log('call.values', call.values);
-        console.log('selected_field', this.call.selected_field);
-        console.log('state', state);
     }
 
     async addSubscriptionFields(): Promise<AppField[]> {
