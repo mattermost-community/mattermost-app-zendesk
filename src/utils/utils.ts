@@ -58,23 +58,37 @@ export const parseTriggerTitle = (title: string): parsedTriggerTitle => {
     };
 };
 
-// getConditionFieldsFromCallValues returns an array of key/value pairs for
-// call values for the give type "any / all"
-export const getConditionFieldsFromCallValues = (callValues: AppCallValues, type: string): any => {
-    const callValueConditions = Object.entries(callValues).
+export type CallValueCondition = {
+    field?: AppSelectOption
+    operator?: AppSelectOption
+    value?: any
+}
+
+export type CallValueConditions = {
+    [key: number]: CallValueCondition
+}
+
+// getConditionFieldsFromCallValues constructs an object of
+// CallValueConditions. The CallValueCondition is a group of up to three call values
+// representing a condition in Zendesk. This type is easier to iterate through
+// than keeping track in an interator of call values
+export const getConditionFieldsFromCallValues = (cValues: AppCallValues, type: string): CallValueConditions => {
+    // get all the call values from the specified any or all type sections
+    const filteredCValues = Object.entries(cValues).
         filter((entry) => {
             return entry[0].startsWith(`${type}_`);
         });
 
-    const myNewObject = {};
-    for (const callVal of callValueConditions) {
+    // create the CallValueConditions object
+    const conditions: CallValueConditions = {};
+    for (const callVal of filteredCValues) {
         const [_, index, name] = callVal[0].split('_');
-        if (!myNewObject[index]) {
-            myNewObject[index] = {};
+        if (!conditions[index]) {
+            conditions[index] = {};
         }
-        myNewObject[index][name] = callVal[1];
+        conditions[index][name] = callVal[1];
     }
-    return myNewObject;
+    return conditions;
 };
 
 export const makeOption = (option: ZDFieldOption): AppSelectOption => ({label: option.name, value: option.value});
