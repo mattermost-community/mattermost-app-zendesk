@@ -104,9 +104,7 @@ class FormFields extends BaseFormFields {
     // - When subcription selection changes, defaults are reset
     //   - if has saved ZD trigger, set to those values
     addConditionsFields(): void {
-        // const types: string[] = ['any', 'all'];
-
-        const types: string[] = ['any'];
+        const types: string[] = SubscriptionFields.ConditionTypes;
         for (const type of types) {
             this.addConditionsFieldsHeader(type);
 
@@ -117,7 +115,7 @@ class FormFields extends BaseFormFields {
                     console.log('condition', condition);
                     const fieldNameOptions = this.makeConditionFieldNameOptions();
                     const fieldNameValue = this.getOptionValue(fieldNameOptions, condition);
-                    this.addConditionNameField(fieldNameValue, type, true, i);
+                    this.addConditionNameField(fieldNameValue, type, i);
 
                     const savedOperValue = condition.operator;
                     const operatorFieldOptions = this.makeConditionOperationOptions(condition.field);
@@ -130,7 +128,7 @@ class FormFields extends BaseFormFields {
                         this.addConditionValueField(condition.field, condition.value, type, i);
                     }
                 });
-                this.addConditionNameField(null, type, false, lastIndex);
+                this.addConditionNameField(null, type, lastIndex);
             } else {
                 // Using call values once the modal is loaded with a subscription
                 const callValueConditions = getConditionFieldsFromCallValues(this.call.values, type);

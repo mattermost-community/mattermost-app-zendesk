@@ -97,35 +97,39 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     addConditions(): void {
         const conditions: ZDTriggerConditions = {
             any: [],
+            all: [],
         };
 
-        const callValueConditions = getConditionFieldsFromCallValues(this.values, 'any');
-        Object.keys(callValueConditions).
-            sort().
-            forEach((index, i) => {
-                if (callValueConditions[index].field) {
-                    const entry: ZDTriggerCondition = {
-                        field: callValueConditions[index].field.value,
-                        operator: callValueConditions[index].operator.value,
-                    };
-                    if (callValueConditions[index].value) {
-                        // if the call value  has a value it is a select option.
-                        // Get the value
-                        if (callValueConditions[index].value.value) {
-                            entry.value = callValueConditions[index].value.value;
+        const types: string[] = SubscriptionFields.ConditionTypes;
+        for (const type of types) {
+            const callValueConditions = getConditionFieldsFromCallValues(this.values, type);
+            Object.keys(callValueConditions).
+                sort().
+                forEach((index, i) => {
+                    if (callValueConditions[index].field) {
+                        const entry: ZDTriggerCondition = {
+                            field: callValueConditions[index].field.value,
+                            operator: callValueConditions[index].operator.value,
+                        };
+                        if (callValueConditions[index].value) {
+                            // if the call value  has a value it is a select option.
+                            // Get the value
+                            if (callValueConditions[index].value.value) {
+                                entry.value = callValueConditions[index].value.value;
+                            } else {
+                                entry.value = callValueConditions[index].value;
+                            }
                         } else {
-                            entry.value = callValueConditions[index].value;
+                            // ZD API requires value field even if null
+                            entry.value = null;
                         }
-                    } else {
-                        // ZD API requires value field even if null
-                        entry.value = null;
+                        conditions[type].push(entry);
                     }
-                    conditions.any.push(entry);
-                }
-            });
+                });
+        }
 
         // do not let subscriptions without a condition be created...
-        if (conditions.any.length === 0) {
+        if (conditions.any.length === 0 && conditions.all.length === 0) {
             throw new Error('Must select at least one condition');
         }
         this.addField('conditions', conditions);
