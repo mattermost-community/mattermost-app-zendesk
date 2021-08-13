@@ -113,31 +113,28 @@ class FormFields extends BaseFormFields {
             // iterate through the conditions saved in Zendesk
             if (this.call.selected_field === SubscriptionFields.SubSelectName) {
                 const lastIndex = this.selectedSavedTriggerConditions[type].length;
-                if (lastIndex) {
-                    this.selectedSavedTriggerConditions[type].forEach((condition: ZDTriggerCondition, i: number) => {
-                        console.log('condition', condition);
-                        const fieldNameOptions = this.makeConditionFieldNameOptions();
-                        const fieldNameValue = this.getOptionValue(fieldNameOptions, condition);
-                        this.addConditionNameField(fieldNameValue, type, i);
+                this.selectedSavedTriggerConditions[type].forEach((condition: ZDTriggerCondition, i: number) => {
+                    console.log('condition', condition);
+                    const fieldNameOptions = this.makeConditionFieldNameOptions();
+                    const fieldNameValue = this.getOptionValue(fieldNameOptions, condition);
+                    this.addConditionNameField(fieldNameValue, type, true, i);
 
-                        const savedOperValue = condition.operator;
-                        const operatorFieldOptions = this.makeConditionOperationOptions(condition.field);
-                        const savedFieldOption = operatorFieldOptions.find((option: any) => {
-                            return option.value.toString() === savedOperValue;
-                        });
-                        this.addConditionOperatorField(condition.field, savedFieldOption, type, i);
-                        if (condition.value) {
-                            // console.log('condition.value', condition.value);
-                            this.addConditionValueField(condition.field, condition.value, type, i);
-                        }
+                    const savedOperValue = condition.operator;
+                    const operatorFieldOptions = this.makeConditionOperationOptions(condition.field);
+                    const savedFieldOption = operatorFieldOptions.find((option: any) => {
+                        return option.value.toString() === savedOperValue;
                     });
-                }
-                this.addConditionNameField(null, type, lastIndex);
+                    this.addConditionOperatorField(condition.field, savedFieldOption, type, i);
+                    if (condition.value) {
+                        // console.log('condition.value', condition.value);
+                        this.addConditionValueField(condition.field, condition.value, type, i);
+                    }
+                });
+                this.addConditionNameField(null, type, false, lastIndex);
             } else {
                 // Using call values once the modal is loaded with a subscription
                 const callValueConditions = getConditionFieldsFromCallValues(this.call.values, type);
 
-                // console.log('callValueConditions', callValueConditions);
                 Object.keys(callValueConditions).
                     sort().
                     forEach((index, i) => {
@@ -148,11 +145,8 @@ class FormFields extends BaseFormFields {
                         }
 
                         if (callCondition.field) {
-                            console.log('\ncallCondition', callCondition);
                             const currentField = type + '_' + index + '_field';
-
                             if (currentField === this.call.selected_field) {
-                                console.log('currentField', currentField);
                                 this.addConditionOperatorField(callCondition.field.value, null, type, index);
                             } else {
                                 this.addConditionOperatorField(callCondition.field.value, callCondition.operator, type, index);
@@ -190,7 +184,7 @@ class FormFields extends BaseFormFields {
         if (fieldNameValue) {
             f.value = fieldNameValue;
         }
-        this.builder.addField(f);
+        this.builder.addFieldToArray(f);
     }
     getFieldFieldName(type: string, i: string): string {
         return type + '_' + i + '_' + SubscriptionFields.NewConditionFieldOptionValue;
@@ -206,12 +200,9 @@ class FormFields extends BaseFormFields {
             options,
             refresh: true,
         };
-
         if (value) {
             f.value = value;
         }
-
-        console.log('f', f);
         this.builder.addFieldToArray(f);
     }
 

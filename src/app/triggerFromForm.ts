@@ -100,7 +100,6 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         };
 
         const callValueConditions = getConditionFieldsFromCallValues(this.values, 'any');
-
         Object.keys(callValueConditions).
             sort().
             forEach((index, i) => {
@@ -110,12 +109,15 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
                         operator: callValueConditions[index].operator.value,
                     };
                     if (callValueConditions[index].value) {
+                        // if the call value  has a value it is a select option.
+                        // Get the value
                         if (callValueConditions[index].value.value) {
                             entry.value = callValueConditions[index].value.value;
                         } else {
                             entry.value = callValueConditions[index].value;
                         }
                     } else {
+                        // ZD API requires value field even if null
                         entry.value = null;
                     }
                     conditions.any.push(entry);
