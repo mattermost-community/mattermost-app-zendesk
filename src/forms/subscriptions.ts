@@ -168,12 +168,13 @@ class FormFields extends BaseFormFields {
     addConditionNameField(fieldNameValue: AppSelectOption, type: string, index: number): void {
         const condFieldName = this.getFieldFieldName(type, index);
         const fieldNameOptions = this.makeConditionFieldNameOptions();
+        const n = index + 1;
         const f: AppField = {
             hint: 'field',
             name: condFieldName,
             type: AppFieldTypes.STATIC_SELECT,
             options: fieldNameOptions,
-            label: `${index}. ${type.toUpperCase()} Condition`,
+            label: `${n}. ${type.toUpperCase()} Condition`,
             refresh: true,
         };
 
