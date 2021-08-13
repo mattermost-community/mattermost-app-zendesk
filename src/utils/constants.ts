@@ -139,7 +139,6 @@ export const SubscriptionFields = {
     NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
 
-    NewSubFieldOptionLabel: 'Select Field',
     NewConditionFieldOptionValue: 'field',
     NewConditionOperatorOptionValue: 'operator',
     NewConditionValueOptionValue: 'value',

@@ -1,5 +1,3 @@
-import {inspect} from 'util';
-
 import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
 
 import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
