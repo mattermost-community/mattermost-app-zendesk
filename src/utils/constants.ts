@@ -140,9 +140,9 @@ export const SubscriptionFields = {
     NewSub_OptionValue: 'newsubscription',
 
     ConditionTypes: ['all', 'any'],
-    NewConditionFieldOptionValue: 'field',
-    NewConditionOperatorOptionValue: 'operator',
-    NewConditionValueOptionValue: 'value',
+    ConditionFieldSuffix: 'field',
+    ConditionOperatorSuffix: 'operator',
+    ConditionValueSuffix: 'value',
 
     PrefixCustomDefinitionSubject: 'custom_fields_',
     PrefixTriggersTitle: '__mm_webhook',

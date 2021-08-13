@@ -184,12 +184,11 @@ class FormFields extends BaseFormFields {
     }
 
     addConditionNameField(fieldNameValue: AppSelectOption, type: string, index: number): void {
-        const condFieldName = this.getFieldFieldName(type, index);
         const fieldNameOptions = this.makeConditionFieldNameOptions();
         const n = index + 1;
         const f: AppField = {
             hint: 'field',
-            name: condFieldName,
+            name: this.getFieldName(type, index, SubscriptionFields.ConditionFieldSuffix),
             type: AppFieldTypes.STATIC_SELECT,
             options: fieldNameOptions,
             label: `${n}. ${type.toUpperCase()} Condition`,
@@ -201,16 +200,16 @@ class FormFields extends BaseFormFields {
         }
         this.builder.addFieldToArray(f);
     }
-    getFieldFieldName(type: string, i: string): string {
-        return type + '_' + i + '_' + SubscriptionFields.NewConditionFieldOptionValue;
+
+    getFieldName(type: string, i: number, name: string): string {
+        return type + '_' + i + '_' + name;
     }
 
-    addConditionOperatorField(fieldName: string, value: AppSelectOption, required: boolean, type: string, index: string): void {
+    addConditionOperatorField(fieldName: string, value: AppSelectOption, required: boolean, type: string, index: number): void {
         const options = this.makeConditionOperationOptions(fieldName);
-        const name = this.getOperatorFieldName(type, index);
         const f: AppField = {
             hint: 'operator',
-            name,
+            name: this.getFieldName(type, index, SubscriptionFields.ConditionOperatorSuffix),
             type: AppFieldTypes.STATIC_SELECT,
             options,
             refresh: true,
@@ -222,12 +221,7 @@ class FormFields extends BaseFormFields {
         this.builder.addFieldToArray(f);
     }
 
-    getOperatorFieldName(type: string, i: string): string {
-        return type + '_' + i + '_' + SubscriptionFields.NewConditionOperatorOptionValue;
-    }
-
-    addConditionValueField(field: string, value: any, required: boolean, type: string, index: string) {
-        const name = this.getOperatorFieldValueName(type, index);
+    addConditionValueField(field: string, value: any, required: boolean, type: string, index: number) {
         const condition = this.fetchedConditionOptions.find((c: ZDConditionOption) => {
             return c.subject.toString() === field;
         });
@@ -235,7 +229,7 @@ class FormFields extends BaseFormFields {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
             hint: 'value',
-            name,
+            name: this.getFieldName(type, index, SubscriptionFields.ConditionValueSuffix),
             is_required: required,
         };
 
@@ -251,9 +245,6 @@ class FormFields extends BaseFormFields {
         }
 
         this.builder.addField(f);
-    }
-    getOperatorFieldValueName(type: string, i: string): string {
-        return type + '_' + i + '_' + SubscriptionFields.NewConditionValueOptionValue;
     }
 
     // getConditions returns an array of Zendesk ANY or ALL trigger conditions for
