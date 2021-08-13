@@ -202,7 +202,6 @@ function getChangedEventText(events: any[]): string {
         return `\`${event.field_name}\` changed from \`${event.previous_value}\` to \`${event.value}\``;
     }
     const newArray = events.map((event) => {
-        // console.log('event', event);
         return `* \`${event.field_name}\` changed from \`${event.previous_value}\` to \`${event.value}\``;
     });
     return 'The following field values changed \n' + newArray.join('\n');
