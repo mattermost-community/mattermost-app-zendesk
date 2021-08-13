@@ -160,25 +160,3 @@ export function isZdAdmin(role: ZDRole): boolean {
 export function webhookConfigured(config: AppConfigStore): boolean {
     return Boolean(config.zd_target_id && config.zd_target_id !== '');
 }
-
-export type checkBox = {
-    label: string
-    name: string
-}
-
-export function getCheckBoxesFromTriggerDefinition(definitions: any): checkBox[] {
-    const actions = definitions[0].definitions.actions;
-    const checkboxes: checkBox[] = [];
-    for (const action of actions) {
-        const subject = action.subject;
-        const isCustomField = subject.startsWith(SubscriptionFields.PrefixCustomDefinitionSubject);
-
-        // restrict possible checkbox values for simplicity
-        // - custom checkbox has only two possible values, but not supported by 'change'
-        // - group === requester also not easily determined
-        if (action.values && action.group === 'ticket' && action.subject !== 'follower' && !isCustomField && action.subject !== 'brand_id') {
-            checkboxes.push({name: action.subject, label: action.title});
-        }
-    }
-    return checkboxes;
-}

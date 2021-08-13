@@ -2,7 +2,7 @@ import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/
 
 import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
 
-import {checkBox, getConditionFieldsFromCallValues} from '../utils/utils';
+import {getConditionFieldsFromCallValues} from '../utils/utils';
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
 interface TriggerFromFrom {
@@ -13,14 +13,12 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     values: AppCallValues;
     context: AppContext;
     targetID: string;
-    checkBoxes: checkBox[];
     trigger: ZDTrigger
 
-    constructor(call: AppCallRequest, checkboxes: checkBox[], targetID: string) {
+    constructor(call: AppCallRequest, targetID: string) {
         this.values = call.values as AppCallValues;
         this.context = call.context;
         this.targetID = targetID;
-        this.checkBoxes = checkboxes;
         this.trigger = {} as ZDTrigger;
         this.buildTrigger();
     }
@@ -136,8 +134,8 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(call: AppCallRequest, checkboxes: checkBox[], targetID: string): ZDTriggerPayload {
-    const trigger = new TriggerFromFormImpl(call, checkboxes, targetID).getTrigger();
+export function newTriggerFromForm(call: AppCallRequest, targetID: string): ZDTriggerPayload {
+    const trigger = new TriggerFromFormImpl(call, targetID).getTrigger();
     return trigger;
 }
 
