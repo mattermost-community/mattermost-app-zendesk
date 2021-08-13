@@ -282,21 +282,30 @@ class FormFields extends BaseFormFields {
             label: SubscriptionFields.SubTextLabel,
             is_required: true,
             max_length: SubscriptionFields.MaxTitleNameLength,
+            hint: SubscriptionFields.NewSub_Hint,
         };
-
-        if (this.isNewSub()) {
-            // emtpy the sub name field if the select subscription dropdown was changed
-            if (this.call.selected_field === SubscriptionFields.SubSelectName) {
-                f.hint = SubscriptionFields.NewSub_Hint;
-                this.builder.addFieldToArray(f);
-            } else {
-                // keep the text value for any other field modal changes
-                this.builder.addField(f);
-            }
-            return;
+        if (this.getSubNameValue()) {
+            f.value = this.getSubNameValue();
         }
-        f.value = this.getSelectedSubTriggerName();
         this.builder.addFieldToArray(f);
+    }
+
+    getSubNameValue(): string {
+        const subTextCallValue = this.call.values[SubscriptionFields.SubTextName];
+        const selectedDropDownName = this.getSelectedSubTriggerName();
+
+        const newSub = this.isNewSub();
+        const selected = this.call.selected_field === SubscriptionFields.SubSelectName;
+        if (selected) {
+            if (!newSub) {
+                return selectedDropDownName;
+            }
+        } else if (newSub) {
+            return subTextCallValue;
+        } else {
+            return selectedDropDownName;
+        }
+        return '';
     }
 
     // add addSubSelectField adds the subscription selector modal field
