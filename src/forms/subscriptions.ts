@@ -14,8 +14,6 @@ import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {newConfigStore} from '../store';
 
-import subscriptionOptions from './subscription_options.json';
-
 // newSubscriptionsForm returns a form response to create subscriptions
 export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {
     const context = call.context as CtxExpandedBotAdminActingUserOauth2User;
@@ -35,7 +33,10 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
     const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
     const zdHost = config.zd_url;
     const mmClient = newMMClient(mmOptions).asAdmin();
-    const formFields = new FormFields(call, zdClient, mmClient, zdHost);
+
+    // definitions will be passed in as call state
+    const fetchedConditionOptions = await fetchZDConditions(zdClient, call.state);
+    const formFields = new FormFields(call, zdClient, mmClient, zdHost, call.state);
     const fields = await formFields.addSubscriptionFields();
 
     const form: AppForm = {
@@ -46,10 +47,29 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
         fields,
         call: {
             path: Routes.App.CallPathSubsSubmitOrUpdateForm,
+            state: {
+                conditions: fetchedConditionOptions,
+            },
         },
     };
     return form;
 }
+
+type ModalState = {conditions: ZDConditionOption}
+
+// fetchZDConditions fetches the conditions as defined by the zendesk instance.
+// conditions are only once when the modal opens and stores in state
+const fetchZDConditions = async (zdClient: ZDClient, state: ModalState): Promise<ZDConditionOption> => {
+    if (state?.conditions) {
+        return state.conditions;
+    }
+
+    const req = zdClient.triggers.definitions() || '';
+    const definitions = await tryPromiseWithMessage(req, 'Failed to fetch trigger definitions');
+
+    // any and all share the same conditions.  only save one of them in state
+    return definitions[0].definitions.conditions_all;
+};
 
 type ZDTriggers = Record<string, ZDTrigger[]>
 
@@ -57,21 +77,24 @@ type ZDTriggers = Record<string, ZDTrigger[]>
 class FormFields extends BaseFormFields {
     triggers: ZDTriggers
     zdHost: string
+    fetchedConditionOptions: ZDConditionOption
     selectedSavedTriggerConditions: ZDTriggerConditions
 
-    constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4, zdHost: string) {
+    constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4, zdHost: string, state: ModalState) {
         super(call, mmClient, zdClient);
 
         this.triggers = {};
         this.zdHost = zdHost;
+        this.fetchedConditionOptions = call.state?.conditions;
         this.selectedSavedTriggerConditions = {any: [], all: []};
+
         console.log('\n\n\n<><><><><>. IN HERE!');
         console.log('call.values', call.values);
         console.log('selected_field', this.call.selected_field);
+        console.log('state', state);
     }
 
     async addSubscriptionFields(): Promise<AppField[]> {
-        // await this.fetchZDConditions();
         this.triggers = await this.fetchChannelTriggers();
         this.addSubSelectField();
 
@@ -88,16 +111,6 @@ class FormFields extends BaseFormFields {
         this.addConditionsFields();
         this.addSubmitButtons();
         return this.builder.getFields();
-    }
-
-    // fetchZDConditions fetches the conditions as defined by the zendesk instance
-    async fetchZDConditions(): Promise<void> {
-        const client = this.zdClient as ZDClient;
-        const req = client.triggers.definitions() || '';
-        const definitions = await tryPromiseWithMessage(req, 'Failed to fetch trigger definitions');
-
-        // this.conditionsOptionsAll = definitions[0].definitions.conditions_all;
-        // this.conditionsOptionsAny = definitions[0].definitions.conditions_any;
     }
 
     // addConditionFields adds condition fields for a subscription
@@ -148,7 +161,7 @@ class FormFields extends BaseFormFields {
                     const callCondition = callValueConditions[index];
                     if (callCondition) {
                         const fieldNameValue = callCondition.field;
-                        this.addConditionNameField(fieldNameValue, type, index);
+                        this.addConditionNameField(fieldNameValue, type, Number(index));
                     }
 
                     if (callCondition.field) {
@@ -220,7 +233,7 @@ class FormFields extends BaseFormFields {
 
     addConditionValueField(field: string, value: any, required: boolean, type: string, index: string) {
         const name = this.getOperatorFieldValueName(type, index);
-        const condition = subscriptionOptions.conditions.find((c: ZDConditionOption) => {
+        const condition = this.fetchedConditionOptions.find((c: ZDConditionOption) => {
             return c.subject.toString() === field;
         });
 
@@ -367,8 +380,7 @@ class FormFields extends BaseFormFields {
         const makeOption = (option: ZDConditionOption): AppSelectOption => ({label: option.title, value: option.subject});
         const makeOptions = (options: ZDConditionOption[]): AppSelectOption[] => options.map(makeOption);
 
-        const c = subscriptionOptions.conditions;
-        const fields = makeOptions(c);
+        const fields = makeOptions(this.fetchedConditionOptions);
         return fields;
     }
 
@@ -383,7 +395,7 @@ class FormFields extends BaseFormFields {
     }
 
     getConditionFromConditionsOptions(subject: string): ZDConditionOption {
-        const condition = subscriptionOptions.conditions.find((c: ZDConditionOption) => {
+        const condition = this.fetchedConditionOptions.find((c: ZDConditionOption) => {
             return c.subject.toString() === subject;
         });
         return condition as ZDConditionOption;
