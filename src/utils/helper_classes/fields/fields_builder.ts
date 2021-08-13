@@ -71,9 +71,6 @@ class FieldsBuilderImpl implements FieldsBuilder {
             field.value = value;
         }
 
-        // console.log('value', value);
-
-        // console.log('field.value', field.value);
         this.addFieldToArray(field);
     }
 

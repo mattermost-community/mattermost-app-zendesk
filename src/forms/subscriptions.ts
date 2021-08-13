@@ -151,25 +151,22 @@ class FormFields extends BaseFormFields {
                             console.log('\ncallCondition', callCondition);
                             const currentField = type + '_' + index + '_field';
 
-                            // if (currentField === this.call.selected_field) {
-                            //     console.log('currentField', currentField);
-                            //     // this.addConditionOperatorField(callCondition.field.value, null, type, index);
-                            // } else {
-                            //     this.addConditionOperatorField(callCondition.field.value, callCondition.operator, type, index);
-                            // }
-                            this.addConditionOperatorField(callCondition.field.value, callCondition.operator, type, index);
+                            if (currentField === this.call.selected_field) {
+                                console.log('currentField', currentField);
+                                this.addConditionOperatorField(callCondition.field.value, null, type, index);
+                            } else {
+                                this.addConditionOperatorField(callCondition.field.value, callCondition.operator, type, index);
+                                const condOption = this.getConditionFromConditionsOptions(callCondition.field.value);
+                                const condOptionOperators: ZDConditionOptionOperator[] = condOption.operators;
+                                const operator = condOptionOperators.find((option: ZDConditionOptionOperator) => {
+                                    return option.value.toString() === callCondition.operator.value;
+                                });
 
-                            const condOption = this.getConditionFromConditionsOptions(callCondition.field.value);
-                            const condOptionOperators: ZDConditionOptionOperator[] = condOption.operators;
-
-                            const operator = condOptionOperators.find((option: ZDConditionOptionOperator) => {
-                                return option.value.toString() === callCondition.operator.value;
-                            });
-
-                            if (operator) {
-                                const isTerminal = operator.terminal;
-                                if (!isTerminal) {
-                                    this.addConditionValueField(callCondition.field.value, callCondition.value, type, index);
+                                if (operator) {
+                                    const isTerminal = operator.terminal;
+                                    if (!isTerminal) {
+                                        this.addConditionValueField(callCondition.field.value, callCondition.value, type, index);
+                                    }
                                 }
                             }
                         }
@@ -181,7 +178,7 @@ class FormFields extends BaseFormFields {
     addConditionNameField(fieldNameValue: AppSelectOption, type: string, index: number): void {
         const condFieldName = this.getFieldFieldName(type, index);
         const fieldNameOptions = this.makeConditionFieldNameOptions();
-        const field: AppField = {
+        const f: AppField = {
             hint: 'field',
             name: condFieldName,
             type: AppFieldTypes.STATIC_SELECT,
@@ -191,9 +188,9 @@ class FormFields extends BaseFormFields {
         };
 
         if (fieldNameValue) {
-            field.value = fieldNameValue;
+            f.value = fieldNameValue;
         }
-        this.builder.addField(field);
+        this.builder.addField(f);
     }
     getFieldFieldName(type: string, i: string): string {
         return type + '_' + i + '_' + SubscriptionFields.NewConditionFieldOptionValue;
@@ -214,7 +211,8 @@ class FormFields extends BaseFormFields {
             f.value = value;
         }
 
-        this.builder.addField(f);
+        console.log('f', f);
+        this.builder.addFieldToArray(f);
     }
 
     getOperatorFieldName(type: string, i: string): string {
