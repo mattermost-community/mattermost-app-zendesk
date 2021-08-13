@@ -111,18 +111,23 @@ class FormFields extends BaseFormFields {
             // load the saved Zendesk subscription
             if (this.call.selected_field === SubscriptionFields.SubSelectName) {
                 this.selectedSavedTriggerConditions[type].forEach((condition: ZDTriggerCondition, i: number) => {
+                    const numConditions = this.selectedSavedTriggerConditions[type].length;
+
+                    let required = false;
+                    if (Number(i) !== numConditions) {
+                        required = true;
+                    }
                     const fieldNameOptions = this.makeConditionFieldNameOptions();
                     const fieldNameValue = this.getOptionValue(fieldNameOptions, condition);
                     this.addConditionNameField(fieldNameValue, type, i);
 
-                    const savedOperValue = condition.operator;
-                    const operatorFieldOptions = this.makeConditionOperationOptions(condition.field);
-                    const savedFieldOption = operatorFieldOptions.find((option: any) => {
-                        return option.value.toString() === savedOperValue;
+                    const operatorOptions = this.makeConditionOperationOptions(condition.field);
+                    const savedOperatorOption = operatorOptions.find((option: any) => {
+                        return option.value.toString() === condition.operator;
                     });
-                    this.addConditionOperatorField(condition.field, savedFieldOption, type, i);
+                    this.addConditionOperatorField(condition.field, savedOperatorOption, required, type, i);
                     if (condition.value) {
-                        this.addConditionValueField(condition.field, condition.value, type, i);
+                        this.addConditionValueField(condition.field, condition.value, required, type, i);
                     }
                 });
                 const lastIndex = this.selectedSavedTriggerConditions[type].length;
@@ -132,9 +137,14 @@ class FormFields extends BaseFormFields {
 
             // Using call values once the modal is loaded with a subscription
             const callValueConditions = getConditionFieldsFromCallValues(this.call.values, type);
+            const numConditions = Object.keys(callValueConditions).length;
             Object.keys(callValueConditions).
                 sort().
                 forEach((index, i) => {
+                    let required = false;
+                    if (Number(index) !== numConditions) {
+                        required = true;
+                    }
                     const callCondition = callValueConditions[index];
                     if (callCondition) {
                         const fieldNameValue = callCondition.field;
@@ -144,9 +154,9 @@ class FormFields extends BaseFormFields {
                     if (callCondition.field) {
                         const currentField = type + '_' + index + '_field';
                         if (currentField === this.call.selected_field) {
-                            this.addConditionOperatorField(callCondition.field.value, null, type, index);
+                            this.addConditionOperatorField(callCondition.field.value, null, required, type, index);
                         } else {
-                            this.addConditionOperatorField(callCondition.field.value, callCondition.operator, type, index);
+                            this.addConditionOperatorField(callCondition.field.value, callCondition.operator, required, type, index);
                             const condOption = this.getConditionFromConditionsOptions(callCondition.field.value);
                             const condOptionOperators: ZDConditionOptionOperator[] = condOption.operators;
                             const operator = condOptionOperators.find((option: ZDConditionOptionOperator) => {
@@ -156,7 +166,7 @@ class FormFields extends BaseFormFields {
                             if (operator) {
                                 const isTerminal = operator.terminal;
                                 if (!isTerminal) {
-                                    this.addConditionValueField(callCondition.field.value, callCondition.value, type, index);
+                                    this.addConditionValueField(callCondition.field.value, callCondition.value, required, type, index);
                                 }
                             }
                         }
@@ -187,7 +197,7 @@ class FormFields extends BaseFormFields {
         return type + '_' + i + '_' + SubscriptionFields.NewConditionFieldOptionValue;
     }
 
-    addConditionOperatorField(fieldName: string, value: AppSelectOption, type: string, index: string): void {
+    addConditionOperatorField(fieldName: string, value: AppSelectOption, required: boolean, type: string, index: string): void {
         const options = this.makeConditionOperationOptions(fieldName);
         const name = this.getOperatorFieldName(type, index);
         const f: AppField = {
@@ -196,6 +206,7 @@ class FormFields extends BaseFormFields {
             type: AppFieldTypes.STATIC_SELECT,
             options,
             refresh: true,
+            is_required: required,
         };
         if (value) {
             f.value = value;
@@ -207,7 +218,7 @@ class FormFields extends BaseFormFields {
         return type + '_' + i + '_' + SubscriptionFields.NewConditionOperatorOptionValue;
     }
 
-    addConditionValueField(field: string, value: any, type: string, index: string) {
+    addConditionValueField(field: string, value: any, required: boolean, type: string, index: string) {
         const name = this.getOperatorFieldValueName(type, index);
         const condition = subscriptionOptions.conditions.find((c: ZDConditionOption) => {
             return c.subject.toString() === field;
@@ -217,6 +228,7 @@ class FormFields extends BaseFormFields {
             type: AppFieldTypes.TEXT,
             hint: 'value',
             name,
+            is_required: required,
         };
 
         if (value) {
