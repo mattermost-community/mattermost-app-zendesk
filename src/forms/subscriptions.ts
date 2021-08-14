@@ -127,8 +127,9 @@ class FormFields extends BaseFormFields {
 
     addSavedZendeskFields(type: string) {
         const numConditions = this.selectedSavedTriggerConditions[type].length;
-        this.selectedSavedTriggerConditions[type].forEach((condition: ZDTriggerCondition, index: number) => {
-            const required = index !== numConditions;
+        const savedConditions = this.selectedSavedTriggerConditions[type];
+        for (let index = 0; index < numConditions; index++) {
+            const condition = savedConditions[index];
             const fieldNameOptions = this.makeConditionFieldNameOptions();
             const fieldNameValue = this.getOptionValue(fieldNameOptions, condition);
             this.addConditionNameField(fieldNameValue, type, index);
@@ -137,46 +138,45 @@ class FormFields extends BaseFormFields {
             const savedOperatorOption = operatorOptions.find((option: AppSelectOption) => {
                 return option.value.toString() === condition.operator;
             });
+            const required = index !== numConditions;
             this.addConditionOperatorField(condition.field, savedOperatorOption, required, type, index);
             if (condition.value) {
                 this.addConditionValueField(condition.field, condition.value, required, type, index);
             }
-        });
+        }
         this.addConditionNameField(undefined, type, this.selectedSavedTriggerConditions[type].length);
     }
 
     updateConditionFields(type: string) {
-        const callValueConditions = getConditionFieldsFromCallValues(this.call.values, type);
-        const numConditions = Object.keys(callValueConditions).length;
-        Object.keys(callValueConditions).
-            sort().
-            forEach((_, index) => {
-                const required = index !== numConditions;
-                const callCondition = callValueConditions[index];
-                const fieldNameValue = callCondition.field;
-                this.addConditionNameField(fieldNameValue, type, index);
+        const conditions = getConditionFieldsFromCallValues(this.call.values, type);
+        const sortedKeys = Object.keys(conditions).length;
+        for (let index = 0; index < sortedKeys; index++) {
+            const condition = conditions[index];
+            const fieldNameValue = condition.field;
+            this.addConditionNameField(fieldNameValue, type, index);
 
-                if (callCondition.field) {
-                    const currentField = type + '_' + index + '_field';
-                    if (currentField === this.call.selected_field) {
-                        this.addConditionOperatorField(callCondition.field.value, undefined, required, type, index);
-                    } else {
-                        this.addConditionOperatorField(callCondition.field.value, callCondition.operator, required, type, index);
-                        const condOption = this.getConditionFromConditionsOptions(callCondition.field.value);
-                        const condOptionOperators: ZDConditionOptionOperator[] = condOption.operators;
-                        const operator = condOptionOperators.find((option: ZDConditionOptionOperator) => {
-                            return option.value.toString() === callCondition.operator?.value;
-                        });
+            const required = index !== Object.keys(conditions).length;
+            if (condition.field) {
+                // if selected field is the field name, reset the operator  field
+                if (this.call.selected_field === this.getFieldName(type, index, SubscriptionFields.ConditionFieldSuffix)) {
+                    this.addConditionOperatorField(condition.field.value, undefined, required, type, index);
+                    continue;
+                }
 
-                        if (operator) {
-                            const isTerminal = operator.terminal;
-                            if (!isTerminal) {
-                                this.addConditionValueField(callCondition.field.value, callCondition.value, required, type, index);
-                            }
-                        }
+                this.addConditionOperatorField(condition.field.value, condition.operator, required, type, index);
+                const condOption = this.getConditionFromConditionsOptions(condition.field.value);
+                const operators: ZDConditionOptionOperator[] = condOption.operators;
+                const operator = operators.find((option: ZDConditionOptionOperator) => {
+                    return option.value.toString() === condition.operator?.value;
+                });
+                if (operator) {
+                    const isTerminal = operator.terminal;
+                    if (!isTerminal) {
+                        this.addConditionValueField(condition.field.value, condition.value, required, type, index);
                     }
                 }
-            });
+            }
+        }
     }
 
     addConditionNameField(fieldNameValue: AppSelectOption | undefined, type: string, index: number): void {
