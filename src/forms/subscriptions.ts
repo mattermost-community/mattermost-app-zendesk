@@ -76,7 +76,7 @@ class FormFields extends BaseFormFields {
     triggers: ZDTrigger[]
     zdHost: string
     fetchedConditionOptions: ZDConditionOption[]
-    selectedSavedTriggerConditions: ZDTriggerConditions
+    savedTriggerConditions: ZDTriggerConditions
 
     constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4, zdHost: string) {
         super(call, mmClient, zdClient);
@@ -84,7 +84,7 @@ class FormFields extends BaseFormFields {
         this.triggers = [];
         this.zdHost = zdHost;
         this.fetchedConditionOptions = call.state?.conditions;
-        this.selectedSavedTriggerConditions = {any: [], all: []};
+        this.savedTriggerConditions = {any: [], all: []};
     }
 
     async addSubscriptionFields(): Promise<AppField[]> {
@@ -96,7 +96,7 @@ class FormFields extends BaseFormFields {
             return this.builder.getFields();
         }
 
-        this.selectedSavedTriggerConditions = this.getSavedZDConditions();
+        this.savedTriggerConditions = this.getSavedZDConditions();
 
         // add fields that are dependant on the subscription name
         // provide a text field to add the name of the new subscription
@@ -126,10 +126,9 @@ class FormFields extends BaseFormFields {
     }
 
     addSavedZendeskFields(type: string) {
-        const numConditions = this.selectedSavedTriggerConditions[type].length;
-        const savedConditions = this.selectedSavedTriggerConditions[type];
+        const numConditions = this.savedTriggerConditions[type].length;
         for (let index = 0; index < numConditions; index++) {
-            const condition = savedConditions[index];
+            const condition = this.savedTriggerConditions[type][index];
             const fieldNameValue = this.getOptionValue(condition);
             this.addConditionNameField(fieldNameValue, type, index);
 
@@ -143,18 +142,18 @@ class FormFields extends BaseFormFields {
                 this.addConditionValueField(condition.field, condition.value, required, type, index);
             }
         }
-        this.addConditionNameField(undefined, type, this.selectedSavedTriggerConditions[type].length);
+        this.addConditionNameField(undefined, type, numConditions);
     }
 
     updateConditionFields(type: string) {
         const conditions = getConditionFieldsFromCallValues(this.call.values, type);
-        const sortedKeys = Object.keys(conditions).length;
-        for (let index = 0; index < sortedKeys; index++) {
+        const numConditions = Object.keys(conditions).length;
+        for (let index = 0; index < numConditions; index++) {
             const condition = conditions[index];
             const fieldNameValue = condition.field;
             this.addConditionNameField(fieldNameValue, type, index);
 
-            const required = index !== Object.keys(conditions).length;
+            const required = index !== numConditions;
             if (condition.field) {
                 // if selected field is the field name, reset the operator  field
                 if (this.call.selected_field === this.getFieldName(type, index, SubscriptionFields.ConditionFieldSuffix)) {
