@@ -130,8 +130,7 @@ class FormFields extends BaseFormFields {
         const savedConditions = this.selectedSavedTriggerConditions[type];
         for (let index = 0; index < numConditions; index++) {
             const condition = savedConditions[index];
-            const fieldNameOptions = this.makeConditionFieldNameOptions();
-            const fieldNameValue = this.getOptionValue(fieldNameOptions, condition);
+            const fieldNameValue = this.getOptionValue(condition);
             this.addConditionNameField(fieldNameValue, type, index);
 
             const operatorOptions = this.makeConditionOperationOptions(condition.field);
@@ -360,7 +359,8 @@ class FormFields extends BaseFormFields {
         return trigger;
     }
 
-    getOptionValue(fieldOptions: AppSelectOption[], option: ZDTriggerCondition): AppSelectOption | undefined {
+    getOptionValue(option: ZDTriggerCondition): AppSelectOption | undefined {
+        const fieldOptions = this.makeConditionFieldNameOptions();
         const field = option.field;
         const value = fieldOptions.find((f: AppSelectOption) => {
             return f.value.toString() === field;
