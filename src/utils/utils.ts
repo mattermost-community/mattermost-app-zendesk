@@ -72,21 +72,23 @@ export type CallValueConditions = {
 // CallValueConditions. The CallValueCondition is a group of up to three call values
 // representing a condition in Zendesk. This type is easier to iterate through
 // than keeping track in an interator of call values
-export const getConditionFieldsFromCallValues = (cValues: AppCallValues, type: string): CallValueConditions => {
+export const getConditionFieldsFromCallValues = (cValues: AppCallValues | undefined, type: string): CallValueConditions => {
     // get all the call values from the specified any or all type sections
-    const filteredCValues = Object.entries(cValues).
-        filter((entry) => {
-            return entry[0].startsWith(`${type}_`);
-        });
-
-    // create the CallValueConditions object
     const conditions: CallValueConditions = {};
-    for (const callVal of filteredCValues) {
-        const [_, index, name] = callVal[0].split('_');
-        if (!conditions[index]) {
-            conditions[index] = {};
+    if (cValues) {
+        const filteredCValues = Object.entries(cValues).
+            filter((entry) => {
+                return entry[0].startsWith(`${type}_`);
+            });
+
+        // create the CallValueConditions object
+        for (const callVal of filteredCValues) {
+            const [, index, name] = callVal[0].split('_');
+            if (!conditions[index]) {
+                conditions[index] = {};
+            }
+            conditions[index][name] = callVal[1];
         }
-        conditions[index][name] = callVal[1];
     }
     return conditions;
 };
@@ -100,11 +102,11 @@ export const makeFormOptions = (options: ZDFormFieldOption[]): AppSelectOption[]
 export const makeSubscriptionOption = (option: ZDSubscriptionFieldOption): AppSelectOption => ({label: getDisplaySubTitleOption(option), value: option.id.toString()});
 export const makeSubscriptionOptions = (options: ZDSubscriptionFieldOption[]): AppSelectOption[] => options.map(makeSubscriptionOption);
 
-export const getMultiselectValue = (option: ZDFieldOption): string => option.value;
-export const getMultiselectValues = (options: ZDFieldOption[]): string[] => options.map(getMultiselectValue);
-
 export const makeChannelOption = (option: Channel): AppSelectOption => ({label: option.display_name, value: option.id});
 export const makeChannelOptions = (options: Channel[]): AppSelectOption[] => options.map(makeChannelOption);
+
+export const getMultiselectValue = (option: ZDFieldOption): string => option.value;
+export const getMultiselectValues = (options: ZDFieldOption[]): string[] => options.map(getMultiselectValue);
 
 export function errorWithMessage(err: Error, message: string): string {
     return `"${message}".  ` + err.message;

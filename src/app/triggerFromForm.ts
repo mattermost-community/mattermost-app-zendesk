@@ -103,7 +103,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
             const callValueConditions = getConditionFieldsFromCallValues(this.values, type);
             Object.keys(callValueConditions).
                 sort().
-                forEach((index, i) => {
+                forEach((index,) => {
                     if (callValueConditions[index].field) {
                         const entry: ZDTriggerCondition = {
                             field: callValueConditions[index].field.value,
@@ -119,7 +119,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
                             }
                         } else {
                             // ZD API requires value field even if null
-                            entry.value = null;
+                            entry.value = undefined;
                         }
                         conditions[type].push(entry);
                     }
