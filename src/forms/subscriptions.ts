@@ -133,11 +133,9 @@ class FormFields extends BaseFormFields {
             this.addConditionNameField(nameOption, type, index);
 
             const required = index !== numConditions;
-            const operatorOptions = this.makeConditionOperationOptions(condition.field);
-            const operatorOption = operatorOptions.find((option: AppSelectOption) => {
-                return option.value.toString() === condition.operator;
-            });
+            const operatorOption = this.getSelectOptionFromCondition(condition);
             this.addConditionOperatorField(condition.field, operatorOption, required, type, index);
+
             if (condition.value) {
                 this.addConditionValueField(condition.field, condition.value, required, type, index);
             }
@@ -150,8 +148,7 @@ class FormFields extends BaseFormFields {
         const numConditions = Object.keys(conditions).length;
         for (let index = 0; index < numConditions; index++) {
             const condition = conditions[index];
-            const nameOption = condition.field;
-            this.addConditionNameField(nameOption, type, index);
+            this.addConditionNameField(condition.field, type, index);
 
             const required = index !== numConditions;
             if (condition.field) {
@@ -160,15 +157,11 @@ class FormFields extends BaseFormFields {
                     this.addConditionOperatorField(condition.field.value, undefined, required, type, index);
                     continue;
                 }
-
                 this.addConditionOperatorField(condition.field.value, condition.operator, required, type, index);
 
                 const operator = this.getOperatorFromConditionOptions(condition);
-                if (operator) {
-                    const isTerminal = operator.terminal;
-                    if (!isTerminal) {
-                        this.addConditionValueField(condition.field.value, condition.value, required, type, index);
-                    }
+                if (!operator?.terminal) {
+                    this.addConditionValueField(condition.field.value, condition.value, required, type, index);
                 }
             }
         }
@@ -387,6 +380,14 @@ class FormFields extends BaseFormFields {
         const operators = condition.operators;
         const fields = makeOptions(operators);
         return fields;
+    }
+
+    getSelectOptionFromCondition(condition: ZDTriggerCondition) {
+        const operatorOptions = this.makeConditionOperationOptions(condition.field);
+        const operatorOption = operatorOptions.find((option: AppSelectOption) => {
+            return option.value.toString() === condition.operator;
+        });
+        return operatorOption;
     }
 
     getOperatorFromConditionOptions(condition: CallValueCondition) {
