@@ -106,9 +106,8 @@ class FormFields extends BaseFormFields {
         return this.builder.getFields();
     }
 
-    // addConditionFields adds condition fields for a subscription
-    // - When subcription selection changes, defaults are reset
-    //   - if has saved ZD trigger, set to those values
+    // addConditionFields adds condition fields for a subscription.
+    // When subcription selection changes values are reset to the defaults
     addConditionsFields(): void {
         const types: string[] = SubscriptionFields.ConditionTypes;
         for (const type of types) {
@@ -153,7 +152,7 @@ class FormFields extends BaseFormFields {
             const required = index !== numConditions;
             if (condition.field) {
                 // if selected field is the field name, reset the operator  field
-                if (this.call.selected_field === this.getFieldName(type, index, SubscriptionFields.ConditionFieldSuffix)) {
+                if (this.conditionFieldNameSelected(type, index)) {
                     this.addConditionOperatorField(condition.field.value, undefined, required, type, index);
                     continue;
                 }
@@ -316,6 +315,11 @@ class FormFields extends BaseFormFields {
         };
 
         this.builder.addField(f);
+    }
+
+    conditionFieldNameSelected(type:string, index:number) {
+        const fieldName = this.getFieldName(type, index, SubscriptionFields.ConditionFieldSuffix);
+        return this.call.selected_field === fieldName;
     }
 
     isNewSub(): boolean {
