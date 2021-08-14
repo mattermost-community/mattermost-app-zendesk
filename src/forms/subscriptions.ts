@@ -118,28 +118,23 @@ class FormFields extends BaseFormFields {
 
             // load the saved Zendesk subscription
             if (this.call.selected_field === SubscriptionFields.SubSelectName) {
-                this.selectedSavedTriggerConditions[type].forEach((condition: ZDTriggerCondition, i: number) => {
-                    const numConditions = this.selectedSavedTriggerConditions[type].length;
-
-                    let required = false;
-                    if (Number(i) !== numConditions) {
-                        required = true;
-                    }
+                const numConditions = this.selectedSavedTriggerConditions[type].length;
+                this.selectedSavedTriggerConditions[type].forEach((condition: ZDTriggerCondition, index: number) => {
+                    const required = index !== numConditions;
                     const fieldNameOptions = this.makeConditionFieldNameOptions();
                     const fieldNameValue = this.getOptionValue(fieldNameOptions, condition);
-                    this.addConditionNameField(fieldNameValue, type, i);
+                    this.addConditionNameField(fieldNameValue, type, index);
 
                     const operatorOptions = this.makeConditionOperationOptions(condition.field);
                     const savedOperatorOption = operatorOptions.find((option: any) => {
                         return option.value.toString() === condition.operator;
                     });
-                    this.addConditionOperatorField(condition.field, savedOperatorOption, required, type, i);
+                    this.addConditionOperatorField(condition.field, savedOperatorOption, required, type, index);
                     if (condition.value) {
-                        this.addConditionValueField(condition.field, condition.value, required, type, i);
+                        this.addConditionValueField(condition.field, condition.value, required, type, index);
                     }
                 });
-                const lastIndex = this.selectedSavedTriggerConditions[type].length;
-                this.addConditionNameField(null, type, lastIndex);
+                this.addConditionNameField(null, type, this.selectedSavedTriggerConditions[type].length);
                 continue;
             }
 
@@ -148,16 +143,11 @@ class FormFields extends BaseFormFields {
             const numConditions = Object.keys(callValueConditions).length;
             Object.keys(callValueConditions).
                 sort().
-                forEach((index, i) => {
-                    let required = false;
-                    if (Number(index) !== numConditions) {
-                        required = true;
-                    }
+                forEach((_, index) => {
+                    const required = index !== numConditions;
                     const callCondition = callValueConditions[index];
-                    if (callCondition) {
-                        const fieldNameValue = callCondition.field;
-                        this.addConditionNameField(fieldNameValue, type, Number(index));
-                    }
+                    const fieldNameValue = callCondition.field;
+                    this.addConditionNameField(fieldNameValue, type, index);
 
                     if (callCondition.field) {
                         const currentField = type + '_' + index + '_field';
@@ -334,7 +324,8 @@ class FormFields extends BaseFormFields {
     }
 
     isNewSub(): boolean {
-        return this.getSelectedSubTriggerID() === SubscriptionFields.NewSub_OptionValue;
+        const subNameValue = this.call.values[SubscriptionFields.SubSelectName].value;
+        return subNameValue === SubscriptionFields.NewSub_OptionValue;
     }
 
     getSelectedSubTrigger(): ZDTrigger {
@@ -383,10 +374,10 @@ class FormFields extends BaseFormFields {
     }
 
     makeConditionOperationOptions(field: string): AppSelectOption[] {
-        const condition = this.getConditionFromConditionsOptions(field);
         const makeOption = (option: ZDConditionOptionOperator): AppSelectOption => ({label: option.title, value: option.value});
         const makeOptions = (options: ZDConditionOptionOperator[]): AppSelectOption[] => options.map(makeOption);
 
+        const condition = this.getConditionFromConditionsOptions(field);
         const operators = condition.operators;
         const fields = makeOptions(operators);
         return fields;
