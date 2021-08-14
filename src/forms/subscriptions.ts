@@ -177,7 +177,6 @@ class FormFields extends BaseFormFields {
             label: `${n}. ${type.toUpperCase()} Condition`,
             refresh: true,
         };
-
         if (option) {
             f.value = option;
         }
@@ -215,7 +214,6 @@ class FormFields extends BaseFormFields {
             name: this.getFieldName(type, index, SubscriptionFields.ConditionValueSuffix),
             is_required: required,
         };
-
         if (value) {
             f.value = value;
         }
@@ -226,7 +224,6 @@ class FormFields extends BaseFormFields {
             f.options = this.makeConditionValueOptions(condition);
             f.value = this.getConditionOptionValueValue(f.options, value);
         }
-
         this.builder.addField(f);
     }
 
@@ -275,21 +272,26 @@ class FormFields extends BaseFormFields {
 
     getSubNameValue(): string {
         const selectedDropDownName = this.getSelectedSubTriggerName();
-        const newSub = this.isNewSub();
-        const selected = this.call.selected_field === SubscriptionFields.SubSelectName;
-        if (selected) {
-            if (!newSub) {
-                return selectedDropDownName;
+
+        // default to the subname drop down value for existing sub
+        let subName = selectedDropDownName;
+
+        // if sub selection changed set the value
+        if (this.call.selected_field === SubscriptionFields.SubSelectName) {
+            // reset to empty for new sub creation
+            if (this.isNewSub()) {
+                subName = '';
             }
-        } else if (newSub) {
-            if (this.call.values) {
-                const subTextCallValue = this.call.values[SubscriptionFields.SubTextName];
-                return subTextCallValue;
-            }
-        } else {
+
+            // set to the the subname drop down value for existing subs
             return selectedDropDownName;
         }
-        return '';
+
+        // if any other selection changes, keep the previous value
+        if (this.call.values) {
+            subName = this.call.values[SubscriptionFields.SubTextName];
+        }
+        return subName;
     }
 
     // add addSubSelectField adds the subscription selector modal field
@@ -313,7 +315,6 @@ class FormFields extends BaseFormFields {
             is_required: true,
             refresh: true,
         };
-
         this.builder.addField(f);
     }
 
@@ -371,7 +372,6 @@ class FormFields extends BaseFormFields {
     makeConditionFieldNameOptions(): AppSelectOption[] {
         const makeOption = (option: ZDConditionOption): AppSelectOption => ({label: option.title, value: option.subject});
         const makeOptions = (options: ZDConditionOption[]): AppSelectOption[] => options.map(makeOption);
-
         const fields = makeOptions(this.fetchedConditionOptions);
         return fields;
     }
@@ -379,7 +379,6 @@ class FormFields extends BaseFormFields {
     makeConditionOperationOptions(field: string): AppSelectOption[] {
         const makeOption = (option: ZDConditionOptionOperator): AppSelectOption => ({label: option.title, value: option.value});
         const makeOptions = (options: ZDConditionOptionOperator[]): AppSelectOption[] => options.map(makeOption);
-
         const condition = this.getConditionFromConditionOptions(field);
         const operators = condition.operators;
         const fields = makeOptions(operators);
@@ -398,7 +397,6 @@ class FormFields extends BaseFormFields {
         if (condition.field) {
             const condOption = this.getConditionFromConditionOptions(condition.field.value);
             const operators: ZDConditionOptionOperator[] = condOption.operators;
-
             const operator = operators.find((option: ZDConditionOptionOperator) => {
                 return option.value.toString() === condition.operator?.value;
             });
@@ -417,7 +415,6 @@ class FormFields extends BaseFormFields {
     makeConditionValueOptions(condition: ZDConditionOption): AppSelectOption[] {
         const makeOption = (option: ZDConditionOptionValue): AppSelectOption => ({label: option.title, value: option.value});
         const makeOptions = (options: ZDConditionOptionValue[]): AppSelectOption[] => options.map(makeOption);
-
         if (condition.values) {
             const fields = makeOptions(condition.values);
             return fields;
@@ -447,13 +444,11 @@ class FormFields extends BaseFormFields {
     // addSubmitButtons adds a delete button in addition to the save button
     addSubmitButtons(): void {
         const options = SubscriptionFields.SubmitButtonsOptions;
-
         const f: AppField = {
             name: SubscriptionFields.SubmitButtonsName,
             type: AppFieldTypes.STATIC_SELECT,
             options,
         };
-
         this.builder.addField(f);
     }
 }
