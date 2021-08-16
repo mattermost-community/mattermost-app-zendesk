@@ -120,7 +120,7 @@ class FormFields extends BaseFormFields {
         for (const type of types) {
             this.addConditionsFieldsHeader(type);
 
-            const [loadSaved, conditions] = this.getConditions(type);
+            const conditions = this.getConditions(type);
             const numConditions = conditions.length;
 
             for (let index = 0; index < numConditions; index++) {
@@ -138,23 +138,24 @@ class FormFields extends BaseFormFields {
                 const operatorOption = this.getSelectOptionFromCondition(condition);
 
                 // update the modal using call values once the modal is loaded with a subscription
-                if (loadSaved) {
-                    if (this.conditionFieldNameSelected(opts)) {
-                        this.addConditionOperatorField(undefined, opts);
-                        continue;
-                    }
+                if (this.subPulldownChanged()) {
                     this.addConditionOperatorField(operatorOption, opts);
-
-                    if (!this.isOperatorTerminal(condition)) {
+                    if (condition.value) {
                         this.addConditionValueField(opts);
                     }
                     continue;
                 }
 
+                if (this.conditionFieldNameSelected(opts)) {
+                    this.addConditionOperatorField(undefined, opts);
+                    continue;
+                }
                 this.addConditionOperatorField(operatorOption, opts);
-                if (condition.value) {
+
+                if (!this.isOperatorTerminal(condition)) {
                     this.addConditionValueField(opts);
                 }
+                continue;
             }
 
             const newOpts: ConditionOptions = {
@@ -170,17 +171,11 @@ class FormFields extends BaseFormFields {
         return this.call.selected_field === SubscriptionFields.SubSelectName;
     }
 
-    getConditions(type: string): [boolean, ZDTriggerCondition[]] {
-        let loadSaved: boolean;
-        let conditions: ZDTriggerCondition[];
+    getConditions(type: string): ZDTriggerCondition[] {
         if (this.subPulldownChanged()) {
-            loadSaved = false;
-            conditions = this.savedTriggerConditions[type];
-        } else {
-            loadSaved = true;
-            conditions = this.createConditionsFromCall(this.call.values, type);
+            return this.savedTriggerConditions[type];
         }
-        return [loadSaved, conditions];
+        return this.createConditionsFromCall(this.call.values, type);
     }
 
     // createConditionsFromCall constructs an object of
