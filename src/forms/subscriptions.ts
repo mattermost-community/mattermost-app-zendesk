@@ -135,29 +135,16 @@ class FormFields extends BaseFormFields {
                 };
 
                 this.addConditionNameField(opts);
-                const operatorOption = this.getSelectOptionFromCondition(condition);
 
                 // the subname pulldown changed, load the saved ZD values
                 if (this.subNamePullDownChanged()) {
-                    this.addConditionOperatorField(operatorOption, opts);
-                    if (condition.value) {
-                        this.addConditionValueField(opts);
-                    }
+                    this.initializeModal(opts);
                     continue;
                 }
 
                 // update the modal using call values once the modal is loaded with a subscription
                 // if field name is selected, show operator field without a value selected
-                if (this.conditionFieldNameSelected(opts)) {
-                    this.addConditionOperatorField(undefined, opts);
-                    continue;
-                }
-                this.addConditionOperatorField(operatorOption, opts);
-
-                // if operator is not terminal, show field to supply field value
-                if (!this.isOperatorTerminal(condition)) {
-                    this.addConditionValueField(opts);
-                }
+                this.updateModal(opts);
             }
 
             const newOpts: ConditionOptions = {
@@ -167,6 +154,28 @@ class FormFields extends BaseFormFields {
                 type,
             };
             this.addConditionNameField(newOpts);
+        }
+    }
+
+    initializeModal(opts: ConditionOptions): void {
+        const operatorOption = this.getSelectOptionFromCondition(opts.condition);
+        this.addConditionOperatorField(operatorOption, opts);
+        if (opts.condition.value) {
+            this.addConditionValueField(opts);
+        }
+    }
+
+    updateModal(opts: ConditionOptions): void {
+        const operatorOption = this.getSelectOptionFromCondition(opts.condition);
+        if (this.conditionFieldNameSelected(opts)) {
+            this.addConditionOperatorField(undefined, opts);
+            return;
+        }
+        this.addConditionOperatorField(operatorOption, opts);
+
+        // if operator is not terminal, show field to supply field value
+        if (!this.isOperatorTerminal(opts.condition)) {
+            this.addConditionValueField(opts);
         }
     }
 
