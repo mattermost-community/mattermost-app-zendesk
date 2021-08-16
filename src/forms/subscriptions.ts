@@ -247,7 +247,7 @@ class FormFields extends BaseFormFields {
             name: this.getFieldName(opts.type, opts.index, SubscriptionFields.ConditionFieldSuffix),
             type: AppFieldTypes.STATIC_SELECT,
             options: fieldNameOptions,
-            label: `${n}. ${opts.type.toUpperCase()} Condition`,
+            modal_label: `${n}. ${opts.type.toUpperCase()} Condition`,
             refresh: true,
         };
         if (opts.fieldNameOption) {
@@ -378,7 +378,7 @@ class FormFields extends BaseFormFields {
 
         const f: AppField = {
             name: SubscriptionFields.SubSelectName,
-            label: SubscriptionFields.SubSelectLabel,
+            modal_label: SubscriptionFields.SubSelectLabel,
             type: AppFieldTypes.STATIC_SELECT,
             options,
             is_required: true,
