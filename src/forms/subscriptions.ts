@@ -61,7 +61,7 @@ type ConditionOptions = {
     required: boolean,
     type: string,
     index: number
-    value: AppSelectOption | undefined
+    fieldNameOption: AppSelectOption | undefined
 }
 
 // fetchZDConditions fetches the conditions as defined by the zendesk instance.
@@ -128,10 +128,10 @@ class FormFields extends BaseFormFields {
 
                 const opts: ConditionOptions = {
                     condition,
+                    fieldNameOption: this.getOptionValue(condition),
                     required: index !== numConditions,
                     index,
                     type,
-                    value: this.getOptionValue(condition),
                 };
 
                 this.addConditionNameField(opts);
@@ -146,20 +146,22 @@ class FormFields extends BaseFormFields {
                     continue;
                 }
 
+                // if field name is selected, show operator field without a
+                // value selected
                 if (this.conditionFieldNameSelected(opts)) {
                     this.addConditionOperatorField(undefined, opts);
                     continue;
                 }
                 this.addConditionOperatorField(operatorOption, opts);
 
+                // if operator is not terminal, show field to supply field value
                 if (!this.isOperatorTerminal(condition)) {
                     this.addConditionValueField(opts);
                 }
-                continue;
             }
 
             const newOpts: ConditionOptions = {
-                value: undefined,
+                fieldNameOption: undefined,
                 index: numConditions,
                 type,
             };
@@ -239,8 +241,8 @@ class FormFields extends BaseFormFields {
             label: `${n}. ${opts.type.toUpperCase()} Condition`,
             refresh: true,
         };
-        if (opts.value) {
-            f.value = opts.value;
+        if (opts.fieldNameOption) {
+            f.value = opts.fieldNameOption;
         }
         this.builder.addFieldToArray(f);
     }
