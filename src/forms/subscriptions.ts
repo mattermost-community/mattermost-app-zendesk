@@ -1,5 +1,5 @@
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
-import {AppCallRequest, AppCallValues, AppForm, AppField, AppSelectOption} from 'mattermost-redux/trequired: boolean, type: string, index: numberypes/apps';
+import {AppCallRequest, AppCallValues, AppForm, AppField, AppSelectOption} from 'mattermost-redux/types/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
@@ -7,7 +7,7 @@ import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {Routes} from '../utils';
-import {makeSubscriptionOptions, tryPromiseWithMessage, getConditionFieldsFromCallValues, CallValueCondition} from '../utils/utils';
+import {makeSubscriptionOptions, tryPromiseWithMessage} from '../utils/utils';
 import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions, ZDConditionOption, ZDConditionOptionValue, ZDConditionOptionOperator} from '../utils/ZDTypes';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
@@ -137,8 +137,8 @@ class FormFields extends BaseFormFields {
                 this.addConditionNameField(opts);
                 const operatorOption = this.getSelectOptionFromCondition(condition);
 
-                // update the modal using call values once the modal is loaded with a subscription
-                if (this.subPulldownChanged()) {
+                // the subname pulldown changed, load the saved ZD values
+                if (this.subNamePullDownChanged()) {
                     this.addConditionOperatorField(operatorOption, opts);
                     if (condition.value) {
                         this.addConditionValueField(opts);
@@ -146,8 +146,8 @@ class FormFields extends BaseFormFields {
                     continue;
                 }
 
-                // if field name is selected, show operator field without a
-                // value selected
+                // update the modal using call values once the modal is loaded with a subscription
+                // if field name is selected, show operator field without a value selected
                 if (this.conditionFieldNameSelected(opts)) {
                     this.addConditionOperatorField(undefined, opts);
                     continue;
@@ -161,6 +161,7 @@ class FormFields extends BaseFormFields {
             }
 
             const newOpts: ConditionOptions = {
+                required: false,
                 fieldNameOption: undefined,
                 index: numConditions,
                 type,
@@ -169,12 +170,12 @@ class FormFields extends BaseFormFields {
         }
     }
 
-    subPulldownChanged(): boolean {
+    subNamePullDownChanged(): boolean {
         return this.call.selected_field === SubscriptionFields.SubSelectName;
     }
 
     getConditions(type: string): ZDTriggerCondition[] {
-        if (this.subPulldownChanged()) {
+        if (this.subNamePullDownChanged()) {
             return this.savedTriggerConditions[type];
         }
         return this.createConditionsFromCall(this.call.values, type);
@@ -229,7 +230,6 @@ class FormFields extends BaseFormFields {
         return conditions;
     }
 
-    // addConditionNameField(option: AppSelectOption | undefined, opts: ConditionOptions): void {
     addConditionNameField(opts: ConditionOptions): void {
         const fieldNameOptions = this.makeConditionFieldNameOptions();
         const n = opts.index + 1;
@@ -337,26 +337,21 @@ class FormFields extends BaseFormFields {
 
     getSubNameValue(): string {
         const selectedDropDownName = this.getSelectedSubTriggerName();
-
-        // default to the subname drop down value for existing sub
-        let subName = selectedDropDownName;
-
-        // if sub selection changed set the value
-        if (this.call.selected_field === SubscriptionFields.SubSelectName) {
-        // reset to empty for new sub creation
+        if (this.subNamePullDownChanged()) {
+            // reset to empty for new sub creation
             if (this.isNewSub()) {
-                subName = '';
+                return '';
             }
 
-            // set to the the subname drop down value for existing subs
+            // default to the subname drop down value for existing sub
             return selectedDropDownName;
         }
 
         // if any other selection changes, keep the previous value
         if (this.call.values) {
-            subName = this.call.values[SubscriptionFields.SubTextName];
+            return this.call.values[SubscriptionFields.SubTextName];
         }
-        return subName;
+        return selectedDropDownName;
     }
 
     // add addSubSelectField adds the subscription selector modal field
@@ -458,7 +453,7 @@ class FormFields extends BaseFormFields {
         return operatorOption;
     }
 
-    isOperatorTerminal(condition: CallValueCondition): boolean {
+    isOperatorTerminal(condition: ZDTriggerCondition): boolean {
         if (condition.field) {
             const condOption = this.getConditionFromConditionOptions(condition.field);
             const operators: ZDConditionOptionOperator[] = condOption.operators;
