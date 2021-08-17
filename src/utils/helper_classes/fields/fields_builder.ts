@@ -53,6 +53,7 @@ class FieldsBuilderImpl implements FieldsBuilder {
         const field: AppField = {
             name: f.name,
             label: f.label,
+            modal_label: f.modal_label,
             type: f.type,
             hint: f.hint,
             subtype: f.subtype,
