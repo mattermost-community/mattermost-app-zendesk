@@ -354,7 +354,7 @@ class FormFields extends BaseFormFields {
 
         const f: AppField = {
             name: SubscriptionFields.SubSelectName,
-            label: SubscriptionFields.SubSelectLabel,
+            modal_label: SubscriptionFields.SubSelectLabel,
             type: AppFieldTypes.STATIC_SELECT,
             options,
             is_required: true,
