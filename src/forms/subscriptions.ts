@@ -142,26 +142,10 @@ class FormFields extends BaseFormFields {
                     continue;
                 }
 
-<<<<<<< HEAD
                 // update the modal using call values once the modal is loaded with a subscription
                 // if field name is selected, show operator field without a value selected
                 this.updateModal(opts);
             }
-=======
-    // getTriggers gets all the team triggers saved in Zendesk via the ZD client
-    async getTriggers(): Promise<ZDTrigger[]> {
-        // modified node-zendesk to allow hitting triggers/search api
-        // returns all triggers for all channels and teams
-        const search = [
-            SubscriptionFields.PrefixTriggersTitle,
-            SubscriptionFields.RegexTriggerInstance,
-            this.call.context.mattermost_site_url,
-            SubscriptionFields.RegexTriggerTeamID,
-            this.call.context.team_id,
-            SubscriptionFields.RegexTriggerChannelID,
-            this.call.context.channel_id,
-        ].join('');
->>>>>>> master
 
             const newOpts: ConditionOptions = {
                 required: false,
