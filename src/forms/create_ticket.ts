@@ -241,7 +241,7 @@ class FormFields extends BaseFormFields {
             name: CreateTicketFields.NameAdditionalMessage,
             type: AppFieldTypes.TEXT,
             subtype: 'textarea',
-            label: 'Optional message',
+            modal_label: 'Optional message',
             options: makeFormOptions(this.zdTicketForms),
             description: 'Add additional message to the Zendesk ticket',
         };
@@ -253,7 +253,7 @@ class FormFields extends BaseFormFields {
             name: CreateTicketFields.NamePostMessage,
             type: AppFieldTypes.TEXT,
             subtype: 'textarea',
-            label: 'Mattermost message',
+            modal_label: 'Mattermost message',
             value: this.postMessage,
             is_required: true,
             readonly: true,

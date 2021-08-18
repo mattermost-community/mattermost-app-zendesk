@@ -4,7 +4,6 @@ import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
 
 import {Oauth2App} from '../types/apps';
-import {getManifest} from '../manifest';
 import {AppConfigStore} from '../store/config';
 
 import {SubscriptionFields, ZDRoles} from './constants';
