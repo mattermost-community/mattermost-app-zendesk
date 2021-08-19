@@ -25,7 +25,7 @@ This guide is intended for Mattermost System Admins setting up the Zendesk app. 
 
 ### Prerequisites
 
-The Zendesk App is designed using the [Apps Framework](https://developers.mattermost.com/integrate/apps) which differs from the Plugin Framework. The Apps framework is written as a [Mattermost plugin](https://github.com/mattermost/mattermost-plugin-apps) and needs to be installed and enabled before Mattermost Apps like the Zendesk App can be installed. You can install the Apps plugin via the Mattermost Marketplace.
+The Zendesk App is designed using the [Apps Framework](https://developers.mattermost.com/integrate/apps) which differs from the Plugin Framework. You must install and enable the [Mattermost Apps Plugin](https://github.com/mattermost/mattermost-plugin-apps) before Mattermost Apps like the Zendesk App can be installed. You can install the Apps plugin via the Mattermost Marketplace.
 
 ### Setting up
 
