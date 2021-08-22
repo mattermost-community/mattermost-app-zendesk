@@ -79,7 +79,7 @@ const fetchZDConditions = async (zdClient: ZDClient, state: ModalState): Promise
 };
 
 // FormFields retrieves viewable modal app fields. The fields are scoped to the currently viewed channel
-class FormFields extends BaseFormFields {
+export class FormFields extends BaseFormFields {
     triggers: ZDTrigger[]
     zdHost: string
     fetchedConditionOptions: ZDConditionOption[]
@@ -95,21 +95,23 @@ class FormFields extends BaseFormFields {
     }
 
     async addSubscriptionFields(): Promise<AppField[]> {
+        console.log('. IN HERE!');
         this.triggers = await this.fetchChannelTriggers();
-        this.addSubSelectField();
 
-        // only show subscriptions name field until user selects a value
-        if (!this.builder.currentFieldValuesAreDefined()) {
-            return this.builder.getFields();
-        }
+        // this.addSubSelectField();
 
-        this.savedTriggerConditions = this.getSavedZDConditions();
-
-        // add fields that are dependant on the subscription name
-        // provide a text field to add the name of the new subscription
-        this.addSubNameTextField();
-        this.addConditionsFields();
-        this.addSubmitButtons();
+        // // only show subscriptions name field until user selects a value
+        // if (!this.builder.currentFieldValuesAreDefined()) {
+        //     return this.builder.getFields();
+        // }
+        //
+        // this.savedTriggerConditions = this.getSavedZDConditions();
+        //
+        // // add fields that are dependant on the subscription name
+        // // provide a text field to add the name of the new subscription
+        // this.addSubNameTextField();
+        // this.addConditionsFields();
+        // this.addSubmitButtons();
         return this.builder.getFields();
     }
 

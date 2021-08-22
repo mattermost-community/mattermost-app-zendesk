@@ -26,7 +26,7 @@ interface Groups {
     show(id: number): any;
 }
 
-interface Triggers {
+export interface Triggers {
     definitions(): any;
     update(id: number, trigger: any): any;
     delete(id: number): any;

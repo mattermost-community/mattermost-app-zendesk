@@ -41,6 +41,7 @@
     "eslint-plugin-import": "^2.22.1",
     "express": "4.17.1",
     "jest": "27.0.6",
+    "jest-mock-extended": "2.0.2-beta2",
     "nodemon": "2.0.6",
     "ts-jest": "27.0.5",
     "typescript": "3.9.7"
@@ -51,6 +52,11 @@
     "roots": [
       "<rootDir>/src"
     ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": false
+      }
+    },
     "testMatch": [
       "**/__tests__/**/*.+(ts|tsx|js)",
       "**/?(*.)+(spec|test).+(ts|tsx|js)"

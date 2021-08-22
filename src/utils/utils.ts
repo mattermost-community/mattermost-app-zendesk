@@ -112,6 +112,7 @@ export function errorWithMessage(err: Error, message: string): string {
 }
 
 export async function tryPromiseWithMessage(p: Promise<any>, message: string): Promise<any> {
+    console.log('p', p);
     return p.catch((err) => {
         throw new Error(errorWithMessage(err, message));
     });

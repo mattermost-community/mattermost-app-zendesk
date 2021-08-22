@@ -2,7 +2,7 @@ import Client from 'mattermost-redux/client/client4.js';
 
 import {baseUrlFromContext} from '../utils';
 
-interface MMClient {
+export interface MMClient {
     asBot(): Client;
     asAdmin(): Client;
     asActingUser(): Client;
