@@ -19,7 +19,7 @@ describe('utils/createZdConditionsFromCall', () => {
             },
             [
                 {field: 'field-0', operator: 'field-0-oper'},
-                {field: 'field-1'}
+                {field: 'field-1'},
             ],
         ],
         ['should ignore state',
@@ -41,7 +41,7 @@ describe('utils/createZdConditionsFromCall', () => {
                 any_0_value: {label: 'field-0-value', value: 'field-0-value'},
             },
             [
-                {field: 'field-0', operator: 'field-0-oper', value: 'field-0-value'} 
+                {field: 'field-0', operator: 'field-0-oper', value: 'field-0-value'},
             ],
         ],
     ])('%s', (_, callVals, expected) => {

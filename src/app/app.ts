@@ -158,8 +158,8 @@ class AppImpl implements App {
     }
 
     validateSubNameIsUnique = (proposedSubName: string): boolean => {
-        // state contains the list of saved subscriptions in Zendesk
-        const zdSubs = this.call.state.conditions;
+        // state.triggers contains the list of saved subscriptions in Zendesk
+        const zdSubs = this.call.state.triggers;
         const values = this.call.values;
 
         // label value of the selected dropdown subscription

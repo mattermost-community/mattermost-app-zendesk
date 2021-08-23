@@ -11,7 +11,7 @@
     "lint": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --cache",
     "fix": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --fix --cache",
     "start": "nodemon dist/index.js",
-    "test": "jest --coverage --passWithNoTests"
+    "test": "jest --coverage"
   },
   "author": "",
   "license": "ISC",
