@@ -2,7 +2,7 @@ import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/
 
 import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
 
-import {getConditionFieldsFromCallValues} from '../utils/utils';
+import {getCallValueConditions} from '../utils/utils';
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
 interface TriggerFromFrom {
@@ -100,7 +100,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
 
         const types: string[] = SubscriptionFields.ConditionTypes;
         for (const type of types) {
-            const callValueConditions = getConditionFieldsFromCallValues(this.values, type);
+            const callValueConditions = getCallValueConditions(this.values, type);
             Object.keys(callValueConditions).
                 sort().
                 forEach((index,) => {

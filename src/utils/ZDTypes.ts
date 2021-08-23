@@ -27,7 +27,7 @@ export type ZDConditionOption = {
 
 export type ZDTriggerCondition = {
     field: string
-    operator: string
+    operator?: string
     value?: string
 }
 

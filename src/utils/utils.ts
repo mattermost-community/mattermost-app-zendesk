@@ -7,7 +7,7 @@ import {Oauth2App} from '../types/apps';
 import {AppConfigStore} from '../store/config';
 
 import {SubscriptionFields, ZDRoles} from './constants';
-import {StoredOauthUserToken, ZDRole} from './ZDTypes';
+import {StoredOauthUserToken, ZDRole, ZDTriggerCondition} from './ZDTypes';
 
 export type ZDFieldOption = {
     name: string;
@@ -67,11 +67,37 @@ export type CallValueConditions = {
     [key: number]: CallValueCondition
 }
 
-// getConditionFieldsFromCallValues constructs an object of
-// CallValueConditions. The CallValueCondition is a group of up to three call values
+// createConditionsFromCall returns an array of Zendesk conditions
+// constructed from the App call values
+export const createZdConditionsFromCall = (cValues: AppCallValues | undefined, type: string): ZDTriggerCondition[] => {
+    const cValueConditions = getCallValueConditions(cValues, type);
+    const conditions: ZDTriggerCondition[] = [];
+    const numConditions = Object.keys(cValueConditions).length;
+    for (let index = 0; index < numConditions; index++) {
+        const condition = cValueConditions[index];
+
+        if (!condition.field) {
+            continue;
+        }
+        const newCond: ZDTriggerCondition = {
+            field: condition.field.value,
+        };
+        if (condition.operator) {
+            newCond.operator = condition.operator.value;
+        }
+        if (condition.value) {
+            newCond.value = condition.value.value || condition.value;
+        }
+        conditions.push(newCond);
+    }
+    return conditions;
+};
+
+// getCallValueConditions constructs an object of CallValueConditions.
+// A CallValueCondition is a group of up to three call values
 // representing a condition in Zendesk. This type is easier to iterate through
 // than keeping track in an interator of call values
-export const getConditionFieldsFromCallValues = (cValues: AppCallValues | undefined, type: string): CallValueConditions => {
+export const getCallValueConditions = (cValues: AppCallValues | undefined, type: string): CallValueConditions => {
     // get all the call values from the specified any or all type sections
     const conditions: CallValueConditions = {};
     if (cValues) {
@@ -101,11 +127,11 @@ export const makeFormOptions = (options: ZDFormFieldOption[]): AppSelectOption[]
 export const makeSubscriptionOption = (option: ZDSubscriptionFieldOption): AppSelectOption => ({label: getDisplaySubTitleOption(option), value: option.id.toString()});
 export const makeSubscriptionOptions = (options: ZDSubscriptionFieldOption[]): AppSelectOption[] => options.map(makeSubscriptionOption);
 
-export const makeChannelOption = (option: Channel): AppSelectOption => ({label: option.display_name, value: option.id});
-export const makeChannelOptions = (options: Channel[]): AppSelectOption[] => options.map(makeChannelOption);
-
 export const getMultiselectValue = (option: ZDFieldOption): string => option.value;
 export const getMultiselectValues = (options: ZDFieldOption[]): string[] => options.map(getMultiselectValue);
+
+export const makeChannelOption = (option: Channel): AppSelectOption => ({label: option.display_name, value: option.id});
+export const makeChannelOptions = (options: Channel[]): AppSelectOption[] => options.map(makeChannelOption);
 
 export function errorWithMessage(err: Error, message: string): string {
     return `"${message}".  ` + err.message;
