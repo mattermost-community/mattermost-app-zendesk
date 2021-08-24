@@ -64,6 +64,7 @@ class FieldsBuilderImpl implements FieldsBuilder {
             max_length: f.max_length || this.defaultMaxLength,
             refresh: f.refresh,
             is_required: f.is_required,
+            hide_required_star: f.hide_required_star,
             readonly: f.readonly,
 
             // if field is provided by caller, use that value

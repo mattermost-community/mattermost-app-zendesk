@@ -234,6 +234,7 @@ class FormFields extends BaseFormFields {
             options: this.makeConditionOperationOptions(opts.condition.field),
             refresh: true,
             is_required: opts.required,
+            hide_required_star: true,
         };
         if (value) {
             f.value = value;
@@ -254,6 +255,7 @@ class FormFields extends BaseFormFields {
             hint: 'value',
             name: this.getFieldName(opts.type, opts.index, SubscriptionFields.ConditionValueSuffix),
             is_required: opts.required,
+            hide_required_star: true,
         };
         const value = opts.condition.value;
         if (value) {
