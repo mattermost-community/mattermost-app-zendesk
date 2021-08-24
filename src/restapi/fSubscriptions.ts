@@ -12,7 +12,7 @@ export async function fOpenSubscriptionsForm(req: Request, res: Response): Promi
     const config = newConfigStore(context.bot_access_token, context.mattermost_site_url);
     const cValues = await config.getValues();
     if (!webhookConfigured(cValues)) {
-        const msg = 'Subscriptions cannot be created before the Zendesk Target is configured.  Please contact your Mattermost admin.';
+        const msg = 'Subscriptions cannot be created before the Zendesk Target is configured.  If you are a Mattermost Admin, you can setup the target by running `/zendesk setup-target`.';
         res.json(newOKCallResponseWithMarkdown(msg));
         return;
     }

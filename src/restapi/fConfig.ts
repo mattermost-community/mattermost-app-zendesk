@@ -63,13 +63,14 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
 }
 
 const verifyUrl = async (url: string) => {
-    const verifyURL = '`' + url + Routes.ZD.AccessURI + '`';
+    const verifyURL = url + Routes.ZD.AccessURI;
+    const quotedURL = '`' + verifyURL + '`';
     try {
         const resp = await fetch(verifyURL, {method: 'post'});
         if (!resp.ok) {
-            throw new Error(`failed to verify url: ${verifyURL}`);
+            throw new Error(`failed to verify url: ${quotedURL}`);
         }
     } catch (err) {
-        throw new Error(`failed to fetch url: ${verifyURL}`);
+        throw new Error(`failed to fetch url: ${quotedURL}`);
     }
 };
