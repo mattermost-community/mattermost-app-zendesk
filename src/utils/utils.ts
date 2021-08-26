@@ -72,10 +72,7 @@ export type CallValueConditions = {
 export const createZdConditionsFromCall = (cValues: AppCallValues | undefined, type: string): ZDTriggerCondition[] => {
     const cValueConditions = getCallValueConditions(cValues, type);
     const conditions: ZDTriggerCondition[] = [];
-    const numConditions = Object.keys(cValueConditions).length;
-    for (let index = 0; index < numConditions; index++) {
-        const condition = cValueConditions[index];
-
+    for (const condition of Object.values(cValueConditions)) {
         if (!condition.field) {
             continue;
         }
@@ -93,27 +90,29 @@ export const createZdConditionsFromCall = (cValues: AppCallValues | undefined, t
     return conditions;
 };
 
-// getCallValueConditions constructs an object of CallValueConditions.
+// getCallValueConditions constructs a dictionary of CallValueConditions.
 // A CallValueCondition is a group of up to three call values
 // representing a condition in Zendesk. This type is easier to iterate through
 // than keeping track in an interator of call values
 export const getCallValueConditions = (cValues: AppCallValues | undefined, type: string): CallValueConditions => {
-    // get all the call values from the specified any or all type sections
+    // get all the call values from the specified "any" or "all" type sections
     const conditions: CallValueConditions = {};
-    if (cValues) {
-        const filteredCValues = Object.entries(cValues).
-            filter((entry) => {
-                return entry[0].startsWith(`${type}_`);
-            });
+    if (!cValues) {
+        return conditions;
+    }
 
-        // create the CallValueConditions object
-        for (const callVal of filteredCValues) {
-            const [, index, name] = callVal[0].split('_');
-            if (!conditions[index]) {
-                conditions[index] = {};
-            }
-            conditions[index][name] = callVal[1];
+    const filteredCValues = Object.entries(cValues).
+        filter((entry) => {
+            return entry[0].startsWith(`${type}_`);
+        });
+
+    // create the CallValueConditions object
+    for (const callVal of filteredCValues) {
+        const [, index, name] = callVal[0].split('_');
+        if (!conditions[index]) {
+            conditions[index] = {};
         }
+        conditions[index][name] = callVal[1];
     }
     return conditions;
 };

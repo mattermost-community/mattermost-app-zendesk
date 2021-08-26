@@ -51,15 +51,15 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotA
         },
     };
 
-    const host = cValues.zd_url;
-    const link = '[Zendesk target](' + host + '/agent/admin/extensions)';
-
     // add the user access_token to the store
     if (oauth2User.token && oauth2User.token.access_token) {
         cValues.zd_oauth_access_token = oauth2User.token.access_token;
     } else {
         throw new Error('failed to get oauth2 user access_token');
     }
+
+    const host = cValues.zd_url;
+    const link = '[Zendesk target](' + host + '/agent/admin/extensions)';
 
     // update the existing target
     if (webhookConfigured(cValues)) {
