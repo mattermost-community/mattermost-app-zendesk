@@ -92,8 +92,7 @@ export const createZdConditionsFromCall = (cValues: AppCallValues | undefined, t
 
 // getCallValueConditions constructs a dictionary of CallValueConditions.
 // A CallValueCondition is a group of up to three call values
-// representing a condition in Zendesk. This type is easier to iterate through
-// than keeping track in an interator of call values
+// representing a condition in Zendesk.
 export const getCallValueConditions = (cValues: AppCallValues | undefined, type: string): CallValueConditions => {
     // get all the call values from the specified "any" or "all" type sections
     const conditions: CallValueConditions = {};
