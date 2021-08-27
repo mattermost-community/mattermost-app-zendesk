@@ -1,10 +1,11 @@
-import {Request, Response} from 'express';
+import {AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown, CallResponseHandler} from '../utils/call_responses';
 
-export async function fInstall(_: Request, res: Response): Promise<void> {
+export const fInstall: CallResponseHandler = async (_, res) => {
     let msg = '**Zendesk is now installed!**\n\n';
     msg += 'To finish configuring the Zendesk app please read the [Quick Start](https://github.com/mattermost/mattermost-app-zendesk#quick-start) section of the README.\n';
-    res.json(newOKCallResponseWithMarkdown(msg));
-}
+    const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(msg);
+    res.json(callResponse);
+};
 

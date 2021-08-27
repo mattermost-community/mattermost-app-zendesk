@@ -1,7 +1,16 @@
+import {Request, Response} from 'express';
 import {AppCallResponse, AppForm} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
 export type FieldValidationErrors = {[name: string]: string};
+
+export type CallResponseHandler = (
+    req: Request,
+    res: {
+        json: (
+            callResponse: AppCallResponse
+        ) => void}
+) => Promise<void>;
 
 export function newOKCallResponse(): AppCallResponse {
     return {

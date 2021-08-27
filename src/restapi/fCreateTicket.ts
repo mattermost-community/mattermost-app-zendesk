@@ -1,39 +1,46 @@
-import {Request, Response} from 'express';
-import {AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {newFormCallResponse, newErrorCallResponseWithMessage} from '../utils/call_responses';
+import {newFormCallResponse, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
 import {newCreateTicketForm} from '../forms';
 import {newApp} from '../app/app';
 
 // fOpenCreateTicketForm opens a new create ticket form
-export async function fOpenCreateTicketForm(req: Request, res: Response): Promise<void> {
+export const fOpenCreateTicketForm: CallResponseHandler = async (req, res) => {
+    let callResponse: AppCallResponse;
     try {
         const form = await newCreateTicketForm(req.body);
-        res.json(newFormCallResponse(form));
+        callResponse = newFormCallResponse(form);
+        res.json(callResponse);
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('Unable to open create ticket form: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('Unable to open create ticket form: ' + error.message);
+        res.json(callResponse);
     }
-}
+};
 
 // fSubmitOrUpdateCreateTicketForm updates the create ticket form with new values or
 // submits the ticket if submit button is clicked
-export async function fSubmitOrUpdateCreateTicketForm(req: Request, res: Response): Promise<void> {
+export const fSubmitOrUpdateCreateTicketForm: CallResponseHandler = async (req, res) => {
+    let callResponse: AppCallResponse;
     try {
         const form = await newCreateTicketForm(req.body);
-        res.json(newFormCallResponse(form));
+        callResponse = newFormCallResponse(form);
+        res.json(callResponse);
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('Unable to update create ticket form: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('Unable to update create ticket form: ' + error.message);
+        res.json(callResponse);
     }
-}
+};
 
 // fSubmitOrUpdateCreateTicketSubmit creates a ticket
-export async function fSubmitOrUpdateCreateTicketSubmit(req: Request, res: Response): Promise<void> {
+export const fSubmitOrUpdateCreateTicketSubmit: CallResponseHandler = async (req, res) => {
     const call: AppCallRequest = req.body;
+    let callResponse: AppCallResponse;
     try {
         const app = newApp(call);
-        const callResponse = await app.createTicketFromPost();
+        callResponse = await app.createTicketFromPost();
         res.json(callResponse);
     } catch (err) {
-        res.json(newErrorCallResponseWithMessage('Unable to create ticket from post: ' + err.message));
+        callResponse = newErrorCallResponseWithMessage('Unable to create ticket from post: ' + err.message);
+        res.json(callResponse);
     }
-}
+};

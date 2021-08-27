@@ -1,4 +1,4 @@
-import {Request, Response} from 'express';
+import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {getManifest} from '../manifest';
 import {Routes, tryPromiseWithMessage} from '../utils';
@@ -6,10 +6,10 @@ import {webhookConfigured, isZdAdmin} from '../utils/utils';
 import {newZDClient, ZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {newConfigStore} from '../store';
-import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
 import {CtxExpandedBotAppActingUserOauth2AppOauth2User} from 'types/apps';
 
-export async function fCreateTarget(req: Request, res: Response): Promise<void> {
+export const fCreateTarget: CallResponseHandler = async (req, res) => {
     const context = req.body.context;
     const zdOptions: ZDClientOptions = {
         oauth2UserAccessToken: context.oauth2.user.token.access_token,
@@ -17,13 +17,16 @@ export async function fCreateTarget(req: Request, res: Response): Promise<void> 
         mattermostSiteUrl: context.mattermost_site_url,
     };
     const zdClient = await newZDClient(zdOptions);
+    let callResponse: AppCallResponse;
     try {
         const text = await updateOrCreateTarget(zdClient, context);
-        res.json(newOKCallResponseWithMarkdown(text));
+        callResponse = newOKCallResponseWithMarkdown(text);
+        res.json(callResponse);
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('Unable to create target: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('Unable to create target: ' + error.message);
+        res.json(callResponse);
     }
-}
+};
 
 // updateOrCreateTarget creates a target or updates an the exising target
 async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotAppActingUserOauth2AppOauth2User): Promise<string> {

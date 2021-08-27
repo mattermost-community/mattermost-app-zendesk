@@ -1,5 +1,5 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {Request, Response} from 'express';
+import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {ExpandedBotAdminActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
@@ -8,9 +8,10 @@ import {newZDClient, newMMClient} from '../clients';
 import {ZDClientOptions, ZDClient} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
-import {newConfigStore, AppConfigStore} from '../store/config';
+import {newConfigStore} from '../store/config';
+import {CallResponseHandler, newOKCallResponse} from '../utils/call_responses';
 
-export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
+export const fHandleSubcribeNotification: CallResponseHandler = async (req, res) => {
     const values = req.body.values.data;
     const context: ExpandedBotAdminActingUser = req.body.context;
 
@@ -55,8 +56,9 @@ export async function fHandleSubcribeNotification(req: Request, res: Response): 
 
     const createPostReq = adminClient.createPost(post as Post);
     await tryPromiseWithMessage(createPostReq, 'Failed to create post');
-    res.json({});
-}
+    const callResponse:AppCallResponse = newOKCallResponse();
+    res.json(callResponse);
+};
 
 // getNotificationMessage returns text for a post message
 async function getNotificationMessage(zdClient: ZDClient, zdUrl: string, ticketID: string, ticketTitle: string, ticketAudit: any): Promise<string> {

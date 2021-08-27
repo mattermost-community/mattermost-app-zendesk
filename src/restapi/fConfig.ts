@@ -1,25 +1,27 @@
-import {Request, Response} from 'express';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {AppCallRequestWithValues, CtxExpandedBotActingUserAccessToken} from '../types/apps';
 import {newConfigStore, AppConfigStore} from '../store/config';
 import {newAppsClient} from '../clients';
 import {newZendeskConfigForm} from '../forms';
-import {newOKCallResponseWithMarkdown, newFormCallResponse, newErrorCallResponseWithMessage, newErrorCallResponseWithFieldErrors} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown, newFormCallResponse, newErrorCallResponseWithMessage, newErrorCallResponseWithFieldErrors, CallResponseHandler} from '../utils/call_responses';
 import {baseUrlFromContext} from '../utils/utils';
 import {Routes} from '../utils/constants';
 
 // fOpenZendeskConfigForm opens a new configuration form
-export async function fOpenZendeskConfigForm(req: Request, res: Response): Promise<void> {
+export const fOpenZendeskConfigForm: CallResponseHandler = async (req, res) => {
+    let callResponse: AppCallResponse;
     try {
         const form = await newZendeskConfigForm(req.body);
-        res.json(newFormCallResponse(form));
+        callResponse = newFormCallResponse(form);
+        res.json(callResponse);
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('Unable to open configuration form: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('Unable to open configuration form: ' + error.message);
+        res.json(callResponse);
     }
-}
+};
 
-export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Response): Promise<void> {
+export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (req, res) => {
     const call: AppCallRequestWithValues = req.body;
     const context = call.context as CtxExpandedBotActingUserAccessToken;
     const url = baseUrlFromContext(call.context.mattermost_site_url);
@@ -60,7 +62,7 @@ export async function fSubmitOrUpdateZendeskConfigSubmit(req: Request, res: Resp
         callResponse = newErrorCallResponseWithMessage('Unable to submit configuration form: ' + err.message);
     }
     res.json(callResponse);
-}
+};
 
 const verifyUrl = async (url: string) => {
     const verifyURL = url + Routes.ZD.AccessURI;
