@@ -102,26 +102,27 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         for (const type of types) {
             const callValueConditions = getCallValueConditions(this.values, type);
             const keys = Object.keys(callValueConditions).sort();
-            keys.forEach((index,) => {
-                if (callValueConditions[index].field) {
-                    const entry: ZDTriggerCondition = {
-                        field: callValueConditions[index].field.value,
-                        operator: callValueConditions[index].operator.value,
-                    };
-                    if (callValueConditions[index].value) {
-                        // if the call value  has a value it is a select option.
-                        // Get the value
-                        if (callValueConditions[index].value.value) {
-                            entry.value = callValueConditions[index].value.value;
-                        } else {
-                            entry.value = callValueConditions[index].value;
-                        }
-                    } else {
-                        // ZD API requires value field even if null
-                        entry.value = undefined;
-                    }
-                    conditions[type].push(entry);
+            keys.forEach((key: string) => {
+                const condition = callValueConditions[key];
+                if (!condition.field) {
+                    return;
                 }
+
+                const entry: ZDTriggerCondition = {
+                    field: condition.field.value,
+                    operator: condition.operator.value,
+                    value: undefined, //  ZD API requires value field even if null
+                };
+
+                if (condition.value) {
+                    entry.value = condition.value;
+
+                    // if the call value has a value it is a select option.
+                    if (condition.value.value) {
+                        entry.value = condition.value.value;
+                    }
+                }
+                conditions[type].push(entry);
             });
         }
 
