@@ -393,11 +393,11 @@ class FormFields extends BaseFormFields {
     }
 
     getSubTriggerByID(subID: string): ZDTrigger {
-        const trigger = this.triggers.find((t: ZDTrigger) => t.id.toString() === subID) as ZDTrigger;
+        const trigger = this.triggers.find((t: ZDTrigger) => t.id.toString() === subID);
         if (!trigger && !this.isNewSub()) {
             throw new Error('unable to get trigger by ID ' + subID);
         }
-        return trigger;
+        return trigger as ZDTrigger;
     }
 
     // makeConditionFieldNameOptions returns an array of available field name options
