@@ -276,7 +276,7 @@ class FormFields extends BaseFormFields {
         return `${type}_${index}_${name}`;
     }
 
-    // getConditions returns an array of Zendesk "any" or "all" trigger conditions for
+    // getSavedZDConditions returns an array of Zendesk "any" or "all" trigger conditions for
     // the selected subscription
     getSavedZDConditions(): ZDTriggerConditions {
         if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
