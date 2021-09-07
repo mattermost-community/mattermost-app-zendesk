@@ -282,11 +282,7 @@ class FormFields extends BaseFormFields {
         if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
             return this.getSelectedSubTrigger().conditions;
         }
-        const emptyConditions: ZDTriggerConditions = {
-            any: [],
-            all: [],
-        };
-        return emptyConditions;
+        return {any: [], all: []};
     }
 
     // addConditionsFieldsHeader adds a markdown field for a section of conditions
