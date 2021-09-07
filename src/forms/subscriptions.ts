@@ -439,7 +439,7 @@ class FormFields extends BaseFormFields {
         return value;
     }
 
-    // getConditionOptionValueValue returns the value of a selected condition operator field
+    // getConditionOptionValue returns the value of a selected condition operator field
     getConditionOptionValue(fieldOptions: AppSelectOption[], option: string): AppSelectOption | undefined {
         const value = fieldOptions.find((f: AppSelectOption) => {
             return f.value.toString() === option;
