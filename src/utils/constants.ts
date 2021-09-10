@@ -125,8 +125,6 @@ export const SubscriptionFields = {
     SubSelectLabel: 'Select Subscription',
     SubSelectName: 'subscription_select_name',
 
-    UnsupportedFieldsTextName: 'unsupported_fields',
-
     SubTextLabel: 'Name',
     SubTextName: 'subscription_text_name',
 
