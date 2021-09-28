@@ -316,11 +316,11 @@ class FormFields extends BaseFormFields {
         this.builder.addFieldToArray(f);
     }
 
-    // getSubNameValue retruns value of the sub name text field
+    // getSubNameValue returns value of the sub name text field
     getSubNameValue(): string {
         const selectedDropDownName = this.getSelectedSubTriggerName();
         if (this.subNameDropDownChanged()) {
-            // reset to empty for new sub creation
+            // reset to empty for new subscription creation
             if (this.isNewSub()) {
                 return '';
             }
@@ -336,7 +336,7 @@ class FormFields extends BaseFormFields {
         return selectedDropDownName;
     }
 
-    // add addSubSelectField adds the subscription selector modal field
+    // addSubSelectField adds the subscription selector modal field
     addSubSelectField(): void {
         // first option is to create new subscription
         const newSubOption = {
