@@ -36,7 +36,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
     };
     const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
     const zdHost = config.zd_url;
-    const mmClient = newMMClient(mmOptions).asAdmin();
+    const mmClient = newMMClient(mmOptions).asActingUser();
     const formFields = new FormFields(call, zdClient, mmClient, zdHost);
     const fields = await formFields.getSubscriptionFields();
 

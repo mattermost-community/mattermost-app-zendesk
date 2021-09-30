@@ -34,7 +34,7 @@ export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm
         botAccessToken: context.bot_access_token,
         adminAccessToken: context.admin_access_token,
     };
-    const mmClient = newMMClient(mmOptions).asAdmin();
+    const mmClient = newMMClient(mmOptions).asActingUser();
     const formFields = new FormFields(call, zdClient, mmClient);
     const fields = await formFields.getCreateTicketFields();
 

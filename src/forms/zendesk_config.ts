@@ -19,7 +19,7 @@ export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppFor
         botAccessToken: context.bot_access_token,
         adminAccessToken: context.admin_access_token,
     };
-    const mmClient = newMMClient(mmOptions).asAdmin();
+    const mmClient = newMMClient(mmOptions).asActingUser();
     const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
     const formFields = new FormFields(call, configStore, mmClient);
     const fields = await formFields.getConfigFields();
