@@ -2,7 +2,7 @@
 import {UserProfile} from 'mattermost-redux/types/users';
 import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppContext, AppCall, AppCallValues} from 'mattermost-redux/types/apps';
+import {AppCall, AppCallValues, AppContext} from 'mattermost-redux/types/apps';
 
 import {StoredOauthUserToken} from 'utils/ZDTypes';
 

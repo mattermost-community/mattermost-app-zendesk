@@ -5,7 +5,7 @@ import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage, CallResp
 import {newZDClient, newAppsClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {ZDTokensResponse} from '../utils/ZDTypes';
-import {newConfigStore, AppConfigStore} from '../store/config';
+import {AppConfigStore, newConfigStore} from '../store/config';
 
 export const fDisconnect:CallResponseHandler = async (req, res) => {
     const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;

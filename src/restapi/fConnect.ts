@@ -2,7 +2,7 @@ import ClientOAuth2, {Token} from 'client-oauth2';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
-import {AppCallRequestWithValues, ExpandedOauth2App, CtxExpandedActingUserOauth2AppBot, CtxExpandedBotActingUserOauth2AppOauth2User} from '../types/apps';
+import {AppCallRequestWithValues, CtxExpandedActingUserOauth2AppBot, CtxExpandedBotActingUserOauth2AppOauth2User, ExpandedOauth2App} from '../types/apps';
 import {ZDClientOptions} from 'clients/zendesk';
 import {newOKCallResponse, newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
 import {newConfigStore, AppConfigStore} from '../store/config';
