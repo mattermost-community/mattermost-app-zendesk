@@ -4,8 +4,8 @@ import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
 import {AppCallRequestWithValues, CtxExpandedActingUserOauth2AppBot, CtxExpandedBotActingUserOauth2AppOauth2User, ExpandedOauth2App} from '../types/apps';
 import {ZDClientOptions} from 'clients/zendesk';
-import {newOKCallResponse, newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
-import {newConfigStore, AppConfigStore} from '../store/config';
+import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {AppConfigStore, newConfigStore} from '../store/config';
 import {Routes} from '../utils';
 import {ZDRoles} from '../utils/constants';
 import {newApp} from '../app/app';
