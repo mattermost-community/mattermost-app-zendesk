@@ -2,7 +2,7 @@ import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/
 
 import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
 
-import {checkBox} from '../utils/utils';
+import {getCallValueConditions} from '../utils/utils';
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
 
 interface TriggerFromFrom {
@@ -13,14 +13,12 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     values: AppCallValues;
     context: AppContext;
     targetID: string;
-    checkBoxes: checkBox[];
     trigger: ZDTrigger
 
-    constructor(call: AppCallRequest, checkboxes: checkBox[], targetID: string) {
+    constructor(call: AppCallRequest, targetID: string) {
         this.values = call.values as AppCallValues;
         this.context = call.context;
         this.targetID = targetID;
-        this.checkBoxes = checkboxes;
         this.trigger = {} as ZDTrigger;
         this.buildTrigger();
     }
@@ -97,27 +95,47 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     addConditions(): void {
         const conditions: ZDTriggerConditions = {
             any: [],
+            all: [],
         };
-        for (const checkbox of this.checkBoxes) {
-            if (this.values[checkbox.name]) {
+
+        const types: string[] = SubscriptionFields.ConditionTypes;
+        for (const type of types) {
+            const callValueConditions = getCallValueConditions(this.values, type);
+            const keys = Object.keys(callValueConditions).sort();
+            keys.forEach((key: string) => {
+                const condition = callValueConditions[key];
+                if (!condition.field) {
+                    return;
+                }
+
                 const entry: ZDTriggerCondition = {
-                    field: checkbox.name,
-                    operator: 'changed',
+                    field: condition.field.value,
+                    operator: condition.operator.value,
+                    value: undefined, //  ZD API requires value field even if null
                 };
-                conditions.any.push(entry);
-            }
+
+                if (condition.value) {
+                    entry.value = condition.value;
+
+                    // if the call value has a value it is a select option.
+                    if (condition.value.value) {
+                        entry.value = condition.value.value;
+                    }
+                }
+                conditions[type].push(entry);
+            });
         }
 
         // do not let subscriptions without a condition be created...
-        if (conditions.any.length === 0) {
+        if (conditions.any.length === 0 && conditions.all.length === 0) {
             throw new Error('Must select at least one condition');
         }
         this.addField('conditions', conditions);
     }
 }
 
-export function newTriggerFromForm(call: AppCallRequest, checkboxes: checkBox[], targetID: string): ZDTriggerPayload {
-    const trigger = new TriggerFromFormImpl(call, checkboxes, targetID).getTrigger();
+export function newTriggerFromForm(call: AppCallRequest, targetID: string): ZDTriggerPayload {
+    const trigger = new TriggerFromFormImpl(call, targetID).getTrigger();
     return trigger;
 }
 
