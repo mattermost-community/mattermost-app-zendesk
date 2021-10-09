@@ -1,4 +1,4 @@
-import {AppSelectOption, AppField} from 'mattermost-redux/types/apps';
+import {AppField, AppSelectOption} from 'mattermost-redux/types/apps';
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';

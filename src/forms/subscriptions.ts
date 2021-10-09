@@ -1,18 +1,18 @@
 import asyncBatch from 'async-batch/lib';
 
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppSelectOption, AppCallRequest, AppForm, AppField} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppField, AppForm, AppSelectOption} from 'mattermost-redux/types/apps';
 
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
-import {newZDClient, newMMClient, ZDClient} from '../clients';
+import {ZDClient, newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {Routes} from '../utils';
-import {makeBulletedList, makeSubscriptionOptions, parseTriggerTitle,
-    checkBox, getCheckBoxesFromTriggerDefinition, tryPromiseWithMessage} from '../utils/utils';
+import {checkBox, getCheckBoxesFromTriggerDefinition, makeBulletedList,
+    makeSubscriptionOptions, parseTriggerTitle, tryPromiseWithMessage} from '../utils/utils';
 import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../utils/ZDTypes';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';

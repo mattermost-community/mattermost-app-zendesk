@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import {newFormCallResponse, newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage} from '../utils/call_responses';
+import {newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newSubscriptionsForm} from '../forms';
 import {newApp} from '../app/app';
 import {webhookConfigured} from '../utils/utils';

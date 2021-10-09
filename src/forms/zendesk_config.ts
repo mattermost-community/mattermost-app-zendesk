@@ -8,7 +8,7 @@ import {MMClientOptions} from 'clients/mattermost';
 import {Routes} from '../utils';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {ZendeskIcon} from '../utils/constants';
-import {newConfigStore, ConfigStore, AppConfigStore} from '../store/config';
+import {AppConfigStore, ConfigStore, newConfigStore} from '../store/config';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {

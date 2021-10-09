@@ -4,11 +4,11 @@ import {Request, Response} from 'express';
 import {ExpandedBotAdminActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
-import {newZDClient, newMMClient} from '../clients';
-import {ZDClientOptions, ZDClient} from 'clients/zendesk';
+import {newMMClient, newZDClient} from '../clients';
+import {ZDClient, ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
-import {newConfigStore, AppConfigStore} from '../store/config';
+import {AppConfigStore, newConfigStore} from '../store/config';
 
 export async function fHandleSubcribeNotification(req: Request, res: Response): Promise<void> {
     const values = req.body.values.data;

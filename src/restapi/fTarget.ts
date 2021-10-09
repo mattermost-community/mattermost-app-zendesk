@@ -2,11 +2,11 @@ import {Request, Response} from 'express';
 
 import {getManifest} from '../manifest';
 import {Routes, tryPromiseWithMessage} from '../utils';
-import {webhookConfigured, isZdAdmin} from '../utils/utils';
-import {newZDClient, ZDClient} from '../clients';
+import {isZdAdmin, webhookConfigured} from '../utils/utils';
+import {ZDClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {newConfigStore} from '../store';
-import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage} from '../utils/call_responses';
+import {newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {CtxExpandedBotAppActingUserOauth2AppOauth2User} from 'types/apps';
 
 export async function fCreateTarget(req: Request, res: Response): Promise<void> {

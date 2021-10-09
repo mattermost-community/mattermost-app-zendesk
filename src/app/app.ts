@@ -1,13 +1,13 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppCallValues, AppCallResponse, AppCallRequest, AppSelectOption} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallResponse, AppCallValues, AppSelectOption} from 'mattermost-redux/types/apps';
 
 import {
+    FieldValidationErrors,
     newErrorCallResponseWithFieldErrors,
-    newOKCallResponse,
-    newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
-    FieldValidationErrors} from '../utils/call_responses';
+    newOKCallResponse,
+    newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {tryPromiseWithMessage} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';

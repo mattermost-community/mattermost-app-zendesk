@@ -1,11 +1,11 @@
 import {Request, Response} from 'express';
 
 import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
-import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage} from '../utils/call_responses';
-import {newZDClient, newAppsClient} from '../clients';
+import {newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newAppsClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {ZDTokensResponse} from '../utils/ZDTypes';
-import {newConfigStore, AppConfigStore} from '../store/config';
+import {AppConfigStore, newConfigStore} from '../store/config';
 
 export async function fDisconnect(req: Request, res: Response): Promise<void> {
     const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;

@@ -1,6 +1,6 @@
-import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallValues, AppContext} from 'mattermost-redux/types/apps';
 
-import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
+import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions, ZDTriggerPayload} from '../utils/ZDTypes';
 
 import {checkBox} from '../utils/utils';
 import {SubscriptionFields, TriggerFields} from '../utils/constants';

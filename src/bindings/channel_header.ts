@@ -1,6 +1,6 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
 
-import {newChannelHeaderBindings, isZdAdmin} from '../utils';
+import {isZdAdmin, newChannelHeaderBindings} from '../utils';
 
 import {getSubscribeBinding} from './bindings';
 

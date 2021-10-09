@@ -2,10 +2,10 @@ import {Request, Response} from 'express';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {AppCallRequestWithValues, CtxExpandedBotActingUserAccessToken} from '../types/apps';
-import {newConfigStore, AppConfigStore} from '../store/config';
+import {AppConfigStore, newConfigStore} from '../store/config';
 import {newAppsClient} from '../clients';
 import {newZendeskConfigForm} from '../forms';
-import {newOKCallResponseWithMarkdown, newFormCallResponse, newErrorCallResponseWithMessage, newErrorCallResponseWithFieldErrors} from '../utils/call_responses';
+import {newErrorCallResponseWithFieldErrors, newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {baseUrlFromContext} from '../utils/utils';
 import {Routes} from '../utils/constants';
 

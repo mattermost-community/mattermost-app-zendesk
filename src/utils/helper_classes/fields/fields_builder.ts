@@ -1,4 +1,4 @@
-import {AppCallRequest, AppField, AppCallValues, AppFormValue} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallValues, AppField, AppFormValue} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 export interface FieldsBuilder {
