@@ -120,72 +120,18 @@ async function mapIDsToTextValues(zdClient: ZDClient, events: any[]): Promise<an
 }
 
 async function getFormNames(zdClient: ZDClient, event: any): Promise<any> {
-    const requests: any[] = [];
-    const currReq = zdClient.ticketforms.show(event.value);
-    requests.push(tryPromiseWithMessage(currReq, 'Failed to fetch current ticket form'));
-
-    if (event.previous_value) {
-        const prevReq = zdClient.ticketforms.show(event.previous_value);
-        requests.push(tryPromiseWithMessage(prevReq, 'Failed to fetch previous ticket form'));
-    }
-
-    try {
-        await Promise.all(requests).then((values) => {
-            event.value = values[0].name;
-            if (values.length === 2) {
-                event.previous_value = values[1].name;
-            }
-        });
-    } catch (error) {
-        throw new Error('Unable to get Form Names: ' + error.message);
-    }
-    return event;
+    const nameType = 'Form';
+    return getNamesFromRequest(zdClient, event, nameType);
 }
 
 async function getGroupNames(zdClient: ZDClient, event: any): Promise<any> {
-    const requests: any[] = [];
-    const currReq = zdClient.groups.show(event.value);
-    requests.push(tryPromiseWithMessage(currReq, 'Failed to fetch current group'));
-
-    if (event.previous_value) {
-        const prevReq = zdClient.groups.show(event.previous_value);
-        requests.push(tryPromiseWithMessage(prevReq, 'Failed to fetch previous group'));
-    }
-
-    try {
-        await Promise.all(requests).then((values) => {
-            event.value = values[0].name;
-            if (values.length === 2) {
-                event.previous_value = values[1].name;
-            }
-        });
-    } catch (error) {
-        throw new Error('Unable to get Group Names: ' + error.message);
-    }
-    return event;
+    const nameType = 'Group';
+    return getNamesFromRequest(zdClient, event, nameType);
 }
 
 async function getAssigneeNames(zdClient: ZDClient, event: any): Promise<any> {
-    const requests: any[] = [];
-    const currReq = zdClient.users.show(event.value);
-    requests.push(tryPromiseWithMessage(currReq, 'Failed to get current Zendesk user'));
-
-    if (event.previous_value) {
-        const prevReq = zdClient.users.show(event.previous_value);
-        requests.push(tryPromiseWithMessage(prevReq, 'Failed to get previous Zendesk user'));
-    }
-
-    try {
-        await Promise.all(requests).then((values) => {
-            event.value = values[0].name;
-            if (values.length === 2) {
-                event.previous_value = values[1].name;
-            }
-        });
-    } catch (error) {
-        throw new Error('Unable to get Assignee Names: ' + error.message);
-    }
-    return event;
+    const nameType = 'Assignee';
+    return getNamesFromRequest(zdClient, event, nameType);
 }
 
 // getEventTypes returns events for a specified event type
@@ -214,4 +160,57 @@ function getCreatedEventText(events: any[]): string {
         return `* ${event.field_name}: \`${event.value}\``;
     });
     return 'A new ticket was created with the following properties: \n' + newArray.join('\n');
+}
+
+// getNamesFromRequest return event 
+async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: string): Promise<any> {
+    let errorMessages = {
+        current: 'Failed to get current',
+        previous: 'Failed to get previous',
+        unabled: 'Unable to get names',
+    };
+
+    if (nameType === 'Form') {
+        errorMessages = {
+            current: 'Failed to fetch current ticket form',
+            previous: 'Failed to fetch previous ticket form',
+            unabled: 'Unable to get Form Names: ',
+        }
+    }
+    if (nameType === 'Group') {
+        errorMessages = {
+            current: 'Failed to fetch current group',
+            previous: 'Failed to fetch previous group',
+            unabled: 'Unable to get Group Names: ',
+        }
+    }
+    if (nameType === 'Assignee') {
+        errorMessages = {
+            current: 'Failed to get current Zendesk user',
+            previous: 'Failed to get previous Zendesk user',
+            unabled: 'Unable to get Assignee Names: ',
+        }
+    }
+
+
+    const requests: any[] = [];
+    const currReq = zdClient.users.show(event.value);
+    requests.push(tryPromiseWithMessage(currReq, errorMessages.current));
+
+    if (event.previous_value) {
+        const prevReq = zdClient.users.show(event.previous_value);
+        requests.push(tryPromiseWithMessage(prevReq, errorMessages.previous));
+    }
+
+    try {
+        await Promise.all(requests).then((values) => {
+            event.value = values[0].name;
+            if (values.length === 2) {
+                event.previous_value = values[1].name;
+            }
+        });
+    } catch (error) {
+        throw new Error(errorMessages.unabled + error.message);
+    }
+    return event;
 }
