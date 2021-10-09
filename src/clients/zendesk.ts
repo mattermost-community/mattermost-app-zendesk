@@ -44,7 +44,7 @@ interface Users {
     me(): any;
 }
 
-// expose on the methods that will be used by the app
+// Expose on the methods that will be used by the app
 export interface ZDClient {
     tickets: Tickets;
     ticketforms: TicketForms;

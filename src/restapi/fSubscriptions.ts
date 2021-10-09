@@ -29,8 +29,7 @@ export const fOpenSubscriptionsForm: CallResponseHandler = async (req, res) => {
     }
 };
 
-// SubmitOrUpdateSubscriptionsForm updates the subscriptions form with new values or
-// submits the form if submit button is clicked
+// SubmitOrUpdateSubscriptionsForm updates the subscriptions form with new values or submits the form if submit button is clicked
 export const fSubmitOrUpdateSubscriptionsForm: CallResponseHandler = async (req, res) => {
     let callResponse: AppCallResponse;
     try {

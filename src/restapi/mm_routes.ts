@@ -20,38 +20,38 @@ const router = express.Router();
 router.get(Routes.App.ManifestPath, fManifest);
 router.post(Routes.App.BindingsPath, fBindings);
 
-// oauth2 Connect
+// OAuth2 Connect
 router.post(Routes.App.OAuthConnectPath, fOauth2Connect);
 router.post(Routes.App.OAuthCompletePath, fOauth2Complete);
 
 router.post(Routes.App.InstallPath, fInstall);
 
-// formless calls
+// Formless calls
 router.post(Routes.App.BindingPathConnect + '/submit', fConnect);
 router.post(Routes.App.BindingPathDisconnect + '/submit', fDisconnect);
 router.post(Routes.App.BindingPathHelp + '/submit', fHelp);
 router.post(Routes.App.BindingPathTargetCreate + '/submit', fCreateTarget);
 router.post(Routes.App.BindingPathMe + '/submit', fMe);
 
-// configuration
+// Configuration
 router.post(Routes.App.CallPathConfigOpenForm + '/submit', fOpenZendeskConfigForm);
 router.post(Routes.App.CallPathConfigSubmitOrUpdateForm + '/submit', fSubmitOrUpdateZendeskConfigSubmit);
 
-// subscriptions
+// Subscriptions
 router.post(Routes.App.CallPathSubsOpenForm + '/submit', fOpenSubscriptionsForm);
 router.post(Routes.App.CallPathSubsSubmitOrUpdateForm + '/form', fSubmitOrUpdateSubscriptionsForm);
 router.post(Routes.App.CallPathSubsSubmitOrUpdateForm + '/submit', fSubmitOrUpdateSubscriptionsSubmit);
 
-// tickets
+// Tickets
 router.post(Routes.App.CallPathTicketOpenForm + '/submit', fOpenCreateTicketForm);
 router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/form', fSubmitOrUpdateCreateTicketForm);
 router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/submit', fSubmitOrUpdateCreateTicketSubmit);
 
-// static files
+// Static files
 const staticRouter = express.Router();
 staticRouter.use(express.static('static'));
 router.use('/static', staticRouter);
 
-// zendesk
+// Zendesk
 router.post(Routes.App.SubscribeIncomingWebhookPath, fHandleSubcribeNotification);
 export default router;

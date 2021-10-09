@@ -54,7 +54,7 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotA
         },
     };
 
-    // add the user access_token to the store
+    // Add the user access_token to the store
     if (oauth2User.token && oauth2User.token.access_token) {
         cValues.zd_oauth_access_token = oauth2User.token.access_token;
     } else {
@@ -64,12 +64,11 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotA
     const host = cValues.zd_url;
     const link = '[Zendesk target](' + host + '/agent/admin/extensions)';
 
-    // update the existing target
+    // Update the existing target
     if (webhookConfigured(cValues)) {
         const id = cValues.zd_target_id;
 
-        // reuse the saved targetID. Failing to do so will invalidate all
-        // previously created triggers attached to the previous targetID
+        // Reuse the saved targetID. Failing to do so will invalidate all previously created triggers attached to the previous targetID
         payload.target.id = id;
         const createReq = zdClient.targets.update(id, payload);
         await tryPromiseWithMessage(createReq, 'Failed to update Zendesk target');
@@ -77,12 +76,12 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotA
         return `Successfully updated ${link}`;
     }
 
-    // create the target
+    // Create the target
     const createReq = zdClient.targets.create(payload);
     const zdTarget = await tryPromiseWithMessage(createReq, 'Failed to create Zendesk target');
     cValues.zd_target_id = zdTarget.id;
 
-    // save the targetID
+    // Save the targetID
     await config.storeConfigInfo(cValues);
     return `Successfully created ${link}`;
 }

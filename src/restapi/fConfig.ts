@@ -38,11 +38,9 @@ export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (re
         const targetID = cValues.zd_target_id;
         const zdOauth2AccessToken = cValues.zd_oauth_access_token;
 
-        // Using a simple /\/+$/ fails CodeQL check - Polynomial regular
-        // expression used on uncontrolled data. The solution is to utilize the
-        // negative lookbehind pattern match. Matches when the previous
-        // character is not a forward slash, then any number of slashes, and
-        // and EOL.
+        // Using a simple /\/+$/ fails CodeQL check - Polynomial regular expression used on uncontrolled data. 
+        // The solution is to utilize the negative lookbehind pattern match. 
+        // Matches when the previous character is not a forward slash, then any number of slashes, and EOL.
         // https://codeql.github.com/codeql-query-help/javascript/js-polynomial-redos/#
         const storeValues = call.values as AppConfigStore;
         storeValues.zd_url = storeValues.zd_url.replace(/\/$|(?<!\/)\/+$/, '');

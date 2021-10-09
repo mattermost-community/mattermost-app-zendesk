@@ -116,7 +116,7 @@ export const SubscriptionFields = {
     //  -  52   = uuid (26 * 2) channelID and teamID uuids
     // ------
     //    106
-    // call it 50 to be conservative
+    // Call it 50 to be conservative
     MaxTitleNameLength: 50,
 
     ChannelPickerSelectLabel: 'Channel Name',
@@ -169,8 +169,7 @@ export const TriggerFields = {
     ActionValuePairs: {},
 };
 
-// ActionValuePairs is an object of static key value pairs that will be added to a
-// trigger when saving in Zendesk
+// ActionValuePairs is an object of static key value pairs that will be added to a trigger when saving in Zendesk
 TriggerFields.ActionValuePairs[TriggerFields.TicketIDKey] = '{{ticket.id}}';
 TriggerFields.ActionValuePairs[TriggerFields.TicketTitleKey] = '{{ticket.title}}';
 
@@ -200,8 +199,7 @@ export const ZDRoles = {
     agent: 'agent',
 };
 
-// MappedZDNames are field names that need to be remapped before sending as a
-// field name for the app modal.
+// MappedZDNames are field names that need to be remapped before sending as a field name for the app modal.
 export const MappedZDNames = { };
 MappedZDNames[ZDFieldTypes.TicketType] = 'type';
 

@@ -6,7 +6,7 @@ import {getSubscribeBinding} from './bindings';
 
 import {BindingOptions} from './index';
 
-// getChannelHeaderBindings returns the users command bindings
+// GetChannelHeaderBindings returns the users command bindings
 export const getChannelHeaderBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
     if (options.isConnected && isZdAdmin(options.zdUserRole)) {

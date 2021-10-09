@@ -7,16 +7,16 @@ import {getCreateTicketBinding} from './bindings';
 
 import {BindingOptions} from './index';
 
-// getPostMenuBindings returns the users post menu bindings
+// GetPostMenuBindings returns the users post menu bindings
 export const getPostMenuBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
 
-    // do not show any post menu options if the app is not configured
+    // Do not show any post menu options if the app is not configured
     if (!options.isConfigured) {
         return newPostMenuBindings(bindings);
     }
 
-    // admins and agents can create tickets in Zendesk
+    // Admins and agents can create tickets in Zendesk
     if (options.isConnected) {
         if (isZdAdmin(options.zdUserRole) || isZdAgent(options.zdUserRole)) {
             bindings.push(getCreateTicketBinding());
