@@ -170,7 +170,11 @@ async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: str
         unabled: 'Unable to get names',
     };
 
+    const requests: any[] = [];
+    let currReq:any
+
     if (nameType === 'Form') {
+        currReq = zdClient.ticketforms.show(event.value);
         errorMessages = {
             current: 'Failed to fetch current ticket form',
             previous: 'Failed to fetch previous ticket form',
@@ -178,6 +182,7 @@ async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: str
         }
     }
     if (nameType === 'Group') {
+        currReq = zdClient.groups.show(event.value);
         errorMessages = {
             current: 'Failed to fetch current group',
             previous: 'Failed to fetch previous group',
@@ -185,6 +190,7 @@ async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: str
         }
     }
     if (nameType === 'Assignee') {
+        currReq = zdClient.users.show(event.value);
         errorMessages = {
             current: 'Failed to get current Zendesk user',
             previous: 'Failed to get previous Zendesk user',
@@ -192,9 +198,6 @@ async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: str
         }
     }
 
-
-    const requests: any[] = [];
-    const currReq = zdClient.users.show(event.value);
     requests.push(tryPromiseWithMessage(currReq, errorMessages.current));
 
     if (event.previous_value) {
