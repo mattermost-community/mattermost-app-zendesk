@@ -7,7 +7,7 @@ import {getCreateTicketBinding} from './bindings';
 
 import {BindingOptions} from './index';
 
-// GetPostMenuBindings returns the users post menu bindings
+// getPostMenuBindings returns the users post menu bindings
 export const getPostMenuBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
 

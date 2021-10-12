@@ -27,8 +27,6 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
             }
         }
         bindings.push(getDisconnectBinding());
-
-        // Bindings.push(getMeBinding(mmSiteURL));
     } else {
         bindings.push(getConnectBinding());
     }

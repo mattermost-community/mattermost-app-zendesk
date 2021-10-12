@@ -171,7 +171,7 @@ class AppImpl implements App {
             return true;
         }
 
-        // MatchingSubs is an array of existing ZD subs that match the proposed new subName
+        // matchingSubs is an array of existing ZD subs that match the proposed new subName
         const matchingSubs = zdSubs.filter((option: AppSelectOption) => option.label === proposedSubName);
         const numMatchingSubs = matchingSubs.length;
 

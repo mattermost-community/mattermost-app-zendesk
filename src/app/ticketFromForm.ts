@@ -47,12 +47,12 @@ export class TicketFromFormImpl implements TicketFromFrom {
         return {ticket: this.ticket};
     }
 
-    // MapFormValuesToTicket maps AppCall values 1:1 to a zendesk ticket
+    // mapFormValuesToTicket maps AppCall values 1:1 to a zendesk ticket
     mapFormValuesToTicket(): void {
         // Get only the fields that will be mapped
         const prunedFormNames = this.pruneFieldNames();
 
-        // iterate through each field and build the Zendesk ticket
+        // Iterate through each field and build the Zendesk ticket
         prunedFormNames.forEach((fieldName) => {
             // this is a custom field
             if (this.isCustomField(fieldName)) {
@@ -64,7 +64,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
         });
     }
 
-    // MapCustomFieldToTicket maps a custom to a zendesk ticket
+    // mapCustomFieldToTicket maps a custom to a zendesk ticket
     mapCustomFieldToTicket(fieldName: string): void {
         const [zdType, id] = this.getCustomZDFieldTypeAndID(fieldName);
         if (!zdType) {
@@ -88,7 +88,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
         this.addCustomField(zdField);
     }
 
-    // MapFieldToTicket maps a non-custom field directly to a zendesk ticket
+    // mapFieldToTicket maps a non-custom field directly to a zendesk ticket
     mapFieldToTicket(fieldName: string): void {
         this.ticket[fieldName] = this.getFieldValue(fieldName)[0];
     }
@@ -114,8 +114,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
         }
     }
 
-    // PruneFormFields removes field names that are not defined or will be omitted
-    // during the field mapping process
+    // pruneFormFields removes field names that are not defined or will be omitted during the field mapping process
     pruneFieldNames(): string[] {
         const prunedFormNames: string[] = [];
         Object.keys(this.formValues).forEach((fieldName) => {
@@ -138,19 +137,19 @@ export class TicketFromFormImpl implements TicketFromFrom {
         this.ticket.custom_fields.push(customPair);
     }
 
-    // IsCustomField determines if a field is custom based on the field name
+    // isCustomField determines if a field is custom based on the field name
     isCustomField(fieldName: string): boolean {
         return Boolean(fieldName.startsWith(CreateTicketFields.PrefixCustomField));
     }
 
-    // IsOmittedField returns true if a field should not be mapped directly to a zendesk ticket
+    // isOmittedField returns true if a field should not be mapped directly to a zendesk ticket
     isOmittedField(fieldName: string): boolean {
         // App form values that are not to be 1:1 mapped to zendesk fields
         const omitFields = [CreateTicketFields.NameAdditionalMessage, CreateTicketFields.NamePostMessage];
         return Boolean(omitFields.includes(fieldName));
     }
 
-    // GetFieldValue converts app field value to a zendesk field value
+    // getFieldValue converts app field value to a zendesk field value
     getFieldValue(fieldName: string): [Tickets.Field, string] {
         let fieldValue: any = this.formValues[fieldName];
         if (!fieldValue) {
