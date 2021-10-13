@@ -1,9 +1,10 @@
-import {Request, Response} from 'express';
+import {AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown, CallResponseHandler} from '../utils/call_responses';
 
-export async function fMe(req: Request, res: Response): Promise<void> {
+export const fMe: CallResponseHandler = async (req, res) => {
     const message = '`access_token:` ' + req.body.context.oauth2.user.token.access_token;
-    res.json(newOKCallResponseWithMarkdown(message));
-}
+    const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(message);
+    res.json(callResponse);
+};
 

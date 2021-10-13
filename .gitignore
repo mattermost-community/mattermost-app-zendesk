@@ -1,5 +1,6 @@
 /.eslintcache
 /node_modules
+/coverage
 /dist
 .env
 config.json

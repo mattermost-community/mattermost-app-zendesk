@@ -1,20 +1,20 @@
-import {Request, Response} from 'express';
-import {AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {ExpandedBotAdminActingUser} from '../types/apps';
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newOKCallResponseWithMarkdown, CallResponseHandler} from '../utils/call_responses';
 import {getManifest} from '../manifest';
 import {CommandTrigger} from '../utils/constants';
 import {isUserSystemAdmin} from '../utils';
 
-export async function fHelp(req: Request, res: Response): Promise<void> {
+export const fHelp: CallResponseHandler = async (req, res) => {
     const helpText = [
         getHeader(),
         getCommands(req.body),
         getPostText(),
     ].join('');
-    res.json(newOKCallResponseWithMarkdown(helpText));
-}
+    const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
+    res.json(callResponse);
+};
 
 function getHeader(): string {
     const homepageURL = getManifest().homepage_url;

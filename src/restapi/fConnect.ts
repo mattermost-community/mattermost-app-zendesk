@@ -1,11 +1,10 @@
-import {Request, Response} from 'express';
 import ClientOAuth2, {Token} from 'client-oauth2';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
 import {AppCallRequestWithValues, ExpandedOauth2App, CtxExpandedActingUserOauth2AppBot, CtxExpandedBotActingUserOauth2AppOauth2User} from '../types/apps';
 import {ZDClientOptions} from 'clients/zendesk';
-import {newOKCallResponse, newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage} from '../utils/call_responses';
+import {newOKCallResponse, newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
 import {newConfigStore, AppConfigStore} from '../store/config';
 import {Routes} from '../utils';
 import {ZDRoles} from '../utils/constants';
@@ -14,22 +13,25 @@ import {newAppsClient, newZDClient} from '../clients';
 import {getOAuthConfig} from '../app/oauth';
 import {StoredOauthUserToken} from 'utils/ZDTypes';
 
-export function fConnect(req: Request, res: Response): void {
+export const fConnect: CallResponseHandler = async (req, res) => {
     const context: ExpandedOauth2App = req.body.context;
     const url = context.oauth2.connect_url;
-    res.json(newOKCallResponseWithMarkdown(`Follow this [link](${url}) to connect Mattermost to your Zendesk Account.`));
-}
+    const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(`Follow this [link](${url}) to connect Mattermost to your Zendesk Account.`);
+    res.json(callResponse);
+};
 
-export async function fOauth2Connect(req: Request, res: Response): Promise<void> {
+export const fOauth2Connect: CallResponseHandler = async (req, res) => {
     const context: CtxExpandedActingUserOauth2AppBot = req.body.context;
     const state = req.body.values.state;
 
     const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
     let config: AppConfigStore;
+    let callResponse: AppCallResponse;
     try {
         config = await configStore.getValues();
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('fOauth2Connect - Unable to get config store values: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('fOauth2Connect - Unable to get config store values: ' + error.message);
+        res.json(callResponse);
         return;
     }
     const zdHost = config.zd_url;
@@ -43,14 +45,14 @@ export async function fOauth2Connect(req: Request, res: Response): Promise<void>
     urlWithParams.searchParams.append('scope', 'read write');
 
     const link = urlWithParams.href;
-    const callResponse: AppCallResponse = {
+    callResponse = {
         type: AppCallResponseTypes.OK,
         data: link,
     };
     res.json(callResponse);
-}
+};
 
-export async function fOauth2Complete(req: Request, res: Response): Promise<void> {
+export const fOauth2Complete: CallResponseHandler = async (req, res) => {
     const call: AppCallRequestWithValues = req.body;
     const context: CtxExpandedBotActingUserOauth2AppOauth2User = req.body.context;
 
@@ -60,10 +62,12 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     }
 
     let zdAuth: ClientOAuth2;
+    let callResponse: AppCallResponse;
     try {
         zdAuth = await getOAuthConfig(context);
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('fOauth2Complete - Unable to get oauth config: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to get oauth config: ' + error.message);
+        res.json(callResponse);
         return;
     }
     const zdURL = context.oauth2.complete_url + '?code=' + code;
@@ -72,7 +76,8 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     try {
         user = await zdAuth.code.getToken(zdURL);
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('fOauth2Complete - Unable to get user token: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to get user token: ' + error.message);
+        res.json(callResponse);
         return;
     }
 
@@ -90,7 +95,8 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     try {
         me = await zdClient.users.me();
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('fOauth2Complete - Unable to get current zendesk user: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to get current zendesk user: ' + error.message);
+        res.json(callResponse);
         return;
     }
     let dmText = 'You have successfully connected your Zendesk account!';
@@ -108,15 +114,18 @@ export async function fOauth2Complete(req: Request, res: Response): Promise<void
     try {
         await ppClient.storeOauth2User(storedToken);
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('fOauth2Complete - Unable to store oauth2user: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to store oauth2user: ' + error.message);
+        res.json(callResponse);
         return;
     }
     const app = newApp(call);
     try {
         await app.createBotDMPost(dmText);
     } catch (error) {
-        res.json(newErrorCallResponseWithMessage('fOauth2Complete - Unable to create bot DM post: ' + error.message));
+        callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to create bot DM post: ' + error.message);
+        res.json(callResponse);
         return;
     }
-    res.json(newOKCallResponse());
-}
+    callResponse = newOKCallResponse();
+    res.json(callResponse);
+};
