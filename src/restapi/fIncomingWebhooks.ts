@@ -171,22 +171,22 @@ async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: str
     };
 
     const requests: any[] = [];
-    let currReq:any
+    let clientMethod:any;
 
     if (nameType === 'Form') {
-        currReq = zdClient.ticketforms.show(event.value);
+        clientMethod = zdClient.ticketforms;
       }
     if (nameType === 'Group') {
-        currReq = zdClient.groups.show(event.value);
+        clientMethod = zdClient.groups;
      }
     if (nameType === 'Assignee') {
-        currReq = zdClient.users.show(event.value);
+        clientMethod = zdClient.users;
      }
 
-    requests.push(tryPromiseWithMessage(currReq, errorMessages.current));
+    requests.push(tryPromiseWithMessage(clientMethod.show(event.value), errorMessages.current));
 
     if (event.previous_value) {
-        const prevReq = zdClient.users.show(event.previous_value);
+        const prevReq = clientMethod.show(event.previous_value);
         requests.push(tryPromiseWithMessage(prevReq, errorMessages.previous));
     }
 
