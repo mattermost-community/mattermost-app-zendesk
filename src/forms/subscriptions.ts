@@ -1,39 +1,21 @@
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
-import {
-    AppCallRequest,
-    AppField,
-    AppForm,
-    AppSelectOption,
-} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppForm, AppField, AppSelectOption} from 'mattermost-redux/types/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
-import {ZDClient, newMMClient, newZDClient} from '../clients';
+import {newZDClient, newMMClient, ZDClient} from '../clients';
 import {Routes} from '../utils';
-import {
-    createZdConditionsFromCall,
-    makeSubscriptionOptions,
-    tryPromiseWithMessage,
-} from '../utils/utils';
-import {
-    ZDConditionOption,
-    ZDConditionOptionOperator,
-    ZDConditionOptionValue,
-    ZDTrigger,
-    ZDTriggerCondition,
-    ZDTriggerConditions,
-} from '../utils/ZDTypes';
+import {makeSubscriptionOptions, tryPromiseWithMessage, createZdConditionsFromCall} from '../utils/utils';
+import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions, ZDConditionOption, ZDConditionOptionValue, ZDConditionOptionOperator} from '../utils/ZDTypes';
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {newConfigStore} from '../store';
 
 // newSubscriptionsForm returns a form response to create subscriptions
-export async function newSubscriptionsForm(
-    call: AppCallRequest
-): Promise<AppForm> {
+export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {
     const context = call.context as CtxExpandedBotAdminActingUserOauth2User;
     const zdOptions: ZDClientOptions = {
         oauth2UserAccessToken: context.oauth2.user.token.access_token,
@@ -48,10 +30,7 @@ export async function newSubscriptionsForm(
         botAccessToken: context.bot_access_token,
         adminAccessToken: context.admin_access_token,
     };
-    const config = await newConfigStore(
-        context.bot_access_token,
-        context.mattermost_site_url
-    ).getValues();
+    const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
     const zdHost = config.zd_url;
     const mmClient = newMMClient(mmOptions).asAdmin();
 
@@ -60,9 +39,7 @@ export async function newSubscriptionsForm(
     const formFields = new FormFields(call, zdClient, mmClient, zdHost);
     const fields = await formFields.getSubscriptionFields();
 
-    const subOptions = fields.find(
-        (field) => field.name === SubscriptionFields.SubSelectName
-    );
+    const subOptions = fields.find((field) => field.name === SubscriptionFields.SubSelectName);
     const form: AppForm = {
         title: 'Create or Edit Zendesk Subscriptions',
         header: 'Create or edit channel subscriptions to Zendesk notifications',
@@ -81,35 +58,27 @@ export async function newSubscriptionsForm(
 }
 
 type ModalState = {
-    conditions: ZDConditionOption;
-};
+    conditions: ZDConditionOption
+}
 
 type FieldOptions = {
-    required: boolean;
-    type: string;
-    index: number;
-    fieldNameOption: AppSelectOption | undefined;
-};
+    required: boolean,
+    type: string,
+    index: number
+    fieldNameOption: AppSelectOption | undefined
+}
 
-type FieldOptionsWithCondition = FieldOptions & {
-    condition: ZDTriggerCondition;
-};
+type FieldOptionsWithCondition = FieldOptions & {condition: ZDTriggerCondition}
 
 // fetchZDConditions fetches the conditions as defined by the Zendesk instance.
 // Conditions are fetched only once when the modal opens and stores in state
-const fetchZDConditions = async (
-    zdClient: ZDClient,
-    state: ModalState
-): Promise<ZDConditionOption> => {
+const fetchZDConditions = async (zdClient: ZDClient, state: ModalState): Promise<ZDConditionOption> => {
     if (state?.conditions) {
         return state.conditions;
     }
 
     const req = zdClient.triggers.definitions() || '';
-    const definitions = await tryPromiseWithMessage(
-        req,
-        'Failed to fetch trigger definitions'
-    );
+    const definitions = await tryPromiseWithMessage(req, 'Failed to fetch trigger definitions');
 
     // Any and all share the same conditions.  only save one of them in state
     return definitions[0].definitions.conditions_all;
@@ -117,17 +86,12 @@ const fetchZDConditions = async (
 
 // FormFields retrieves viewable modal app fields. The fields are scoped to the currently viewed channel
 class FormFields extends BaseFormFields {
-    triggers: ZDTrigger[];
-    zdHost: string;
-    fetchedConditionOptions: ZDConditionOption[];
-    savedTriggerConditions: ZDTriggerConditions;
+    triggers: ZDTrigger[]
+    zdHost: string
+    fetchedConditionOptions: ZDConditionOption[]
+    savedTriggerConditions: ZDTriggerConditions
 
-    constructor(
-        call: AppCallRequest,
-        zdClient: ZDClient,
-        mmClient: Client4,
-        zdHost: string
-    ) {
+    constructor(call: AppCallRequest, zdClient: ZDClient, mmClient: Client4, zdHost: string) {
         super(call, mmClient, zdClient);
 
         this.triggers = [];
@@ -249,11 +213,7 @@ class FormFields extends BaseFormFields {
         const n = opts.index + 1;
         const f: AppField = {
             hint: 'field',
-            name: this.getFieldName(
-                opts.type,
-                opts.index,
-                SubscriptionFields.ConditionFieldSuffix
-            ),
+            name: this.getFieldName(opts.type, opts.index, SubscriptionFields.ConditionFieldSuffix),
             type: AppFieldTypes.STATIC_SELECT,
             options: this.makeConditionFieldNameOptions(),
             modal_label: `${n}. ${opts.type.toUpperCase()} Condition`,
@@ -266,17 +226,10 @@ class FormFields extends BaseFormFields {
     }
 
     // addConditionOperatorField adds a dropdown to select an operator condition field
-    addConditionOperatorField(
-        value: AppSelectOption | undefined,
-        opts: FieldOptionsWithCondition
-    ): void {
+    addConditionOperatorField(value: AppSelectOption | undefined, opts: FieldOptionsWithCondition): void {
         const f: AppField = {
             hint: 'operator',
-            name: this.getFieldName(
-                opts.type,
-                opts.index,
-                SubscriptionFields.ConditionOperatorSuffix
-            ),
+            name: this.getFieldName(opts.type, opts.index, SubscriptionFields.ConditionOperatorSuffix),
             type: AppFieldTypes.STATIC_SELECT,
             options: this.makeConditionOperationOptions(opts.condition.field),
             refresh: true,
@@ -292,20 +245,14 @@ class FormFields extends BaseFormFields {
     // a dropdown, or type a text value
     addConditionValueField(opts: FieldOptionsWithCondition) {
         const field = opts.condition.field;
-        const condition = this.fetchedConditionOptions.find(
-            (c: ZDConditionOption) => {
-                return c.subject.toString() === field;
-            }
-        );
+        const condition = this.fetchedConditionOptions.find((c: ZDConditionOption) => {
+            return c.subject.toString() === field;
+        });
 
         const f: AppField = {
             type: AppFieldTypes.TEXT,
             hint: 'value',
-            name: this.getFieldName(
-                opts.type,
-                opts.index,
-                SubscriptionFields.ConditionValueSuffix
-            ),
+            name: this.getFieldName(opts.type, opts.index, SubscriptionFields.ConditionValueSuffix),
             is_required: opts.required,
         };
         const value = opts.condition.value;
@@ -332,10 +279,7 @@ class FormFields extends BaseFormFields {
     // getSavedZDConditions returns an array of Zendesk "any" or "all" trigger conditions for
     // the selected subscription
     getSavedZDConditions(): ZDTriggerConditions {
-        if (
-            this.getSelectedSubTrigger() &&
-      this.getSelectedSubTrigger().conditions
-        ) {
+        if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
             return this.getSelectedSubTrigger().conditions;
         }
         return {any: [], all: []};
@@ -400,7 +344,10 @@ class FormFields extends BaseFormFields {
             value: SubscriptionFields.NewSub_OptionValue,
         };
         const subsOptions = makeSubscriptionOptions(this.triggers);
-        const options = [newSubOption, ...subsOptions];
+        const options = [
+            newSubOption,
+            ...subsOptions,
+        ];
 
         const f: AppField = {
             name: SubscriptionFields.SubSelectName,
@@ -415,19 +362,14 @@ class FormFields extends BaseFormFields {
 
     // conditionFieldNameSelected returns true if the field name value was changed
     conditionFieldNameSelected(opts: FieldOptions): boolean {
-        const fieldName = this.getFieldName(
-            opts.type,
-            opts.index,
-            SubscriptionFields.ConditionFieldSuffix
-        );
+        const fieldName = this.getFieldName(opts.type, opts.index, SubscriptionFields.ConditionFieldSuffix);
         return this.call.selected_field === fieldName;
     }
 
     // isNewSub returns true when "Create New" is selected in the "Subscription Name" dropdown
     isNewSub(): boolean {
         if (this.call.values) {
-            const subNameValue =
-        this.call.values[SubscriptionFields.SubSelectName].value;
+            const subNameValue = this.call.values[SubscriptionFields.SubSelectName].value;
             return subNameValue === SubscriptionFields.NewSub_OptionValue;
         }
         return false;
@@ -439,9 +381,7 @@ class FormFields extends BaseFormFields {
     }
 
     getSelectedSubTriggerID(): string {
-        return this.builder.getFieldValueByName(
-            SubscriptionFields.SubSelectName
-        ) as string;
+        return this.builder.getFieldValueByName(SubscriptionFields.SubSelectName) as string;
     }
 
     getSelectedSubTriggerName(): string {
@@ -449,9 +389,7 @@ class FormFields extends BaseFormFields {
     }
 
     getSubTriggerByID(subID: string): ZDTrigger {
-        const trigger = this.triggers.find(
-            (t: ZDTrigger) => t.id.toString() === subID
-        );
+        const trigger = this.triggers.find((t: ZDTrigger) => t.id.toString() === subID);
         if (!trigger && !this.isNewSub()) {
             throw new Error('unable to get trigger by ID ' + subID);
         }
@@ -488,9 +426,7 @@ class FormFields extends BaseFormFields {
     }
 
     // getConditionFieldNameValue returns the value of a selected condition field name
-    getConditionFieldNameValue(
-        option: ZDTriggerCondition
-    ): AppSelectOption | undefined {
+    getConditionFieldNameValue(option: ZDTriggerCondition): AppSelectOption | undefined {
         const fieldOptions = this.makeConditionFieldNameOptions();
         const field = option.field;
         const value = fieldOptions.find((f: AppSelectOption) => {
@@ -500,10 +436,7 @@ class FormFields extends BaseFormFields {
     }
 
     // getConditionOptionValue returns the value of a selected condition operator field
-    getConditionOptionValue(
-        fieldOptions: AppSelectOption[],
-        option: string
-    ): AppSelectOption | undefined {
+    getConditionOptionValue(fieldOptions: AppSelectOption[], option: string): AppSelectOption | undefined {
         const value = fieldOptions.find((f: AppSelectOption) => {
             return f.value.toString() === option;
         });
@@ -511,9 +444,7 @@ class FormFields extends BaseFormFields {
     }
 
     // getSelectOptionFromCondition returns the value of a condition operator value field
-    getSelectOptionFromCondition(
-        condition: ZDTriggerCondition
-    ): AppSelectOption | undefined {
+    getSelectOptionFromCondition(condition: ZDTriggerCondition): AppSelectOption | undefined {
         const operatorOptions = this.makeConditionOperationOptions(condition.field);
         const operatorOption = operatorOptions.find((option: AppSelectOption) => {
             return option.value.toString() === condition.operator;
@@ -524,11 +455,9 @@ class FormFields extends BaseFormFields {
     // getConditionFromConditionOptions returns a condition option based on the
     // selected condition operator value
     getConditionFromConditionOptions(subject: string): ZDConditionOption {
-        const condition = this.fetchedConditionOptions.find(
-            (c: ZDConditionOption) => {
-                return c.subject.toString() === subject;
-            }
-        );
+        const condition = this.fetchedConditionOptions.find((c: ZDConditionOption) => {
+            return c.subject.toString() === subject;
+        });
         return condition as ZDConditionOption;
     }
 
