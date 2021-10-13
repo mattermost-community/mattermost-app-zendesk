@@ -163,26 +163,28 @@ function getCreatedEventText(events: any[]): string {
     return 'A new ticket was created with the following properties: \n' + newArray.join('\n');
 }
 
-// getNamesFromRequest return event 
+// getNamesFromRequest return event
 async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: string): Promise<any> {
-    let errorMessages = {
-        current: `Failed to get current ${nameType}`,
-        previous: `Failed to get previous ${nameType}`,
-        unabled: `Unable to get ${nameType} names`,
+    const errorMessages = {
+        current: `Failed to fetch current ${nameType}`,
+        previous: `Failed to fetch previous ${nameType}`,
+        unabled: `Unable to fetch ${nameType} names`,
     };
 
     const requests: any[] = [];
     let clientMethod:any;
 
-    if (nameType === 'Form') {
+    switch (nameType) {
+    case 'Form':
         clientMethod = zdClient.ticketforms;
-      }
-    if (nameType === 'Group') {
+        break;
+    case 'Group':
         clientMethod = zdClient.groups;
-     }
-    if (nameType === 'Assignee') {
+        break;
+    case 'Assignee':
         clientMethod = zdClient.users;
-     }
+        break;
+    }
 
     requests.push(tryPromiseWithMessage(clientMethod.show(event.value), errorMessages.current));
 
