@@ -5,7 +5,7 @@ import {ExpandedBotAdminActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
 import {newZDClient, newMMClient} from '../clients';
-import {ZDClientOptions, ZDClient} from 'clients/zendesk';
+import {Groups, TicketForms, Users, ZDClientOptions, ZDClient} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {newConfigStore} from '../store/config';
@@ -123,17 +123,17 @@ async function mapIDsToTextValues(zdClient: ZDClient, events: any[]): Promise<an
 
 async function getFormNames(zdClient: ZDClient, event: any): Promise<any> {
     const nameType = 'Form';
-    return getNamesFromRequest(zdClient, event, nameType);
+    return getNamesFromRequest(zdClient.ticketforms, event, nameType);
 }
 
 async function getGroupNames(zdClient: ZDClient, event: any): Promise<any> {
     const nameType = 'Group';
-    return getNamesFromRequest(zdClient, event, nameType);
+    return getNamesFromRequest(zdClient.groups, event, nameType);
 }
 
 async function getAssigneeNames(zdClient: ZDClient, event: any): Promise<any> {
     const nameType = 'Assignee';
-    return getNamesFromRequest(zdClient, event, nameType);
+    return getNamesFromRequest(zdClient.users, event, nameType);
 }
 
 // getEventTypes returns events for a specified event type
@@ -164,7 +164,7 @@ function getCreatedEventText(events: any[]): string {
 }
 
 // getNamesFromRequest return event
-async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: string): Promise<any> {
+async function getNamesFromRequest(clientMethod: TicketForms | Groups | Users, event: any, nameType: string): Promise<any> {
     const errorMessages = {
         current: `Failed to fetch current ${nameType}`,
         previous: `Failed to fetch previous ${nameType}`,
@@ -172,19 +172,6 @@ async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: str
     };
 
     const requests: any[] = [];
-    let clientMethod:any;
-
-    switch (nameType) {
-    case 'Form':
-        clientMethod = zdClient.ticketforms;
-        break;
-    case 'Group':
-        clientMethod = zdClient.groups;
-        break;
-    case 'Assignee':
-        clientMethod = zdClient.users;
-        break;
-    }
 
     requests.push(tryPromiseWithMessage(clientMethod.show(event.value), errorMessages.current));
 
