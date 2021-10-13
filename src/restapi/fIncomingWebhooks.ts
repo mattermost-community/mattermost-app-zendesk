@@ -165,9 +165,9 @@ function getCreatedEventText(events: any[]): string {
 // getNamesFromRequest return event 
 async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: string): Promise<any> {
     let errorMessages = {
-        current: 'Failed to get current',
-        previous: 'Failed to get previous',
-        unabled: 'Unable to get names',
+        current: `Failed to get current ${nameType}`,
+        previous: `Failed to get previous ${nameType}`,
+        unabled: `Unable to get ${nameType} names`,
     };
 
     const requests: any[] = [];
@@ -175,28 +175,13 @@ async function getNamesFromRequest(zdClient: ZDClient, event: any, nameType: str
 
     if (nameType === 'Form') {
         currReq = zdClient.ticketforms.show(event.value);
-        errorMessages = {
-            current: 'Failed to fetch current ticket form',
-            previous: 'Failed to fetch previous ticket form',
-            unabled: 'Unable to get Form Names: ',
-        }
-    }
+      }
     if (nameType === 'Group') {
         currReq = zdClient.groups.show(event.value);
-        errorMessages = {
-            current: 'Failed to fetch current group',
-            previous: 'Failed to fetch previous group',
-            unabled: 'Unable to get Group Names: ',
-        }
-    }
+     }
     if (nameType === 'Assignee') {
         currReq = zdClient.users.show(event.value);
-        errorMessages = {
-            current: 'Failed to get current Zendesk user',
-            previous: 'Failed to get previous Zendesk user',
-            unabled: 'Unable to get Assignee Names: ',
-        }
-    }
+     }
 
     requests.push(tryPromiseWithMessage(currReq, errorMessages.current));
 
