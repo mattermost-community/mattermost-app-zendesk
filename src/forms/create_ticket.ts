@@ -121,7 +121,7 @@ class FormFields extends BaseFormFields {
         const fields: ZDUserField[] = [];
         ticketFields.forEach((field: ZDUserField) => {
             // Omit fields that do not show up in the create ticket modal in Zendesk
-            // But are returned in the ticketFields query
+            // but are returned in the ticketFields query
             if (omitFields.includes(field.title)) {
                 return;
             }
