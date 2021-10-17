@@ -165,19 +165,12 @@ function getCreatedEventText(events: any[]): string {
 
 // getNamesFromRequest return event
 async function getNamesFromRequest(clientMethod: TicketForms | Groups | Users, event: any, nameType: string): Promise<any> {
-    const errorMessages = {
-        current: `Failed to fetch current ${nameType}`,
-        previous: `Failed to fetch previous ${nameType}`,
-        unabled: `Unable to fetch ${nameType} names`,
-    };
-
-    const requests: any[] = [];
-
-    requests.push(tryPromiseWithMessage(clientMethod.show(event.value), errorMessages.current));
+    const requests: Promise<any>[] = [];
+    requests.push(tryPromiseWithMessage(clientMethod.show(event.value), `Failed to fetch current ${nameType}`));
 
     if (event.previous_value) {
         const prevReq = clientMethod.show(event.previous_value);
-        requests.push(tryPromiseWithMessage(prevReq, errorMessages.previous));
+        requests.push(tryPromiseWithMessage(prevReq, `Failed to fetch previous ${nameType}`));
     }
 
     try {
@@ -188,7 +181,7 @@ async function getNamesFromRequest(clientMethod: TicketForms | Groups | Users, e
             }
         });
     } catch (error) {
-        throw new Error(errorMessages.unabled + error.message);
+        throw new Error(`Unable to fetch ${nameType} names: ${error.message}`);
     }
     return event;
 }
