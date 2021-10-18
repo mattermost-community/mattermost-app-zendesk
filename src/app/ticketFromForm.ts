@@ -118,7 +118,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
     pruneFieldNames(): string[] {
         const prunedFormNames: string[] = [];
         Object.keys(this.formValues).forEach((fieldName) => {
-            // Form is not defined, selected, or checked in the modal or is an ommitted field
+            // Form is not defined, selected, or checked in the modal or is an omitted field
             if (this.isOmittedField(fieldName) || !this.formValues[fieldName]) {
                 return;
             }
