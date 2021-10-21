@@ -5,7 +5,7 @@ import {ExpandedBotAdminActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
 import {newMMClient, newZDClient} from '../clients';
-import {ZDClient, ZDClientOptions} from 'clients/zendesk';
+import {Groups, TicketForms, Users, ZDClient, ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {newConfigStore} from '../store/config';
@@ -122,72 +122,18 @@ async function mapIDsToTextValues(zdClient: ZDClient, events: any[]): Promise<an
 }
 
 async function getFormNames(zdClient: ZDClient, event: any): Promise<any> {
-    const requests: any[] = [];
-    const currReq = zdClient.ticketforms.show(event.value);
-    requests.push(tryPromiseWithMessage(currReq, 'Failed to fetch current ticket form'));
-
-    if (event.previous_value) {
-        const prevReq = zdClient.ticketforms.show(event.previous_value);
-        requests.push(tryPromiseWithMessage(prevReq, 'Failed to fetch previous ticket form'));
-    }
-
-    try {
-        await Promise.all(requests).then((values) => {
-            event.value = values[0].name;
-            if (values.length === 2) {
-                event.previous_value = values[1].name;
-            }
-        });
-    } catch (error) {
-        throw new Error('Unable to get Form Names: ' + error.message);
-    }
-    return event;
+    const nameType = 'Form';
+    return getNamesFromRequest(zdClient.ticketforms, event, nameType);
 }
 
 async function getGroupNames(zdClient: ZDClient, event: any): Promise<any> {
-    const requests: any[] = [];
-    const currReq = zdClient.groups.show(event.value);
-    requests.push(tryPromiseWithMessage(currReq, 'Failed to fetch current group'));
-
-    if (event.previous_value) {
-        const prevReq = zdClient.groups.show(event.previous_value);
-        requests.push(tryPromiseWithMessage(prevReq, 'Failed to fetch previous group'));
-    }
-
-    try {
-        await Promise.all(requests).then((values) => {
-            event.value = values[0].name;
-            if (values.length === 2) {
-                event.previous_value = values[1].name;
-            }
-        });
-    } catch (error) {
-        throw new Error('Unable to get Group Names: ' + error.message);
-    }
-    return event;
+    const nameType = 'Group';
+    return getNamesFromRequest(zdClient.groups, event, nameType);
 }
 
 async function getAssigneeNames(zdClient: ZDClient, event: any): Promise<any> {
-    const requests: any[] = [];
-    const currReq = zdClient.users.show(event.value);
-    requests.push(tryPromiseWithMessage(currReq, 'Failed to get current Zendesk user'));
-
-    if (event.previous_value) {
-        const prevReq = zdClient.users.show(event.previous_value);
-        requests.push(tryPromiseWithMessage(prevReq, 'Failed to get previous Zendesk user'));
-    }
-
-    try {
-        await Promise.all(requests).then((values) => {
-            event.value = values[0].name;
-            if (values.length === 2) {
-                event.previous_value = values[1].name;
-            }
-        });
-    } catch (error) {
-        throw new Error('Unable to get Assignee Names: ' + error.message);
-    }
-    return event;
+    const nameType = 'Assignee';
+    return getNamesFromRequest(zdClient.users, event, nameType);
 }
 
 // getEventTypes returns events for a specified event type
@@ -215,4 +161,27 @@ function getCreatedEventText(events: any[]): string {
         return `* ${event.field_name}: \`${event.value}\``;
     });
     return 'A new ticket was created with the following properties: \n' + newArray.join('\n');
+}
+
+// getNamesFromRequest return event
+async function getNamesFromRequest(clientMethod: TicketForms | Groups | Users, event: any, nameType: string): Promise<any> {
+    const requests: Promise<any>[] = [];
+    requests.push(tryPromiseWithMessage(clientMethod.show(event.value), `Failed to fetch current ${nameType}`));
+
+    if (event.previous_value) {
+        const prevReq = clientMethod.show(event.previous_value);
+        requests.push(tryPromiseWithMessage(prevReq, `Failed to fetch previous ${nameType}`));
+    }
+
+    try {
+        await Promise.all(requests).then((values) => {
+            event.value = values[0].name;
+            if (values.length === 2) {
+                event.previous_value = values[1].name;
+            }
+        });
+    } catch (error) {
+        throw new Error(`Unable to fetch ${nameType} names: ${error.message}`);
+    }
+    return event;
 }
