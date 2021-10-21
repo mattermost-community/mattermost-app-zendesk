@@ -125,8 +125,6 @@ export const SubscriptionFields = {
     SubSelectLabel: 'Select Subscription',
     SubSelectName: 'subscription_select_name',
 
-    UnsupportedFieldsTextName: 'unsupported_fields',
-
     SubTextLabel: 'Name',
     SubTextName: 'subscription_text_name',
 
@@ -138,6 +136,11 @@ export const SubscriptionFields = {
     NewSub_Hint: 'Name of your subscription',
     NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
+
+    ConditionTypes: ['all', 'any'],
+    ConditionFieldSuffix: 'field',
+    ConditionOperatorSuffix: 'operator',
+    ConditionValueSuffix: 'value',
 
     PrefixCustomDefinitionSubject: 'custom_fields_',
     PrefixTriggersTitle: '__mm_webhook',

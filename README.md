@@ -82,7 +82,7 @@ Subscriptions to Zendesk events can be added via the channel header or using a s
 
 Triggers send a notification based on specified conditions. Subscriptions currently support the `changed` action on a limited number of fields, but will have enhancements in the future.
 
-Zendesk Admins are able to view these subscriptions inside Zendesk via **Settings > Business Rules > Triggers** and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`. After creating a notification from Mattermost, you can access the trigger in Zendesk and modify conditions of the trigger. If an unsupported condition is added, the user will be notified through Mattermost and a link will be provided to the Zendesk trigger where it can be further modified.
+Zendesk Admins are able to view these subscriptions inside Zendesk via **Settings > Business Rules > Triggers** and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`. After creating a notification from Mattermost, you can access the trigger in Zendesk and modify conditions of the trigger.
 
 After saving a subscription, an ephemeral confirmation message is posted in Mattermost, with a link that takes you to the trigger in Zendesk. Note that only you will see this ephemeral message.
 
