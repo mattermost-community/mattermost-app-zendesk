@@ -31,7 +31,6 @@
         "path": "/bindings",
         "expand": {
             "acting_user": "all",
-            "channel": "summary",
             "oauth2_app": "all",
             "oauth2_user": "all"
         }
