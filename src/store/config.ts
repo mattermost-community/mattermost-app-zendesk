@@ -1,7 +1,7 @@
 import {AppCallValues} from 'mattermost-redux/types/apps';
 
 import {StoreKeys} from '../utils/constants';
-import {newAppsClient, AppsClient} from '../clients';
+import {AppsClient, newAppsClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 export type AppConfigStore = {

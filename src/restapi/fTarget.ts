@@ -2,11 +2,11 @@ import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {getManifest} from '../manifest';
 import {Routes, tryPromiseWithMessage} from '../utils';
-import {webhookConfigured, isZdAdmin} from '../utils/utils';
-import {newZDClient, ZDClient} from '../clients';
+import {isZdAdmin, webhookConfigured} from '../utils/utils';
+import {ZDClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {newConfigStore} from '../store';
-import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
+import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {CtxExpandedBotAppActingUserOauth2AppOauth2User} from 'types/apps';
 
 export const fCreateTarget: CallResponseHandler = async (req, res) => {

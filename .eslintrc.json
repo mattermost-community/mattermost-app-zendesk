@@ -452,7 +452,12 @@
         "after": true
       }
     ],
-    "sort-imports": 0,
+    "sort-imports": ["error", {
+      "ignoreCase": false,
+      "ignoreDeclarationSort": true,
+      "ignoreMemberSort": false,
+      "memberSyntaxSortOrder": ["none", "all", "single", "multiple"]
+    }],
     "sort-keys": 0,
     "space-before-blocks": [
       2,

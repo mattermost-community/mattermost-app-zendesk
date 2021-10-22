@@ -4,8 +4,8 @@ import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {ExpandedBotAdminActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
-import {newZDClient, newMMClient} from '../clients';
-import {Groups, TicketForms, Users, ZDClientOptions, ZDClient} from 'clients/zendesk';
+import {newMMClient, newZDClient} from '../clients';
+import {Groups, TicketForms, Users, ZDClient, ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {newConfigStore} from '../store/config';

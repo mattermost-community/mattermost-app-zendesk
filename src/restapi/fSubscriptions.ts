@@ -1,6 +1,6 @@
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {newFormCallResponse, newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
+import {CallResponseHandler, newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newSubscriptionsForm} from '../forms';
 import {newApp} from '../app/app';
 import {webhookConfigured} from '../utils/utils';
