@@ -34,7 +34,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
     const zdHost = config.zd_url;
     const mmClient = newMMClient(mmOptions).asAdmin();
 
-    // definitions will be passed in as call state
+    // Definitions will be passed in as call state
     const fetchedConditionOptions = await fetchZDConditions(zdClient, call.state);
     const formFields = new FormFields(call, zdClient, mmClient, zdHost);
     const fields = await formFields.getSubscriptionFields();
@@ -104,15 +104,14 @@ class FormFields extends BaseFormFields {
         this.triggers = await this.fetchChannelTriggers();
         this.addSubSelectField();
 
-        // only show subscriptions name field until user selects a value
+        // Only show subscriptions name field until user selects a value
         if (!this.builder.currentFieldValuesAreDefined()) {
             return this.builder.getFields();
         }
 
         this.savedTriggerConditions = this.getSavedZDConditions();
 
-        // add fields that are dependant on the subscription name
-        // provide a text field to add the name of the new subscription
+        // Add fields that are dependant on the subscription name provide a text field to add the name of the new subscription
         this.addSubNameTextField();
         this.addConditionsFields();
         this.addSubmitButtons();
@@ -151,13 +150,12 @@ class FormFields extends BaseFormFields {
                     continue;
                 }
 
-                // update the modal using call values once the modal is loaded with a subscription
+                // Update the modal using call values once the modal is loaded with a subscription
                 // if field name is selected, show operator field without a value selected
                 this.updateModal(opts);
             }
 
-            // always add a new condition field dropdown to the end of a section
-            // of conditions, allowing user to add a new condition
+            // Always add a new condition field dropdown to the end of a section of conditions, allowing user to add a new condition
             const newOpts: FieldOptions = {
                 required: false,
                 fieldNameOption: undefined,
@@ -192,8 +190,7 @@ class FormFields extends BaseFormFields {
         }
     }
 
-    // subNameDropDownChanged returns true when the subscription name dropdown
-    // is changed
+    // subNameDropDownChanged returns true when the subscription name dropdown is changed
     subNameDropDownChanged(): boolean {
         return this.call.selected_field === SubscriptionFields.SubSelectName;
     }
@@ -241,8 +238,7 @@ class FormFields extends BaseFormFields {
         this.builder.addFieldToArray(f);
     }
 
-    // addConditionValueField adds a field to select an available value through
-    // a dropdown, or type a text value
+    // addConditionValueField adds a field to select an available value through a dropdown, or type a text value
     addConditionValueField(opts: FieldOptionsWithCondition) {
         const field = opts.condition.field;
         const condition = this.fetchedConditionOptions.find((c: ZDConditionOption) => {
@@ -260,7 +256,7 @@ class FormFields extends BaseFormFields {
             f.value = value;
         }
 
-        // if the condition has values, it is a select field
+        // If the condition has values, it is a select field
         if (condition?.values) {
             f.type = AppFieldTypes.STATIC_SELECT;
             f.options = this.makeConditionValueOptions(condition);
@@ -276,8 +272,7 @@ class FormFields extends BaseFormFields {
         return `${type}_${index}_${name}`;
     }
 
-    // getSavedZDConditions returns an array of Zendesk "any" or "all" trigger conditions for
-    // the selected subscription
+    // getSavedZDConditions returns an array of Zendesk "any" or "all" trigger conditions for the selected subscription
     getSavedZDConditions(): ZDTriggerConditions {
         if (this.getSelectedSubTrigger() && this.getSelectedSubTrigger().conditions) {
             return this.getSelectedSubTrigger().conditions;
@@ -320,16 +315,16 @@ class FormFields extends BaseFormFields {
     getSubNameValue(): string {
         const selectedDropDownName = this.getSelectedSubTriggerName();
         if (this.subNameDropDownChanged()) {
-            // reset to empty for new subscription creation
+            // Reset to empty for new subscription creation
             if (this.isNewSub()) {
                 return '';
             }
 
-            // default to the subname drop down value for existing sub
+            // Default to the subname drop down value for existing sub
             return selectedDropDownName;
         }
 
-        // if any other selection changes, keep the previous value
+        // If any other selection changes, keep the previous value
         if (this.call.values) {
             return this.call.values[SubscriptionFields.SubTextName];
         }
@@ -338,7 +333,7 @@ class FormFields extends BaseFormFields {
 
     // addSubSelectField adds the subscription selector modal field
     addSubSelectField(): void {
-        // first option is to create new subscription
+        // First option is to create new subscription
         const newSubOption = {
             label: SubscriptionFields.NewSub_OptionLabel,
             value: SubscriptionFields.NewSub_OptionValue,
@@ -477,8 +472,7 @@ class FormFields extends BaseFormFields {
 
     // fetchChannelTriggers gets all the channel triggers saved in Zendesk via the ZD client
     async fetchChannelTriggers(): Promise<ZDTrigger[]> {
-        // modified node-zendesk to allow hitting triggers/search api
-        // returns all triggers for all current channel
+        // Modified node-zendesk to allow hitting triggers/search api returns all triggers for all current channel
         const search = [
             SubscriptionFields.PrefixTriggersTitle,
             SubscriptionFields.RegexTriggerInstance,

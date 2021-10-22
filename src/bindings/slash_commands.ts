@@ -10,7 +10,7 @@ import {getConfigureBinding, getConnectBinding, getDisconnectBinding, getHelpBin
 export const getCommandBindings = (options: BindingOptions): AppBinding => {
     const bindings: AppBinding[] = [];
 
-    // only show configuration option if admin has not configured the plugin
+    // Only show configuration option if admin has not configured the plugin
     if (!options.isConfigured) {
         if (options.isSystemAdmin) {
             bindings.push(getConfigureBinding());
@@ -19,7 +19,7 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
         }
     }
     if (options.isConnected) {
-        // only admins can create triggers and targets in zendesk
+        // Only admins can create triggers and targets in zendesk
         if (isZdAdmin(options.zdUserRole)) {
             bindings.push(getSubscribeBinding());
             if (options.isSystemAdmin) {
@@ -27,8 +27,6 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
             }
         }
         bindings.push(getDisconnectBinding());
-
-        // bindings.push(getMeBinding(mmSiteURL));
     } else {
         bindings.push(getConnectBinding());
     }

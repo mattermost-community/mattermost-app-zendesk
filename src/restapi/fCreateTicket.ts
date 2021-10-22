@@ -17,8 +17,7 @@ export const fOpenCreateTicketForm: CallResponseHandler = async (req, res) => {
     }
 };
 
-// fSubmitOrUpdateCreateTicketForm updates the create ticket form with new values or
-// submits the ticket if submit button is clicked
+// fSubmitOrUpdateCreateTicketForm updates the create ticket form with new values or submits the ticket if submit button is clicked
 export const fSubmitOrUpdateCreateTicketForm: CallResponseHandler = async (req, res) => {
     let callResponse: AppCallResponse;
     try {
