@@ -2,19 +2,19 @@ import {Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppField, AppForm, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
-import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption, ZDFieldOption} from '../utils/utils';
-import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields, ZendeskIcon} from '../utils/constants';
+import {ZDFieldOption, ZDFormFieldOption, makeFormOptions, makeOptions, tryPromiseWithMessage} from '../utils/utils';
+import {CreateTicketFields, MappedZDNames, SystemFields, ZDFieldTypes, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {ZDUserField} from '../utils/ZDTypes';
 
 import {Routes} from '../utils';
-import {newZDClient, newMMClient, ZDClient} from '../clients';
+import {ZDClient, newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-import {ExpandedPost, CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
+import {CtxExpandedBotAdminActingUserOauth2User, ExpandedPost} from '../types/apps';
 
 const omitFields = ['Group', 'Status'];
 

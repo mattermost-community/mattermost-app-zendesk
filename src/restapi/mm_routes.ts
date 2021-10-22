@@ -3,7 +3,7 @@ import express from 'express';
 import {Routes} from '../utils';
 
 import {fBindings} from './fBindings';
-import {fConnect, fOauth2Connect, fOauth2Complete} from './fConnect';
+import {fConnect, fOauth2Complete, fOauth2Connect} from './fConnect';
 import {fOpenCreateTicketForm, fSubmitOrUpdateCreateTicketForm, fSubmitOrUpdateCreateTicketSubmit} from './fCreateTicket';
 import {fOpenSubscriptionsForm, fSubmitOrUpdateSubscriptionsForm, fSubmitOrUpdateSubscriptionsSubmit} from './fSubscriptions';
 import {fOpenZendeskConfigForm, fSubmitOrUpdateZendeskConfigSubmit} from './fConfig';

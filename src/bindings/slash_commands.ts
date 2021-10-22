@@ -4,7 +4,7 @@ import {newCommandBindings} from '../utils';
 import {isZdAdmin} from '../utils/utils';
 import {BindingOptions} from 'bindings';
 
-import {getConnectBinding, getDisconnectBinding, getConfigureBinding, getSubscribeBinding, getHelpBinding, getTargetBinding} from './bindings';
+import {getConfigureBinding, getConnectBinding, getDisconnectBinding, getHelpBinding, getSubscribeBinding, getTargetBinding} from './bindings';
 
 // getCommandBindings returns the users slash command bindings
 export const getCommandBindings = (options: BindingOptions): AppBinding => {

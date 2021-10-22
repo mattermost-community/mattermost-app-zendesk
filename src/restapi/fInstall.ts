@@ -1,6 +1,6 @@
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {newOKCallResponseWithMarkdown, CallResponseHandler} from '../utils/call_responses';
+import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
 export const fInstall: CallResponseHandler = async (_, res) => {
     let msg = '**Zendesk is now installed!**\n\n';

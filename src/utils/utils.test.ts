@@ -1,4 +1,4 @@
-import {getCallValueConditions, createZdConditionsFromCall} from './utils';
+import {createZdConditionsFromCall, getCallValueConditions} from './utils';
 
 describe('utils/createZdConditionsFromCall', () => {
     test.each([

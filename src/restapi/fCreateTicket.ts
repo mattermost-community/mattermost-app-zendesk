@@ -1,6 +1,6 @@
 import {AppCallRequest, AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {newFormCallResponse, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
+import {CallResponseHandler, newErrorCallResponseWithMessage, newFormCallResponse} from '../utils/call_responses';
 import {newCreateTicketForm} from '../forms';
 import {newApp} from '../app/app';
 

@@ -1,7 +1,7 @@
 import {AppBinding} from 'mattermost-redux/types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
-import {Routes, Locations, ZendeskIcon} from '../utils/constants';
+import {Locations, Routes, ZendeskIcon} from '../utils/constants';
 import {getManifest} from '../manifest';
 
 export const getSubscribeBinding = (label?: string): AppBinding => {

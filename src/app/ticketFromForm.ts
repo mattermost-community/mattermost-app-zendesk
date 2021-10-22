@@ -1,9 +1,9 @@
 import {Tickets} from 'node-zendesk';
-import {AppFormValues, AppContext, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppContext, AppFormValues} from 'mattermost-redux/types/apps';
 
 import {FieldValidationErrors} from '../utils/call_responses';
 import {CreateTicketFields, ZDFieldValidation} from '../utils/constants';
-import {getMultiselectValues, isFieldValueSelected, baseUrlFromContext} from '../utils/utils';
+import {baseUrlFromContext, getMultiselectValues, isFieldValueSelected} from '../utils/utils';
 
 interface TicketFromFrom {
     getTicket(): Tickets.CreatePayload;

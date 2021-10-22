@@ -1,7 +1,7 @@
 import {AppCallRequest, AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {ExpandedBotAdminActingUser} from '../types/apps';
-import {newOKCallResponseWithMarkdown, CallResponseHandler} from '../utils/call_responses';
+import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {getManifest} from '../manifest';
 import {CommandTrigger} from '../utils/constants';
 import {isUserSystemAdmin} from '../utils';
