@@ -1,13 +1,13 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppCallValues, AppCallResponse, AppCallRequest, AppSelectOption} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallResponse, AppCallValues, AppSelectOption} from 'mattermost-redux/types/apps';
 
 import {
+    FieldValidationErrors,
     newErrorCallResponseWithFieldErrors,
-    newOKCallResponse,
-    newOKCallResponseWithMarkdown,
     newErrorCallResponseWithMessage,
-    FieldValidationErrors} from '../utils/call_responses';
+    newOKCallResponse,
+    newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {tryPromiseWithMessage} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
@@ -52,23 +52,23 @@ class AppImpl implements App {
     createTicketFromPost = async (): Promise<AppCallResponse> => {
         const zdClient = await newZDClient(this.zdOptions);
 
-        // create the ticket object from the form response
+        // Create the ticket object from the form response
         const {payload, errors} = newTicketFromForm(this.call);
 
-        // respond with errors
+        // Respond with errors
         if (this.hasFieldErrors(errors)) {
             return newErrorCallResponseWithFieldErrors(errors);
         }
 
-        // create the ticket in Zendesk
+        // Create the ticket in Zendesk
         const createReq = zdClient.tickets.create(payload);
         const zdTicket = await tryPromiseWithMessage(createReq, 'Failed to create Zendesk ticket');
 
-        // get the Zendesk user
+        // Get the Zendesk user
         const getUserReq = zdClient.users.show(zdTicket.requester_id);
         const zdUser = await tryPromiseWithMessage(getUserReq, 'Failed to get Zendesk user');
 
-        // create a reply to the original post noting the ticket was created
+        // Create a reply to the original post noting the ticket was created
         const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
 
@@ -81,7 +81,7 @@ class AppImpl implements App {
     }
 
     createZDSubscription = async (): Promise<AppCallResponse> => {
-        // get zendesk client for user
+        // Get zendesk client for user
         const zdClient = await newZDClient(this.zdOptions);
 
         const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
@@ -91,7 +91,7 @@ class AppImpl implements App {
             return newErrorCallResponseWithMessage('failed to create subscription. TargetID is missing from the configuration data.');
         }
 
-        // create the trigger object from the form response
+        // Create the trigger object from the form response
         let zdTriggerPayload: ZDTriggerPayload;
         try {
             zdTriggerPayload = newTriggerFromForm(this.call, targetID);
@@ -99,7 +99,7 @@ class AppImpl implements App {
             return newErrorCallResponseWithMessage(e.message);
         }
 
-        // create a reply to the original post noting the ticket was created
+        // Create a reply to the original post noting the ticket was created
         let request: any;
         let action: string;
         let actionType: string;
@@ -134,7 +134,7 @@ class AppImpl implements App {
 
         const actingUserClient = newMMClient(this.mmOptions).asActingUser();
 
-        // add bot to team and channel
+        // Add bot to team and channel
         const botUserID = this.context.bot_user_id;
         const addToTeamReq = actingUserClient.addToTeam(this.context.team_id, botUserID);
         await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
@@ -153,7 +153,7 @@ class AppImpl implements App {
 
         msg += 'This could take a moment before your subscription data is saved in Zendesk';
 
-        // return the call response with successful markdown message
+        // Return the call response with successful markdown message
         return newOKCallResponseWithMarkdown(msg);
     }
 
@@ -162,10 +162,10 @@ class AppImpl implements App {
         const zdSubs = this.call.state.triggers;
         const values = this.call.values;
 
-        // label value of the selected dropdown subscription
+        // Label value of the selected dropdown subscription
         const selectedSubName = values?.[SubscriptionFields.SubSelectName].label;
 
-        // if proposed subname does not exist in existing ZD subs, subname is unique
+        // If proposed subname does not exist in existing ZD subs, subname is unique
         const subFound = zdSubs.find((option: AppSelectOption) => option.label === proposedSubName);
         if (!subFound) {
             return true;
@@ -175,7 +175,7 @@ class AppImpl implements App {
         const matchingSubs = zdSubs.filter((option: AppSelectOption) => option.label === proposedSubName);
         const numMatchingSubs = matchingSubs.length;
 
-        // if changing the subName of an existing subscription, ensure new name does not exist
+        // If changing the subName of an existing subscription, ensure new name does not exist
         if (selectedSubName !== proposedSubName) {
             return numMatchingSubs === 0;
         }

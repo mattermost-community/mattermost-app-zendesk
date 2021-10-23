@@ -2,19 +2,19 @@ import {Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppField, AppForm, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 
-import {makeOptions, makeFormOptions, tryPromiseWithMessage, ZDFormFieldOption, ZDFieldOption} from '../utils/utils';
-import {SystemFields, MappedZDNames, ZDFieldTypes, CreateTicketFields, ZendeskIcon} from '../utils/constants';
+import {ZDFieldOption, ZDFormFieldOption, makeFormOptions, makeOptions, tryPromiseWithMessage} from '../utils/utils';
+import {CreateTicketFields, MappedZDNames, SystemFields, ZDFieldTypes, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {ZDUserField} from '../utils/ZDTypes';
 
 import {Routes} from '../utils';
-import {newZDClient, newMMClient, ZDClient} from '../clients';
+import {ZDClient, newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-import {ExpandedPost, CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
+import {CtxExpandedBotAdminActingUserOauth2User, ExpandedPost} from '../types/apps';
 
 const omitFields = ['Group', 'Status'];
 
@@ -70,15 +70,15 @@ class FormFields extends BaseFormFields {
 
     // buildFields adds fields to list of viewable proxy app fields
     async buildFields(): Promise<void> {
-        // show the form selector when intially opening the modal
+        // Show the form selector when intially opening the modal
         this.addFormsSelectField();
 
-        // only show form select field until user selects a form select value
+        // Only show form select field until user selects a form select value
         if (!this.builder.currentFieldValuesAreDefined()) {
             return;
         }
 
-        // add fields that are dependant on form selector dropdown being defined
+        // Add fields that are dependant on form selector dropdown being defined
         await this.addFormSelectDependentFields();
     }
 
@@ -90,7 +90,7 @@ class FormFields extends BaseFormFields {
     }
 
     async addFormSelectDependentFields(): Promise<void> {
-        // get the form id from the selected form field value
+        // Get the form id from the selected form field value
         const formID = this.builder.getFieldValueByName(CreateTicketFields.NameFormsSelect);
 
         const zdFormFieldIDs = this.getTicketFieldIDs(formID as string);
@@ -101,7 +101,7 @@ class FormFields extends BaseFormFields {
 
         this.mapZdFieldsToAppFields(zdViewableFields);
 
-        // append optional message and post message to end of form fields
+        // Append optional message and post message to end of form fields
         this.addOptionalMessageField();
         this.addPostMessageField();
     }
@@ -120,18 +120,18 @@ class FormFields extends BaseFormFields {
     private getViewableFields(ticketFields: ZDUserField[], formIDs: string[]): ZDUserField[] {
         const fields: ZDUserField[] = [];
         ticketFields.forEach((field: ZDUserField) => {
-            // omit fields that do not show up in the create ticket modal in Zendesk
+            // Omit fields that do not show up in the create ticket modal in Zendesk
             // but are returned in the ticketFields query
             if (omitFields.includes(field.title)) {
                 return;
             }
 
-            // fields should always have an id, but if not return
+            // Fields should always have an id, but if not return
             if (!field.id) {
                 return;
             }
 
-            // only keep fields listed in formIDs
+            // Only keep fields listed in formIDs
             if (formIDs.includes(field.id.toString())) {
                 fields.push(field);
             }
@@ -154,7 +154,7 @@ class FormFields extends BaseFormFields {
 
             switch (field.type) {
             case ZDFieldTypes.Description:
-                // will be filled by post message and handled separately
+                // Will be filled by post message and handled separately
                 return;
 
             case ZDFieldTypes.Integer:
@@ -205,8 +205,7 @@ class FormFields extends BaseFormFields {
     }
 
     // getMappedName gets the mapped field name for a zendesk field.
-    // custom zendesk field names are prefixed so that it can be easily parsed
-    // when form is submitted
+    // Custom zendesk field names are prefixed so that it can be easily parsed when form is submitted
     getMappedName(field: ZDUserField): string {
         const strFieldType = String(field.type);
         if (strFieldType in MappedZDNames) {

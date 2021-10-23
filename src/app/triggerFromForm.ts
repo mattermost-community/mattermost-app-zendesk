@@ -1,6 +1,6 @@
-import {AppContext, AppCallValues, AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallValues, AppContext} from 'mattermost-redux/types/apps';
 
-import {ZDTrigger, ZDTriggerConditions, ZDTriggerCondition, ZDTriggerPayload} from '../utils/ZDTypes';
+import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions, ZDTriggerPayload} from '../utils/ZDTypes';
 
 import {getCallValueConditions} from '../utils/utils';
 import {SubscriptionFields, TriggerFields} from '../utils/constants';
@@ -55,10 +55,10 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
 
     // getJSONDataFields constructs the object text string for a trigger
     getJSONDataFields(): string {
-        // default to the viewing channel_id
+        // Default to the viewing channel_id
         let channelID = this.context.channel_id;
 
-        // if channel picker exists, use its channel ID value
+        // If channel picker exists, use its channel ID value
         if (this.values[SubscriptionFields.ChannelPickerSelectName] && this.values[SubscriptionFields.ChannelPickerSelectName].value) {
             channelID = this.values[SubscriptionFields.ChannelPickerSelectName].value;
         }
@@ -117,7 +117,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
                 if (condition.value) {
                     entry.value = condition.value;
 
-                    // if the call value has a value it is a select option.
+                    // If the call value has a value it is a select option.
                     if (condition.value.value) {
                         entry.value = condition.value.value;
                     }
@@ -126,7 +126,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
             });
         }
 
-        // do not let subscriptions without a condition be created...
+        // Do not let subscriptions without a condition be created...
         if (conditions.any.length === 0 && conditions.all.length === 0) {
             throw new Error('Must select at least one condition');
         }

@@ -1,11 +1,11 @@
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
-import {newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
-import {newZDClient, newAppsClient} from '../clients';
+import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {newAppsClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {ZDTokensResponse} from '../utils/ZDTypes';
-import {newConfigStore, AppConfigStore} from '../store/config';
+import {AppConfigStore, newConfigStore} from '../store/config';
 
 export const fDisconnect:CallResponseHandler = async (req, res) => {
     const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;
@@ -15,7 +15,7 @@ export const fDisconnect:CallResponseHandler = async (req, res) => {
         mattermostSiteUrl: context.mattermost_site_url,
     };
 
-    // get the saved service account config zendesk access_token
+    // Get the saved service account config zendesk access_token
     const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
     let config: AppConfigStore;
     let callResponse: AppCallResponse;
@@ -45,14 +45,14 @@ export const fDisconnect:CallResponseHandler = async (req, res) => {
         return;
     }
 
-    // get the token ID
+    // Get the token ID
     const tokenID = getUserTokenID(zdOptions.oauth2UserAccessToken, tokens);
 
-    // delete the token from the proxy app
+    // Delete the token from the proxy app
     const ppClient = newAppsClient(context.acting_user_access_token, context.mattermost_site_url);
     await ppClient.storeOauth2User({token: {}, role: ''});
 
-    // delete the zendesk user oauth token
+    // Delete the zendesk user oauth token
     try {
         await zdClient.oauthtokens.revoke(tokenID);
     } catch (error) {

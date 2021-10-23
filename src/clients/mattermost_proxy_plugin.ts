@@ -4,7 +4,7 @@ import ClientOAuth2 from 'client-oauth2';
 
 import {Oauth2App} from '../types/apps';
 
-import {Routes, AppsPluginName, PathAPI} from '../utils/constants';
+import {AppsPluginName, PathAPI, Routes} from '../utils/constants';
 import {tryPromiseWithMessage} from '../utils/utils';
 import {getManifest} from '../manifest';
 import {StoredOauthUserToken} from 'utils/ZDTypes';

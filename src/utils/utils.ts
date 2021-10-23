@@ -1,4 +1,4 @@
-import {AppSelectOption, AppField, AppCallValues} from 'mattermost-redux/types/apps';
+import {AppCallValues, AppField, AppSelectOption} from 'mattermost-redux/types/apps';
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
@@ -41,8 +41,7 @@ export type parsedTriggerTitle = {
     instance: string
 }
 
-// parseTriggerTitle extracts the name, instance, and channelID from a saved Zendesk
-// trigger title
+// parseTriggerTitle extracts the name, instance, and channelID from a saved Zendesk trigger title
 export const parseTriggerTitle = (title: string): parsedTriggerTitle => {
     const re = new RegExp(SubscriptionFields.RegexTriggerTitle);
     const match = title.match(re);
@@ -67,8 +66,7 @@ export type CallValueConditions = {
     [key: number]: CallValueCondition
 }
 
-// createConditionsFromCall returns an array of Zendesk conditions
-// constructed from the App call values
+// createConditionsFromCall returns an array of Zendesk conditions constructed from the App call values
 export const createZdConditionsFromCall = (cValues: AppCallValues | undefined, type: string): ZDTriggerCondition[] => {
     const cValueConditions = getCallValueConditions(cValues, type);
     const conditions: ZDTriggerCondition[] = [];
@@ -91,10 +89,9 @@ export const createZdConditionsFromCall = (cValues: AppCallValues | undefined, t
 };
 
 // getCallValueConditions constructs a dictionary of CallValueConditions.
-// A CallValueCondition is a group of up to three call values
-// representing a condition in Zendesk.
+// A CallValueCondition is a group of up to three call values representing a condition in Zendesk.
 export const getCallValueConditions = (cValues: AppCallValues | undefined, type: string): CallValueConditions => {
-    // get all the call values from the specified "any" or "all" type sections
+    // Get all the call values from the specified "any" or "all" type sections
     const conditions: CallValueConditions = {};
     if (!cValues) {
         return conditions;
@@ -105,7 +102,7 @@ export const getCallValueConditions = (cValues: AppCallValues | undefined, type:
             return entry[0].startsWith(`${type}_`);
         });
 
-    // create the CallValueConditions object
+    // Create the CallValueConditions object
     for (const callVal of filteredCValues) {
         const [, index, name] = callVal[0].split('_');
         if (!conditions[index]) {
@@ -149,8 +146,7 @@ export function baseUrlFromContext(mattermostSiteUrl: string): string {
     return mattermostSiteUrl || 'http://localhost:8065';
 }
 
-// makeBulletedList returns a bulleted list of items with options header
-// pretext
+// makeBulletedList returns a bulleted list of items with options header pretext
 export function makeBulletedList(pretext: string, items: string[]): string {
     let text = '* ' + items.join('\n* ');
     if (pretext) {

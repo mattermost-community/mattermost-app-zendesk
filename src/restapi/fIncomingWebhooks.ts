@@ -4,8 +4,8 @@ import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {ExpandedBotAdminActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
-import {newZDClient, newMMClient} from '../clients';
-import {Groups, TicketForms, Users, ZDClientOptions, ZDClient} from 'clients/zendesk';
+import {newMMClient, newZDClient} from '../clients';
+import {Groups, TicketForms, Users, ZDClient, ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {newConfigStore} from '../store/config';
@@ -81,13 +81,12 @@ async function getNotificationMessage(zdClient: ZDClient, zdUrl: string, ticketI
     throw new Error('Event type does not contain Change or Create event types');
 }
 
-// mapIDsToTextValues takes an array of events and maps ID values to human
-// readable text
+// mapIDsToTextValues takes an array of events and maps ID values to human readable text
 async function mapIDsToTextValues(zdClient: ZDClient, events: any[]): Promise<any> {
     const mappedArray: any[] = [];
     const promiseEvents: any[] = [];
 
-    // build the new mapped event with promises for where needed
+    // Build the new mapped event with promises for where needed
     for (const event of events) {
         if (event.field_name === 'ticket_form_id') {
             promiseEvents.push(getFormNames(zdClient, event));
@@ -108,7 +107,7 @@ async function mapIDsToTextValues(zdClient: ZDClient, events: any[]): Promise<an
         mappedArray.push(event);
     }
 
-    // resolve all the Promises
+    // Resolve all the Promises
     try {
         await Promise.all(promiseEvents).then((mappedEvents) => {
             for (const mappedEvent of mappedEvents) {

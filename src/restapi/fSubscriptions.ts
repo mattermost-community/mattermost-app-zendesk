@@ -1,12 +1,12 @@
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {newFormCallResponse, newOKCallResponseWithMarkdown, newErrorCallResponseWithMessage, CallResponseHandler} from '../utils/call_responses';
+import {CallResponseHandler, newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newSubscriptionsForm} from '../forms';
 import {newApp} from '../app/app';
 import {webhookConfigured} from '../utils/utils';
 import {newConfigStore} from '../store';
 
-// OpenSubscriptionsForm opens a new subscriptions form
+// fOpenSubscriptionsForm opens a new subscriptions form
 export const fOpenSubscriptionsForm: CallResponseHandler = async (req, res) => {
     const context = req.body.context;
     const config = newConfigStore(context.bot_access_token, context.mattermost_site_url);
@@ -29,8 +29,7 @@ export const fOpenSubscriptionsForm: CallResponseHandler = async (req, res) => {
     }
 };
 
-// SubmitOrUpdateSubscriptionsForm updates the subscriptions form with new values or
-// submits the form if submit button is clicked
+// fSubmitOrUpdateSubscriptionsForm updates the subscriptions form with new values or submits the form if submit button is clicked
 export const fSubmitOrUpdateSubscriptionsForm: CallResponseHandler = async (req, res) => {
     let callResponse: AppCallResponse;
     try {
