@@ -24,7 +24,8 @@
     "node-fetch": "2.6.1",
     "node-zendesk": "github:jfrerich/node-zendesk#c5909d6e6727fd6321e267454ff239a46d026808",
     "serverless-http": "2.7.0",
-    "ts-node": "^9.1.1"
+    "ts-node": "^9.1.1",
+    "tslib": "^1.14.1"
   },
   "devDependencies": {
     "@babel/core": "7.15.0",
