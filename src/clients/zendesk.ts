@@ -13,7 +13,7 @@ interface Targets {
     update(id: string, target: any): any;
 }
 
-interface TicketForms {
+export interface TicketForms {
     list(): any;
     show(id: number): any;
 }
@@ -22,7 +22,7 @@ interface TicketFields {
     list(): any;
 }
 
-interface Groups {
+export interface Groups {
     show(id: number): any;
 }
 
@@ -39,12 +39,12 @@ interface OauthTokens {
     revoke(id: number): any;
 }
 
-interface Users {
+export interface Users {
     show(id: number): any;
     me(): any;
 }
 
-// expose on the methods that will be used by the app
+// Expose the methods that will be used by the app
 export interface ZDClient {
     tickets: Tickets;
     ticketforms: TicketForms;

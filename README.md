@@ -9,6 +9,7 @@ This repository is licensed under the [Apache 2.0 License](https://github.com/ma
 ## Table of Contents
 
 - [Admin Guide](#admin-guide)
+  - [Prerequisites](#prerequisites)
   - [Setting up](#setting-up)
   - [Notification management](#notification-management)
   - [System Admin slash commands](#system-admin-slash-commands)
@@ -16,10 +17,15 @@ This repository is licensed under the [Apache 2.0 License](https://github.com/ma
   - [Slash commands](#slash-commands)
   - [Create a ticket](#create-a-ticket)
 - [Development](#development)
+- [Provision](#provision)
 
 ## Admin Guide
 
 This guide is intended for Mattermost System Admins setting up the Zendesk app. For more information about contributing to this plugin, visit the [Development section](#development).
+
+### Prerequisites
+
+The Zendesk App is designed using the [Apps Framework](https://developers.mattermost.com/integrate/apps) which differs from the Plugin Framework. You must install and enable the [Mattermost Apps Plugin](https://github.com/mattermost/mattermost-plugin-apps) before Mattermost Apps like the Zendesk App can be installed. You can install the Apps plugin via the Mattermost Marketplace.
 
 ### Setting up
 
@@ -72,11 +78,23 @@ Note, the access token is only used to read ticket information when a subcriptio
 
 ## Notification management
 
-Subscriptions to Zendesk events can be added via the channel header, post menu, or using a slash command. Each subscription creates a [Zendesk Trigger](https://developer.zendesk.com/rest_api/docs/support/triggers). A trigger consists of one or more actions performed when a ticket is created or updated. The actions are performed only if certain conditions are met. For example, a trigger can notify the customer when an agent changes the status of a ticket to Solved.
+Subscriptions to Zendesk events can be added via the channel header or using a slash command. Each subscription creates a [Zendesk Trigger](https://developer.zendesk.com/rest_api/docs/support/triggers). A trigger consists of one or more actions performed when a ticket is created or updated. The actions are performed only if certain conditions are met. For example, a trigger can notify the customer when an agent changes the status of a ticket to Solved.
 
 Triggers send a notification based on specified conditions. Subscriptions currently support the `changed` action on a limited number of fields, but will have enhancements in the future.
 
-Zendesk Admins are able to view these subscriptions inside Zendesk via **Settings > Business Rules > Triggers** and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`. After creating a notification from Mattermost, you can access the trigger in Zendesk and modify conditions of the trigger. If an unsupported condition is added, the user will be notified through Mattermost and a link will be provided to the Zendesk trigger where it can be further modified.
+Zendesk Admins are able to view these subscriptions inside Zendesk via **Settings > Business Rules > Triggers** and all generated Mattermost Zendesk App Trigger names are prefixed with `__mm_webhook__`. After creating a notification from Mattermost, you can access the trigger in Zendesk and modify conditions of the trigger.
+
+After saving a subscription, an ephemeral confirmation message is posted in Mattermost, with a link that takes you to the trigger in Zendesk. Note that only you will see this ephemeral message.
+
+![subscription post](./docs/subscription-post.png)
+
+When you create a subscription for a Mattermost channel, the following message will be posted that shows information about the new ticket.
+
+![subscription new ticket](./docs/subscription-notification-new-ticket.png)
+
+When a notification for a subscription is received, the Zendesk app posts a message in the channel. The message contains a link to the ticket, the field that changed, and its previous and changed values.
+
+![subscription change](./docs/subscription-notification-change.png)
 
 ### System Admin slash commands
 
@@ -124,7 +142,7 @@ Start the node server
 
 ## Provision
 
-To provision this app to AWS run `make dist` to generate the App bundle and then follow the steps [here](https://github.com/mattermost/mattermost-plugin-apps#provisioning).
+To provision this app to AWS run `make dist` to generate the App bundle and then follow the steps in the [Deployment (AWS)](https://developers.mattermost.com/integrate/apps/deployment-aws) section of the App Developers Preview online documentation.
 
 ## Troubleshooting
 

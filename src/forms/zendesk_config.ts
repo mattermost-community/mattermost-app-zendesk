@@ -8,7 +8,7 @@ import {MMClientOptions} from 'clients/mattermost';
 import {Routes} from '../utils';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {ZendeskIcon} from '../utils/constants';
-import {newConfigStore, ConfigStore, AppConfigStore} from '../store/config';
+import {AppConfigStore, ConfigStore, newConfigStore} from '../store/config';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
@@ -88,7 +88,7 @@ class FormFields extends BaseFormFields {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
             name: 'zd_client_id',
-            label: 'Client ID',
+            modal_label: 'Client ID',
             value: this.OauthValues.client_id,
             description: 'Client ID obtained from Zendesk Oauth client Unique Identifier',
             is_required: true,
@@ -100,7 +100,7 @@ class FormFields extends BaseFormFields {
             type: AppFieldTypes.TEXT,
             subtype: 'password',
             name: 'zd_client_secret',
-            label: 'Client Secret',
+            modal_label: 'Client Secret',
             value: this.OauthValues.client_secret,
             description: 'Client Secret obtained from Zendesk Oauth client secret',
             is_required: true,

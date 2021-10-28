@@ -1,18 +1,20 @@
-import {Request, Response} from 'express';
-import {AppCallRequest} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {ExpandedBotAdminActingUser} from '../types/apps';
-import {newOKCallResponseWithMarkdown} from '../utils/call_responses';
+import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {getManifest} from '../manifest';
 import {CommandTrigger} from '../utils/constants';
 import {isUserSystemAdmin} from '../utils';
 
-export async function fHelp(req: Request, res: Response): Promise<void> {
-    let helpText = getHeader();
-    helpText += getCommands(req.body);
-    helpText += getPostText();
-    res.json(newOKCallResponseWithMarkdown(helpText));
-}
+export const fHelp: CallResponseHandler = async (req, res) => {
+    const helpText = [
+        getHeader(),
+        getCommands(req.body),
+        getPostText(),
+    ].join('');
+    const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(helpText);
+    res.json(callResponse);
+};
 
 function getHeader(): string {
     const homepageURL = getManifest().homepage_url;
@@ -29,35 +31,38 @@ function getCommands(call: AppCallRequest): string {
 }
 
 function getUserCommands(): string {
-    let text = h5('User Commands');
-    text += addBulletSlashCommand('connect');
-    text += addBulletSlashCommand('disconnect');
-    text += addBulletSlashCommand('help');
-    return text;
+    return joinLines(
+        h5('User Commands'),
+        addBulletSlashCommand('connect'),
+        addBulletSlashCommand('disconnect'),
+        addBulletSlashCommand('help'),
+    ) + '\n';
 }
 
 function getAdminCommands(): string {
-    let text = h5('System Admin Commands');
-    text += addBulletSlashCommand('configure');
-    text += addBulletSlashCommand('setup-target');
-    text += addBulletSlashCommand('subscribe');
-    return text;
+    return joinLines(
+        h5('System Admin Commands'),
+        addBulletSlashCommand('configure'),
+        addBulletSlashCommand('setup-target'),
+        addBulletSlashCommand('subscribe'),
+    ) + '\n';
 }
 
 function getPostText(): string {
-    let text = h5('Post Menu Options');
-    text += 'click the (...) on a post\n';
-    text += addBullet('Create Zendesk Ticket');
-    text += addBullet('Zendesk Subscriptions');
-    return text;
+    return joinLines(
+        h5('Post Menu Options'),
+        textLine('click the (...) on a post'),
+        addBullet('Create Zendesk Ticket'),
+        addBullet('Zendesk Subscriptions'),
+    ) + '\n';
 }
 
 function addBullet(text: string): string {
-    return `* ${text}\n`;
+    return `* ${text}`;
 }
 
 function addBulletSlashCommand(text: string): string {
-    return `* \`/${CommandTrigger} ${text}\`\n`;
+    return `* \`/${CommandTrigger} ${text}\``;
 }
 
 function h5(text: string): string {
@@ -66,4 +71,12 @@ function h5(text: string): string {
 
 function h4(text: string): string {
     return `#### ${text}\n`;
+}
+
+function textLine(text: string): string {
+    return `${text}\n`;
+}
+
+function joinLines(...lines: string[]): string {
+    return lines.join('\n');
 }

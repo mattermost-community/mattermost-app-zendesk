@@ -1,4 +1,5 @@
 export const CommandTrigger = 'zendesk';
+
 export const ZendeskIcon = 'zendesk.png';
 export const FormTextAreaMinLength = 2;
 export const FormTextAreaMaxLength = 1024;
@@ -21,6 +22,7 @@ const ZDPaths = {
     OAuthAuthorizationURI: '/oauth/authorizations/new',
     OAuthAccessTokenURI: '/oauth/tokens',
     TicketPathPrefix: '/agent/tickets',
+    AccessURI: '/access/unauthenticated',
     APIVersion: '/api/v2',
 };
 
@@ -114,7 +116,7 @@ export const SubscriptionFields = {
     //  -  52   = uuid (26 * 2) channelID and teamID uuids
     // ------
     //    106
-    // call it 50 to be conservative
+    // Call it 50 to be conservative
     MaxTitleNameLength: 50,
 
     ChannelPickerSelectLabel: 'Channel Name',
@@ -122,8 +124,6 @@ export const SubscriptionFields = {
 
     SubSelectLabel: 'Select Subscription',
     SubSelectName: 'subscription_select_name',
-
-    UnsupportedFieldsTextName: 'unsupported_fields',
 
     SubTextLabel: 'Name',
     SubTextName: 'subscription_text_name',
@@ -136,6 +136,11 @@ export const SubscriptionFields = {
     NewSub_Hint: 'Name of your subscription',
     NewSub_OptionLabel: 'Create New',
     NewSub_OptionValue: 'newsubscription',
+
+    ConditionTypes: ['all', 'any'],
+    ConditionFieldSuffix: 'field',
+    ConditionOperatorSuffix: 'operator',
+    ConditionValueSuffix: 'value',
 
     PrefixCustomDefinitionSubject: 'custom_fields_',
     PrefixTriggersTitle: '__mm_webhook',
@@ -164,8 +169,7 @@ export const TriggerFields = {
     ActionValuePairs: {},
 };
 
-// ActionValuePairs is an object of static key value pairs that will be added to a
-// trigger when saving in Zendesk
+// ActionValuePairs is an object of static key value pairs that will be added to a trigger when saving in Zendesk
 TriggerFields.ActionValuePairs[TriggerFields.TicketIDKey] = '{{ticket.id}}';
 TriggerFields.ActionValuePairs[TriggerFields.TicketTitleKey] = '{{ticket.title}}';
 
@@ -195,8 +199,7 @@ export const ZDRoles = {
     agent: 'agent',
 };
 
-// MappedZDNames are field names that need to be remapped before sending as a
-// field name for the app modal.
+// MappedZDNames are field names that need to be remapped before sending as a field name for the app modal.
 export const MappedZDNames = { };
 MappedZDNames[ZDFieldTypes.TicketType] = 'type';
 
