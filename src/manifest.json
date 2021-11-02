@@ -10,7 +10,6 @@
     "requested_permissions": [
         "act_as_user",
         "act_as_bot",
-        "act_as_admin",
         "remote_webhooks",
         "remote_oauth2"
     ],
@@ -32,8 +31,6 @@
         "path": "/bindings",
         "expand": {
             "acting_user": "all",
-            "channel": "summary",
-            "admin_access_token": "all",
             "oauth2_app": "all",
             "oauth2_user": "all"
         }

@@ -1,6 +1,6 @@
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
+import {CtxExpandedBotActingUserOauth2User} from '../types/apps';
 import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newAppsClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
@@ -8,7 +8,7 @@ import {ZDTokensResponse} from '../utils/ZDTypes';
 import {AppConfigStore, newConfigStore} from '../store/config';
 
 export const fDisconnect:CallResponseHandler = async (req, res) => {
-    const context: CtxExpandedBotAdminActingUserOauth2User = req.body.context;
+    const context: CtxExpandedBotActingUserOauth2User = req.body.context;
     const zdOptions: ZDClientOptions = {
         oauth2UserAccessToken: context.oauth2.user.token.access_token,
         botAccessToken: context.bot_access_token,
