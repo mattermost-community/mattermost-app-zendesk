@@ -33,17 +33,12 @@ export type ExpandedActingUserAccessToken = AppContext & {
     acting_user_access_token: string
 }
 
-export type ExpandedBotAdminActingUser = AppContext & {
+export type ExpandedBotActingUser = AppContext & {
     acting_user: UserProfile,
     acting_user_id: string,
     acting_user_access_token: string
-    admin_access_token: string
     bot_user_id: string,
     bot_access_token: string,
-}
-
-export type ExpandedAdmin = AppContext & {
-    admin_access_token: string
 }
 
 export type ExpandedPost = AppContext & {
@@ -80,9 +75,9 @@ export type ExpandedActingUser = AppContext & {
     acting_user_access_token: string
 }
 
-export type CtxExpandedBotAdminActingUserOauth2User = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin
-export type CtxExpandedBotAdminActingUserOauth2UserChannel = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin & ExpandedChannel
-export type CtxExpandedBotAdminActingUserOauth2UserChannelPost = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedAdmin & ExpandedChannel & ExpandedPost
+export type CtxExpandedBotActingUserOauth2User = ExpandedActingUser & ExpandedOauth2User & ExpandedBot
+export type CtxExpandedBotActingUserOauth2UserChannel = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedChannel
+export type CtxExpandedBotActingUserOauth2UserChannelPost = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedChannel & ExpandedPost
 export type CtxExpandedActingUserOauth2App = ExpandedActingUser & ExpandedOauth2App
 export type CtxExpandedActingUserOauth2AppOauth2User = ExpandedActingUser & ExpandedOauth2App & ExpandedOauth2User
 export type CtxExpandedActingUserOauth2AppBot = ExpandedActingUser & ExpandedOauth2App & ExpandedBot

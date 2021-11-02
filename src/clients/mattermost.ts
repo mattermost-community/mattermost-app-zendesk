@@ -4,7 +4,6 @@ import {baseUrlFromContext} from '../utils';
 
 interface MMClient {
     asBot(): Client;
-    asAdmin(): Client;
     asActingUser(): Client;
 }
 
@@ -12,7 +11,6 @@ export type MMClientOptions = {
     mattermostSiteURL: string,
     actingUserAccessToken: string,
     botAccessToken: string,
-    adminAccessToken: string
 }
 
 export const newMMClient = (mmOptions: MMClientOptions): MMClient => {
@@ -39,12 +37,6 @@ class MMClientImpl implements MMClient {
     asBot(): Client {
         return this.as(
             this.options.botAccessToken,
-        );
-    }
-
-    asAdmin(): Client {
-        return this.as(
-            this.options.adminAccessToken,
         );
     }
 

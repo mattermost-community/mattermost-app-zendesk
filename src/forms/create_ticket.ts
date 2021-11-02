@@ -14,13 +14,13 @@ import {Routes} from '../utils';
 import {ZDClient, newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-import {CtxExpandedBotAdminActingUserOauth2User, ExpandedPost} from '../types/apps';
+import {CtxExpandedBotActingUserOauth2User, ExpandedPost} from '../types/apps';
 
 const omitFields = ['Group', 'Status'];
 
 // newCreateTicketForm returns a form response to create a ticket from a post
 export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm> {
-    const context = call.context as CtxExpandedBotAdminActingUserOauth2User;
+    const context = call.context as CtxExpandedBotActingUserOauth2User;
     const zdOptions: ZDClientOptions = {
         oauth2UserAccessToken: context.oauth2.user.token.access_token,
         botAccessToken: context.bot_access_token,
@@ -32,7 +32,6 @@ export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm
         mattermostSiteURL: context.mattermost_site_url,
         actingUserAccessToken: context.acting_user_access_token,
         botAccessToken: context.bot_access_token,
-        adminAccessToken: context.admin_access_token,
     };
     const mmClient = newMMClient(mmOptions).asActingUser();
     const formFields = new FormFields(call, zdClient, mmClient);

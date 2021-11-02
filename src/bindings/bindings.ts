@@ -15,7 +15,6 @@ export const getSubscribeBinding = (label?: string): AppBinding => {
         call: {
             path: Routes.App.CallPathSubsOpenForm,
             expand: {
-                admin_access_token: AppExpandLevels.EXPAND_SUMMARY,
                 channel: AppExpandLevels.EXPAND_SUMMARY,
                 acting_user_access_token: AppExpandLevels.EXPAND_SUMMARY,
                 oauth2_user: AppExpandLevels.EXPAND_SUMMARY,

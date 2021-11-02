@@ -2,7 +2,7 @@ import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {ExpandedBotAdminActingUser, ExpandedOauth2App, Oauth2App} from '../types/apps';
+import {ExpandedBotActingUser, ExpandedOauth2App, Oauth2App} from '../types/apps';
 import {newMMClient} from '../clients';
 import {MMClientOptions} from 'clients/mattermost';
 import {Routes} from '../utils';
@@ -12,12 +12,11 @@ import {AppConfigStore, ConfigStore, newConfigStore} from '../store/config';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
-    const context = call.context as ExpandedBotAdminActingUser;
+    const context = call.context as ExpandedBotActingUser;
     const mmOptions: MMClientOptions = {
         mattermostSiteURL: context.mattermost_site_url,
         actingUserAccessToken: context.acting_user_access_token,
         botAccessToken: context.bot_access_token,
-        adminAccessToken: context.admin_access_token,
     };
     const mmClient = newMMClient(mmOptions).asActingUser();
     const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);

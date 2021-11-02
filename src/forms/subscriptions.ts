@@ -5,7 +5,7 @@ import Client4 from 'mattermost-redux/client/client4.js';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 
-import {CtxExpandedBotAdminActingUserOauth2User} from '../types/apps';
+import {CtxExpandedBotActingUserOauth2User} from '../types/apps';
 import {ZDClient, newMMClient, newZDClient} from '../clients';
 import {Routes} from '../utils';
 import {createZdConditionsFromCall, makeSubscriptionOptions, tryPromiseWithMessage} from '../utils/utils';
@@ -16,7 +16,7 @@ import {newConfigStore} from '../store';
 
 // newSubscriptionsForm returns a form response to create subscriptions
 export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {
-    const context = call.context as CtxExpandedBotAdminActingUserOauth2User;
+    const context = call.context as CtxExpandedBotActingUserOauth2User;
     const zdOptions: ZDClientOptions = {
         oauth2UserAccessToken: context.oauth2.user.token.access_token,
         botAccessToken: context.bot_access_token,
@@ -28,7 +28,6 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
         mattermostSiteURL: context.mattermost_site_url,
         actingUserAccessToken: context.acting_user_access_token,
         botAccessToken: context.bot_access_token,
-        adminAccessToken: context.admin_access_token,
     };
     const config = await newConfigStore(context.bot_access_token, context.mattermost_site_url).getValues();
     const zdHost = config.zd_url;
