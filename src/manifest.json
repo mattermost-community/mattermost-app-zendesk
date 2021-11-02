@@ -1,5 +1,5 @@
 {
-    "app_id": "com.mattermost.zendesk",
+    "app_id": "zendesk",
     "app_type": "aws_lambda",
     "version": "0.2.1",
     "display_name": "Zendesk",
