@@ -124,6 +124,12 @@ Creating a ticket from a Mattermost post is done through the `...` post menu but
 
 ## Development
 
+Mattermost Server Setup
+
+To allow the Mattermost server to communicate with a Zendesk cloud instance, your Mattermost instance needs to be exposed to the internet via a tool such as [ngrok.io](https://ngrok.io). The Mattermost server then needs to be configured to use the exposed address. You can set it via **System Console > ENVIRONMENT > Web Server > Site URL**. Then select **Test Live URL** to confirm that the URL is correct. You can also set the `MM_SERVICESETTINGS_SITEURL` environment variable. 
+
+You'll need to restart your Mattermost server after you change the Site URL. 
+
 To install Zendesk in a development environment:
 
 `/apps install http http://localhost:4000/manifest.json`
