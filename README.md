@@ -39,14 +39,14 @@ Log in to Zendesk as System Admin to create a Zendesk OAuth client for Mattermos
 1. Select **Add OAuth Client**
     1. `Client Name`: (Example `Mattermost Zendesk App`)
     1. `Description`: `Connect your Zendesk account to Mattermost`
-    1. `Redirect URLs`: `https://<mattermost-site-url>/plugins/com.mattermost.apps/apps/com.mattermost.zendesk/oauth2/remote/complete`
+    1. `Redirect URLs`: `https://<mattermost-site-url>/plugins/com.mattermost.apps/apps/zendesk/oauth2/remote/complete`
 1. Select **Save**.
 
 #### 2. Install the app in Mattermost
 
 Next, log in to Mattermost as System Admin and run:
 
-`/apps install --app-id com.mattermost.zendesk`
+`/apps install zendesk`
 
 #### 3. Configure the Zendesk client in Mattermost
 
@@ -132,8 +132,7 @@ You'll need to restart your Mattermost server after you change the Site URL.
 
 To install Zendesk in a development environment:
 
-`/apps debug-add-manifest --url http://localhost:4000/manifest.json`  
-`/apps install http com.mattermost.zendesk`
+`/apps install http http://localhost:4000/manifest.json`
 
 Start the node server
 

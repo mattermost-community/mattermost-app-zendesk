@@ -1,7 +1,7 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
-import {ExpandedBotAdminActingUser} from '../types/apps';
+import {ExpandedBotActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../utils/constants';
 import {newMMClient, newZDClient} from '../clients';
@@ -13,7 +13,7 @@ import {CallResponseHandler, newOKCallResponse} from '../utils/call_responses';
 
 export const fHandleSubcribeNotification: CallResponseHandler = async (req, res) => {
     const values = req.body.values.data;
-    const context: ExpandedBotAdminActingUser = req.body.context;
+    const context: ExpandedBotActingUser = req.body.context;
 
     const ticketID = values[TriggerFields.TicketIDKey];
     const ticketTitle = values[TriggerFields.TicketTitleKey];
@@ -44,7 +44,6 @@ export const fHandleSubcribeNotification: CallResponseHandler = async (req, res)
         mattermostSiteURL: context.mattermost_site_url,
         actingUserAccessToken: context.acting_user_access_token,
         botAccessToken: context.bot_access_token,
-        adminAccessToken: context.admin_access_token,
     };
     const adminClient = newMMClient(mmOptions).asBot();
 

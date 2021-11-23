@@ -12,7 +12,7 @@ import {tryPromiseWithMessage} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-import {CtxExpandedBotAdminActingUserOauth2UserChannelPost} from '../types/apps';
+import {CtxExpandedBotActingUserOauth2UserChannelPost} from '../types/apps';
 import {SubscriptionFields} from '../utils/constants';
 import {ZDTriggerPayload} from '../utils/ZDTypes';
 import {newConfigStore} from '../store';
@@ -28,14 +28,14 @@ export interface App {
 
 class AppImpl implements App {
     call: AppCallRequest
-    context: CtxExpandedBotAdminActingUserOauth2UserChannelPost
+    context: CtxExpandedBotActingUserOauth2UserChannelPost
     values: AppCallValues
     zdOptions: ZDClientOptions
     mmOptions: MMClientOptions
 
     constructor(call: AppCallRequest) {
         this.call = call;
-        this.context = call.context as CtxExpandedBotAdminActingUserOauth2UserChannelPost;
+        this.context = call.context as CtxExpandedBotActingUserOauth2UserChannelPost;
         this.values = call.values as AppCallValues;
         this.zdOptions = {
             oauth2UserAccessToken: this.context.oauth2.user.token.access_token,
@@ -46,7 +46,6 @@ class AppImpl implements App {
             mattermostSiteURL: this.context.mattermost_site_url,
             actingUserAccessToken: this.context.acting_user_access_token,
             botAccessToken: this.context.bot_access_token,
-            adminAccessToken: this.context.admin_access_token,
         };
     }
     createTicketFromPost = async (): Promise<AppCallResponse> => {
