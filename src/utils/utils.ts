@@ -164,7 +164,7 @@ export function isUserSystemAdmin(actingUser: UserProfile): boolean {
 }
 
 export function isConnected(oauth2user: StoredOauthUserToken): boolean {
-    if (oauth2user && oauth2user.token.access_token && oauth2user.token.access_token !== '') {
+    if (oauth2user?.token?.access_token !== '') {
         return true;
     }
     return false;
