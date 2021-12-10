@@ -16,16 +16,16 @@ export const fCreateTarget: CallResponseHandler = async (req, res) => {
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
-    const zdClient = await newZDClient(zdOptions);
+
     let callResponse: AppCallResponse;
     try {
+        const zdClient = await newZDClient(zdOptions);
         const text = await updateOrCreateTarget(zdClient, context);
         callResponse = newOKCallResponseWithMarkdown(text);
-        res.json(callResponse);
     } catch (error) {
         callResponse = newErrorCallResponseWithMessage('Unable to create target: ' + error.message);
-        res.json(callResponse);
     }
+    res.json(callResponse);
 };
 
 // updateOrCreateTarget creates a target or updates an the exising target
