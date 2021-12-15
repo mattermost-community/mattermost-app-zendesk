@@ -184,12 +184,12 @@ class AppImpl implements App {
 
     createActingUserPost = async (message: string): Promise<void> => {
         const actingUserClient = newMMClient(this.mmOptions).asActingUser();
-        const userID = this.context.acting_user_id;
+        const actingUserID = this.context.acting_user.id;
 
         const rootID = this.context.post.root_id || this.context.post.id;
         const post = {
             message,
-            user_id: userID,
+            user_id: actingUserID,
             channel_id: String(this.context.channel_id),
             root_id: String(rootID),
         } as Post;
@@ -216,7 +216,7 @@ class AppImpl implements App {
 
     createBotDMPost = async (message: string): Promise<void> => {
         const botUserID = this.context.bot_user_id;
-        const actingUserID = this.context.acting_user_id;
+        const actingUserID = this.context.acting_user.id;
 
         const botClient = newMMClient(this.mmOptions).asBot();
         const channel: Channel = await botClient.createDirectChannel([botUserID, actingUserID]);
