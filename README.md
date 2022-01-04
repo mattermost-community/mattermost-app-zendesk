@@ -143,6 +143,18 @@ Start the node server
 
 To provision this app to AWS run `make dist` to generate the App bundle and then follow the steps in the [Deployment (AWS)](https://developers.mattermost.com/integrate/apps/deployment-aws) section of the App Developers Preview online documentation.
 
+### Deployment to Heroku
+
+```sh
+# Create app in heroku.
+heroku login
+heroku create
+heroku config:set NODE_HOST="heroku url from the previous command's output"
+
+# Deploy app.
+# You can be on any branch and run this exact command to deploy your current local commit to heroku
+git push -f heroku HEAD:master
+```
 ## Troubleshooting
 
 ### Log message received and binding locations do not show
