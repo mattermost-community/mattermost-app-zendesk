@@ -74,7 +74,7 @@ export const fOauth2Complete: CallResponseHandler = async (req, res) => {
     };
     const zdClient = await newZDClient(zdOptions);
     let me: any;
-    me = tryCallResponseWithMessage(zdClient.users.me(), 'fOauth2Complete - Unable to get current zendesk user', res);
+    me = await tryCallResponseWithMessage(zdClient.users.me(), 'fOauth2Complete - Unable to get current zendesk user', res);
     let dmText = 'You have successfully connected your Zendesk account!';
     if (me.role !== ZDRoles.admin && me.role !== ZDRoles.agent) {
         dmText += '  This app currently supports Zendesk admin and agent accounts and does not provide any features for end-user accounts.';
