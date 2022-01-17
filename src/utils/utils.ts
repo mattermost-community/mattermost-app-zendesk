@@ -2,6 +2,7 @@ import {AppCallValues, AppField, AppSelectOption} from 'mattermost-redux/types/a
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
+import {newErrorCallResponseWithMessage} from './call_responses';
 
 import {Oauth2App} from '../types/apps';
 import {AppConfigStore} from '../store/config';
@@ -180,4 +181,12 @@ export function isZdAdmin(role: ZDRole): boolean {
 
 export function webhookConfigured(config: AppConfigStore): boolean {
     return Boolean(config.zd_target_id && config.zd_target_id !== '');
+}
+
+export async function tryCallResponseWithMessage(promise, message, res) {
+    return promise.catch((error) => {
+        const fullMessage = message + ': ' + error.message;
+        const callResponse = newErrorCallResponseWithMessage(fullMessage);
+        res.json(callResponse);
+    });
 }
