@@ -25,7 +25,6 @@ export const fOauth2Connect: CallResponseHandler = async (req, res) => {
     const state = req.body.values.state;
 
     const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
-    let callResponse: AppCallResponse;
     const config: AppConfigStore = await tryCallResponseWithMessage(configStore.getValues(), 'fOauth2Connect - Unable to get config store values', res);
     const zdHost = config.zd_url;
     const clientID = context.oauth2.client_id;
@@ -38,7 +37,7 @@ export const fOauth2Connect: CallResponseHandler = async (req, res) => {
     urlWithParams.searchParams.append('scope', 'read write');
 
     const link = urlWithParams.href;
-    callResponse = {
+    const callResponse: AppCallResponse = {
         type: AppCallResponseTypes.OK,
         data: link,
     };
@@ -54,7 +53,6 @@ export const fOauth2Complete: CallResponseHandler = async (req, res) => {
         throw new Error('Bad Request: code param not provided');
     }
 
-    let callResponse: AppCallResponse;
     const zdAuth: ClientOAuth2 = await tryCallResponseWithMessage(getOAuthConfig(context), 'fOauth2Complete - Unable to get oauth config', res);
     const zdURL = context.oauth2.complete_url + '?code=' + code;
 
@@ -86,6 +84,6 @@ export const fOauth2Complete: CallResponseHandler = async (req, res) => {
     await tryCallResponseWithMessage(ppClient.storeOauth2User(storedToken), 'fOauth2Complete - Unable to store oauth2user', res);
     const app = newApp(call);
     await tryCallResponseWithMessage(app.createBotDMPost(dmText), 'fOauth2Complete - Unable to create bot DM post', res);
-    callResponse = newOKCallResponse();
+    const callResponse: AppCallResponse = newOKCallResponse();
     res.json(callResponse);
 };

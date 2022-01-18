@@ -2,10 +2,11 @@ import {AppCallValues, AppField, AppSelectOption} from 'mattermost-redux/types/a
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
-import {newErrorCallResponseWithMessage} from './call_responses';
 
 import {Oauth2App} from '../types/apps';
 import {AppConfigStore} from '../store/config';
+
+import {newErrorCallResponseWithMessage} from './call_responses';
 
 import {SubscriptionFields, ZDRoles} from './constants';
 import {StoredOauthUserToken, ZDRole, ZDTriggerCondition} from './ZDTypes';
