@@ -3,7 +3,7 @@ import {AppCallResponse} from 'mattermost-redux/types/apps';
 import {CallResponseHandler, newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newSubscriptionsForm} from '../forms';
 import {newApp} from '../app/app';
-import {webhookConfigured} from '../utils/utils';
+import {tryCallResponseWithMessage, webhookConfigured} from '../utils/utils';
 import {newConfigStore} from '../store';
 
 // fOpenSubscriptionsForm opens a new subscriptions form
@@ -19,37 +19,33 @@ export const fOpenSubscriptionsForm: CallResponseHandler = async (req, res) => {
         return;
     }
 
-    try {
-        const form = await newSubscriptionsForm(req.body);
-        callResponse = newFormCallResponse(form);
-        res.json(callResponse);
-    } catch (error) {
-        callResponse = newErrorCallResponseWithMessage('Unable to open subscriptions form: ' + error.message);
-        res.json(callResponse);
-    }
+    await tryCallResponseWithMessage(
+        newSubscriptionsForm(req.body).then((form) => {
+            callResponse = newFormCallResponse(form);
+            res.json(callResponse);
+        }),
+        'Unable to open subscriptions form',
+        res
+    );
 };
 
 // fSubmitOrUpdateSubscriptionsForm updates the subscriptions form with new values or submits the form if submit button is clicked
 export const fSubmitOrUpdateSubscriptionsForm: CallResponseHandler = async (req, res) => {
-    let callResponse: AppCallResponse;
-    try {
-        const form = await newSubscriptionsForm(req.body);
-        callResponse = newFormCallResponse(form);
-        res.json(callResponse);
-    } catch (error) {
-        callResponse = newErrorCallResponseWithMessage('Unable to update subscriptions form: ' + error.message);
-        res.json(callResponse);
-    }
+    await tryCallResponseWithMessage(
+        newSubscriptionsForm(req.body).then((form) => {
+            const callResponse = newFormCallResponse(form);
+            res.json(callResponse);
+        }),
+        'Unable to update subscriptions form',
+        res
+    );
 };
 
 export const fSubmitOrUpdateSubscriptionsSubmit: CallResponseHandler = async (req, res) => {
-    let callResponse: AppCallResponse;
-    try {
-        const app = newApp(req.body);
-        callResponse = await app.createZDSubscription();
-        res.json(callResponse);
-    } catch (error) {
-        callResponse = newErrorCallResponseWithMessage('Unable to create subscription: ' + error.message);
-        res.json(callResponse);
-    }
+    const app = newApp(req.body);
+    await tryCallResponseWithMessage(
+        app.createZDSubscription().then((callResponse) => res.json(callResponse)),
+        'Unable to create subscription',
+        res
+    );
 };

@@ -1,7 +1,7 @@
 import {AppCallResponse} from 'mattermost-redux/types/apps';
 
 import {getManifest} from '../manifest';
-import {Routes, tryPromiseWithMessage} from '../utils';
+import {Routes, tryCallResponseWithMessage, tryPromiseWithMessage} from '../utils';
 import {isZdAdmin, webhookConfigured} from '../utils/utils';
 import {ZDClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
@@ -17,15 +17,14 @@ export const fCreateTarget: CallResponseHandler = async (req, res) => {
         mattermostSiteUrl: context.mattermost_site_url,
     };
     const zdClient = await newZDClient(zdOptions);
-    let callResponse: AppCallResponse;
-    try {
-        const text = await updateOrCreateTarget(zdClient, context);
-        callResponse = newOKCallResponseWithMarkdown(text);
-        res.json(callResponse);
-    } catch (error) {
-        callResponse = newErrorCallResponseWithMessage('Unable to create target: ' + error.message);
-        res.json(callResponse);
-    }
+    await tryCallResponseWithMessage(
+        updateOrCreateTarget(zdClient, context).then((text) => {
+            const callResponse = newOKCallResponseWithMarkdown(text);
+            res.json(callResponse);
+        }),
+        'Unable to create target',
+        res
+    );
 };
 
 // updateOrCreateTarget creates a target or updates an the exising target
