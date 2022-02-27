@@ -4,42 +4,38 @@ import {CallResponseHandler, newErrorCallResponseWithMessage, newFormCallRespons
 import {newCreateTicketForm} from '../forms';
 import {newApp} from '../app/app';
 
+import {tryCallResponseWithMessage} from '../utils/utils';
+
 // fOpenCreateTicketForm opens a new create ticket form
 export const fOpenCreateTicketForm: CallResponseHandler = async (req, res) => {
-    let callResponse: AppCallResponse;
-    try {
-        const form = await newCreateTicketForm(req.body);
-        callResponse = newFormCallResponse(form);
-        res.json(callResponse);
-    } catch (error) {
-        callResponse = newErrorCallResponseWithMessage('Unable to open create ticket form: ' + error.message);
-        res.json(callResponse);
-    }
+    const form = await tryCallResponseWithMessage(
+        newCreateTicketForm(req.body),
+        'Unable to open create ticket form',
+        res
+    );
+    const callResponse = newFormCallResponse(form);
+    res.json(callResponse);
 };
 
 // fSubmitOrUpdateCreateTicketForm updates the create ticket form with new values or submits the ticket if submit button is clicked
 export const fSubmitOrUpdateCreateTicketForm: CallResponseHandler = async (req, res) => {
-    let callResponse: AppCallResponse;
-    try {
-        const form = await newCreateTicketForm(req.body);
-        callResponse = newFormCallResponse(form);
-        res.json(callResponse);
-    } catch (error) {
-        callResponse = newErrorCallResponseWithMessage('Unable to update create ticket form: ' + error.message);
-        res.json(callResponse);
-    }
+    const form = await tryCallResponseWithMessage(
+        newCreateTicketForm(req.body),
+        'Unable to update create ticket form',
+        res
+    );
+    const callResponse = newFormCallResponse(form);
+    res.json(callResponse);
 };
 
 // fSubmitOrUpdateCreateTicketSubmit creates a ticket
 export const fSubmitOrUpdateCreateTicketSubmit: CallResponseHandler = async (req, res) => {
     const call: AppCallRequest = req.body;
-    let callResponse: AppCallResponse;
-    try {
-        const app = newApp(call);
-        callResponse = await app.createTicketFromPost();
-        res.json(callResponse);
-    } catch (err) {
-        callResponse = newErrorCallResponseWithMessage('Unable to create ticket from post: ' + err.message);
-        res.json(callResponse);
-    }
+    const app = newApp(call);
+    const callResponse = await tryCallResponseWithMessage(
+        app.createTicketFromPost(),
+        'Unable to create ticket from post',
+        res
+    );
+    res.json(callResponse);
 };
