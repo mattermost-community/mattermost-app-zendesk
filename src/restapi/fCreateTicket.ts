@@ -8,35 +8,34 @@ import {tryCallResponseWithMessage} from '../utils/utils';
 
 // fOpenCreateTicketForm opens a new create ticket form
 export const fOpenCreateTicketForm: CallResponseHandler = async (req, res) => {
-    await tryCallResponseWithMessage(
-        newCreateTicketForm(req.body).then((form) => {
-            const callResponse = newFormCallResponse(form);
-            res.json(callResponse);
-        }),
+    const form = await tryCallResponseWithMessage(
+        newCreateTicketForm(req.body),
         'Unable to open create ticket form',
         res
     );
+    const callResponse = newFormCallResponse(form);
+    res.json(callResponse);
 };
 
 // fSubmitOrUpdateCreateTicketForm updates the create ticket form with new values or submits the ticket if submit button is clicked
 export const fSubmitOrUpdateCreateTicketForm: CallResponseHandler = async (req, res) => {
-    await tryCallResponseWithMessage(
-        newCreateTicketForm(req.body).then((form) => {
-            const callResponse = newFormCallResponse(form);
-            res.json(callResponse);
-        }),
+    const form = await tryCallResponseWithMessage(
+        newCreateTicketForm(req.body),
         'Unable to update create ticket form',
         res
     );
+    const callResponse = newFormCallResponse(form);
+    res.json(callResponse);
 };
 
 // fSubmitOrUpdateCreateTicketSubmit creates a ticket
 export const fSubmitOrUpdateCreateTicketSubmit: CallResponseHandler = async (req, res) => {
     const call: AppCallRequest = req.body;
     const app = newApp(call);
-    await tryCallResponseWithMessage(
-        app.createTicketFromPost().then((callResponse) => res.json(callResponse)),
+    const callResponse = await tryCallResponseWithMessage(
+        app.createTicketFromPost(),
         'Unable to create ticket from post',
         res
     );
+    res.json(callResponse);
 };

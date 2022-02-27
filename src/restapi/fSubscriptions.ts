@@ -19,33 +19,32 @@ export const fOpenSubscriptionsForm: CallResponseHandler = async (req, res) => {
         return;
     }
 
-    await tryCallResponseWithMessage(
-        newSubscriptionsForm(req.body).then((form) => {
-            callResponse = newFormCallResponse(form);
-            res.json(callResponse);
-        }),
+    const form = await tryCallResponseWithMessage(
+        newSubscriptionsForm(req.body),
         'Unable to open subscriptions form',
         res
     );
+    callResponse = newFormCallResponse(form);
+    res.json(callResponse);
 };
 
 // fSubmitOrUpdateSubscriptionsForm updates the subscriptions form with new values or submits the form if submit button is clicked
 export const fSubmitOrUpdateSubscriptionsForm: CallResponseHandler = async (req, res) => {
-    await tryCallResponseWithMessage(
-        newSubscriptionsForm(req.body).then((form) => {
-            const callResponse = newFormCallResponse(form);
-            res.json(callResponse);
-        }),
+    const form = await tryCallResponseWithMessage(
+        newSubscriptionsForm(req.body),
         'Unable to update subscriptions form',
         res
     );
+    const callResponse = newFormCallResponse(form);
+    res.json(callResponse);
 };
 
 export const fSubmitOrUpdateSubscriptionsSubmit: CallResponseHandler = async (req, res) => {
     const app = newApp(req.body);
-    await tryCallResponseWithMessage(
-        app.createZDSubscription().then((callResponse) => res.json(callResponse)),
+    const callResponse = await tryCallResponseWithMessage(
+        app.createZDSubscription(),
         'Unable to create subscription',
         res
     );
+    res.json(callResponse);
 };
