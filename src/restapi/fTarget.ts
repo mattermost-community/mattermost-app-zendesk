@@ -12,20 +12,20 @@ import {CtxExpandedBotAppActingUserOauth2AppOauth2User} from 'types/apps';
 export const fCreateTarget: CallResponseHandler = async (req, res) => {
     const context = req.body.context;
     const zdOptions: ZDClientOptions = {
-        oauth2UserAccessToken: context.oauth2.user.token.access_token,
+        oauth2UserAccessToken: context.oauth2.user?.token?.access_token,
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
-    const zdClient = await newZDClient(zdOptions);
+
     let callResponse: AppCallResponse;
     try {
+        const zdClient = await newZDClient(zdOptions);
         const text = await updateOrCreateTarget(zdClient, context);
         callResponse = newOKCallResponseWithMarkdown(text);
-        res.json(callResponse);
     } catch (error) {
         callResponse = newErrorCallResponseWithMessage('Unable to create target: ' + error.message);
-        res.json(callResponse);
     }
+    res.json(callResponse);
 };
 
 // updateOrCreateTarget creates a target or updates an the exising target
@@ -55,7 +55,7 @@ async function updateOrCreateTarget(zdClient: ZDClient, context: CtxExpandedBotA
     };
 
     // Add the user access_token to the store
-    if (oauth2User.token && oauth2User.token.access_token) {
+    if (oauth2User?.token?.access_token) {
         cValues.zd_oauth_access_token = oauth2User.token.access_token;
     } else {
         throw new Error('failed to get oauth2 user access_token');
