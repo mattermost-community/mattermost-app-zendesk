@@ -1,12 +1,18 @@
 {
     "app_id": "zendesk",
-    "app_type": "aws_lambda",
     "version": "0.2.1",
+    "homepage_url": "https://github.com/mattermost/mattermost-app-zendesk",
     "display_name": "Zendesk",
     "description": "Zendesk cloud app for Mattermost",
-    "homepage_url": "https://github.com/mattermost/mattermost-app-zendesk",
-    "root_url": "",
     "icon": "zendesk-profile-icon.png",
+    "bindings": {
+        "path": "/bindings",
+        "expand": {
+            "acting_user": "all",
+            "oauth2_app": "all",
+            "oauth2_user": "all"
+        }
+    },
     "requested_permissions": [
         "act_as_user",
         "act_as_bot",
@@ -19,21 +25,17 @@
         "/post_menu",
         "/in_post"
     ],
-    "aws_lambda": [
-        {
-            "path": "/",
-            "name": "js-function",
-            "handler": "index.handler",
-            "runtime": "nodejs14.x"
-        }
-    ],
-    "bindings": {
-        "path": "/bindings",
-        "expand": {
-            "acting_user": "all",
-            "oauth2_app": "all",
-            "oauth2_user": "all"
-        }
+    "aws_lambda": {
+        "functions": [
+            {
+                "path": "/",
+                "name": "js-function",
+                "handler": "index.handler",
+                "runtime": "nodejs14.x"
+            }
+        ]
     },
-    "assets": []
+    "http": {
+        "use_jwt": false
+    }
 }
