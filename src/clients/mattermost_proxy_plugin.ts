@@ -94,11 +94,11 @@ class AppsClientImpl implements AppsClient {
     }
 
     oauth2AppPath(): string {
-        return this.apiPath(Routes.MM.PathOAuth2App);
+        return this.apiPath(Routes.MM.PathOAuth2App) + '/' + getManifest().app_id;
     }
 
     oauth2UserPath(): string {
-        return this.apiPath(Routes.MM.PathOAuth2User);
+        return this.apiPath(Routes.MM.PathOAuth2User) + '/' + getManifest().app_id;
     }
 
     apiPath(p: string): string {
