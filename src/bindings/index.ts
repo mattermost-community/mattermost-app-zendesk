@@ -25,8 +25,21 @@ export function getBindings(context: CtxExpandedActingUserOauth2AppOauth2User): 
     };
 
     const bindings: AppBinding[] = [];
-    bindings.push(getPostMenuBindings(bindingOptions));
-    bindings.push(getCommandBindings(bindingOptions));
-    bindings.push(getChannelHeaderBindings(bindingOptions));
+
+    const postMenu = getPostMenuBindings(bindingOptions);
+    if (postMenu.bindings?.length) {
+        bindings.push(postMenu);
+    }
+
+    const command = getCommandBindings(bindingOptions);
+    if (command.bindings?.length) {
+        bindings.push(command);
+    }
+
+    const channelHeader = getChannelHeaderBindings(bindingOptions);
+    if (channelHeader.bindings?.length) {
+        bindings.push(channelHeader);
+    }
+
     return bindings;
 }

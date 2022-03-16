@@ -33,5 +33,5 @@ function getPort(): number {
 }
 
 export function getHTTPPath(): string {
-    return 'http://localhost:' + getPort();
+    return process.env.NODE_HOST || `http://localhost:${getPort()}`;
 }

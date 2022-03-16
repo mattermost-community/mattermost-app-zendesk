@@ -28,8 +28,12 @@ export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppFor
         header: 'Configure the Zendesk app with the following information.',
         icon: ZendeskIcon,
         fields,
-        call: {
-            path: Routes.App.CallPathConfigSubmitOrUpdateForm,
+        submit: {
+            path: Routes.App.CallPathConfigSubmitOrUpdateForm + '/submit',
+            expand: {
+                oauth2_app: 'summary',
+                acting_user_access_token: 'summary',
+            },
         },
     };
     return form;
@@ -107,4 +111,3 @@ class FormFields extends BaseFormFields {
         this.builder.addField(f);
     }
 }
-

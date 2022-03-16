@@ -3,7 +3,7 @@ import {Users} from 'node-zendesk';
 import Client4 from 'mattermost-redux/client/client4.js';
 
 import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
-import {AppFieldTypes} from 'mattermost-redux/constants/apps';
+import {AppExpandLevels, AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import {ZDFieldOption, ZDFormFieldOption, makeFormOptions, makeOptions, tryPromiseWithMessage} from '../utils/utils';
 import {CreateTicketFields, MappedZDNames, SystemFields, ZDFieldTypes, ZendeskIcon} from '../utils/constants';
@@ -42,8 +42,22 @@ export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm
         header: 'Create a Zendesk ticket from Mattermost by filling out and submitting this form. Additional text can be added in the `Optional Message` field.',
         icon: ZendeskIcon,
         fields,
-        call: {
-            path: Routes.App.CallPathTicketSubmitOrUpdateForm,
+        submit: {
+            path: Routes.App.CallPathTicketSubmitOrUpdateForm + '/submit',
+            expand: {
+                acting_user: AppExpandLevels.EXPAND_SUMMARY,
+                acting_user_access_token: AppExpandLevels.EXPAND_SUMMARY,
+                post: AppExpandLevels.EXPAND_SUMMARY,
+                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+            },
+        },
+        source: {
+            path: Routes.App.CallPathTicketSubmitOrUpdateForm + '/form',
+            expand: {
+                acting_user: AppExpandLevels.EXPAND_SUMMARY,
+                post: AppExpandLevels.EXPAND_SUMMARY,
+                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+            },
         },
     };
     return form;
@@ -259,4 +273,3 @@ class FormFields extends BaseFormFields {
         this.builder.addField(f);
     }
 }
-

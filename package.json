@@ -10,7 +10,7 @@
     "check-types": "tsc",
     "lint": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --cache",
     "fix": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --fix --cache",
-    "start": "nodemon dist/index.js",
+    "start": "LOCAL=true nodemon dist/index.js",
     "test": "jest --coverage"
   },
   "author": "",

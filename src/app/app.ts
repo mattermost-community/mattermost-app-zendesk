@@ -135,7 +135,13 @@ class AppImpl implements App {
 
         // Add bot to team and channel
         const botUserID = this.context.bot_user_id;
-        const addToTeamReq = actingUserClient.addToTeam(this.context.team_id, botUserID);
+
+        const teamID = this.context.team_id;
+        if (!teamID) {
+            return newErrorCallResponseWithMessage('No team id provided in context');
+        }
+
+        const addToTeamReq = actingUserClient.addToTeam(teamID, botUserID);
         await tryPromiseWithMessage(addToTeamReq, 'Failed to add bot to team');
 
         const addToChannelReq = actingUserClient.addToChannel(botUserID, this.context.channel_id);

@@ -18,10 +18,10 @@ export function newOKCallResponse(): AppCallResponse {
     };
 }
 
-export function newOKCallResponseWithMarkdown(markdown: string): AppCallResponse {
+export function newOKCallResponseWithMarkdown(text: string): AppCallResponse {
     return {
         type: AppCallResponseTypes.OK,
-        markdown,
+        text,
     };
 }
 
@@ -42,7 +42,7 @@ export function newFormCallResponse(form: AppForm): AppCallResponse {
 export function newErrorCallResponseWithMessage(message: string): AppCallResponse {
     return {
         type: AppCallResponseTypes.ERROR,
-        error: message,
+        text: message,
     };
 }
 

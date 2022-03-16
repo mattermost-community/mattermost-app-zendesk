@@ -1,4 +1,4 @@
-import {AppFieldTypes} from 'mattermost-redux/constants/apps';
+import {AppExpandLevels, AppFieldTypes} from 'mattermost-redux/constants/apps';
 import {AppCallRequest, AppField, AppForm, AppSelectOption} from 'mattermost-redux/types/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
@@ -45,11 +45,24 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
         icon: ZendeskIcon,
         submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
-        call: {
-            path: Routes.App.CallPathSubsSubmitOrUpdateForm,
+        submit: {
+            path: Routes.App.CallPathSubsSubmitOrUpdateForm + '/submit',
             state: {
                 conditions: fetchedConditionOptions,
                 triggers: subOptions?.options,
+            },
+            expand: {
+                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+            },
+        },
+        source: {
+            path: Routes.App.CallPathSubsSubmitOrUpdateForm + '/form',
+            state: {
+                conditions: fetchedConditionOptions,
+                triggers: subOptions?.options,
+            },
+            expand: {
+                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
             },
         },
     };
