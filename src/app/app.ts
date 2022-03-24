@@ -1,6 +1,6 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
-import {AppCallRequest, AppCallResponse, AppCallValues, AppSelectOption} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallResponse, AppCallValues, AppSelectOption} from 'types/apps';
 
 import {
     FieldValidationErrors,

@@ -1,4 +1,4 @@
-import {AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCallResponse} from 'types/apps';
 
 import {getManifest} from '../manifest';
 import {Routes, tryPromiseWithMessage} from '../utils';

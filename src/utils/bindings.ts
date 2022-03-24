@@ -1,5 +1,5 @@
 import {AppBindingLocations} from 'mattermost-redux/constants/apps';
-import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'types/apps';
 
 import {CommandTrigger, ZendeskIcon} from '../utils/constants';
 import {getManifest} from '../manifest';

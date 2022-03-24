@@ -1,4 +1,4 @@
-import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'types/apps';
 
 import {CtxExpandedActingUserOauth2AppOauth2User} from 'types/apps';
 import {isConfigured, isConnected, isUserSystemAdmin} from '../utils';

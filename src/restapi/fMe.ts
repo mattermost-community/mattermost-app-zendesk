@@ -1,4 +1,4 @@
-import {AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCallResponse} from 'types/apps';
 
 import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
@@ -7,4 +7,3 @@ export const fMe: CallResponseHandler = async (req, res) => {
     const callResponse: AppCallResponse = newOKCallResponseWithMarkdown(message);
     res.json(callResponse);
 };
-

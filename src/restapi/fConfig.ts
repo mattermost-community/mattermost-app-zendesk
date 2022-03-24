@@ -1,4 +1,4 @@
-import {AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCallResponse} from 'types/apps';
 
 import {AppCallRequestWithValues, CtxExpandedBotActingUserAccessToken} from '../types/apps';
 import {AppConfigStore, newConfigStore} from '../store/config';

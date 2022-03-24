@@ -1,4 +1,4 @@
-import {AppCallValues} from 'mattermost-redux/types/apps';
+import {AppCallValues} from 'types/apps';
 
 import {StoreKeys} from '../utils/constants';
 import {AppsClient, newAppsClient} from '../clients';

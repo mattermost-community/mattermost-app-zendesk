@@ -1,4 +1,4 @@
-import {AppCallRequest, AppCallValues, AppContext} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallValues, AppContext} from 'types/apps';
 
 import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions, ZDTriggerPayload} from '../utils/ZDTypes';
 
@@ -138,4 +138,3 @@ export function newTriggerFromForm(call: AppCallRequest, targetID: string): ZDTr
     const trigger = new TriggerFromFormImpl(call, targetID).getTrigger();
     return trigger;
 }
-

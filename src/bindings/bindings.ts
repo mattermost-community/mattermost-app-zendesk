@@ -1,4 +1,4 @@
-import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'types/apps';
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {Locations, Routes, ZendeskIcon} from '../utils/constants';

@@ -1,4 +1,4 @@
-import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'types/apps';
 
 import {newCommandBindings} from '../utils';
 import {isZdAdmin} from '../utils/utils';
@@ -37,4 +37,3 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
     bindings.push(getHelpBinding());
     return newCommandBindings(bindings);
 };
-

@@ -1,5 +1,5 @@
 import {Tickets} from 'node-zendesk';
-import {AppCallRequest, AppContext, AppFormValues} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppContext, AppFormValues} from 'types/apps';
 
 import {FieldValidationErrors} from '../utils/call_responses';
 import {CreateTicketFields, ZDFieldValidation} from '../utils/constants';

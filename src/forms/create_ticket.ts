@@ -2,7 +2,7 @@ import {Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppField, AppForm} from 'types/apps';
 import {AppExpandLevels, AppFieldTypes} from 'mattermost-redux/constants/apps';
 
 import {ZDFieldOption, ZDFormFieldOption, makeFormOptions, makeOptions, tryPromiseWithMessage} from '../utils/utils';

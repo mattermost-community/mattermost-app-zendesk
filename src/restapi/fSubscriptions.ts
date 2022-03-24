@@ -1,4 +1,4 @@
-import {AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCallResponse} from 'types/apps';
 
 import {CallResponseHandler, newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {newSubscriptionsForm} from '../forms';

@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {AppCallResponse, AppForm} from 'mattermost-redux/types/apps';
+import {AppCallResponse, AppForm} from 'types/apps';
 import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
 
 export type FieldValidationErrors = {[name: string]: string};

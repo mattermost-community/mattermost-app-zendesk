@@ -4,7 +4,7 @@ export const ZendeskIcon = 'zendesk.png';
 export const FormTextAreaMinLength = 2;
 export const FormTextAreaMaxLength = 1024;
 
-import {AppSelectOption} from 'mattermost-redux/types/apps';
+import {AppSelectOption} from 'types/apps';
 
 export const AppsPluginName = 'com.mattermost.apps';
 export const PathAPI = '/api/v1';

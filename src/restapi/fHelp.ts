@@ -1,4 +1,4 @@
-import {AppCallRequest, AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallResponse} from 'types/apps';
 
 import {ExpandedBotActingUser} from '../types/apps';
 import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_responses';
