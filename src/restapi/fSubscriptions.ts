@@ -23,7 +23,7 @@ export const fOpenSubscriptionsForm: CallResponseHandler = async (req, res) => {
         const form = await newSubscriptionsForm(req.body);
         callResponse = newFormCallResponse(form);
         res.json(callResponse);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to open subscriptions form: ' + error.message);
         res.json(callResponse);
     }
@@ -36,7 +36,7 @@ export const fSubmitOrUpdateSubscriptionsForm: CallResponseHandler = async (req,
         const form = await newSubscriptionsForm(req.body);
         callResponse = newFormCallResponse(form);
         res.json(callResponse);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to update subscriptions form: ' + error.message);
         res.json(callResponse);
     }
@@ -48,7 +48,7 @@ export const fSubmitOrUpdateSubscriptionsSubmit: CallResponseHandler = async (re
         const app = newApp(req.body);
         callResponse = await app.createZDSubscription();
         res.json(callResponse);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to create subscription: ' + error.message);
         res.json(callResponse);
     }

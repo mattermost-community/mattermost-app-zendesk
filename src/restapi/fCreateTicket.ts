@@ -11,7 +11,7 @@ export const fOpenCreateTicketForm: CallResponseHandler = async (req, res) => {
         const form = await newCreateTicketForm(req.body);
         callResponse = newFormCallResponse(form);
         res.json(callResponse);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to open create ticket form: ' + error.message);
         res.json(callResponse);
     }
@@ -24,7 +24,7 @@ export const fSubmitOrUpdateCreateTicketForm: CallResponseHandler = async (req, 
         const form = await newCreateTicketForm(req.body);
         callResponse = newFormCallResponse(form);
         res.json(callResponse);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to update create ticket form: ' + error.message);
         res.json(callResponse);
     }
@@ -38,7 +38,7 @@ export const fSubmitOrUpdateCreateTicketSubmit: CallResponseHandler = async (req
         const app = newApp(call);
         callResponse = await app.createTicketFromPost();
         res.json(callResponse);
-    } catch (err) {
+    } catch (err: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to create ticket from post: ' + err.message);
         res.json(callResponse);
     }

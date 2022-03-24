@@ -21,7 +21,7 @@ export const fDisconnect:CallResponseHandler = async (req, res) => {
     let callResponse: AppCallResponse;
     try {
         config = await configStore.getValues();
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('fDisconnect - Unable to get config store values: ' + error.message);
         res.json(callResponse);
         return;
@@ -39,7 +39,7 @@ export const fDisconnect:CallResponseHandler = async (req, res) => {
     let tokens: ZDTokensResponse;
     try {
         tokens = await zdClient.oauthtokens.list();
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('fDisconnect - Unable to list zendesk oauth tokens: ' + error.message);
         res.json(callResponse);
         return;
@@ -55,7 +55,7 @@ export const fDisconnect:CallResponseHandler = async (req, res) => {
     // Delete the zendesk user oauth token
     try {
         await zdClient.oauthtokens.revoke(tokenID);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('fDisconnect - failed to revoke acting user token');
         res.json(callResponse);
         return;

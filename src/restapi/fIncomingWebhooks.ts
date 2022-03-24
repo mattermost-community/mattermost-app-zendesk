@@ -113,7 +113,7 @@ async function mapIDsToTextValues(zdClient: ZDClient, events: any[]): Promise<an
                 mappedArray.push(mappedEvent);
             }
         });
-    } catch (error) {
+    } catch (error: any) {
         throw new Error('Unable to map IDs to text values: ' + error.message);
     }
     return mappedArray;
@@ -178,7 +178,7 @@ async function getNamesFromRequest(clientMethod: TicketForms | Groups | Users, e
                 event.previous_value = values[1].name;
             }
         });
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(`Unable to fetch ${nameType} names: ${error.message}`);
     }
     return event;

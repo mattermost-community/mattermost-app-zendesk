@@ -15,7 +15,7 @@ export const fOpenZendeskConfigForm: CallResponseHandler = async (req, res) => {
         const form = await newZendeskConfigForm(req.body);
         callResponse = newFormCallResponse(form);
         res.json(callResponse);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to open configuration form: ' + error.message);
         res.json(callResponse);
     }
@@ -47,7 +47,7 @@ export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (re
 
         try {
             await verifyUrl(storeValues.zd_url);
-        } catch (error) {
+        } catch (error: any) {
             callResponse = newErrorCallResponseWithFieldErrors({zd_url: error.message});
             res.json(callResponse);
             return;
@@ -56,7 +56,7 @@ export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (re
         storeValues.zd_target_id = targetID;
         storeValues.zd_oauth_access_token = zdOauth2AccessToken;
         await configStore.storeConfigInfo(storeValues);
-    } catch (err) {
+    } catch (err: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to submit configuration form: ' + err.message);
     }
     res.json(callResponse);
@@ -70,7 +70,7 @@ const verifyUrl = async (url: string) => {
         if (!resp.ok) {
             throw new Error(`failed to verify url: ${quotedURL}`);
         }
-    } catch (err) {
+    } catch (err: any) {
         throw new Error(`failed to fetch url: ${quotedURL}`);
     }
 };

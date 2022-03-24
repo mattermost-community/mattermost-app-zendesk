@@ -22,7 +22,7 @@ export const fCreateTarget: CallResponseHandler = async (req, res) => {
         const zdClient = await newZDClient(zdOptions);
         const text = await updateOrCreateTarget(zdClient, context);
         callResponse = newOKCallResponseWithMarkdown(text);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to create target: ' + error.message);
     }
     res.json(callResponse);
