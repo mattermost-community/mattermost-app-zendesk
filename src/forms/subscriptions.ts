@@ -13,6 +13,7 @@ import {ZDConditionOption, ZDConditionOptionOperator, ZDConditionOptionValue, ZD
 import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {newConfigStore} from '../store';
+import {AppImpl} from '../app/app';
 
 // newSubscriptionsForm returns a form response to create subscriptions
 export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {
@@ -51,9 +52,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
                 conditions: fetchedConditionOptions,
                 triggers: subOptions?.options,
             },
-            expand: {
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: AppImpl.expandSubscriptionForm,
         },
         source: {
             path: Routes.App.CallPathSubsSubmitOrUpdateForm + '/form',
@@ -61,9 +60,7 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
                 conditions: fetchedConditionOptions,
                 triggers: subOptions?.options,
             },
-            expand: {
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: AppImpl.expandSubscriptionForm,
         },
     };
     return form;
@@ -490,9 +487,9 @@ class FormFields extends BaseFormFields {
             SubscriptionFields.RegexTriggerInstance,
             this.call.context.mattermost_site_url,
             SubscriptionFields.RegexTriggerTeamID,
-            this.call.context.team_id,
+            this.call.context.team?.id,
             SubscriptionFields.RegexTriggerChannelID,
-            this.call.context.channel_id,
+            this.call.context.channel?.id,
         ].join('');
 
         const client = this.zdClient as ZDClient;

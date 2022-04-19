@@ -29,7 +29,7 @@ export class TicketFromFormImpl implements TicketFromFrom {
 
     getPostMessage(): string {
         const baseURL = baseUrlFromContext(this.context.mattermost_site_url);
-        const postID = this.context.post_id;
+        const postID = this.context.post?.id;
         const mmSignature = `\n*message created from [Mattermost message](${baseURL}/_redirect/pl/${postID}).*\n`;
 
         const additionalMessage = this.formValues[CreateTicketFields.NameAdditionalMessage] || '';

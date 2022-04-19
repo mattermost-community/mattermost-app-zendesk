@@ -15,6 +15,7 @@ import {ZDClient, newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
 import {CtxExpandedBotActingUserOauth2User, ExpandedPost} from '../types/apps';
+import {AppImpl} from '../app/app';
 
 const omitFields = ['Group', 'Status'];
 
@@ -44,20 +45,11 @@ export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm
         fields,
         submit: {
             path: Routes.App.CallPathTicketSubmitOrUpdateForm + '/submit',
-            expand: {
-                acting_user: AppExpandLevels.EXPAND_SUMMARY,
-                acting_user_access_token: AppExpandLevels.EXPAND_SUMMARY,
-                post: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: AppImpl.expandCreateTicket,
         },
         source: {
             path: Routes.App.CallPathTicketSubmitOrUpdateForm + '/form',
-            expand: {
-                acting_user: AppExpandLevels.EXPAND_SUMMARY,
-                post: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: AppImpl.expandCreateTicket,
         },
     };
     return form;

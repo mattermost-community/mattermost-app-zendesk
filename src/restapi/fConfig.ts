@@ -7,6 +7,14 @@ import {newZendeskConfigForm} from '../forms';
 import {CallResponseHandler, newErrorCallResponseWithFieldErrors, newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {baseUrlFromContext} from '../utils/utils';
 import {Routes} from '../utils/constants';
+import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+
+export const expandConfigure = {
+    acting_user: AppExpandLevels.EXPAND_SUMMARY,
+    acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+    oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
+    oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+};
 
 // fOpenZendeskConfigForm opens a new configuration form
 export const fOpenZendeskConfigForm: CallResponseHandler = async (req, res) => {

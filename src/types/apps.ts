@@ -287,7 +287,10 @@ export type ExpandedPost = AppContext & {
 
 export type ExpandedChannel = AppContext & {
     channel: Channel
-    // channel_id: string
+}
+
+export type ExpandedTeam = AppContext & {
+    team: Team
 }
 
 export type ExpandedOauth2User = {
@@ -317,6 +320,7 @@ export type ExpandedActingUser = AppContext & {
 export type CtxExpandedBotActingUserOauth2User = ExpandedActingUser & ExpandedOauth2User & ExpandedBot
 export type CtxExpandedBotActingUserOauth2UserChannel = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedChannel
 export type CtxExpandedBotActingUserOauth2UserChannelPost = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedChannel & ExpandedPost
+export type CtxExpandedBotActingUserOauth2UserTeamChannelPost = ExpandedActingUser & ExpandedOauth2User & ExpandedBot & ExpandedTeam & ExpandedChannel & ExpandedPost
 export type CtxExpandedActingUserOauth2App = ExpandedActingUser & ExpandedOauth2App
 export type CtxExpandedActingUserOauth2AppOauth2User = ExpandedActingUser & ExpandedOauth2App & ExpandedOauth2User
 export type CtxExpandedActingUserOauth2AppBot = ExpandedActingUser & ExpandedOauth2App & ExpandedBot

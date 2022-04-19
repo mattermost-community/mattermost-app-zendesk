@@ -6,6 +6,13 @@ import {newAppsClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {ZDTokensResponse} from '../utils/ZDTypes';
 import {AppConfigStore, newConfigStore} from '../store/config';
+import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+
+export const expandDisconnect = {
+    acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+    oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
+    oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+};
 
 export const fDisconnect:CallResponseHandler = async (req, res) => {
     const context: CtxExpandedBotActingUserOauth2User = req.body.context;

@@ -9,6 +9,7 @@ import {Routes} from '../utils';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {ZendeskIcon} from '../utils/constants';
 import {AppConfigStore, ConfigStore, newConfigStore} from '../store/config';
+import {expandConfigure} from '../restapi/fConfig';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
@@ -30,10 +31,7 @@ export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppFor
         fields,
         submit: {
             path: Routes.App.CallPathConfigSubmitOrUpdateForm + '/submit',
-            expand: {
-                oauth2_app: 'summary',
-                acting_user_access_token: 'summary',
-            },
+            expand: expandConfigure,
         },
     };
     return form;
@@ -101,7 +99,6 @@ class FormFields extends BaseFormFields {
     addZDClientSecretField(): void {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
-            subtype: 'password',
             name: 'zd_client_secret',
             modal_label: 'Client Secret',
             value: this.OauthValues.client_secret,

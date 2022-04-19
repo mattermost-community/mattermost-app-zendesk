@@ -5,6 +5,11 @@ import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_
 import {getManifest} from '../manifest';
 import {CommandTrigger} from '../utils/constants';
 import {isUserSystemAdmin} from '../utils';
+import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+
+export const expandHelp = {
+    acting_user: AppExpandLevels.EXPAND_SUMMARY,
+};
 
 export const fHelp: CallResponseHandler = async (req, res) => {
     const helpText = [

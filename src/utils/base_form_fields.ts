@@ -25,11 +25,11 @@ export class BaseFormFields {
     }
 
     getCurrentTeamID(): string {
-        return this.call.context.team_id || '';
+        return this.call.context.team?.id || '';
     }
 
     getCurrentChannelID(): string {
-        return this.call.context.channel_id || '';
+        return this.call.context.channel?.id || '';
     }
 
     getCallValues(): AppCallValues {

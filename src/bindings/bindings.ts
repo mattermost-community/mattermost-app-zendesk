@@ -1,8 +1,14 @@
 import {AppBinding} from 'types/apps';
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 import {Locations, Routes, ZendeskIcon} from '../utils/constants';
 import {getManifest} from '../manifest';
+import {AppImpl} from '../app/app';
+import {expandConnect} from '../restapi/fConnect';
+import {expandDisconnect} from '../restapi/fDisconnect';
+import {expandConfigure} from '../restapi/fConfig';
+import {expandMe} from '../restapi/fMe';
+import {expandTarget} from '../restapi/fTarget';
+import {expandHelp} from '../restapi/fHelp';
 
 export const getSubscribeBinding = (label?: string): AppBinding => {
     return {
@@ -13,12 +19,7 @@ export const getSubscribeBinding = (label?: string): AppBinding => {
         icon: ZendeskIcon,
         submit: {
             path: Routes.App.CallPathSubsOpenForm + '/submit',
-            expand: {
-                channel: AppExpandLevels.EXPAND_SUMMARY,
-                acting_user_access_token: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: AppImpl.expandSubscriptionForm,
         },
     };
 };
@@ -31,10 +32,8 @@ export const getConnectBinding = (): AppBinding => {
         description: 'Connect your Zendesk account',
         icon: ZendeskIcon,
         submit: {
-            expand: {
-                oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-            },
             path: Routes.App.BindingPathConnect + '/submit',
+            expand: expandConnect,
         },
     };
 };
@@ -47,12 +46,8 @@ export const getDisconnectBinding = (): AppBinding => {
         description: 'Disconnect your Zendesk account',
         icon: ZendeskIcon,
         submit: {
-            expand: {
-                acting_user_access_token: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
             path: Routes.App.BindingPathDisconnect + '/submit',
+            expand: expandDisconnect,
         },
     };
 };
@@ -66,12 +61,7 @@ export const getConfigureBinding = (): AppBinding => {
         icon: ZendeskIcon,
         submit: {
             path: Routes.App.CallPathConfigOpenForm + '/submit',
-            expand: {
-                acting_user: AppExpandLevels.EXPAND_SUMMARY,
-                acting_user_access_token: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: expandConfigure,
         },
     };
 };
@@ -85,10 +75,7 @@ export const getMeBinding = (): AppBinding => {
         icon: ZendeskIcon,
         submit: {
             path: Routes.App.BindingPathMe + '/submit',
-            expand: {
-                oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: expandMe,
         },
     };
 };
@@ -102,11 +89,7 @@ export const getTargetBinding = (): AppBinding => {
         icon: ZendeskIcon,
         submit: {
             path: Routes.App.BindingPathTargetCreate + '/submit',
-            expand: {
-                app: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: expandTarget,
         },
     };
 };
@@ -120,9 +103,7 @@ export const getHelpBinding = (): AppBinding => {
         icon: ZendeskIcon,
         submit: {
             path: Routes.App.BindingPathHelp + '/submit',
-            expand: {
-                acting_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: expandHelp,
         },
     };
 };
@@ -136,13 +117,7 @@ export const getCreateTicketBinding = (): AppBinding => {
         location: Locations.Ticket,
         submit: {
             path: Routes.App.CallPathTicketOpenForm + '/submit',
-            expand: {
-                post: AppExpandLevels.EXPAND_SUMMARY,
-                acting_user: AppExpandLevels.EXPAND_SUMMARY,
-                acting_user_access_token: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-                oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
-            },
+            expand: AppImpl.expandCreateTicket,
         },
     };
 };

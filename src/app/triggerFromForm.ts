@@ -56,7 +56,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     // getJSONDataFields constructs the object text string for a trigger
     getJSONDataFields(): string {
         // Default to the viewing channel_id
-        let channelID = this.context.channel_id;
+        let channelID = this.context.channel?.id;
 
         // If channel picker exists, use its channel ID value
         if (this.values[SubscriptionFields.ChannelPickerSelectName] && this.values[SubscriptionFields.ChannelPickerSelectName].value) {
@@ -71,8 +71,8 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         const title = [
             SubscriptionFields.PrefixTriggersTitle,
             SubscriptionFields.RegexTriggerInstance + this.context.mattermost_site_url,
-            SubscriptionFields.RegexTriggerTeamID + this.context.team_id,
-            SubscriptionFields.RegexTriggerChannelID + this.context.channel_id,
+            SubscriptionFields.RegexTriggerTeamID + this.context.team?.id,
+            SubscriptionFields.RegexTriggerChannelID + this.context.channel?.id,
             ' ' + this.values[SubscriptionFields.SubTextName],
         ].join('');
         this.addField('title', title);
