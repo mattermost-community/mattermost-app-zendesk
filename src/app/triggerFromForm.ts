@@ -1,9 +1,9 @@
 import {AppCallRequest, AppCallValues, AppContext} from 'types/apps';
 
-import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions, ZDTriggerPayload} from '../utils/ZDTypes';
+import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions, ZDTriggerPayload} from '../types/zendesk';
 
 import {getCallValueConditions} from '../utils/utils';
-import {SubscriptionFields, TriggerFields} from '../utils/constants';
+import {SubscriptionFields, TriggerFields} from '../constants/zendesk';
 
 interface TriggerFromFrom {
     getTrigger(): ZDTriggerPayload;

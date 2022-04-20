@@ -1,5 +1,6 @@
-import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
+
+import {AppFieldTypes} from 'constants/apps';
 
 import {AppCallRequest, AppField, AppForm} from 'types/apps';
 
@@ -8,7 +9,7 @@ import {newMMClient} from '../clients';
 import {MMClientOptions} from 'clients/mattermost';
 import {Routes} from '../utils';
 import {BaseFormFields} from '../utils/base_form_fields';
-import {ZendeskIcon} from '../utils/constants';
+import {ZendeskIcon} from '../constants/zendesk';
 import {AppConfigStore, ConfigStore, newConfigStore} from '../store/config';
 import {expandConfigure} from '../restapi/fConfig';
 

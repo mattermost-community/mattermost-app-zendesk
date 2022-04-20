@@ -1,6 +1,6 @@
 import ClientOAuth2, {Token} from 'client-oauth2';
 
-import {AppCallResponseTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
+import {AppCallResponseTypes, AppExpandLevels} from 'constants/apps';
 
 import {AppCallResponse} from 'types/apps';
 
@@ -9,11 +9,11 @@ import {ZDClientOptions} from 'clients/zendesk';
 import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {AppConfigStore, newConfigStore} from '../store/config';
 import {Routes} from '../utils';
-import {ZDRoles} from '../utils/constants';
+import {ZDRoles} from '../constants/zendesk';
 import {newApp} from '../app/app';
 import {newAppsClient, newZDClient} from '../clients';
 import {getOAuthConfig} from '../app/oauth';
-import {StoredOauthUserToken} from 'utils/ZDTypes';
+import {StoredOauthUserToken} from 'types/zendesk';
 
 export const expandConnect = {
     oauth2_app: AppExpandLevels.EXPAND_SUMMARY,

@@ -4,7 +4,7 @@ import {AppCallResponse} from 'types/apps';
 
 import {ExpandedBotActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
-import {TriggerFields} from '../utils/constants';
+import {TriggerFields} from '../constants/zendesk';
 import {newMMClient, newZDClient} from '../clients';
 import {Groups, TicketForms, Users, ZDClient, ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';

@@ -1,6 +1,6 @@
 import {AppBinding, CtxExpandedActingUserOauth2AppOauth2User} from 'types/apps';
 import {isConfigured, isConnected, isUserSystemAdmin} from '../utils';
-import {ZDRole} from '../utils/ZDTypes';
+import {ZDRole} from '../types/zendesk';
 
 import {getCommandBindings} from './slash_commands';
 import {getPostMenuBindings} from './post_menu';

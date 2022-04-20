@@ -1,4 +1,4 @@
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+import {AppExpandLevels} from 'constants/apps';
 
 import {AppCallResponse} from 'types/apps';
 

@@ -1,11 +1,11 @@
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+import {AppExpandLevels} from 'constants/apps';
 
 import {AppCallRequest, AppCallResponse} from 'types/apps';
 
 import {ExpandedBotActingUser} from '../types/apps';
 import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {getManifest} from '../manifest';
-import {CommandTrigger} from '../utils/constants';
+import {CommandTrigger} from '../constants/zendesk';
 import {isUserSystemAdmin} from '../utils';
 
 export const expandHelp = {

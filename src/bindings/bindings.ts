@@ -1,6 +1,6 @@
 import {AppBinding} from 'types/apps';
 
-import {Locations, Routes, ZendeskIcon} from '../utils/constants';
+import {Locations, Routes, ZendeskIcon} from '../constants/zendesk';
 import {getManifest} from '../manifest';
 import {AppImpl} from '../app/app';
 import {expandConnect} from '../restapi/fConnect';

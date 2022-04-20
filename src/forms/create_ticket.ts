@@ -2,14 +2,14 @@ import {Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppExpandLevels, AppFieldTypes} from 'mattermost-redux/constants/apps';
+import {AppExpandLevels, AppFieldTypes} from 'constants/apps';
 
 import {AppCallRequest, AppField, AppForm} from 'types/apps';
 
 import {ZDFieldOption, ZDFormFieldOption, makeFormOptions, makeOptions, tryPromiseWithMessage} from '../utils/utils';
-import {CreateTicketFields, MappedZDNames, SystemFields, ZDFieldTypes, ZendeskIcon} from '../utils/constants';
+import {CreateTicketFields, MappedZDNames, SystemFields, ZDFieldTypes, ZendeskIcon} from '../constants/zendesk';
 import {BaseFormFields} from '../utils/base_form_fields';
-import {ZDUserField} from '../utils/ZDTypes';
+import {ZDUserField} from '../types/zendesk';
 
 import {Routes} from '../utils';
 import {ZDClient, newMMClient, newZDClient} from '../clients';

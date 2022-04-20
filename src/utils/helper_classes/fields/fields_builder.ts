@@ -1,4 +1,4 @@
-import {AppFieldTypes} from 'mattermost-redux/constants/apps';
+import {AppFieldTypes} from 'constants/apps';
 
 import {AppCallRequest, AppCallValues, AppField, AppFormValue} from 'types/apps';
 

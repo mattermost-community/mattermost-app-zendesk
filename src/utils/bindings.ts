@@ -1,8 +1,8 @@
-import {AppBindingLocations} from 'mattermost-redux/constants/apps';
-
 import {AppBinding} from 'types/apps';
 
-import {CommandTrigger, ZendeskIcon} from '../utils/constants';
+import {AppBindingLocations} from 'constants/apps';
+import {CommandTrigger, ZendeskIcon} from 'constants/zendesk';
+
 import {getManifest} from '../manifest';
 
 export const newPostMenuBindings = (bindings: AppBinding[]): AppBinding => {

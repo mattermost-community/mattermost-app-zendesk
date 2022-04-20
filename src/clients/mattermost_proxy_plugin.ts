@@ -4,10 +4,10 @@ import ClientOAuth2 from 'client-oauth2';
 
 import {Oauth2App} from '../types/apps';
 
-import {AppsPluginName, PathAPI, Routes} from '../utils/constants';
+import {AppsPluginName, PathAPI, Routes} from '../constants/zendesk';
 import {tryPromiseWithMessage} from '../utils/utils';
 import {getManifest} from '../manifest';
-import {StoredOauthUserToken} from 'utils/ZDTypes';
+import {StoredOauthUserToken} from 'types/zendesk';
 
 export interface AppsClient {
     kvSet(key: string, value: any): Promise<void>;

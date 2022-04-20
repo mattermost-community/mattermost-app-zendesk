@@ -1,4 +1,4 @@
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+import {AppExpandLevels} from 'constants/apps';
 
 import {AppCallResponse} from 'types/apps';
 
@@ -8,7 +8,7 @@ import {newAppsClient} from '../clients';
 import {newZendeskConfigForm} from '../forms';
 import {CallResponseHandler, newErrorCallResponseWithFieldErrors, newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {baseUrlFromContext} from '../utils/utils';
-import {Routes} from '../utils/constants';
+import {Routes} from '../constants/zendesk';
 
 export const expandConfigure = {
     acting_user: AppExpandLevels.EXPAND_SUMMARY,

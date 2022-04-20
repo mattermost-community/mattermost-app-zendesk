@@ -1,6 +1,6 @@
-import {AppExpandLevels, AppFieldTypes} from 'mattermost-redux/constants/apps';
-
 import Client4 from 'mattermost-redux/client/client4.js';
+
+import {AppExpandLevels, AppFieldTypes} from 'constants/apps';
 
 import {AppCallRequest, AppField, AppForm, AppSelectOption} from 'types/apps';
 
@@ -11,8 +11,8 @@ import {CtxExpandedBotActingUserOauth2User} from '../types/apps';
 import {ZDClient, newMMClient, newZDClient} from '../clients';
 import {Routes} from '../utils';
 import {createZdConditionsFromCall, makeSubscriptionOptions, tryPromiseWithMessage} from '../utils/utils';
-import {ZDConditionOption, ZDConditionOptionOperator, ZDConditionOptionValue, ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../utils/ZDTypes';
-import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
+import {ZDConditionOption, ZDConditionOptionOperator, ZDConditionOptionValue, ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../types/zendesk';
+import {SubscriptionFields, ZendeskIcon} from '../constants/zendesk';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {newConfigStore} from '../store';
 import {AppImpl} from '../app/app';

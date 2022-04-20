@@ -1,6 +1,6 @@
 import {AppCallValues} from 'types/apps';
 
-import {StoreKeys} from '../utils/constants';
+import {StoreKeys} from '../constants/zendesk';
 import {AppsClient, newAppsClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 

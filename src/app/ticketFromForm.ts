@@ -3,7 +3,7 @@ import {Tickets} from 'node-zendesk';
 import {AppCallRequest, AppContext, AppFormValues} from 'types/apps';
 
 import {FieldValidationErrors} from '../utils/call_responses';
-import {CreateTicketFields, ZDFieldValidation} from '../utils/constants';
+import {CreateTicketFields, ZDFieldValidation} from '../constants/zendesk';
 import {baseUrlFromContext, getMultiselectValues, isFieldValueSelected} from '../utils/utils';
 
 interface TicketFromFrom {

@@ -4,7 +4,7 @@ import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
 import {Team} from 'mattermost-redux/types/teams';
 
-import {StoredOauthUserToken} from 'utils/ZDTypes';
+import {StoredOauthUserToken} from 'types/zendesk';
 
 /* START Copied from mattermost-redux */
 

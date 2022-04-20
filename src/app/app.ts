@@ -1,7 +1,7 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
 
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+import {AppExpandLevels} from 'constants/apps';
 
 import {AppCallRequest, AppCallResponse, AppCallValues, AppExpand, AppSelectOption, CtxExpandedBotActingUserOauth2UserTeamChannelPost} from 'types/apps';
 
@@ -15,8 +15,8 @@ import {tryPromiseWithMessage} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';
-import {SubscriptionFields} from '../utils/constants';
-import {ZDTriggerPayload} from '../utils/ZDTypes';
+import {SubscriptionFields} from '../constants/zendesk';
+import {ZDTriggerPayload} from '../types/zendesk';
 import {newConfigStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
