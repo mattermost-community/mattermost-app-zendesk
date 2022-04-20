@@ -49,7 +49,7 @@ function getAdminCommands(): string {
     return joinLines(
         h5('System Admin Commands'),
         addBulletSlashCommand('configure'),
-        addBulletSlashCommand('setup-target'),
+        addBulletSlashCommand('setup-webhook'),
         addBulletSlashCommand('subscribe'),
     ) + '\n';
 }

@@ -105,15 +105,15 @@ export class AppImpl implements App {
 
         const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
-        const targetID = config.zd_target_id;
-        if (targetID === '') {
-            return newErrorCallResponseWithMessage('failed to create subscription. TargetID is missing from the configuration data.');
+        const webhookID = config.zd_webhook_id;
+        if (webhookID === '') {
+            return newErrorCallResponseWithMessage('failed to create subscription. WebhookID is missing from the configuration data.');
         }
 
         // Create the trigger object from the form response
         let zdTriggerPayload: ZDTriggerPayload;
         try {
-            zdTriggerPayload = newTriggerFromForm(this.call, targetID);
+            zdTriggerPayload = newTriggerFromForm(this.call, webhookID);
         } catch (e: any) {
             return newErrorCallResponseWithMessage(e.message);
         }

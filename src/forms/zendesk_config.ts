@@ -56,7 +56,7 @@ class FormFields extends BaseFormFields {
         this.storeValues = {
             zd_url: '',
             zd_oauth_access_token: '',
-            zd_target_id: '',
+            zd_webhook_id: '',
         };
     }
 

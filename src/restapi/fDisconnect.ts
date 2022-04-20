@@ -36,7 +36,7 @@ export const fDisconnect:CallResponseHandler = async (req, res) => {
     }
 
     const configOauthToken = config.zd_oauth_access_token;
-    const text = 'This mattermost account is connected via oauth2 to Zendesk for subscription functionality and cannot be disconnected until the access token is updated to a new user access token. Please have another connected Mattermost System Admin user with Zendesk Admin privileges run `/zendesk setup-target` to update the access_token';
+    const text = 'This mattermost account is connected via oauth2 to Zendesk for subscription functionality and cannot be disconnected until the access token is updated to a new user access token. Please have another connected Mattermost System Admin user with Zendesk Admin privileges run `/zendesk setup-webhook` to update the access_token';
     if (context.oauth2.user?.token?.access_token === configOauthToken) {
         callResponse = newOKCallResponseWithMarkdown(text);
         res.json(callResponse);

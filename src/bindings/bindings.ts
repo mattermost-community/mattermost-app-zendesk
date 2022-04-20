@@ -7,7 +7,7 @@ import {expandConnect} from '../restapi/fConnect';
 import {expandDisconnect} from '../restapi/fDisconnect';
 import {expandConfigure} from '../restapi/fConfig';
 import {expandMe} from '../restapi/fMe';
-import {expandTarget} from '../restapi/fTarget';
+import {expandSetupWebhook} from '../restapi/fSetupWebhook';
 import {expandHelp} from '../restapi/fHelp';
 
 export const getSubscribeBinding = (label?: string): AppBinding => {
@@ -80,16 +80,16 @@ export const getMeBinding = (): AppBinding => {
     };
 };
 
-export const getTargetBinding = (): AppBinding => {
+export const getWebhookBinding = (): AppBinding => {
     return {
         app_id: getManifest().app_id,
-        location: Locations.Target,
-        label: 'setup-target',
-        description: 'Setup Zendesk Target',
+        location: Locations.SetupWebhook,
+        label: 'setup-webhook',
+        description: 'Setup Zendesk Webhook',
         icon: ZendeskIcon,
         submit: {
-            path: Routes.App.BindingPathTargetCreate + '/submit',
-            expand: expandTarget,
+            path: Routes.App.BindingPathSetupWebhook + '/submit',
+            expand: expandSetupWebhook,
         },
     };
 };

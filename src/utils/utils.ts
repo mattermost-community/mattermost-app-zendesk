@@ -179,5 +179,5 @@ export function isZdAdmin(role: ZDRole): boolean {
 }
 
 export function webhookConfigured(config: AppConfigStore): boolean {
-    return Boolean(config.zd_target_id && config.zd_target_id !== '');
+    return Boolean(config.zd_webhook_id);
 }

@@ -12,13 +12,13 @@ interface TriggerFromFrom {
 export class TriggerFromFormImpl implements TriggerFromFrom {
     values: AppCallValues;
     context: AppContext;
-    targetID: string;
+    webhookID: string;
     trigger: ZDTrigger
 
-    constructor(call: AppCallRequest, targetID: string) {
+    constructor(call: AppCallRequest, webhookID: string) {
         this.values = call.values as AppCallValues;
         this.context = call.context;
-        this.targetID = targetID;
+        this.webhookID = webhookID;
         this.trigger = {} as ZDTrigger;
         this.buildTrigger();
     }
@@ -45,7 +45,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
             {
                 field: TriggerFields.ActionField,
                 value: [
-                    this.targetID,
+                    this.webhookID,
                     this.getJSONDataFields(),
                 ],
             },
@@ -134,7 +134,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(call: AppCallRequest, targetID: string): ZDTriggerPayload {
-    const trigger = new TriggerFromFormImpl(call, targetID).getTrigger();
+export function newTriggerFromForm(call: AppCallRequest, webhookID: string): ZDTriggerPayload {
+    const trigger = new TriggerFromFormImpl(call, webhookID).getTrigger();
     return trigger;
 }

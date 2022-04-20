@@ -13,7 +13,7 @@ export const fOpenSubscriptionsForm: CallResponseHandler = async (req, res) => {
     const cValues = await config.getValues();
     let callResponse: AppCallResponse;
     if (!webhookConfigured(cValues)) {
-        const msg = 'Subscriptions cannot be created before the Zendesk Target is configured.  If you are a Mattermost Admin, you can setup the target by running `/zendesk setup-target`.';
+        const msg = 'Subscriptions cannot be created before the Zendesk webhook is configured.  If you are a Mattermost Admin, you can setup the webhook by running `/zendesk setup-webhook`.';
         callResponse = newOKCallResponseWithMarkdown(msg);
         res.json(callResponse);
         return;

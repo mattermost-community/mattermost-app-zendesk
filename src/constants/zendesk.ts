@@ -33,7 +33,7 @@ const AppPaths = {
 
     OAuthCompletePath: '/oauth2/complete',
     OAuthConnectPath: '/oauth2/connect',
-    SubscribeIncomingWebhookPath: '/webhook/webhook-target',
+    SubscribeIncomingWebhookPath: '/webhook/webhook-endpoint',
 
     // Binding routes are accessed via a location call
     BindingsPath: '/bindings',
@@ -52,7 +52,7 @@ const AppPaths = {
 
     BindingPathConnect: '/connect',
     BindingPathDisconnect: '/disconnect',
-    BindingPathTargetCreate: '/target-create',
+    BindingPathSetupWebhook: '/setup-webhook',
     BindingPathHelp: '/help',
     BindingPathMe: '/me',
 };
@@ -69,7 +69,7 @@ export const Locations = {
     Disconnect: 'disconnect',
     Subscribe: 'subscribe',
     Ticket: 'ticket',
-    Target: 'target',
+    SetupWebhook: 'setup-webhook',
     Help: 'help',
     Me: 'me',
 };

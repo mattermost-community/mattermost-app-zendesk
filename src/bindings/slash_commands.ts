@@ -4,7 +4,7 @@ import {newCommandBindings} from '../utils';
 import {isZdAdmin} from '../utils/utils';
 import {BindingOptions} from 'bindings';
 
-import {getConfigureBinding, getConnectBinding, getDisconnectBinding, getHelpBinding, getSubscribeBinding, getTargetBinding} from './bindings';
+import {getConfigureBinding, getConnectBinding, getDisconnectBinding, getHelpBinding, getSubscribeBinding, getWebhookBinding} from './bindings';
 
 // getCommandBindings returns the users slash command bindings
 export const getCommandBindings = (options: BindingOptions): AppBinding => {
@@ -19,11 +19,11 @@ export const getCommandBindings = (options: BindingOptions): AppBinding => {
         }
     }
     if (options.isConnected) {
-        // Only admins can create triggers and targets in zendesk
+        // Only admins can create triggers and webhooks in zendesk
         if (isZdAdmin(options.zdUserRole)) {
             bindings.push(getSubscribeBinding());
             if (options.isSystemAdmin) {
-                bindings.push(getTargetBinding());
+                bindings.push(getWebhookBinding());
             }
         }
         bindings.push(getDisconnectBinding());

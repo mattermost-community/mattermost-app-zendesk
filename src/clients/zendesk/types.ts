@@ -3,11 +3,6 @@ interface Tickets {
     exportAudit(id: number): any;
 }
 
-interface Targets {
-    create(target: any): any;
-    update(id: string, target: any): any;
-}
-
 export type Webhook = {
     id: string;
     name: string;
@@ -55,7 +50,6 @@ export interface ZDClient {
     tickets: Tickets;
     ticketforms: TicketForms;
     ticketfields: TicketFields;
-    targets: Targets;
     triggers: Triggers;
     oauthtokens: OauthTokens;
     users: Users;

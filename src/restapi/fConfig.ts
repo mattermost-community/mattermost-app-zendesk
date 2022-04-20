@@ -44,7 +44,7 @@ export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (re
 
         const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
         const cValues = await configStore.getValues();
-        const targetID = cValues.zd_target_id;
+        const webhookID = cValues.zd_webhook_id;
         const zdOauth2AccessToken = cValues.zd_oauth_access_token;
 
         // Using a simple /\/+$/ fails CodeQL check - Polynomial regular expression used on uncontrolled data.
@@ -62,7 +62,7 @@ export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (re
             return;
         }
 
-        storeValues.zd_target_id = targetID;
+        storeValues.zd_webhook_id = webhookID;
         storeValues.zd_oauth_access_token = zdOauth2AccessToken;
         await configStore.storeConfigInfo(storeValues);
     } catch (err: any) {
