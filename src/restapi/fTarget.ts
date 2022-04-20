@@ -9,6 +9,12 @@ import {newConfigStore} from '../store';
 import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {CtxExpandedBotAppActingUserOauth2AppOauth2User} from 'types/apps';
 
+export const expandTarget = {
+    app: AppExpandLevels.EXPAND_SUMMARY,
+    oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
+    oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+};
+
 export const fCreateTarget: CallResponseHandler = async (req, res) => {
     const context = req.body.context;
     const zdOptions: ZDClientOptions = {
