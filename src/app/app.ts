@@ -1,7 +1,7 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
 
-import {AppExpandLevels} from 'constants/apps';
+import {AppExpandLevels} from '../constants/apps';
 
 import {AppCallRequest, AppCallResponse, AppCallValues, AppExpand, AppSelectOption, CtxExpandedBotActingUserOauth2UserTeamChannelPost} from 'types/apps';
 

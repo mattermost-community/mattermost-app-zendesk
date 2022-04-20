@@ -1,6 +1,6 @@
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppFieldTypes} from 'constants/apps';
+import {AppFieldTypes} from '../constants/apps';
 
 import {AppCallRequest, AppField, AppForm} from 'types/apps';
 

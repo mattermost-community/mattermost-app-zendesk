@@ -1,4 +1,4 @@
-import {AppExpandLevels} from 'constants/apps';
+import {AppExpandLevels} from '../constants/apps';
 
 import {AppCallResponse, CtxExpandedBotAppActingUserOauth2AppOauth2User} from 'types/apps';
 

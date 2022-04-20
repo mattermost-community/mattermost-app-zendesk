@@ -1,6 +1,6 @@
 import ClientOAuth2, {Token} from 'client-oauth2';
 
-import {AppCallResponseTypes, AppExpandLevels} from 'constants/apps';
+import {AppCallResponseTypes, AppExpandLevels} from '../constants/apps';
 
 import {AppCallResponse} from 'types/apps';
 
