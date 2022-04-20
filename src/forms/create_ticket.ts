@@ -2,8 +2,9 @@ import {Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppCallRequest, AppField, AppForm} from 'types/apps';
 import {AppExpandLevels, AppFieldTypes} from 'mattermost-redux/constants/apps';
+
+import {AppCallRequest, AppField, AppForm} from 'types/apps';
 
 import {ZDFieldOption, ZDFormFieldOption, makeFormOptions, makeOptions, tryPromiseWithMessage} from '../utils/utils';
 import {CreateTicketFields, MappedZDNames, SystemFields, ZDFieldTypes, ZendeskIcon} from '../utils/constants';

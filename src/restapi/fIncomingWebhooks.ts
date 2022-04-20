@@ -1,4 +1,5 @@
 import {Post} from 'mattermost-redux/types/posts';
+
 import {AppCallResponse} from 'types/apps';
 
 import {ExpandedBotActingUser} from '../types/apps';

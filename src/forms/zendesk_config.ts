@@ -1,6 +1,7 @@
-import {AppCallRequest, AppField, AppForm} from 'types/apps';
 import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
+
+import {AppCallRequest, AppField, AppForm} from 'types/apps';
 
 import {ExpandedBotActingUser, ExpandedOauth2App, Oauth2App} from '../types/apps';
 import {newMMClient} from '../clients';

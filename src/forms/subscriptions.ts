@@ -1,6 +1,8 @@
 import {AppExpandLevels, AppFieldTypes} from 'mattermost-redux/constants/apps';
-import {AppCallRequest, AppField, AppForm, AppSelectOption} from 'types/apps';
+
 import Client4 from 'mattermost-redux/client/client4.js';
+
+import {AppCallRequest, AppField, AppForm, AppSelectOption} from 'types/apps';
 
 import {ZDClientOptions} from 'clients/zendesk';
 import {MMClientOptions} from 'clients/mattermost';

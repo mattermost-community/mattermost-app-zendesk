@@ -1,4 +1,5 @@
 import {AppBindingLocations} from 'mattermost-redux/constants/apps';
+
 import {AppBinding} from 'types/apps';
 
 import {CommandTrigger, ZendeskIcon} from '../utils/constants';

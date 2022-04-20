@@ -1,3 +1,5 @@
+import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+
 import {AppCallRequest, AppCallResponse} from 'types/apps';
 
 import {ExpandedBotActingUser} from '../types/apps';
@@ -5,7 +7,6 @@ import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_
 import {getManifest} from '../manifest';
 import {CommandTrigger} from '../utils/constants';
 import {isUserSystemAdmin} from '../utils';
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 export const expandHelp = {
     acting_user: AppExpandLevels.EXPAND_SUMMARY,

@@ -1,3 +1,5 @@
+import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+
 import {AppCallResponse} from 'types/apps';
 
 import {CtxExpandedBotActingUserOauth2User} from '../types/apps';
@@ -6,7 +8,6 @@ import {newAppsClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {ZDTokensResponse} from '../utils/ZDTypes';
 import {AppConfigStore, newConfigStore} from '../store/config';
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 export const expandDisconnect = {
     acting_user_access_token: AppExpandLevels.EXPAND_ALL,

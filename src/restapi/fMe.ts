@@ -1,4 +1,5 @@
 import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+
 import {AppCallResponse} from 'types/apps';
 
 import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_responses';

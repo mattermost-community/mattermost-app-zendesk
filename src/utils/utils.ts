@@ -1,7 +1,8 @@
-import {AppCallValues, AppField, AppSelectOption} from 'types/apps';
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
+
+import {AppCallValues, AppField, AppSelectOption} from 'types/apps';
 
 import {Oauth2App} from '../types/apps';
 import {AppConfigStore} from '../store/config';

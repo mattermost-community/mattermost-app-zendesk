@@ -244,7 +244,6 @@ export type AppLookupResponse = {
     items: AppSelectOption[];
 }
 
-
 /* END Copied from mattermost-redux */
 
 export type ZDOauth2User = {
@@ -332,6 +331,7 @@ export type CtxExpandedBotApp = ExpandedBot & ExpandedApp
 export type AppContext = {
     app_id: string;
     location?: string;
+
     // acting_user_id?: string;
     // user_id?: string;
     // channel_id?: string;

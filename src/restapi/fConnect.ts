@@ -1,6 +1,8 @@
 import ClientOAuth2, {Token} from 'client-oauth2';
-import {AppCallResponse} from 'types/apps';
+
 import {AppCallResponseTypes, AppExpandLevels} from 'mattermost-redux/constants/apps';
+
+import {AppCallResponse} from 'types/apps';
 
 import {AppCallRequestWithValues, CtxExpandedActingUserOauth2AppBot, CtxExpandedBotActingUserOauth2AppOauth2User, ExpandedOauth2App} from '../types/apps';
 import {ZDClientOptions} from 'clients/zendesk';

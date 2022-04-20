@@ -1,5 +1,8 @@
 import {Post} from 'mattermost-redux/types/posts';
 import {Channel} from 'mattermost-redux/types/channels';
+
+import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+
 import {AppCallRequest, AppCallResponse, AppCallValues, AppExpand, AppSelectOption, CtxExpandedBotActingUserOauth2UserTeamChannelPost} from 'types/apps';
 
 import {
@@ -18,7 +21,6 @@ import {newConfigStore} from '../store';
 
 import {newTicketFromForm} from './ticketFromForm';
 import {newTriggerFromForm} from './triggerFromForm';
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 export interface App {
     createTicketFromPost(): Promise<AppCallResponse>;
