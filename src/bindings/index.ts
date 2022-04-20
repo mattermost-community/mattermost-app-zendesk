@@ -1,6 +1,4 @@
-import {AppBinding} from 'types/apps';
-
-import {CtxExpandedActingUserOauth2AppOauth2User} from 'types/apps';
+import {AppBinding, CtxExpandedActingUserOauth2AppOauth2User} from 'types/apps';
 import {isConfigured, isConnected, isUserSystemAdmin} from '../utils';
 import {ZDRole} from '../utils/ZDTypes';
 

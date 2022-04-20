@@ -1,4 +1,6 @@
-import {AppCallResponse} from 'types/apps';
+import {AppExpandLevels} from 'mattermost-redux/constants/apps';
+
+import {AppCallResponse, CtxExpandedBotAppActingUserOauth2AppOauth2User} from 'types/apps';
 
 import {getManifest} from '../manifest';
 import {Routes, tryPromiseWithMessage} from '../utils';
@@ -7,8 +9,6 @@ import {ZDClient, newZDClient} from '../clients';
 import {ZDClientOptions} from 'clients/zendesk';
 import {newConfigStore} from '../store';
 import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from '../utils/call_responses';
-import {CtxExpandedBotAppActingUserOauth2AppOauth2User} from 'types/apps';
-import {AppExpandLevels} from 'mattermost-redux/constants/apps';
 
 export const expandTarget = {
     app: AppExpandLevels.EXPAND_SUMMARY,
