@@ -3,11 +3,11 @@ import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
 
 import {AppCallValues, AppField, AppSelectOption, Oauth2App} from 'types/apps';
+import {StoredOauthUserToken, ZDRole, ZDTriggerCondition} from 'types/zendesk';
 
 import {AppConfigStore} from 'store/config';
 
-import {SubscriptionFields, ZDRoles} from 'constants/zendesk';
-import {StoredOauthUserToken, ZDRole, ZDTriggerCondition} from 'types/zendesk';
+import {SubscriptionFields, ZDRoles} from '../constants/zendesk';
 
 export type ZDFieldOption = {
     name: string;
