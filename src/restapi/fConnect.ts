@@ -5,7 +5,7 @@ import {AppCallResponseTypes, AppExpandLevels} from '../constants/apps';
 import {AppCallResponse} from 'types/apps';
 
 import {AppCallRequestWithValues, CtxExpandedActingUserOauth2AppBot, CtxExpandedBotActingUserOauth2AppOauth2User, ExpandedOauth2App} from '../types/apps';
-import {ZDClientOptions} from 'clients/zendesk';
+import {ZDClientOptions} from 'clients/zendesk/types';
 import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {AppConfigStore, newConfigStore} from '../store/config';
 import {Routes} from '../utils';

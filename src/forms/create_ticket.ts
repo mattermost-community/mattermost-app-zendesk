@@ -13,7 +13,7 @@ import {ZDUserField} from '../types/zendesk';
 
 import {Routes} from '../utils';
 import {ZDClient, newMMClient, newZDClient} from '../clients';
-import {ZDClientOptions} from 'clients/zendesk';
+import {ZDClientOptions} from 'clients/zendesk/types';
 import {MMClientOptions} from 'clients/mattermost';
 import {CtxExpandedBotActingUserOauth2User, ExpandedPost} from '../types/apps';
 import {AppImpl} from '../app/app';

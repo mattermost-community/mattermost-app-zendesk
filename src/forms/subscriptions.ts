@@ -4,7 +4,7 @@ import {AppExpandLevels, AppFieldTypes} from '../constants/apps';
 
 import {AppCallRequest, AppField, AppForm, AppSelectOption} from 'types/apps';
 
-import {ZDClientOptions} from 'clients/zendesk';
+import {ZDClientOptions} from 'clients/zendesk/types';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {CtxExpandedBotActingUserOauth2User} from '../types/apps';

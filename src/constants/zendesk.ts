@@ -165,7 +165,7 @@ export const TriggerFields = {
     TicketIDKey: 'ticketID',
     TicketTitleKey: 'ticketTitle',
     ChannelIDKey: 'channelID',
-    ActionField: 'notification_target',
+    ActionField: 'notification_webhook',
     ActionValuePairs: {},
 };
 

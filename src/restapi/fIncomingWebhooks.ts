@@ -6,7 +6,7 @@ import {ExpandedBotActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
 import {TriggerFields} from '../constants/zendesk';
 import {newMMClient, newZDClient} from '../clients';
-import {Groups, TicketForms, Users, ZDClient, ZDClientOptions} from 'clients/zendesk';
+import {Groups, TicketForms, Users, ZDClient, ZDClientOptions} from 'clients/zendesk/types';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {newConfigStore} from '../store/config';

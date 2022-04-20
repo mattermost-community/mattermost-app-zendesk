@@ -13,7 +13,7 @@ import {
     newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {tryPromiseWithMessage} from '../utils';
 import {newMMClient, newZDClient} from '../clients';
-import {ZDClientOptions} from 'clients/zendesk';
+import {ZDClientOptions} from 'clients/zendesk/types';
 import {MMClientOptions} from 'clients/mattermost';
 import {SubscriptionFields} from '../constants/zendesk';
 import {ZDTriggerPayload} from '../types/zendesk';
