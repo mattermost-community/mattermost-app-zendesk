@@ -1,6 +1,6 @@
 import {Request, Response} from 'express';
 
-import {AppCallResponseTypes} from 'constants/apps';
+import {AppCallResponseTypes} from '../constants/apps';
 
 import {AppCallResponse, AppForm} from 'types/apps';
 

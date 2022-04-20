@@ -1,7 +1,7 @@
 import {AppBinding} from 'types/apps';
 
-import {AppBindingLocations} from 'constants/apps';
-import {CommandTrigger, ZendeskIcon} from 'constants/zendesk';
+import {AppBindingLocations} from '../constants/apps';
+import {CommandTrigger, ZendeskIcon} from '../constants/zendesk';
 
 import {getManifest} from '../manifest';
 
