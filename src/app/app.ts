@@ -106,7 +106,7 @@ export class AppImpl implements App {
         const config = await newConfigStore(this.context.bot_access_token, this.context.mattermost_site_url).getValues();
         const host = config.zd_url;
         const webhookID = config.zd_webhook_id;
-        if (webhookID === '') {
+        if (!webhookID) {
             return newErrorCallResponseWithMessage('failed to create subscription. WebhookID is missing from the configuration data.');
         }
 
