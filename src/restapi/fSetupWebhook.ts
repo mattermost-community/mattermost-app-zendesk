@@ -11,8 +11,8 @@ import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponseW
 
 export const expandSetupWebhook = {
     app: AppExpandLevels.EXPAND_SUMMARY,
-    oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-    oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+    oauth2_app: AppExpandLevels.EXPAND_ALL,
+    oauth2_user: AppExpandLevels.EXPAND_ALL,
 };
 
 export const fSetupWebhook: CallResponseHandler = async (req, res) => {

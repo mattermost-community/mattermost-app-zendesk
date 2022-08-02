@@ -14,11 +14,13 @@ import {fSetupWebhook} from './fSetupWebhook';
 import {fMe} from './fMe';
 import {fInstall} from './fInstall';
 import {fManifest} from './fManifest';
+import {fPing} from './fPing';
 
 const router = express.Router();
 
 router.get(Routes.App.ManifestPath, fManifest);
 router.post(Routes.App.BindingsPath, fBindings);
+router.post(Routes.App.PingPath, fPing);
 
 // OAuth2 Connect
 router.post(Routes.App.OAuthConnectPath, fOauth2Connect);

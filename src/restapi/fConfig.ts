@@ -13,8 +13,8 @@ import {Routes} from '../constants/zendesk';
 export const expandConfigure = {
     acting_user: AppExpandLevels.EXPAND_SUMMARY,
     acting_user_access_token: AppExpandLevels.EXPAND_ALL,
-    oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-    oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+    oauth2_app: AppExpandLevels.EXPAND_ALL,
+    oauth2_user: AppExpandLevels.EXPAND_ALL,
 };
 
 // fOpenZendeskConfigForm opens a new configuration form

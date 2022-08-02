@@ -30,6 +30,7 @@ const ZDPaths = {
 const AppPaths = {
     ManifestPath: '/manifest.json',
     InstallPath: '/install',
+    PingPath: '/ping',
 
     OAuthCompletePath: '/oauth2/complete',
     OAuthConnectPath: '/oauth2/connect',

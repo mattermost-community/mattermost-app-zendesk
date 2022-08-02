@@ -57,8 +57,8 @@ export class AppImpl implements App {
         channel: AppExpandLevels.EXPAND_SUMMARY,
         acting_user: AppExpandLevels.EXPAND_SUMMARY,
         acting_user_access_token: AppExpandLevels.EXPAND_ALL,
-        oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-        oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+        oauth2_app: AppExpandLevels.EXPAND_ALL,
+        oauth2_user: AppExpandLevels.EXPAND_ALL,
     };
 
     createTicketFromPost = async (): Promise<AppCallResponse> => {
@@ -93,7 +93,7 @@ export class AppImpl implements App {
     }
 
     static expandSubscriptionForm: AppExpand = {
-        oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+        oauth2_user: AppExpandLevels.EXPAND_ALL,
         team: AppExpandLevels.EXPAND_SUMMARY,
         channel: AppExpandLevels.EXPAND_SUMMARY,
         acting_user_access_token: AppExpandLevels.EXPAND_ALL,
@@ -131,7 +131,7 @@ export class AppImpl implements App {
         switch (true) {
         case (this.values && this.values[SubscriptionFields.SubmitButtonsName] === SubscriptionFields.DeleteButtonLabel):
             request = zdClient.triggers.delete(zdTriggerPayload.trigger.id);
-            action = 'Deleting';
+            action = 'Deleted';
             actionType = 'delete';
             break;
         case Boolean(zdTriggerPayload.trigger.id):
@@ -139,7 +139,7 @@ export class AppImpl implements App {
                 return newErrorCallResponseWithFieldErrors(uniqueSubnameError);
             }
             request = zdClient.triggers.update(zdTriggerPayload.trigger.id, zdTriggerPayload);
-            action = 'Updating';
+            action = 'Updated';
             actionType = 'update';
             break;
         default:
@@ -147,7 +147,7 @@ export class AppImpl implements App {
                 return newErrorCallResponseWithFieldErrors(uniqueSubnameError);
             }
             request = zdClient.triggers.create(zdTriggerPayload);
-            action = 'Creating';
+            action = 'Created';
             actionType = 'create';
         }
 
@@ -175,8 +175,6 @@ export class AppImpl implements App {
         } catch (e: any) {
             return newErrorCallResponseWithMessage(`failed to ${actionType} subscription: ` + e.message);
         }
-
-        msg += 'This could take a moment before your subscription data is saved in Zendesk';
 
         // Return the call response with successful markdown message
         return newOKCallResponseWithMarkdown(msg);

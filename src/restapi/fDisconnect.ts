@@ -11,8 +11,8 @@ import {AppConfigStore, newConfigStore} from '../store/config';
 
 export const expandDisconnect = {
     acting_user_access_token: AppExpandLevels.EXPAND_ALL,
-    oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
-    oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
+    oauth2_app: AppExpandLevels.EXPAND_ALL,
+    oauth2_user: AppExpandLevels.EXPAND_ALL,
 };
 
 export const fDisconnect:CallResponseHandler = async (req, res) => {

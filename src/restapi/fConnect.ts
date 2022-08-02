@@ -16,7 +16,7 @@ import {getOAuthConfig} from '../app/oauth';
 import {StoredOauthUserToken} from 'types/zendesk';
 
 export const expandConnect = {
-    oauth2_app: AppExpandLevels.EXPAND_SUMMARY,
+    oauth2_app: AppExpandLevels.EXPAND_ALL,
 };
 
 export const fConnect: CallResponseHandler = async (req, res) => {
