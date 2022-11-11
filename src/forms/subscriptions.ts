@@ -18,7 +18,7 @@ import {newConfigStore} from '../store';
 export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {
     const context = call.context as CtxExpandedBotActingUserOauth2User;
     const zdOptions: ZDClientOptions = {
-        oauth2UserAccessToken: context.oauth2.user.token.access_token,
+        oauth2UserAccessToken: context.oauth2.user?.token?.access_token,
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
