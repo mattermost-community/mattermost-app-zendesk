@@ -35,7 +35,6 @@ export type ExpandedActingUserAccessToken = AppContext & {
 
 export type ExpandedBotActingUser = AppContext & {
     acting_user: UserProfile,
-    acting_user_id: string,
     acting_user_access_token: string
     bot_user_id: string,
     bot_access_token: string,
@@ -71,7 +70,6 @@ export type AppCallRequestWithValues = AppCall & {
 
 export type ExpandedActingUser = AppContext & {
     acting_user: UserProfile,
-    acting_user_id: string,
     acting_user_access_token: string
 }
 

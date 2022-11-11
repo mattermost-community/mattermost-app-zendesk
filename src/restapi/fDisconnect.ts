@@ -10,7 +10,7 @@ import {AppConfigStore, newConfigStore} from '../store/config';
 export const fDisconnect:CallResponseHandler = async (req, res) => {
     const context: CtxExpandedBotActingUserOauth2User = req.body.context;
     const zdOptions: ZDClientOptions = {
-        oauth2UserAccessToken: context.oauth2.user.token.access_token,
+        oauth2UserAccessToken: context.oauth2.user?.token?.access_token,
         botAccessToken: context.bot_access_token,
         mattermostSiteUrl: context.mattermost_site_url,
     };
@@ -29,7 +29,7 @@ export const fDisconnect:CallResponseHandler = async (req, res) => {
 
     const configOauthToken = config.zd_oauth_access_token;
     const text = 'This mattermost account is connected via oauth2 to Zendesk for subscription functionality and cannot be disconnected until the access token is updated to a new user access token. Please have another connected Mattermost System Admin user with Zendesk Admin privileges run `/zendesk setup-target` to update the access_token';
-    if (context.oauth2.user.token.access_token === configOauthToken) {
+    if (context.oauth2.user?.token?.access_token === configOauthToken) {
         callResponse = newOKCallResponseWithMarkdown(text);
         res.json(callResponse);
         return;
