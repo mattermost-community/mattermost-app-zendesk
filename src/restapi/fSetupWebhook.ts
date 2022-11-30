@@ -10,7 +10,7 @@ import {newConfigStore} from '../store';
 import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 
 export const expandSetupWebhook = {
-    app: AppExpandLevels.EXPAND_SUMMARY,
+    app: AppExpandLevels.EXPAND_ALL,
     oauth2_app: AppExpandLevels.EXPAND_ALL,
     oauth2_user: AppExpandLevels.EXPAND_ALL,
 };
