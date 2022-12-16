@@ -1,4 +1,5 @@
-import {AppContext} from '../types/apps';
+import {AppContext} from 'mattermost-redux/types/apps';
+
 import {newErrorCallResponseWithMessage} from '../utils/call_responses';
 import {isConnected, isUserSystemAdmin, isZdAdmin} from '../utils';
 
