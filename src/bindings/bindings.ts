@@ -88,7 +88,7 @@ export const getWebhookBinding = (): AppBinding => {
         description: 'Setup Zendesk Webhook',
         icon: ZendeskIcon,
         submit: {
-            path: Routes.App.BindingPathSetupWebhook + '/submit',
+            path: Routes.App.CallPathSetupWebhook + '/submit',
             expand: expandSetupWebhook,
         },
     };

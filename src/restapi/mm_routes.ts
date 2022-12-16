@@ -15,45 +15,50 @@ import {fMe} from './fMe';
 import {fInstall} from './fInstall';
 import {fManifest} from './fManifest';
 import {fPing} from './fPing';
+import {connectedSystemAdminMiddleware, systemAdminMiddleware, validateWebhookMiddleware, zendeskAdminMiddleware, zendeskUserMiddleware} from './middleware';
 
 const router = express.Router();
 
+// System
 router.get(Routes.App.ManifestPath, fManifest);
-router.post(Routes.App.BindingsPath, fBindings);
 router.post(Routes.App.PingPath, fPing);
+router.post(Routes.App.InstallPath, fInstall);
 
-// OAuth2 Connect
+// User: Bindings
+router.post(Routes.App.BindingsPath, fBindings);
+
+// User: OAuth2 Connect
 router.post(Routes.App.OAuthConnectPath, fOauth2Connect);
 router.post(Routes.App.OAuthCompletePath, fOauth2Complete);
 
-router.post(Routes.App.InstallPath, fInstall);
-
-// Formless calls
+// User: Formless calls
 router.post(Routes.App.BindingPathConnect + '/submit', fConnect);
 router.post(Routes.App.BindingPathDisconnect + '/submit', fDisconnect);
 router.post(Routes.App.BindingPathHelp + '/submit', fHelp);
-router.post(Routes.App.BindingPathSetupWebhook + '/submit', fSetupWebhook);
 router.post(Routes.App.BindingPathMe + '/submit', fMe);
 
-// Configuration
-router.post(Routes.App.CallPathConfigOpenForm + '/submit', fOpenZendeskConfigForm);
-router.post(Routes.App.CallPathConfigSubmitOrUpdateForm + '/submit', fSubmitOrUpdateZendeskConfigSubmit);
+// System Admin: Configuration
+router.post(Routes.App.CallPathConfigOpenForm + '/submit', systemAdminMiddleware, fOpenZendeskConfigForm);
+router.post(Routes.App.CallPathConfigSubmitOrUpdateForm + '/submit', systemAdminMiddleware, fSubmitOrUpdateZendeskConfigSubmit);
 
-// Subscriptions
-router.post(Routes.App.CallPathSubsOpenForm + '/submit', fOpenSubscriptionsForm);
-router.post(Routes.App.CallPathSubsSubmitOrUpdateForm + '/form', fSubmitOrUpdateSubscriptionsForm);
-router.post(Routes.App.CallPathSubsSubmitOrUpdateForm + '/submit', fSubmitOrUpdateSubscriptionsSubmit);
+// Zendesk Admin: Setup Webhook
+router.post(Routes.App.CallPathSetupWebhook + '/submit', zendeskAdminMiddleware, fSetupWebhook);
 
-// Tickets
-router.post(Routes.App.CallPathTicketOpenForm + '/submit', fOpenCreateTicketForm);
-router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/form', fSubmitOrUpdateCreateTicketForm);
-router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/submit', fSubmitOrUpdateCreateTicketSubmit);
+// Zendesk User: Subscriptions
+router.post(Routes.App.CallPathSubsOpenForm + '/submit', zendeskUserMiddleware, fOpenSubscriptionsForm);
+router.post(Routes.App.CallPathSubsSubmitOrUpdateForm + '/form', zendeskUserMiddleware, fSubmitOrUpdateSubscriptionsForm);
+router.post(Routes.App.CallPathSubsSubmitOrUpdateForm + '/submit', zendeskUserMiddleware, fSubmitOrUpdateSubscriptionsSubmit);
 
-// Static files
+// Zendesk User: Tickets
+router.post(Routes.App.CallPathTicketOpenForm + '/submit', zendeskUserMiddleware, fOpenCreateTicketForm);
+router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/form', zendeskUserMiddleware, fSubmitOrUpdateCreateTicketForm);
+router.post(Routes.App.CallPathTicketSubmitOrUpdateForm + '/submit', zendeskUserMiddleware, fSubmitOrUpdateCreateTicketSubmit);
+
+// General: Static files
 const staticRouter = express.Router();
 staticRouter.use(express.static('static'));
 router.use('/static', staticRouter);
 
-// Zendesk
-router.post(Routes.App.SubscribeIncomingWebhookPath, fHandleSubcribeNotification);
+// Webhooks: Zendesk
+router.post(Routes.App.SubscribeIncomingWebhookPath, validateWebhookMiddleware, fHandleSubcribeNotification);
 export default router;
