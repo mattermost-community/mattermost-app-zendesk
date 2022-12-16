@@ -49,7 +49,6 @@ const AppPaths = {
     // Zendesk Configuration
     CallPathConfigOpenForm: '/config/open-form',
     CallPathConfigSubmitOrUpdateForm: '/config/submit-or-update',
-    CallPathSetupWebhook: '/setup-webhook',
     CallPathTargetCreate: '/target-create',
 
     BindingPathConnect: '/connect',

@@ -13,7 +13,6 @@
             "oauth2_user": "all"
         }
     },
-    "on_install": "/install",
     "requested_permissions": [
         "act_as_user",
         "act_as_bot",
