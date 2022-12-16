@@ -104,7 +104,7 @@ export const getTargetBinding = (): AppBinding => {
         icon: ZendeskIcon,
         form: {fields: []},
         call: {
-            path: Routes.App.BindingPathTargetCreate,
+            path: Routes.App.CallPathTargetCreate,
             expand: {
                 app: AppExpandLevels.EXPAND_SUMMARY,
                 oauth2_user: AppExpandLevels.EXPAND_SUMMARY,
