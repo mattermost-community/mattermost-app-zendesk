@@ -3,7 +3,7 @@ import {AppContext} from 'mattermost-redux/types/apps';
 import {newErrorCallResponseWithMessage} from '../utils/call_responses';
 import {isConnected, isUserSystemAdmin, isZdAdmin} from '../utils';
 
-export const zendeskUserMiddleware = (req, res, next) => {
+export const requireZendeskUser = (req, res, next) => {
     const context: AppContext | undefined = req.body?.context;
     const oauth2User = context?.oauth2?.user;
     if (!oauth2User) {
@@ -19,7 +19,7 @@ export const zendeskUserMiddleware = (req, res, next) => {
     next();
 };
 
-export const zendeskAdminMiddleware = (req, res, next) => {
+export const requireZendeskAdmin = (req, res, next) => {
     const context: AppContext | undefined = req.body?.context;
     const role = context?.oauth2?.user?.role;
     if (!role) {
@@ -35,7 +35,7 @@ export const zendeskAdminMiddleware = (req, res, next) => {
     next();
 };
 
-export const systemAdminMiddleware = (req, res, next) => {
+export const requireSystemAdmin = (req, res, next) => {
     const context: AppContext | undefined = req.body?.context;
     const actingUser = context?.acting_user;
 
@@ -50,17 +50,6 @@ export const systemAdminMiddleware = (req, res, next) => {
     }
 
     next();
-};
-
-export const connectedSystemAdminMiddleware = (req, res, next) => {
-    systemAdminMiddleware(req, res, (err) => {
-        if (err) {
-            next(err);
-            return;
-        }
-
-        zendeskUserMiddleware(req, res, next);
-    });
 };
 
 export const validateWebhookMiddleware = (req, res, next) => {
