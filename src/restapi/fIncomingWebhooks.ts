@@ -55,7 +55,7 @@ export const fHandleSubcribeNotification: CallResponseHandler = async (req, res)
             channel_id: channelID,
         };
 
-        const createPostReq = adminClient.createPost(post as Post);
+        console.log(context);
         await tryPromiseWithMessage(createPostReq, 'Failed to create post');
     }
 
