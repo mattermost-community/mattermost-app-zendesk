@@ -1,4 +1,6 @@
-import {AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppExpandLevels} from '../constants/apps';
+
+import {AppCallResponse} from 'types/apps';
 
 import {AppCallRequestWithValues, CtxExpandedBotActingUserAccessToken} from '../types/apps';
 import {AppConfigStore, newConfigStore} from '../store/config';
@@ -6,7 +8,14 @@ import {newAppsClient} from '../clients';
 import {newZendeskConfigForm} from '../forms';
 import {CallResponseHandler, newErrorCallResponseWithFieldErrors, newErrorCallResponseWithMessage, newFormCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {baseUrlFromContext} from '../utils/utils';
-import {Routes} from '../utils/constants';
+import {Routes} from '../constants/zendesk';
+
+export const expandConfigure = {
+    acting_user: AppExpandLevels.EXPAND_SUMMARY,
+    acting_user_access_token: AppExpandLevels.EXPAND_ALL,
+    oauth2_app: AppExpandLevels.EXPAND_ALL,
+    oauth2_user: AppExpandLevels.EXPAND_ALL,
+};
 
 // fOpenZendeskConfigForm opens a new configuration form
 export const fOpenZendeskConfigForm: CallResponseHandler = async (req, res) => {
@@ -15,7 +24,7 @@ export const fOpenZendeskConfigForm: CallResponseHandler = async (req, res) => {
         const form = await newZendeskConfigForm(req.body);
         callResponse = newFormCallResponse(form);
         res.json(callResponse);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to open configuration form: ' + error.message);
         res.json(callResponse);
     }
@@ -35,7 +44,7 @@ export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (re
 
         const configStore = newConfigStore(context.bot_access_token, context.mattermost_site_url);
         const cValues = await configStore.getValues();
-        const targetID = cValues.zd_target_id;
+        const webhookID = cValues.zd_webhook_id;
         const zdOauth2AccessToken = cValues.zd_oauth_access_token;
 
         // Using a simple /\/+$/ fails CodeQL check - Polynomial regular expression used on uncontrolled data.
@@ -47,16 +56,16 @@ export const fSubmitOrUpdateZendeskConfigSubmit: CallResponseHandler = async (re
 
         try {
             await verifyUrl(storeValues.zd_url);
-        } catch (error) {
+        } catch (error: any) {
             callResponse = newErrorCallResponseWithFieldErrors({zd_url: error.message});
             res.json(callResponse);
             return;
         }
 
-        storeValues.zd_target_id = targetID;
+        storeValues.zd_webhook_id = webhookID;
         storeValues.zd_oauth_access_token = zdOauth2AccessToken;
         await configStore.storeConfigInfo(storeValues);
-    } catch (err) {
+    } catch (err: any) {
         callResponse = newErrorCallResponseWithMessage('Unable to submit configuration form: ' + err.message);
     }
     res.json(callResponse);
@@ -70,7 +79,7 @@ const verifyUrl = async (url: string) => {
         if (!resp.ok) {
             throw new Error(`failed to verify url: ${quotedURL}`);
         }
-    } catch (err) {
+    } catch (err: any) {
         throw new Error(`failed to fetch url: ${quotedURL}`);
     }
 };

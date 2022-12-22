@@ -1,9 +1,9 @@
-import {AppCallRequest, AppCallValues, AppContext} from 'mattermost-redux/types/apps';
+import {AppCallRequest, AppCallValues, AppContext} from 'types/apps';
 
-import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions, ZDTriggerPayload} from '../utils/ZDTypes';
+import {ZDTrigger, ZDTriggerCondition, ZDTriggerConditions, ZDTriggerPayload} from '../types/zendesk';
 
 import {getCallValueConditions} from '../utils/utils';
-import {SubscriptionFields, TriggerFields} from '../utils/constants';
+import {SubscriptionFields, TriggerFields} from '../constants/zendesk';
 
 interface TriggerFromFrom {
     getTrigger(): ZDTriggerPayload;
@@ -12,13 +12,13 @@ interface TriggerFromFrom {
 export class TriggerFromFormImpl implements TriggerFromFrom {
     values: AppCallValues;
     context: AppContext;
-    targetID: string;
+    webhookID: string;
     trigger: ZDTrigger
 
-    constructor(call: AppCallRequest, targetID: string) {
+    constructor(call: AppCallRequest, webhookID: string) {
         this.values = call.values as AppCallValues;
         this.context = call.context;
-        this.targetID = targetID;
+        this.webhookID = webhookID;
         this.trigger = {} as ZDTrigger;
         this.buildTrigger();
     }
@@ -45,7 +45,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
             {
                 field: TriggerFields.ActionField,
                 value: [
-                    this.targetID,
+                    this.webhookID,
                     this.getJSONDataFields(),
                 ],
             },
@@ -56,7 +56,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     // getJSONDataFields constructs the object text string for a trigger
     getJSONDataFields(): string {
         // Default to the viewing channel_id
-        let channelID = this.context.channel_id;
+        let channelID = this.context.channel?.id;
 
         // If channel picker exists, use its channel ID value
         if (this.values[SubscriptionFields.ChannelPickerSelectName] && this.values[SubscriptionFields.ChannelPickerSelectName].value) {
@@ -71,8 +71,8 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
         const title = [
             SubscriptionFields.PrefixTriggersTitle,
             SubscriptionFields.RegexTriggerInstance + this.context.mattermost_site_url,
-            SubscriptionFields.RegexTriggerTeamID + this.context.team_id,
-            SubscriptionFields.RegexTriggerChannelID + this.context.channel_id,
+            SubscriptionFields.RegexTriggerTeamID + this.context.team?.id,
+            SubscriptionFields.RegexTriggerChannelID + this.context.channel?.id,
             ' ' + this.values[SubscriptionFields.SubTextName],
         ].join('');
         this.addField('title', title);
@@ -134,8 +134,7 @@ export class TriggerFromFormImpl implements TriggerFromFrom {
     }
 }
 
-export function newTriggerFromForm(call: AppCallRequest, targetID: string): ZDTriggerPayload {
-    const trigger = new TriggerFromFormImpl(call, targetID).getTrigger();
+export function newTriggerFromForm(call: AppCallRequest, webhookID: string): ZDTriggerPayload {
+    const trigger = new TriggerFromFormImpl(call, webhookID).getTrigger();
     return trigger;
 }
-

@@ -1,18 +1,21 @@
-import {AppFieldTypes} from 'mattermost-redux/constants/apps';
-import {AppCallRequest, AppField, AppForm, AppSelectOption} from 'mattermost-redux/types/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {ZDClientOptions} from 'clients/zendesk';
+import {AppExpandLevels, AppFieldTypes} from '../constants/apps';
+
+import {AppCallRequest, AppField, AppForm, AppSelectOption} from 'types/apps';
+
+import {ZDClientOptions} from 'clients/zendesk/types';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {CtxExpandedBotActingUserOauth2User} from '../types/apps';
 import {ZDClient, newMMClient, newZDClient} from '../clients';
 import {Routes} from '../utils';
 import {createZdConditionsFromCall, makeSubscriptionOptions, tryPromiseWithMessage} from '../utils/utils';
-import {ZDConditionOption, ZDConditionOptionOperator, ZDConditionOptionValue, ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../utils/ZDTypes';
-import {SubscriptionFields, ZendeskIcon} from '../utils/constants';
+import {ZDConditionOption, ZDConditionOptionOperator, ZDConditionOptionValue, ZDTrigger, ZDTriggerCondition, ZDTriggerConditions} from '../types/zendesk';
+import {SubscriptionFields, ZendeskIcon} from '../constants/zendesk';
 import {BaseFormFields} from '../utils/base_form_fields';
 import {newConfigStore} from '../store';
+import {AppImpl} from '../app/app';
 
 // newSubscriptionsForm returns a form response to create subscriptions
 export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppForm> {
@@ -45,12 +48,21 @@ export async function newSubscriptionsForm(call: AppCallRequest): Promise<AppFor
         icon: ZendeskIcon,
         submit_buttons: SubscriptionFields.SubmitButtonsName,
         fields,
-        call: {
-            path: Routes.App.CallPathSubsSubmitOrUpdateForm,
+        submit: {
+            path: Routes.App.CallPathSubsSubmitOrUpdateForm + '/submit',
             state: {
                 conditions: fetchedConditionOptions,
                 triggers: subOptions?.options,
             },
+            expand: AppImpl.expandSubscriptionForm,
+        },
+        source: {
+            path: Routes.App.CallPathSubsSubmitOrUpdateForm + '/form',
+            state: {
+                conditions: fetchedConditionOptions,
+                triggers: subOptions?.options,
+            },
+            expand: AppImpl.expandSubscriptionForm,
         },
     };
     return form;
@@ -477,9 +489,9 @@ class FormFields extends BaseFormFields {
             SubscriptionFields.RegexTriggerInstance,
             this.call.context.mattermost_site_url,
             SubscriptionFields.RegexTriggerTeamID,
-            this.call.context.team_id,
+            this.call.context.team?.id,
             SubscriptionFields.RegexTriggerChannelID,
-            this.call.context.channel_id,
+            this.call.context.channel?.id,
         ].join('');
 
         const client = this.zdClient as ZDClient;

@@ -2,8 +2,7 @@ NPM ?= npm
 
 
 .PHONY: all
-## all: builds and runs the service
-all: run
+all: build
 
 .PHONY: build
 ## build: build the app

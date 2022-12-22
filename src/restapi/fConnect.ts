@@ -1,17 +1,23 @@
 import ClientOAuth2, {Token} from 'client-oauth2';
-import {AppCallResponse} from 'mattermost-redux/types/apps';
-import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
+
+import {AppCallResponseTypes, AppExpandLevels} from '../constants/apps';
+
+import {AppCallResponse} from 'types/apps';
 
 import {AppCallRequestWithValues, CtxExpandedActingUserOauth2AppBot, CtxExpandedBotActingUserOauth2AppOauth2User, ExpandedOauth2App} from '../types/apps';
-import {ZDClientOptions} from 'clients/zendesk';
+import {ZDClientOptions} from 'clients/zendesk/types';
 import {CallResponseHandler, newErrorCallResponseWithMessage, newOKCallResponse, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {AppConfigStore, newConfigStore} from '../store/config';
 import {Routes} from '../utils';
-import {ZDRoles} from '../utils/constants';
+import {ZDRoles} from '../constants/zendesk';
 import {newApp} from '../app/app';
 import {newAppsClient, newZDClient} from '../clients';
 import {getOAuthConfig} from '../app/oauth';
-import {StoredOauthUserToken} from 'utils/ZDTypes';
+import {StoredOauthUserToken} from 'types/zendesk';
+
+export const expandConnect = {
+    oauth2_app: AppExpandLevels.EXPAND_ALL,
+};
 
 export const fConnect: CallResponseHandler = async (req, res) => {
     const context: ExpandedOauth2App = req.body.context;
@@ -29,7 +35,7 @@ export const fOauth2Connect: CallResponseHandler = async (req, res) => {
     let callResponse: AppCallResponse;
     try {
         config = await configStore.getValues();
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('fOauth2Connect - Unable to get config store values: ' + error.message);
         res.json(callResponse);
         return;
@@ -65,7 +71,7 @@ export const fOauth2Complete: CallResponseHandler = async (req, res) => {
     let callResponse: AppCallResponse;
     try {
         zdAuth = await getOAuthConfig(context);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to get oauth config: ' + error.message);
         res.json(callResponse);
         return;
@@ -75,7 +81,7 @@ export const fOauth2Complete: CallResponseHandler = async (req, res) => {
     let user: Token;
     try {
         user = await zdAuth.code.getToken(zdURL);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to get user token: ' + error.message);
         res.json(callResponse);
         return;
@@ -94,7 +100,7 @@ export const fOauth2Complete: CallResponseHandler = async (req, res) => {
     let me: any;
     try {
         me = await zdClient.users.me();
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to get current zendesk user: ' + error.message);
         res.json(callResponse);
         return;
@@ -113,7 +119,7 @@ export const fOauth2Complete: CallResponseHandler = async (req, res) => {
     };
     try {
         await ppClient.storeOauth2User(storedToken);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to store oauth2user: ' + error.message);
         res.json(callResponse);
         return;
@@ -121,7 +127,7 @@ export const fOauth2Complete: CallResponseHandler = async (req, res) => {
     const app = newApp(call);
     try {
         await app.createBotDMPost(dmText);
-    } catch (error) {
+    } catch (error: any) {
         callResponse = newErrorCallResponseWithMessage('fOauth2Complete - Unable to create bot DM post: ' + error.message);
         res.json(callResponse);
         return;

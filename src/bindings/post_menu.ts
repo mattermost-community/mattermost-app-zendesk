@@ -1,4 +1,4 @@
-import {AppBinding} from 'mattermost-redux/types/apps';
+import {AppBinding} from 'types/apps';
 
 import {isZdAdmin, isZdAgent} from '../utils/utils';
 import {newPostMenuBindings} from '../utils';
@@ -24,4 +24,3 @@ export const getPostMenuBindings = (options: BindingOptions): AppBinding => {
     }
     return newPostMenuBindings(bindings);
 };
-

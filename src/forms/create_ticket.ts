@@ -2,19 +2,21 @@ import {Users} from 'node-zendesk';
 
 import Client4 from 'mattermost-redux/client/client4.js';
 
-import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
-import {AppFieldTypes} from 'mattermost-redux/constants/apps';
+import {AppFieldTypes} from '../constants/apps';
+
+import {AppCallRequest, AppField, AppForm} from 'types/apps';
 
 import {ZDFieldOption, ZDFormFieldOption, makeFormOptions, makeOptions, tryPromiseWithMessage} from '../utils/utils';
-import {CreateTicketFields, MappedZDNames, SystemFields, ZDFieldTypes, ZendeskIcon} from '../utils/constants';
+import {CreateTicketFields, MappedZDNames, SystemFields, ZDFieldTypes, ZendeskIcon} from '../constants/zendesk';
 import {BaseFormFields} from '../utils/base_form_fields';
-import {ZDUserField} from '../utils/ZDTypes';
+import {ZDUserField} from '../types/zendesk';
 
 import {Routes} from '../utils';
 import {ZDClient, newMMClient, newZDClient} from '../clients';
-import {ZDClientOptions} from 'clients/zendesk';
+import {ZDClientOptions} from 'clients/zendesk/types';
 import {MMClientOptions} from 'clients/mattermost';
 import {CtxExpandedBotActingUserOauth2User, ExpandedPost} from '../types/apps';
+import {AppImpl} from '../app/app';
 
 const omitFields = ['Group', 'Status'];
 
@@ -42,8 +44,13 @@ export async function newCreateTicketForm(call: AppCallRequest): Promise<AppForm
         header: 'Create a Zendesk ticket from Mattermost by filling out and submitting this form. Additional text can be added in the `Optional Message` field.',
         icon: ZendeskIcon,
         fields,
-        call: {
-            path: Routes.App.CallPathTicketSubmitOrUpdateForm,
+        submit: {
+            path: Routes.App.CallPathTicketSubmitOrUpdateForm + '/submit',
+            expand: AppImpl.expandCreateTicket,
+        },
+        source: {
+            path: Routes.App.CallPathTicketSubmitOrUpdateForm + '/form',
+            expand: AppImpl.expandCreateTicket,
         },
     };
     return form;
@@ -259,4 +266,3 @@ class FormFields extends BaseFormFields {
         this.builder.addField(f);
     }
 }
-

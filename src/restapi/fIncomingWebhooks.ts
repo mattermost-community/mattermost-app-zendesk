@@ -1,11 +1,12 @@
 import {Post} from 'mattermost-redux/types/posts';
-import {AppCallResponse} from 'mattermost-redux/types/apps';
+
+import {AppCallResponse} from 'types/apps';
 
 import {ExpandedBotActingUser} from '../types/apps';
 import {Routes, tryPromiseWithMessage} from '../utils';
-import {TriggerFields} from '../utils/constants';
+import {TriggerFields} from '../constants/zendesk';
 import {newMMClient, newZDClient} from '../clients';
-import {Groups, TicketForms, Users, ZDClient, ZDClientOptions} from 'clients/zendesk';
+import {Groups, TicketForms, Users, ZDClient, ZDClientOptions} from 'clients/zendesk/types';
 import {MMClientOptions} from 'clients/mattermost';
 
 import {newConfigStore} from '../store/config';
@@ -40,21 +41,24 @@ export const fHandleSubcribeNotification: CallResponseHandler = async (req, res)
     const ticketAudit = ticketAudits.pop();
     const message = await tryPromiseWithMessage(getNotificationMessage(zdClient, zdUrl, ticketID, ticketTitle, ticketAudit), 'fHandleSubcribeNotification - failed to get notification message');
 
-    const mmOptions: MMClientOptions = {
-        mattermostSiteURL: context.mattermost_site_url,
-        actingUserAccessToken: context.acting_user_access_token,
-        botAccessToken: context.bot_access_token,
-    };
-    const adminClient = newMMClient(mmOptions).asBot();
+    if (message) {
+        const mmOptions: MMClientOptions = {
+            mattermostSiteURL: context.mattermost_site_url,
+            actingUserAccessToken: context.acting_user_access_token,
+            botAccessToken: context.bot_access_token,
+        };
+        const adminClient = newMMClient(mmOptions).asBot();
 
-    const post: Partial<Post> = {
-        message,
-        user_id: context.bot_user_id,
-        channel_id: channelID,
-    };
+        const post: Partial<Post> = {
+            message,
+            user_id: context.bot_user_id,
+            channel_id: channelID,
+        };
 
-    const createPostReq = adminClient.createPost(post as Post);
-    await tryPromiseWithMessage(createPostReq, 'Failed to create post');
+        const createPostReq = adminClient.createPost(post as Post);
+        await tryPromiseWithMessage(createPostReq, 'Failed to create post');
+    }
+
     const callResponse:AppCallResponse = newOKCallResponse();
     res.json(callResponse);
 };
@@ -77,7 +81,13 @@ async function getNotificationMessage(zdClient: ZDClient, zdUrl: string, ticketI
         const events = await mapIDsToTextValues(zdClient, createEvents);
         return '**[NEW TICKET]** ' + prefix + getCreatedEventText(events);
     }
-    throw new Error('Event type does not contain Change or Create event types');
+
+    const commentEvents = getEventTypes(auditEvents, 'Comment');
+    if (commentEvents.length) {
+        return `New comment on ${prefix}\n\n> ${commentEvents[0].plain_body}`;
+    }
+
+    return '';
 }
 
 // mapIDsToTextValues takes an array of events and maps ID values to human readable text
@@ -113,7 +123,7 @@ async function mapIDsToTextValues(zdClient: ZDClient, events: any[]): Promise<an
                 mappedArray.push(mappedEvent);
             }
         });
-    } catch (error) {
+    } catch (error: any) {
         throw new Error('Unable to map IDs to text values: ' + error.message);
     }
     return mappedArray;
@@ -178,7 +188,7 @@ async function getNamesFromRequest(clientMethod: TicketForms | Groups | Users, e
                 event.previous_value = values[1].name;
             }
         });
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(`Unable to fetch ${nameType} names: ${error.message}`);
     }
     return event;

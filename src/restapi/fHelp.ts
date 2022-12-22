@@ -1,10 +1,16 @@
-import {AppCallRequest, AppCallResponse} from 'mattermost-redux/types/apps';
+import {AppExpandLevels} from '../constants/apps';
+
+import {AppCallRequest, AppCallResponse} from 'types/apps';
 
 import {ExpandedBotActingUser} from '../types/apps';
 import {CallResponseHandler, newOKCallResponseWithMarkdown} from '../utils/call_responses';
 import {getManifest} from '../manifest';
-import {CommandTrigger} from '../utils/constants';
+import {CommandTrigger} from '../constants/zendesk';
 import {isUserSystemAdmin} from '../utils';
+
+export const expandHelp = {
+    acting_user: AppExpandLevels.EXPAND_SUMMARY,
+};
 
 export const fHelp: CallResponseHandler = async (req, res) => {
     const helpText = [
@@ -43,7 +49,7 @@ function getAdminCommands(): string {
     return joinLines(
         h5('System Admin Commands'),
         addBulletSlashCommand('configure'),
-        addBulletSlashCommand('setup-target'),
+        addBulletSlashCommand('setup-webhook'),
         addBulletSlashCommand('subscribe'),
     ) + '\n';
 }

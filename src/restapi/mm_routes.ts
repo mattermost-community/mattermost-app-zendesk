@@ -10,15 +10,17 @@ import {fOpenZendeskConfigForm, fSubmitOrUpdateZendeskConfigSubmit} from './fCon
 import {fHandleSubcribeNotification} from './fIncomingWebhooks';
 import {fDisconnect} from './fDisconnect';
 import {fHelp} from './fHelp';
-import {fCreateTarget} from './fTarget';
+import {fSetupWebhook} from './fSetupWebhook';
 import {fMe} from './fMe';
 import {fInstall} from './fInstall';
 import {fManifest} from './fManifest';
+import {fPing} from './fPing';
 
 const router = express.Router();
 
 router.get(Routes.App.ManifestPath, fManifest);
 router.post(Routes.App.BindingsPath, fBindings);
+router.post(Routes.App.PingPath, fPing);
 
 // OAuth2 Connect
 router.post(Routes.App.OAuthConnectPath, fOauth2Connect);
@@ -30,7 +32,7 @@ router.post(Routes.App.InstallPath, fInstall);
 router.post(Routes.App.BindingPathConnect + '/submit', fConnect);
 router.post(Routes.App.BindingPathDisconnect + '/submit', fDisconnect);
 router.post(Routes.App.BindingPathHelp + '/submit', fHelp);
-router.post(Routes.App.BindingPathTargetCreate + '/submit', fCreateTarget);
+router.post(Routes.App.BindingPathSetupWebhook + '/submit', fSetupWebhook);
 router.post(Routes.App.BindingPathMe + '/submit', fMe);
 
 // Configuration

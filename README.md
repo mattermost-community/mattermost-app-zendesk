@@ -72,9 +72,9 @@ This step requires a Zendesk-connected Mattermost system administrator and uses 
 
 Note, the access token is only used to read ticket information when a subcription is triggered. This token will not post on behalf of the user.
 
-1. `/zendesk setup-target` - This command will set up a Zendesk target pointing to your Mattermost instance (it only needs to be run once).
+1. `/zendesk setup-webhook` - This command will set up a Zendesk webhook pointing to your Mattermost instance (it only needs to be run once).
 1. The command also saves the access_token of the acting user for subscriptions functionality.
-1. An ephemeral post will confirm that a target was created and that subscriptions functionality has been configured.
+1. An ephemeral post will confirm that a webhook was created and that subscriptions functionality has been configured.
 
 ## Notification management
 
@@ -98,9 +98,9 @@ When a notification for a subscription is received, the Zendesk app posts a mess
 
 ### System Admin slash commands
 
-`/zendesk configure` - Configure the Zendesk app after installation.  
-`/zendesk setup-target` - Set up the Zendesk target for your instance. (Requires Zendesk admin permissions)  
-`/zendesk subscribe` - Setup a channel subscription. (Requires Zendesk admin permissions)  
+`/zendesk configure` - Configure the Zendesk app after installation.
+`/zendesk setup-webhook` - Set up the Zendesk webhook for your instance. (Requires Zendesk admin permissions)
+`/zendesk subscribe` - Setup a channel subscription. (Requires Zendesk admin permissions)
 
 ## User's Guide
 
@@ -112,9 +112,9 @@ This slash command connects your Mattermost and Zendesk accounts via OAuth2 auth
 
 ### Slash commands
 
-`/zendesk connect` - Connect your Zendesk account to Mattermost.  
-`/zendesk disconnect` - Disconnect your Zendesk account from Mattermost.  
-`/zendesk help` - Post ephemeral message with help text.  
+`/zendesk connect` - Connect your Zendesk account to Mattermost.
+`/zendesk disconnect` - Disconnect your Zendesk account from Mattermost.
+`/zendesk help` - Post ephemeral message with help text.
 
 ## Create a ticket
 
@@ -126,9 +126,9 @@ Creating a ticket from a Mattermost post is done through the `...` post menu but
 
 Mattermost Server Setup
 
-To allow the Mattermost server to communicate with a Zendesk cloud instance, your Mattermost instance needs to be exposed to the internet via a tool such as [ngrok.io](https://ngrok.io). The Mattermost server then needs to be configured to use the exposed address. You can set it via **System Console > ENVIRONMENT > Web Server > Site URL**. Then select **Test Live URL** to confirm that the URL is correct. You can also set the `MM_SERVICESETTINGS_SITEURL` environment variable. 
+To allow the Mattermost server to communicate with a Zendesk cloud instance, your Mattermost instance needs to be exposed to the internet via a tool such as [ngrok.io](https://ngrok.io). The Mattermost server then needs to be configured to use the exposed address. You can set it via **System Console > ENVIRONMENT > Web Server > Site URL**. Then select **Test Live URL** to confirm that the URL is correct. You can also set the `MM_SERVICESETTINGS_SITEURL` environment variable.
 
-You'll need to restart your Mattermost server after you change the Site URL. 
+You'll need to restart your Mattermost server after you change the Site URL.
 
 To install Zendesk in a development environment:
 

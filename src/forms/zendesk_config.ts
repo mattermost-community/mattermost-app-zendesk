@@ -1,14 +1,17 @@
-import {AppCallRequest, AppField, AppForm} from 'mattermost-redux/types/apps';
-import {AppFieldTypes} from 'mattermost-redux/constants/apps';
 import Client4 from 'mattermost-redux/client/client4.js';
+
+import {AppFieldTypes} from '../constants/apps';
+
+import {AppCallRequest, AppField, AppForm} from 'types/apps';
 
 import {ExpandedBotActingUser, ExpandedOauth2App, Oauth2App} from '../types/apps';
 import {newMMClient} from '../clients';
 import {MMClientOptions} from 'clients/mattermost';
 import {Routes} from '../utils';
 import {BaseFormFields} from '../utils/base_form_fields';
-import {ZendeskIcon} from '../utils/constants';
+import {ZendeskIcon} from '../constants/zendesk';
 import {AppConfigStore, ConfigStore, newConfigStore} from '../store/config';
+import {expandConfigure} from '../restapi/fConfig';
 
 // newZendeskConfigForm returns a form response to configure the zendesk client
 export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppForm> {
@@ -28,8 +31,9 @@ export async function newZendeskConfigForm(call: AppCallRequest): Promise<AppFor
         header: 'Configure the Zendesk app with the following information.',
         icon: ZendeskIcon,
         fields,
-        call: {
-            path: Routes.App.CallPathConfigSubmitOrUpdateForm,
+        submit: {
+            path: Routes.App.CallPathConfigSubmitOrUpdateForm + '/submit',
+            expand: expandConfigure,
         },
     };
     return form;
@@ -52,7 +56,7 @@ class FormFields extends BaseFormFields {
         this.storeValues = {
             zd_url: '',
             zd_oauth_access_token: '',
-            zd_target_id: '',
+            zd_webhook_id: '',
         };
     }
 
@@ -97,7 +101,6 @@ class FormFields extends BaseFormFields {
     addZDClientSecretField(): void {
         const f: AppField = {
             type: AppFieldTypes.TEXT,
-            subtype: 'password',
             name: 'zd_client_secret',
             modal_label: 'Client Secret',
             value: this.OauthValues.client_secret,
@@ -107,4 +110,3 @@ class FormFields extends BaseFormFields {
         this.builder.addField(f);
     }
 }
-

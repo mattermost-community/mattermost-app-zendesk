@@ -1,12 +1,12 @@
-import {AppCallValues} from 'mattermost-redux/types/apps';
+import {AppCallValues} from 'types/apps';
 
-import {StoreKeys} from '../utils/constants';
+import {StoreKeys} from '../constants/zendesk';
 import {AppsClient, newAppsClient} from '../clients';
 import {baseUrlFromContext} from '../utils';
 
 export type AppConfigStore = {
     zd_url: string;
-    zd_target_id: string;
+    zd_webhook_id: string;
     zd_oauth_access_token: string;
 }
 
@@ -32,7 +32,7 @@ class ConfigStoreImpl implements ConfigStore {
         const config = await this.ppClient.kvGet(StoreKeys.config);
         if (config) {
             this.storeData.zd_url = config.zd_url || '';
-            this.storeData.zd_target_id = config.zd_target_id || '';
+            this.storeData.zd_webhook_id = config.zd_webhook_id || '';
             this.storeData.zd_oauth_access_token = config.zd_oauth_access_token || '';
         }
         return this.storeData;

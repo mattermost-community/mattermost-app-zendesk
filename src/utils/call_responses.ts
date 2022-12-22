@@ -1,6 +1,8 @@
 import {Request, Response} from 'express';
-import {AppCallResponse, AppForm} from 'mattermost-redux/types/apps';
-import {AppCallResponseTypes} from 'mattermost-redux/constants/apps';
+
+import {AppCallResponseTypes} from '../constants/apps';
+
+import {AppCallResponse, AppForm} from 'types/apps';
 
 export type FieldValidationErrors = {[name: string]: string};
 
@@ -18,10 +20,10 @@ export function newOKCallResponse(): AppCallResponse {
     };
 }
 
-export function newOKCallResponseWithMarkdown(markdown: string): AppCallResponse {
+export function newOKCallResponseWithMarkdown(text: string): AppCallResponse {
     return {
         type: AppCallResponseTypes.OK,
-        markdown,
+        text,
     };
 }
 
@@ -42,7 +44,7 @@ export function newFormCallResponse(form: AppForm): AppCallResponse {
 export function newErrorCallResponseWithMessage(message: string): AppCallResponse {
     return {
         type: AppCallResponseTypes.ERROR,
-        error: message,
+        text: message,
     };
 }
 

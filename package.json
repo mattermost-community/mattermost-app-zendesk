@@ -10,7 +10,7 @@
     "check-types": "tsc",
     "lint": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --cache",
     "fix": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext ts . --quiet --fix --cache",
-    "start": "nodemon dist/index.js",
+    "start": "LOCAL=true nodemon dist/index.js",
     "test": "jest --coverage"
   },
   "author": "",
@@ -18,9 +18,9 @@
   "dependencies": {
     "async-batch": "^1.1.1",
     "body-parser": "1.19.0",
-    "mattermost-redux": "github:mattermost/mattermost-redux#5fa256e1f5ae6ba237a276e35ec23a4c1f73af7b",
+    "mattermost-redux": "5.33.1",
     "node-fetch": "2.6.1",
-    "node-zendesk": "github:jfrerich/node-zendesk#c5909d6e6727fd6321e267454ff239a46d026808",
+    "node-zendesk": "^2.1.1",
     "serverless-http": "2.7.0",
     "ts-node": "^9.1.1"
   },
@@ -43,7 +43,7 @@
     "nodemon": "2.0.6",
     "ts-jest": "27.0.5",
     "ts-loader": "9.2.5",
-    "typescript": "3.9.7"
+    "typescript": "^4.6.2"
   },
   "jest": {
     "preset": "ts-jest",

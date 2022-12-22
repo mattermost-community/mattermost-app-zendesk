@@ -1,13 +1,13 @@
-import {AppCallValues, AppField, AppSelectOption} from 'mattermost-redux/types/apps';
 import GeneralConstants from 'mattermost-redux/constants/general';
 import {Channel} from 'mattermost-redux/types/channels';
 import {UserProfile} from 'mattermost-redux/types/users';
 
-import {Oauth2App} from '../types/apps';
-import {AppConfigStore} from '../store/config';
+import {AppCallValues, AppField, AppSelectOption, Oauth2App} from 'types/apps';
+import {StoredOauthUserToken, ZDRole, ZDTriggerCondition} from 'types/zendesk';
 
-import {SubscriptionFields, ZDRoles} from './constants';
-import {StoredOauthUserToken, ZDRole, ZDTriggerCondition} from './ZDTypes';
+import {AppConfigStore} from 'store/config';
+
+import {SubscriptionFields, ZDRoles} from '../constants/zendesk';
 
 export type ZDFieldOption = {
     name: string;
@@ -179,5 +179,5 @@ export function isZdAdmin(role: ZDRole): boolean {
 }
 
 export function webhookConfigured(config: AppConfigStore): boolean {
-    return Boolean(config.zd_target_id && config.zd_target_id !== '');
+    return Boolean(config.zd_webhook_id);
 }
