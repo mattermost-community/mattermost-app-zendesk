@@ -1,6 +1,6 @@
 import manifest from './manifest.json';
 
-import {getHTTPPath} from './index';
+import {getHTTPPath, isRunningInHTTPMode} from './index';
 
 export type Manifest = {
     app_id: string;
@@ -11,8 +11,8 @@ export type Manifest = {
     icon: string;
     requested_permissions: string[];
     requested_locations: string[];
-    http: {
-        root_url?: string;
+    http?: {
+        root_url: string;
         use_jwt: boolean;
     }
     aws_lambda: {
@@ -28,7 +28,12 @@ export type Manifest = {
 export function getManifest(): Manifest {
     const m: Manifest = manifest;
 
-    m.http.root_url = getHTTPPath();
+    if (isRunningInHTTPMode()) {
+        m.http = {
+            root_url: getHTTPPath(),
+            use_jwt: true,
+        };
+    }
 
     return m;
 }

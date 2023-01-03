@@ -12,7 +12,7 @@ build: node_modules
 .PHONY: run
 ## run: runs the service
 run:# build
-	LOCAL=true $(NPM) run start
+	$(NPM) run start
 
 .PHONY: test
 ## test: runs all tests
