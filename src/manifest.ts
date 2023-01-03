@@ -31,7 +31,7 @@ export function getManifest(): Manifest {
     if (isRunningInHTTPMode()) {
         m.http = {
             root_url: getHTTPPath(),
-            use_jwt: true,
+            use_jwt: false,
         };
     }
 
