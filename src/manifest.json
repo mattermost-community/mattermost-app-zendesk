@@ -34,8 +34,5 @@
                 "runtime": "nodejs14.x"
             }
         ]
-    },
-    "http": {
-        "use_jwt": false
     }
 }
